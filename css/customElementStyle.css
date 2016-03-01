@@ -1,21 +1,5 @@
 .centerPage {
     margin:auto;
-}
-.mainStyle{
     width:800px;
-    margin:0 auto;
-    overflow:hidden;
-}
-.centerTop {
-    width: 100%;
-    height: 20%;
-}
-.centerPage {
-    width: 100%;
-    height: 60%;
-}
-
-.centerBottom {
-    width: 100%;
-    height: 20%;
+    height:600px;
 }
