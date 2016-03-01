@@ -26,7 +26,6 @@
                 <li><input type="text" name="userName" placeholder="Username or email"></li>
                 <li><input type="text" name="password" placeholder="Password"></li>
                 <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Sign in</span></a></li>
-                <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Sign in</span></a></li>
                 <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Sign up</span></a></li>
                 <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>About Us</span></a></li>
             </ul>
