@@ -3,7 +3,7 @@
  * Created by PhpStorm.
  * User: Brandon
  * Date: 2016/03/01
- * Time: 5:20 PM
+ * Time: 11:52 PM
  */?>
 <html lang="en">
 <head>
@@ -18,21 +18,16 @@
 <body>
 <div class="centerPage" style="background-color: grey;">
     <div class="row" style="min-height:175px">
-        <div class="large-8 large-offset-2 columns" style="text-align: center">SebenzaSA stylised name + logo + slogan + stats</div>
+        <div class="large-8 large-offset-2 columns" style="text-align: center">Select user type(Temporary page while backend not fully functioning)</div>
     </div>
     <div class="row" style="min-height:375px">
         <div class="large-4 large-offset-4 columns">
             <ul class="menu vertical">
-                <li><input type="text" name="userName" placeholder="Username or email"></li>
-                <li><input type="text" name="password" placeholder="Password"></li>
-                <li><a href="signInTemp.php"  class="secondary button"><i class="fi-list"></i> <span>Sign in</span></a></li>
-                <li><a href="signUpFirstPage.php" class="secondary button"><i class="fi-list"></i> <span>Sign up</span></a></li>
-                <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>About Us</span></a></li>
+                <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Home User</span></a></li>
+                <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Trade Worker</span></a></li>
+                <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Contractor</span></a></li>
             </ul>
         </div>
-    </div>
-    <div class="row">
-        <div class="large-8 large-offset-2 columns">Disclaimer</div>
     </div>
 </div>
 </body>
