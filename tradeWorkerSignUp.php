@@ -99,7 +99,7 @@
             <li>
                 <div class="row" style="min-height: 3em">
                     <div class="large-8 columns large-offset-2" style="text-align: center;height:1.75em;padding-right: 0">
-                        <label>Select Box</label>
+                        <label>Service Type</label>
                         <select title="selectWorkCategory">
                             <option value="default">Default</option>
                             <option value="building">Building</option>
@@ -111,7 +111,7 @@
         </ul>
     </div>
     <div class="row">
-        <div class="large-8 columns large-offset-2" style="text-align: right;height:1.75em;padding-right: 0"><br><a href="#" class="medium success button">Success Button</a></div>
+        <div class="large-8 columns large-offset-2" style="text-align: right;height:1.75em;padding-right: 0"><br><a href="#" class="medium success button">Submit</a></div>
     </div>
 </div>
 </body>
