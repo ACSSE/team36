@@ -24,7 +24,7 @@
     <div class="row" style="min-height:400px">
         <div class="large-4 large-offset-4 columns">
             <ul class="menu vertical">
-                <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Create Job Request</span></a></li>
+                <li><a href="createJobReqBNR.php" class="secondary button"><i class="fi-list"></i> <span>Create Job Request</span></a></li>
                 <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Manage Job(s)</span></a></li>
                 <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Job History</span></a></li>
                 <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Sign Out</span></a></li>

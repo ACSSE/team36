@@ -23,9 +23,9 @@
     <div class="row" style="min-height:375px">
         <div class="large-4 large-offset-4 columns">
             <ul class="menu vertical">
-                <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Home User</span></a></li>
-                <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Trade Worker</span></a></li>
-                <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Contractor</span></a></li>
+                <li><a href="homeUserView.php"  class="secondary button"><i class="fi-list"></i> <span>Home User</span></a></li>
+                <li><a href="tradeWorkerView.php"  class="secondary button"><i class="fi-list"></i> <span>Trade Worker</span></a></li>
+                <li><a href="contractorView.php"  class="secondary button"><i class="fi-list"></i> <span>Contractor</span></a></li>
             </ul>
         </div>
     </div>
