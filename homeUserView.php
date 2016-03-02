@@ -27,7 +27,7 @@
                 <li><a href="createJobReqBNR.php" class="secondary button"><i class="fi-list"></i> <span>Create Job Request</span></a></li>
                 <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Manage Job(s)</span></a></li>
                 <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Job History</span></a></li>
-                <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>Sign Out</span></a></li>
+                <li><a href="index.php"  class="secondary button"><i class="fi-list"></i> <span>Sign Out</span></a></li>
             </ul>
         </div>
     </div>
