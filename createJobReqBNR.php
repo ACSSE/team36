@@ -57,11 +57,26 @@
                         <div class="large-5 columns text-right" style="padding-right:0"><label>Painting:</label></div>
                         <div class="large-2 columns end" style="padding-left:0.35em"><input type="number" name="ptQuantity"></div>
                     </div></li>
-                <li style="padding-top: 1em"><a href="#"  class="success button"><i class="fi-list"></i> <span>Submit Job Request</span></a></li>
-                <li><a href="#"  class="alert button"><i class="fi-list"></i> <span>Cancel Job Request</span></a></li>
+                <li style="padding-top: 1em"><a data-open="submitModal" class="success button"><i class="fi-list"></i> <span>Submit Job Request</span></a></li>
+                <li><a href="homeUserView.php"  class="alert button"><i class="fi-list"></i> <span>Cancel Job Request</span></a></li>
             </ul>
+            <div class="tiny reveal" id="submitModal" data-reveal>
+                <p class="lead">We'll keep you posted on your request.</p>
+                <button class="close-button" data-close aria-label="Close modal" type="button">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
         </div>
     </div>
 </div>
+
+<script src="foundation-6/js/vendor/jquery.min.js"></script>
+<script src="foundation-6/js/foundation.js"></script>
+<script src="foundation-6/js/foundation.reveal.js"></script>
+<!-- Other JS plugins can be included here -->
+<script>
+    $(document).foundation();
+</script>
 </body>
 </html>
