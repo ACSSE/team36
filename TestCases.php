@@ -16,22 +16,40 @@
 </head>
 <body>
 <?php
-
     echo "<pre>";
 
     //TEST CASES FOR DatabaseModule.php
-    $dbHandler = new ServerSessionDatabaseHandler("localhost","root","Sebenza","test");
-    print_r($dbHandler->runCommand("DROP TABLE IF EXISTS `TestEntity`"));
-    print_r($dbHandler->runCommand("CREATE TABLE `test`.`TestEntity` ( `STUDENT_NUMBER` VARCHAR(9) NOT NULL , `STUDENT_NAME` VARCHAR(25) NOT NULL , PRIMARY KEY (`STUDENT_NUMBER`)) ENGINE = InnoDB"));
-    print_r($dbHandler->runCommand("DELETE FROM `TestEntity` WHERE `STUDENT_NUMBR` = ?", '1'));
-    print_r($dbHandler->runCommand("DELETE FROM `TestEntity` WHERE `STUDENT_Nme` = ?", 'b'));
-    print_r($dbHandler->getErrors());
-    print_r($dbHandler->runCommand("INSERT INTO `TestEntity` VALUES (?,?)",'123456789','Bob'));
-    print_r($dbHandler->runCommand("INSERT INTO `TestEntity` VALUES (?,?)",'234567890','Alice'));
-    print_r($dbHandler->runCommand("SELECT * FROM `TestEntity`"));
-    print_r($dbHandler->runCommand("UPDATE `TestEntity` SET `STUDENT_NAME` = ? WHERE `STUDENT_NUMBER` = '234567890'",'Alice in Wonderland'));
-    print_r($dbHandler->runCommand("DELETE FROM `TestEntity` WHERE `STUDENT_NUMBER` = ?", '123456789'));
-    print_r($dbHandler->runCommand("SELECT * FROM `TestEntity`"));
+    $dbHandler = new ServerSessionDatabaseHandler("localhost","root","Sebenza","SebenzaSA_Database");
+    if ($dbHandler->runCommand("SELECT * FROM `REGISTERED_USER`")) {
+        echo $dbHandler->getResultsInJSON()."\n";
+    }
+
+    //Just for the sake of initiating the variable
+    $insertID = 10;
+
+    if ($dbHandler->runCommand("INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`) VALUES (?,?,?,?,?)",'phpInsertedUser', 'userphp@email.co.za', '0829494321', 3, 'unhashedPassword3')) {
+        $insertID = $dbHandler->getInsertID();
+        echo "Insert ID: ".$insertID."\n";
+        echo "Number of rows affected: ".$dbHandler->getAffectedRowCount()."\n";
+    }
+
+    if ($dbHandler->runCommand("SELECT * FROM `REGISTERED_USER`")) {
+        print_r($dbHandler->getResults());
+    }
+
+    if($dbHandler->runCommand("UPDATE `REGISTERED_USER` SET `Username` = ? WHERE `UserID` = ?",'Alice in Wonderland',$insertID)) {
+        echo "Number of rows affected: ".$dbHandler->getAffectedRowCount()."\n";
+    }
+
+    if ($dbHandler->runCommand("SELECT * FROM `REGISTERED_USER`")) {
+        echo $dbHandler->getResults()[2]["Username"]."\n";
+    }
+
+    $dbHandler->runCommand("DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?", $insertID);
+
+    if ($dbHandler->runCommand("SELECT * FROM `REGISTERED_USER`")) {
+        print_r($dbHandler->getResults());
+    }
 
     echo "</pre>";
 ?>
