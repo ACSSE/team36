@@ -7,6 +7,7 @@
  */?>
 <html lang="en">
 <head>
+    <!-- This is a test -->
     <meta charset="UTF-8">
     <title>sebenzaSA.co.za</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
