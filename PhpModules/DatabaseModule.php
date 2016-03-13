@@ -5,13 +5,12 @@
  * Date: 2016/02/14
  * Time: 8:31 PM
  * Author: 215022652
- * References: php.net/manual
+ * References: php.net/manual & stackexchange
  */
 
 /**
  * TODO
- * 1 Write unit tests for this module.
- * 2 Consider adding the connection as an instance so that every individual command does not have to form a connection.
+ * Write unit tests
  */
 
 /**
@@ -20,7 +19,7 @@
  * This class handles the connection to a database and running any command on that connection. The database language
  * is MySQL.
  */
-class ServerSessionDatabaseHandler {
+class DatabaseHandler {
     private $dbHost = null;             //String URL of database server
     private $dbUser = null;             //String Database user
     private $dbUserPassword = null;     //String User's password
