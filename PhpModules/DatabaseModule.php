@@ -363,9 +363,9 @@ class ServerSessionDatabaseHandler {
                 //Add the connect error to the errors array
                 $this->addError($this->dbName.":".$command."->".$connection->connect_error);
             } else {
-                //Remove leading and trailing whitespaces from the command
-                $command = trim($command);
-                $commandType = preg_split("`[\W\s]+`",$command);
+                //Clean the command's formatting up
+                $command = trim(preg_replace("`[\s]+|[;]+`"," ",$command));
+                $commandType = preg_split("`[\s]+`",$command);
                 //Check if the command is supported by this module
                 if (preg_match("`create|delete|drop|insert|replace|select|update`i", $commandType[0])) {
                     //Prepare the command for execution
@@ -433,19 +433,24 @@ class ServerSessionDatabaseHandler {
 
                         //Close the connection and release the command object
                         $preparedCommand->close();
-                        $connection->close();
+
                     } else {
                         $this->addError($this->dbName.":".$command."->".$connection->error);
                     }
-                } elseif (preg_match("`use`i", $commandType[0])){
-                    $executionSuccess = true;
-                    $this->setDbName($commandType[1]);
+                } elseif (preg_match("`use`i", $commandType[0])) {
+                    if ($connection->query($command)) {
+                        $executionSuccess = true;
+                        $this->setDbName(preg_replace("`[\W]`", "", $commandType[1]));
+                    } else {
+                        $this->addError("Could not run ".$command.".");
+                    }
                 } else {
                     $this->addError($this->dbName.":".$command."->"."This type of command is not supported.");
                 }
             }
+            $connection->close();
         } else {
-            $this->addError($this->dbName.":".$command."->"."The command was not passed as a string.");
+            $this->addError($this->dbName . ":" . $command . "->" . "The command was not passed as a string.");
         }
         return $executionSuccess;
     }

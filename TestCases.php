@@ -27,6 +27,7 @@
     } else {
         print_r($dbHandler->getErrors());
     }
+    $dbHandler->runCommand("    SELECT * FROM     `REGISTERED_USER`;");
     echo (microtime(true) - $startTime)." seconds runtime.";
     echo "</pre>";
 ?>
