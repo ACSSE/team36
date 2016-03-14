@@ -63,4 +63,7 @@ class SebenzaSessionHandler {
     public function exists($key):bool {
         return is_string($key) && isset($_SESSION[$key]);
     }
+
+    public function setTimeout(){}
+    public function resetSessionID(){}
 }
