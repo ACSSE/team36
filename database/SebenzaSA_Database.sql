@@ -13,7 +13,6 @@ CREATE TABLE `REGISTERED_USER` (
 	PRIMARY KEY (`UserID`)
 );
 
-/*Some data*/
-INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`)
+INSERT 	 INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`)
 	VALUES	('firstUser', 'user1@email.co.za', '0831231234', 1, 'unhashedPassword1'),
 			('secondUser', 'user2@email.co.za', '0832342345', 2, 'unhashedPassword2');

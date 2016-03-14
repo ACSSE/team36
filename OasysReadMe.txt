@@ -18,3 +18,10 @@ the completed function to the development branch of the project so that it is ac
 that we do not duplicate work and give each other an indication of progress.
 
 The guidelines should ensure that debugging is less of a nightmare.
+
+Goal:
+$title = ...
+include __DIR__."/PhpModules/openDocument.php"; - any initialisation code as well as opening <html> to opening <body> tag
+//Content that would have been placed in the <body> tags goes between these two lines
+//Consider putting the nav bar in a separate module that's loaded here
+include __DIR__."/PhpModules/closeDocument.php"; - Foundation 6 required end script as well as closing </body></html>
