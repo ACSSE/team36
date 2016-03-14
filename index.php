@@ -18,24 +18,79 @@
     <link rel="stylesheet" href="css/customElementStyle.css" />
 </head>
 <body>
-<div class="centerPage" style="background-color: grey;">
-    <div class="row" style="min-height:175px">
-        <div class="large-8 large-offset-2 columns" style="text-align: center">SebenzaSA stylised name + logo + slogan + stats</div>
-    </div>
-    <div class="row" style="min-height:375px">
-        <div class="large-4 large-offset-4 columns">
-            <ul class="menu vertical">
-                <li><input type="text" name="userName" placeholder="Username or email"></li>
-                <li><input type="text" name="password" placeholder="Password"></li>
-                <li><a href="signInTemp.php"  class="secondary button"><i class="fi-list"></i> <span>Sign in</span></a></li>
-                <li><a href="signUpFirstPage.php" class="secondary button"><i class="fi-list"></i> <span>Sign up</span></a></li>
-                <li><a href="#"  class="secondary button"><i class="fi-list"></i> <span>About Us</span></a></li>
+<div class="centerPage" style=". . .">
+    <div class="top-bar">
+        <div class="top-bar-left">
+            <ul class="menu">
+                <li class="menu-text"> LOGO HERE </li>
+                <li class="has-form">
+                    <div class="row collapse">
+                        <div class="large-8 small-8 large offset-2 columns ">
+                            <input type="text" placeholder="Looking for?">
+                        </div>
+                        <div class="large-4 small-3 columns">
+                            <a href="#" class="alert button">Search</a>
+                        </div>
+                    </div>
+                </li>
+
+            </ul>
+        </div>
+
+        <div class="top-bar-right">
+            <ul class="menu" >
+                <li><a href="#Login.php" class="button">LOGIN</a></li>
+                <li><a hreg="#SignUp.php"class="button">SIGN UP</a></li>
             </ul>
         </div>
     </div>
-    <div class="row">
-        <div class="large-8 large-offset-2 columns">Disclaimer</div>
+    <hr>
+
+    <div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>
+        <ul class="orbit-container">
+            <button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>
+            <button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>
+            <li class="is-active orbit-slide">
+                <img class="orbit-image" src="img1.jpg" alt="test1">
+                <figcaption class="orbit-caption">Test1</figcaption>
+            </li>
+            <li class="orbit-slide">
+                <img class="orbit-image" src="img2.jpg" alt="test2">
+                <figcaption class="orbit-caption">Test2</figcaption>
+            </li>
+            <li class="orbit-slide">
+                <img class="orbit-image" src="img3.jpg" alt="test3">
+                <figcaption class="orbit-caption">Test3</figcaption>
+            </li>
+            <li class="orbit-slide">
+                <img class="orbit-image" src="img4.jpg" alt="test4">
+                <figcaption class="orbit-caption">Test4</figcaption>
+            </li>
+        </ul>
+        <nav class="orbit-bullets">
+            <button class="is-active" data-slide="0"><span class="show-for-sr">First slide details.</span><span class="show-for-sr">Current Slide</span></button>
+            <button data-slide="1"><span class="show-for-sr">Second slide details.</span></button>
+            <button data-slide="2"><span class="show-for-sr">Third slide details.</span></button>
+            <button data-slide="3"><span class="show-for-sr">Fourth slide details.</span></button>
+        </nav>
     </div>
+
+    <hr />
+
+    <footer class="footer">
+        <div class="row">
+            <div class="small-12 columns">
+                <p class="slogan">Get The Job or Get the job done!</p>
+                <p class="links">
+                    <a href="#">Home</a>
+                    <a href="#">About Us</a>
+                    <a href="#">FAQ's</a>
+                    <a href="#">Contact Us</a>
+                </p>
+
+            </div>
+        </div>
+    </footer>
 </div>
 </body>
 </html>
