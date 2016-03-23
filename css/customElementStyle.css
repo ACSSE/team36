@@ -1,5 +1,88 @@
+/*Font setup*/
+body {
+    font-family: Ubuntu, sans-serif;
+}
+
 .centerPage {
     margin:auto;
     width:800px;
     height:600px;
+}
+
+.noPadding {
+    padding:0;
+}
+
+.noMargins {
+    margin:0;
+}
+
+.fullWidth {
+    width: 100%;
+    min-width: initial;
+    max-width: initial;
+}
+
+.fullHeight {
+    height: 100%;
+}
+
+.navBarButton {
+    font-size:0.55rem;
+}
+
+.navBarRightPadding {
+    padding-right: 0.5rem;
+}
+
+.fixed {
+    position: fixed;
+}
+
+.logoWidth {
+    width:19.25rem;
+    min-height: initial;
+    max-height: initial;
+}
+
+.logoHeight {
+    height:7rem;
+    min-height: initial;
+    max-height: initial;
+}
+
+.navBarHeight {
+    height:40%;
+}
+
+.navBarColour {
+    background-color: #000000;
+}
+
+.navBarBackgroundHeight {
+    height:60%;
+}
+
+.backgroundColor {
+    background-color: #ffae00;
+}
+
+/*PHONES PORTRAIT (css-tricks.com, w3schools.com)*/
+@media only screen and (max-width: 700px) and (orientation: portrait) {
+    /*Override classes here*/
+    .logoWidth {
+        width:16.5rem;
+        min-height: initial;
+        max-height: initial;
+    }
+
+    .logoHeight {
+        height:6rem;
+        min-height: initial;
+        max-height: initial;
+    }
+}
+/*PHONES LANDSCAPE*/
+@media only screen and (max-width: 700px) and (orientation: landscape) {
+    /*Override classes here*/
 }

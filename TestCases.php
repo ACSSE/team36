@@ -5,8 +5,8 @@
  * Date: 2016/02/15
  * Time: 1:16 AM
  */
-    include __DIR__."/PhpModules/DatabaseModule.php";
-    include __DIR__."/PhpModules/SessionModule.php";
+    include __DIR__ . "/php/DatabaseModule.php";
+    include __DIR__ . "/php/SessionModule.php";
 ?>
 
 <!DOCTYPE html>
