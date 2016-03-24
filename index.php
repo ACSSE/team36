@@ -18,30 +18,38 @@
     <link rel="stylesheet" href="css/customElementStyle.css" />
 </head>
 <body>
-<div class="centerPage" style=". . .">
-    <div class="top-bar">
-        <div class="top-bar-left">
-            <ul class="menu">
-                <li class="menu-text"> LOGO HERE </li>
-                <li class="has-form">
-                    <div class="row collapse">
-                        <div class="large-8 small-8 large offset-2 columns ">
-                            <input type="text" placeholder="Looking for?">
-                        </div>
-                        <div class="large-4 small-3 columns">
-                            <a href="#" class="alert button">Search</a>
-                        </div>
-                    </div>
-                </li>
+<div class="ubuntuFont">
+    <div class="top-bar menuBarColour noPaddingOrMargins">
+       <!--- <div class="row menuBarColour topHalfHeight topRightWidth noPaddingOrMargins">
+        </div>
+        <div class="row menuSecColour topHalfHeight topRightWidth noPaddingOrMargins">
 
+        </div>-->
+        <div class="top-bar-left topLeftWidth">
+            <ul class="menu menuBarColour">
+                <li class="name noPaddingOrMargins">
+                        <img class="topBarHeight menuBarColour" src="./Images/logo.png" >
+                </li>
             </ul>
         </div>
 
-        <div class="top-bar-right">
-            <ul class="menu" >
-                <li><a href="#Login.php" class="button">LOGIN</a></li>
-                <li><a hreg="#SignUp.php"class="button">SIGN UP</a></li>
-            </ul>
+
+            <div class="row menuBarColour topHalfHeight topRightWidth noPaddingOrMargins">
+            </div>
+            <div class="row menuSecColour topHalfHeight topRightWidth noPaddingOrMargins">
+            <div class="top-bar-right">
+                <ul class="menu menuSecColour" data-responsive-menu="drilldown medium-dropdown">
+                    <li><a href="#Login.php" class="button">Area Information</a></li>
+                    <li class="has-submenu">
+                        <a href="#">Log In</a>
+                        <ul class="submenu menu vertical" data-submenu>
+                            <li><a href="#">One</a></li>
+                            <li><a href="#">Two</a></li>
+                            <li><a href="#">Three</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
     <hr>
@@ -92,5 +100,18 @@
         </div>
     </footer>
 </div>
+<div class="reveal" id="submitModal" data-reveal>
+    <p class="lead">We'll keep you posted on your request.</p>
+    <button class="close-button" data-close aria-label="Close modal" type="button" onclick="window.location = 'homeUserView.php';">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+<!-- Foundation required code-->
+<script src="foundation-6/js/vendor/jquery.min.js"></script>
+<script src="foundation-6/js/foundation.js"></script>
+<!-- Other JS plugins can be included here -->
+<script>
+    $(document).foundation();
+</script>
 </body>
 </html>

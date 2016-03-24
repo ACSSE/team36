@@ -70,10 +70,9 @@
         </div>
     </div>
 </div>
-
+<!-- Foundation required code-->
 <script src="foundation-6/js/vendor/jquery.min.js"></script>
 <script src="foundation-6/js/foundation.js"></script>
-<script src="foundation-6/js/foundation.reveal.js"></script>
 <!-- Other JS plugins can be included here -->
 <script>
     $(document).foundation();
