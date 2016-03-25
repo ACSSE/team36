@@ -503,11 +503,13 @@ class DatabaseHandler {
      */
     public function executeSQLScriptFile($pathAndName): bool {
         //Validate function argument and that file exists
+        $pathAndName = $_SERVER['DOCUMENT_ROOT'].$pathAndName;
         if (is_string($pathAndName) && file_exists($pathAndName)) {
             $executionSuccess = $this->runCommands(file_get_contents($pathAndName));
         } else {
             $executionSuccess = false;
             $this->addError("Specified script file '".$pathAndName."' not found.");
+            var_dump("Specified script file '".$pathAndName."' not found.");
         }
         return $executionSuccess;
     }

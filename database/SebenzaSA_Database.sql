@@ -15,6 +15,7 @@ CREATE TABLE `REGISTERED_USER` (
 	PRIMARY KEY (`UserID`)
 );
 
+DROP TABLE IF EXISTS `SPECIALIZATIONS`;
 CREATE TABLE `SPECIALIZATIONS` (
 	`workTypeID` integer not null auto_increment,
   `WorkType` varchar(15) not null unique,
@@ -22,6 +23,7 @@ CREATE TABLE `SPECIALIZATIONS` (
 	PRIMARY KEY (`workTypeID`)
 );
 
+DROP TABLE IF EXISTS `LOCATIONS`;
 CREATE TABLE `LOCATIONS` (
 	`locationID` integer not null auto_increment,
   `locationName` varchar(15) not null unique,
@@ -29,6 +31,7 @@ CREATE TABLE `LOCATIONS` (
 	PRIMARY KEY (`locationID`)
 );
 
+DROP TABLE IF EXISTS `TRADE_WORKER`;
 CREATE TABLE `TRADE_WORKER` (
 	`userID` integer not null auto_increment,
 	`Username` varchar(40) not null unique,
@@ -40,6 +43,7 @@ CREATE TABLE `TRADE_WORKER` (
 	FOREIGN KEY (`WorkType`) REFERENCES SPECIALIZATIONS(`WorkType`)
 );
 
+DROP TABLE IF EXISTS `LOCATIONS_PER_USER`;
 CREATE TABLE `LOCATIONS_PER_USER` (
   `localID` integer not null auto_increment,
   `Username` varchar(40) not null,
@@ -49,6 +53,7 @@ CREATE TABLE `LOCATIONS_PER_USER` (
   FOREIGN KEY (`locationName`) REFERENCES LOCATIONS(`locationName`)
 );
 
+DROP TABLE IF EXISTS `SPECIALIZATIONS_PER_USER`;
 CREATE TABLE `SPECIALIZATIONS_PER_USER` (
   `specID` integer not null auto_increment,
   `Username` varchar(40) not null,
@@ -59,7 +64,7 @@ CREATE TABLE `SPECIALIZATIONS_PER_USER` (
 );
 
 INSERT 	 INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`)
-	VALUES	('firstUser', 'user1@email.co.za', '0831231234', 0, 'unhashedPassword1', 'name1', 'surname1'),
+	VALUES	('firstUser', 'user1@email.co.za', '0831231234', 0, '$2y$10$uWOUhqFn1A154Iuroa5rUeo2mUFumliCiqDCIWymxpvJ3k8Si/WTm', 'name1', 'surname1'),
 			('secondUser', 'user2@email.co.za', '0832342345', 2, 'unhashedPassword2', 'name2', 'surname2'),
 			('thirdUser', 'user3@email.co.za', '0832123345', 3, 'unhashedPassword3', 'name3', 'surname3'),
 			('fourthUser', 'user4@email.co.za', '0832543673', 3, 'unhashedPassword4', 'name4', 'surname4'),
