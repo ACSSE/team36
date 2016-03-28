@@ -26,6 +26,21 @@ $SERVER = new SebenzaServer();
     <link rel="stylesheet" href="css/customElementStyle.css" />
     <link rel="icon" type="image/png" href="images/favicon.png"/>
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
+    <script
+        src="http://maps.googleapis.com/maps/api/js">
+    </script>
+
+    <script>
+        function initialize() {
+            var mapProp = {
+                center:new google.maps.LatLng(-26.1657905,28.163748),
+                zoom:8,
+                mapTypeId:google.maps.MapTypeId.ROADMAP
+            };
+            var map=new google.maps.Map(document.getElementById("googleMap"), mapProp);
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+    </script>
 </head>
 <body>
     <div class="page-container">
