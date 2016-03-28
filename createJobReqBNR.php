@@ -60,7 +60,7 @@
                 <li style="padding-top: 1em"><a data-open="submitModal" class="success button"><i class="fi-list"></i> <span>Submit Job Request</span></a></li>
                 <li><a href="homeUserView.php"  class="alert button"><i class="fi-list"></i> <span>Cancel Job Request</span></a></li>
             </ul>
-            <div class="reveal" id="submitModal" data-reveal>
+            <div class="reveal" id="submitModal" data-reveal data-animation-in="spin-in">
                 <p class="lead">We'll keep you posted on your request.</p>
                 <button class="close-button" data-close aria-label="Close modal" type="button" onclick="window.location = 'homeUserView.php';">
                     <span aria-hidden="true">&times;</span>
@@ -71,8 +71,10 @@
     </div>
 </div>
 <!-- Foundation required code-->
-<script src="foundation-6/js/vendor/jquery.min.js"></script>
+<script src="foundation-6/js/jquery.js"></script>
+<script src="foundation-6/js/what-input.js"></script>
 <script src="foundation-6/js/foundation.js"></script>
+<script src="foundation-6/js/app.js"></script>
 <!-- Other JS plugins can be included here -->
 <script>
     $(document).foundation();

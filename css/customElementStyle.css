@@ -1,88 +1,242 @@
+/*Center things: https://www.w3.org/Style/Examples/007/center.en.html*/
 /*Font setup*/
-body {
+html, body {
     font-family: Ubuntu, sans-serif;
+    font-size: 1em;
+}
+/*For consistency these colours have been set to those used on buttons in foundation*/
+.yellow-link:link {
+    color:#ffae00;
+    font-weight: bold;
 }
 
-.centerPage {
-    margin:auto;
-    width:800px;
-    height:600px;
+.yellow-link:visited, .yellow-link:hover {
+    color: #ffc857;
 }
 
-.noPadding {
-    padding:0;
+.blue-link:link {
+    color: #2199e8;
+    font-weight: bold;
 }
 
-.noMargins {
-    margin:0;
+.blue-link:visited , .blue-link:hover {
+    color: #74beec;
 }
 
-.fullWidth {
+.full-width {
     width: 100%;
     min-width: initial;
     max-width: initial;
 }
 
-.fullHeight {
+.full-height {
     height: 100%;
 }
 
-.navBarButton {
-    font-size:0.55rem;
-}
-
-.navBarRightPadding {
-    padding-right: 0.5rem;
+.top-padding {
+    padding-top:0.5em;
 }
 
 .fixed {
     position: fixed;
 }
 
-.logoWidth {
+.logo-width {
     width:19.25rem;
     min-height: initial;
     max-height: initial;
 }
 
-.logoHeight {
+.logo-height {
+    /*
+    When updating this height, the width in the logoWidth class should be set to 2.75 times the new value, and the top
+    of the content-view should be set to the same value as the new height.
+    */
     height:7rem;
     min-height: initial;
     max-height: initial;
+}
+
+#login-medium-large {
+    position:absolute;
+    top: 7rem; /*must be same as logo height*/
+    right: 0;
+    width: 16em;
+    padding-bottom: 1em;
+    z-index: 1; /*raise the element above the others so that it is clickable*/
+    display:none;/* hide initially http://foundation.zurb.com/forum/posts/37588-toggler-with-motion-ui---hide-element-initially*/
+}
+
+.smaller-input-box {
+    font-size: 0.75rem;
+    height: 1.5rem;
+    padding: 0.2rem;
+    margin:0;
+    border-radius: 0.2em;
+    border: 1px solid #000000;
+}
+
+.smaller-input-box:focus {
+    border: 1px solid #2199e8;
 }
 
 .navBarHeight {
     height:40%;
 }
 
-.navBarColour {
+.navigation-bar-colour {
     background-color: #000000;
+    color: #FFFFFF;
 }
 
 .navBarBackgroundHeight {
     height:60%;
 }
 
-.backgroundColor {
+.background-colour {
     background-color: #ffae00;
 }
 
+.center-contents {
+    padding:0;
+    margin:0;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-button {
+    font-size: 0.75rem;
+    height: 1.5rem;
+    padding: 0.2rem;
+    margin:0;
+    border-radius: 0.2em;
+    border: 1px solid #000000;
+}
+
+.top-bar-button {
+    height: 70%;
+    font-size:0.8em;
+    font-weight: bold;
+    border-radius: .2em;
+    border: 1px solid black;
+    padding: 0.2em 0.5em 0.2em 0.5em;
+    margin:0;
+    display:flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/*Override foundation 6 button text color*/
+.button, .button:hover, .button:active, .button:focus {
+    color: #000000;
+}
+
+.button.warning, .button.warning:hover, .button.warning:active, .button.warning:focus {
+    color: #000000;
+}
+
+.button.success, .button.success:hover, .button.success:active, .button.success:focus {
+    color: #000000;
+}
+
+.button.alert, .button.alert:hover, .button.alert:active, .button.alert:focus {
+    color: #000000;
+}
+
+.top-bar-button-icon {
+    height: 1.5em;
+    padding-left: .2em;
+}
+
+ul[class~="menu"] li {
+    padding-right: 0.5em;
+}
+
+.navigation-bar {
+    height: 100%;
+    width: 100%;
+    padding: 0;
+    margin: 0;
+    display:flex;
+    align-items: right;
+    justify-content: center;
+}
+
+.page-container {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    top: 0;
+    min-width: 320px;
+    min-height: 320px;
+}
+
+.sebenza-top-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.sebenza-bottom-bar {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 2rem;
+}
+
+.content-view {
+    position: absolute;
+    top: 7rem;
+    bottom: 2rem;
+    left: 0;
+    right: 0;
+    overflow: auto;
+}
+
+.site-links {
+    height: 100%;
+}
+
 /*PHONES PORTRAIT (css-tricks.com, w3schools.com)*/
-@media only screen and (max-width: 700px) and (orientation: portrait) {
+@media only screen and (max-width: 600px) {
     /*Override classes here*/
-    .logoWidth {
-        width:16.5rem;
+    .logo-width {
+        width:13.75rem;
         min-height: initial;
         max-height: initial;
     }
 
-    .logoHeight {
-        height:6rem;
+    .logo-height {
+        height:5rem;
         min-height: initial;
         max-height: initial;
     }
+
+    .top-bar-button-icon {
+        height: 1em;
+        padding-left: .2em;
+    }
+
+    .sebenza-bottom-bar {
+        height: 4rem;
+        font-size: 0.8em;
+    }
+
+    .content-view {
+        position: absolute;
+        top: 5rem; /*Must be same as height value of logoHeight*/
+        bottom: 4rem; /*Must be same as height value of sebenza-bottom-bar*/
+    }
+
+    .site-links {
+        width: 100%;
+    }
 }
 /*PHONES LANDSCAPE*/
-@media only screen and (max-width: 700px) and (orientation: landscape) {
+@media only screen and (max-width: 600px) and (orientation: landscape) {
     /*Override classes here*/
 }

@@ -33,18 +33,18 @@
                 </div>
                 <div class="row collapse navigation-bar-colour full-width navBarHeight">
                     <div class="expanded columns full-height">
-                        <span class="navigation-bar">
+                        <div class="navigation-bar">
                         <!--http://foundation.zurb.com/sites/docs/button-group.html-->
                         <!--http://foundation.zurb.com/sites/docs/button.html-->
                         <ul class="menu align-right hide-for-small-only">
                             <li>
-                                <button type="button" class="warning button" >
+                                <button type="button" class="warning top-bar-button button" >
                                     Area Information
                                     <img class="top-bar-button-icon" type="image/svg+xml" src="../../images/info-icon.svg" alt="logo"/>
                                 </button>
                             </li>
                             <li>
-                                <button type="button" class="button" data-toggle="login-medium-large">
+                                <button type="button" class="top-bar-button button" data-toggle="login-medium-large">
                                     Log In
                                     <img class="top-bar-button-icon" type="image/svg+xml" src="../../images/user-icon.svg" alt="logo"/>
                                 </button>
@@ -52,13 +52,13 @@
                         </ul>
                         <ul class="menu align-right show-for-small-only">
                             <li>
-                                <button type="button" class="button">
+                                <button type="button" class="button top-bar-button">
                                     Menu
                                     <img class="top-bar-button-icon" type="image/svg+xml" src="../../images/menu-icon.svg" alt="logo"/>
                                 </button>
                             </li>
                         </ul>
-                        </span>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -85,14 +85,14 @@
                 </div>
                 <div class="row top-padding">
                     <div class="columns">
-                        <button type="button" class="success button full-width" >
+                        <button type="button" class="success button full-width login-button" >
                             Log In
                         </button>
                     </div>
                 </div>
                 <div class="row top-padding">
                     <div class="columns">
-                        <button type="button" class="button full-width" >
+                        <button type="button" class="button full-width login-button" >
                             Register
                         </button>
                     </div>
@@ -105,16 +105,16 @@
     <footer class="sebenza-bottom-bar navigation-bar-colour">
         <div class="row site-links small-up-2 medium-up-4 large-up-4">
             <div class="columns center-contents">
-                <a href="#1" class="yellow-link">Contact Us</a>
+                <a href="#" class="yellow-link">Contact Us</a>
             </div>
             <div class="columns center-contents">
-                <a href="#2" class="yellow-link">Privacy Policy</a>
+                <a href="#" class="yellow-link">Privacy Policy</a>
             </div>
             <div class="columns center-contents">
-                <a href="#3" class="yellow-link">Terms and Conditions</a>
+                <a href="#" class="yellow-link">Terms and Conditions</a>
             </div>
             <div class="columns center-contents">
-                <a href="#4" class="blue-link">About Us</a>
+                <a href="#" class="blue-link">About Us</a>
             </div>
         </div>
     </footer>
