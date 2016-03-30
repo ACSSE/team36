@@ -79,7 +79,7 @@ INSERT 	 INTO `LOCATIONS` ( `locationName`, `Coordinates`)
 			('Benoni', '0:0');
 
 INSERT 	 INTO `SPECIALIZATIONS` (`WorkType`, `Description`)
-	VALUES	('Painter', 'person whp paints'),
+	VALUES	('Painter', 'person who paints'),
 			( 'Tiler', 'Person who tiles floors'),
 			('Paver', 'Person who paves areas'),
 			('Tree-Feller', 'Person who removes trees');

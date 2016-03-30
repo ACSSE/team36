@@ -5750,10 +5750,12 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
     animOutToLeft: 'slide-out-left',
     /**
     * Allows Orbit to automatically animate on page load.
+    * Brandon Faul
+    * Switching this to false so that the animation will not change unless a user clicks for it to change
     * @option
     * @example true
     */
-    autoPlay: true,
+    autoPlay: false,
     /**
     * Amount of time, in ms, between slide transitions
     * @option

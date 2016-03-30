@@ -200,12 +200,32 @@ ul[class~="menu"] li {
 .site-links {
     height: 100%;
 }
-.test{
+.map-sizer{
     position: absolute;
     top: 0;
     left: 0;
-    height:50%;
+    height:100%;
     width: 100%;
+}
+.content-holder{
+    position: absolute;
+    top: 0;
+    left: 0;
+    height:300px;
+    width: 100%;
+}
+.tab-styler{
+    margin: 0;
+    background-image: url('../Images/construction-hard-hat.jpg');
+    max-width: inherit;
+    height: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 350px;
+}
+.tab-button{
+    background-color: #ffae00;
+    color: #0a0a0a;
 }
 /*PHONES PORTRAIT (css-tricks.com, w3schools.com)*/
 @media only screen and (max-width: 600px) {

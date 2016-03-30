@@ -50,7 +50,7 @@
 <!--http://foundation.zurb.com/sites/docs/toggler.html-->
 <div class="background-colour hide-for-small-only" id="login-medium-large" data-toggler data-animate="hinge-in-from-top hinge-out-from-top">
     <!--http://foundation.zurb.com/sites/docs/forms.html-->
-    <form>
+    <form method="post">
         <div class="row">
             <div class="columns">
                 <label><b>Username</b>
@@ -67,14 +67,14 @@
         </div>
         <div class="row top-padding">
             <div class="columns">
-                <button type="button" class="success button full-width login-button" >
+                <button type="button" class="success button full-width login-button">
                     Log In
                 </button>
             </div>
         </div>
         <div class="row top-padding">
             <div class="columns">
-                <button type="button" class="button full-width login-button" >
+                <button type="button" class="button full-width login-button">
                     Register
                 </button>
             </div>

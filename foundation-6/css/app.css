@@ -3194,7 +3194,7 @@ table.hover tr:nth-of-type(even):hover {
   margin: 0;
   list-style-type: none;
   background: #fefefe;
-  border: 1px solid #e6e6e6; }
+  border: 1px solid black; }
   .tabs::before, .tabs::after {
     content: ' ';
     display: table;
@@ -3232,9 +3232,11 @@ table.hover tr:nth-of-type(even):hover {
     line-height: 1;
     font-size: 0.75rem; }
     .tabs-title > a:hover {
-      background: #fefefe; }
+      background: #ffc857;
+      color:black;}
     .tabs-title > a:focus, .tabs-title > a[aria-selected='true'] {
-      background: #e6e6e6; }
+      background: #ffc857;
+      color:black; }
 
 .tabs-content {
   background: #fefefe;
@@ -3243,12 +3245,13 @@ table.hover tr:nth-of-type(even):hover {
   border-top: 0; }
 
 .tabs-content.vertical {
-  border: 1px solid #e6e6e6;
+  border: 1px solid black;
   border-left: 0; }
 
 .tabs-panel {
   display: none;
-  padding: 1rem; }
+  padding: 1rem black;
+background-color: #ffae00}
   .tabs-panel.is-active {
     display: block; }
 
