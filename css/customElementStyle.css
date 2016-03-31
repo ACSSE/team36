@@ -136,6 +136,14 @@ html, body {
     color: #000000;
 }
 
+.button.secondary, .button.secondary:hover, .button.secondary:active, .button.secondary:focus {
+    color: #000000;
+}
+
+.button, button.radius{
+    border-radius: 3em;
+}
+
 .button.success, .button.success:hover, .button.success:active, .button.success:focus {
     color: #000000;
 }
@@ -217,11 +225,11 @@ ul[class~="menu"] li {
 .tab-styler{
     margin: 0;
     background-image: url('../Images/construction-hard-hat.jpg');
-    max-width: inherit;
     height: 100%;
+    max-width: inherit;
     background-size: cover;
     background-repeat: no-repeat;
-    min-height: 350px;
+    min-height: 100%;
 }
 .tab-button{
     background-color: #ffae00;
