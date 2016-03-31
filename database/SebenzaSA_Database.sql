@@ -64,13 +64,13 @@ CREATE TABLE `SPECIALIZATIONS_PER_USER` (
 );
 
 INSERT 	 INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`)
-	VALUES	('firstUser', 'user1@email.co.za', '0831231234', 0, '$2y$10$uWOUhqFn1A154Iuroa5rUeo2mUFumliCiqDCIWymxpvJ3k8Si/WTm', 'name1', 'surname1'),
-			('secondUser', 'user2@email.co.za', '0832342345', 2, 'unhashedPassword2', 'name2', 'surname2'),
-			('thirdUser', 'user3@email.co.za', '0832123345', 3, 'unhashedPassword3', 'name3', 'surname3'),
-			('fourthUser', 'user4@email.co.za', '0832543673', 3, 'unhashedPassword4', 'name4', 'surname4'),
-			('fifthUser', 'user5@email.co.za', '0832345235', 1, 'unhashedPassword5', 'name5', 'surname5'),
-			('sixthUser', 'user6@email.co.za', '0832886435', 3, 'unhashedPassword6', 'name6', 'surname6'),
-			('seventhUser', 'user7@email.co.za', '0831234675', 3, 'unhashedPassword7', 'name7', 'surname7');
+	VALUES	('firstUser', 'user1@email.co.za', '0831231234', 0, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name1', 'surname1'),
+			('secondUser', 'user2@email.co.za', '0832342345', 2, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name2', 'surname2'),
+			('thirdUser', 'user3@email.co.za', '0832123345', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name3', 'surname3'),
+			('fourthUser', 'user4@email.co.za', '0832543673', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name4', 'surname4'),
+			('fifthUser', 'user5@email.co.za', '0832345235', 1, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name5', 'surname5'),
+			('sixthUser', 'user6@email.co.za', '0832886435', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name6', 'surname6'),
+			('seventhUser', 'user7@email.co.za', '0831234675', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name7', 'surname7');
 
 INSERT 	 INTO `LOCATIONS` ( `locationName`, `Coordinates`)
 	VALUES	('Edenvale', '0:0'),

@@ -6,15 +6,15 @@
  * Time: 3:24 PM
  */?>
     <!--DOCUMENT END-->
-    </div>
-    <!-- Foundation required code-->
-    <script src="foundation-6/js/jquery.js"></script>
-    <script src="foundation-6/js/what-input.js"></script>
-    <script src="foundation-6/js/foundation.js"></script>
-    <script src="foundation-6/js/app.js"></script>
-    <!-- Other JS plugins can be included here -->
-    <script>
-        $(document).foundation();
-</script>
-</body>
+        </div>
+        <!-- Foundation required code-->
+        <script src="foundation-6/js/what-input.js"></script>
+        <script src="foundation-6/js/foundation.js"></script>
+        <script src="foundation-6/js/app.js"></script>
+        <script>
+            $(document).foundation();
+        </script>
+        <!--End Foundation requirements-->
+    </body>
 </html>
+<?php SebenzaServer::stop();?>

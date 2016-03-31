@@ -19,7 +19,6 @@
     echo "<pre>";
     $startTime = microtime(true);
     $server = new SebenzaServer();
-
     $server->fetchDatabaseHandler()->runCommand("SELECT * FROM REGISTERED_USER");
     echo $server->fetchDatabaseHandler()->getResultsInJSON()."\n";
     $test = $server->fetchDatabaseHandler()->getResults();

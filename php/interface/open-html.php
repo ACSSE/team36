@@ -6,7 +6,16 @@
  * Time: 3:23 PM
  */
 include $_SERVER['DOCUMENT_ROOT']."/php/classes/SebenzaModule.php";
-$SERVER = new SebenzaServer();
+//Any redirect related code should happen here (e.g. logout)
+if (!empty($_POST) && isset($_POST['action'])) {
+    $action = $_POST['action'];
+    switch ($action) {
+        case 'logout':
+            SebenzaServer::logout();
+            break;
+    }
+}
+SebenzaServer::start();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -24,12 +33,12 @@ $SERVER = new SebenzaServer();
     <link rel="stylesheet" href="foundation-6/css/foundation-rtl.css"/>
     <link rel="stylesheet" href="foundation-6/css/app.css" />
     <link rel="stylesheet" href="css/customElementStyle.css" />
-    <link rel="icon" type="image/png" href="images/favicon.png"/>
+    <link rel="icon" type="image/png" href="Images/favicon.png"/>
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
-    <script
-        src="http://maps.googleapis.com/maps/api/js">
-    </script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="foundation-6/js/jquery.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script src="javascript/sebenza.js"></script>
+
     <script>
         function initialize() {
             var mapProp = {
@@ -40,6 +49,8 @@ $SERVER = new SebenzaServer();
             var map=new google.maps.Map(document.getElementById("googleMap"), mapProp);
         }
         google.maps.event.addDomListener(window, 'load', initialize);
+        //need to have the map resize without affecting the other elements.
+        //google.maps.event.addDomListener(window, 'resize', initialize);
     </script>
 </head>
 <body>
