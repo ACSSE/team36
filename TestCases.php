@@ -22,8 +22,8 @@
     $server->fetchDatabaseHandler()->runCommand("SELECT * FROM REGISTERED_USER");
     echo $server->fetchDatabaseHandler()->getResultsInJSON()."\n";
     $test = $server->fetchDatabaseHandler()->getResults();
-    echo "The following is test value ".$test[0]["Username"]."\n";
-    echo "Login successful: ".$server->login("firstUser", "unhashedPassword1")."\n";
+    var_dump($test);
+    echo "Login successful: ".$server->login("firstUser", "password")."\n";
     echo $server->fetchSessionHandler()->getSessionVariable("Username")."\n";
     //echo $server->fetchDatabaseHandler()->runCommand("SELECT ")
     echo (microtime(true) - $startTime)." seconds runtime.";
