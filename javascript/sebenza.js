@@ -27,7 +27,7 @@ function handleLoginResponse(response) {
     var success = JSON.parse(response);
     console.log("The following is the response:" + response);
     if (success) {
-        window.location = 'user_page_template.php';
+        window.location = 'userPage.php';
     } else {
         if (!passDialogVisible) {
             passDialogVisible = true;

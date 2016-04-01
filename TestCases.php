@@ -20,7 +20,7 @@
     echo "<pre>";
     $startTime = microtime(true);
     SebenzaServer::createAndResetDatabase();
-    var_dump(SebenzaServer::fetchDatabaseHandler()->getCommandsReport());
+    //var_dump(SebenzaServer::fetchDatabaseHandler()->getCommandsReport());
     $dbHandler = SebenzaServer::fetchDatabaseHandler();
     $sessionHandler = SebenzaServer::fetchSessionHandler();
     if ($sessionHandler->exists("testVariable")) {

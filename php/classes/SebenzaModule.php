@@ -69,14 +69,14 @@ class SebenzaServer {
         if ($session->exists("dbHandler")) {
             $dbHandler = $session->getSessionVariable("dbHandler");
         } else {
-            $dbHandler = new DatabaseHandler("localhost","root","Sebenza","SebenzaSA_Database");
+            $dbHandler = new DatabaseHandler("localhost","root","","SebenzaSA_Database");
             $session->setSessionVariable("dbHandler", $dbHandler);
         }
         return $dbHandler;
     }
 
     public static function createAndResetDatabase():bool {
-        $dbHandler = new DatabaseHandler("localhost","root","Sebenza","");
+        $dbHandler = new DatabaseHandler("localhost","root","","");
         $success = $dbHandler->executeSQLScriptFile("database/SebenzaSA_Database.sql");
         self::fetchSessionHandler()->setSessionVariable("dbHandler", $dbHandler);
         return $success;
