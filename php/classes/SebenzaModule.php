@@ -4,8 +4,8 @@
  * Date: 2016/02/15
  * Time: 1:16 AM
  */
-include "SessionModule.php";
-include "DatabaseModule.php";
+include_once $_SERVER['DOCUMENT_ROOT']."/php/classes/SessionModule.php";
+include_once $_SERVER['DOCUMENT_ROOT']."/php/classes/DatabaseModule.php";
 class SebenzaServer {
     public static function start() {
         //Used in open-html.php and AJAX handling below
@@ -65,38 +65,44 @@ class SebenzaServer {
     }
 
     public static function fetchDatabaseHandler():DatabaseHandler {
-        return new DatabaseHandler("localhost","root","","SebenzaSA_Database");
+        $session = self::fetchSessionHandler();
+        if ($session->exists("dbHandler")) {
+            $dbHandler = $session->getSessionVariable("dbHandler");
+        } else {
+            $dbHandler = new DatabaseHandler("localhost","root","Sebenza","SebenzaSA_Database");
+            $session->setSessionVariable("dbHandler", $dbHandler);
+        }
+        return $dbHandler;
     }
 
     public static function createAndResetDatabase():bool {
-        $dbHanlder = new DatabaseHandler("localhost","root","","");
-        return $dbHanlder->executeSQLScriptFile("database/SebenzaSA_Database.sql");
+        $dbHandler = new DatabaseHandler("localhost","root","Sebenza","");
+        $success = $dbHandler->executeSQLScriptFile("database/SebenzaSA_Database.sql");
+        self::fetchSessionHandler()->setSessionVariable("dbHandler", $dbHandler);
+        return $success;
     }
 
     public static function fetchSessionHandler():Session {
-        return new Session();
+        $session = new Session();
+        if ($session->exists('sessionHandler')) {
+            $session = $session->getSessionVariable('sessionHandler');
+        } else {
+            $session->setSessionVariable('sessionHandler', $session);
+        }
+        return $session;
     }
 
     public static function hashPassword($password):string {
         return password_hash($password,PASSWORD_DEFAULT);
     }
-
-    public static function comparePasswords($password,$inputPassword):bool {
-        if($password == $inputPassword){
-            return true;
-        }
-        else{
-            return false;
-        }
-    }
 }
 
+//The following code handles ajax requests sent to SessionModule.php as in sebenza.js for the login functionality
 if (!empty($_POST)) {
     //Synchronise the time and start output buffering (an AJAX request can happen separate from an official page load)
     SebenzaServer::start();
     //AJAX requests are served some sort of textual response (usually JSON for easier handling by JavaScript)
     $response = "";
-    //var_dump($_POST);
     if (isset($_POST['action'])) {
         $action = $_POST['action'];
         switch ($action) {

@@ -5,7 +5,7 @@
  * Date: 2016/03/28
  * Time: 3:23 PM
  */
-include $_SERVER['DOCUMENT_ROOT']."/php/classes/SebenzaModule.php";
+include_once $_SERVER['DOCUMENT_ROOT']."/php/classes/SebenzaModule.php";
 //Any redirect related code should happen here (e.g. logout)
 if (!empty($_POST) && isset($_POST['action'])) {
     $action = $_POST['action'];
