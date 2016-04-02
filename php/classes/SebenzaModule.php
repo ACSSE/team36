@@ -50,8 +50,6 @@ class SebenzaServer {
     public static function logout() {
         //Clear and end the current session
         self::fetchSessionHandler()->endSession();
-        //Redirect to index
-        //self::redirect("index.php");
     }
 
     //This must be called before any output is sent to the client, so in the beginning of the open-html.php file.
