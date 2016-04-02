@@ -37,7 +37,7 @@ $utype = $test->getSessionVariable('UserType');
                                             </button>';
                                 }
                                 else{
-                                    echo '<button type="button" class="top-bar-button button" onclick="attemptLogout()">
+                                    echo '<button type="button" class="top-bar-button button" id="logout-button">
                                                 Log Out
                                                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
                                             </button>';
@@ -83,7 +83,7 @@ $utype = $test->getSessionVariable('UserType');
         </div>
         <div class="row top-padding">
             <div class="columns">
-                <button type="button" class="success button full-width login-button" id="login-button">
+                <button type="submit" class="success button full-width login-button" id="login-button">
                     Log In
                 </button>
             </div>

@@ -12,7 +12,7 @@ include $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 ?>
     <div class="content-view">
 
-            <div class="row collapse tab-styler">
+            <div class="row collapse background-image">
 
                 <div class="large-3 columns">
                     <ul class="tabs vertical" id="example-vert-tabs" data-tabs>

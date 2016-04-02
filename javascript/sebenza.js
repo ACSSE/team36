@@ -6,6 +6,7 @@
  */
 $(document).ready(function () {
     $('#login-button').click(attemptLogin);
+    $('#logout-button').click(attemptLogout);
 });
 
 var passDialogVisible = false;
@@ -46,15 +47,16 @@ function attemptLogout() {
     });
     //This line prevents the submission from redirecting (refreshing) the page - the default action of submit input tags
     return false;
-    function handleLogoutResponse(response) {
-        console.log("The following is the response:" + response);
+}
 
-        var success = JSON.parse(response);
-        console.log("The following is the response:" + response);
-        if (success) {
-            window.location = 'index.php';
-        } else {
-            console.log("Logout Failed")
-        }
+function handleLogoutResponse(response) {
+    console.log("The following is the response:" + response);
+
+    var success = JSON.parse(response);
+    console.log("The following is the response:" + response);
+    if (success) {
+        window.location = 'index.php';
+    } else {
+        console.log("Logout Failed");
     }
 }

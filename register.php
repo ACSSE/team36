@@ -9,7 +9,7 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/open-html.php";
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 ?>
     <div class="content-view">
-        <div class="row collapse tab-styler">
+        <div class="row collapse background-image">
             <div class="large-3 columns">
                 <ul class="tabs vertical" id="example-vert-tabs" data-tabs>
                     <li class="tabs-title is-active"><a class="tab-button" href="#panel1v">Register as Tradeworker</a></li>
@@ -48,14 +48,14 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
                                     <label >Cellphone Number</label>
                                     <div class="input-group">
                                         <span class="input-group-label">+27</span>
-                                        <input type="text" placeholder="12 345 6789" class="input-group-field" required/>
+                                        <input type="number" placeholder="12 345 6789" class="input-group-field" required/>
                                     </div>
                                 </div>
                                 <div class="column medium-6 large-6">
                                     <label >Home Contact Number</label>
                                     <div class="input-group">
                                         <span class="input-group-label">+27</span>
-                                        <input type="text" placeholder="12 345 6789" class="input-group-field" required/>
+                                        <input type="number" placeholder="12 345 6789" class="input-group-field" required/>
                                     </div>
                                 </div>
                             </div>

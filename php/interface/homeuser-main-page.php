@@ -5,7 +5,7 @@
  * Date: 2016/04/01
  * Time: 7:09 PM
  */?>
-<div class="row collapse tab-styler">
+<div class="row collapse background-image">
     <div class="large-3 columns">
         <ul class="tabs vertical" id="example-vert-tabs" data-tabs>
             <li class="tabs-title is-active"><a class="tab-button" href="#panel1v">Request trade worker(s)</a></li>

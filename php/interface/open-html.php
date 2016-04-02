@@ -6,15 +6,9 @@
  * Time: 3:23 PM
  */
 include_once $_SERVER['DOCUMENT_ROOT']."/php/classes/SebenzaModule.php";
-//Any redirect related code should happen here (e.g. logout)
-if (!empty($_POST) && isset($_POST['action'])) {
-    $action = $_POST['action'];
-    switch ($action) {
-        case 'logout':
-            SebenzaServer::logout();
-            break;
-    }
-}
+//Any php redirect related code should happen here (e.g. logout)
+
+
 SebenzaServer::start();
 ?>
 <!DOCTYPE html>

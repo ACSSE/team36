@@ -5,8 +5,8 @@
  * Time: 3:22 PM
  */
 $PAGE_TITLE = "Homepage";
-include $_SERVER['DOCUMENT_ROOT']."/php/interface/open-html.php";
-include $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
+include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/open-html.php";
+include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 
 ?>
     <div class="content-view">
@@ -32,6 +32,6 @@ include $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
         </div>
     </div>
 <?php
-include $_SERVER['DOCUMENT_ROOT']."/php/interface/bottom-bar.php";
-include $_SERVER['DOCUMENT_ROOT']."/php/interface/close-html.php";
+include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/bottom-bar.php";
+include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/close-html.php";
 ?>

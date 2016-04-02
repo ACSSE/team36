@@ -241,7 +241,7 @@ ul[class~="menu"] li {
     height:300px;
     width: 100%;
 }
-.tab-styler{
+.background-image {
     margin: 0;
     background-image: url('../Images/construction-hard-hat.jpg');
     height: 100%;
@@ -250,6 +250,25 @@ ul[class~="menu"] li {
     background-repeat: no-repeat;
     min-height: 100%;
 }
+
+.background-image-contact{
+    margin: 0;
+    background-image: url('../Images/construction-hard-hat.jpg');
+    height: 100%;
+    max-width: inherit;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.centered-div{
+    width: 50%;
+    min-height: 50%;
+    align-self: center;
+}
+
 .tab-button{
     background-color: #ffae00;
     color: #0a0a0a;

@@ -5,7 +5,7 @@
  * Time: 1:16 AM
  */
 include_once $_SERVER['DOCUMENT_ROOT']."/php/classes/SessionModule.php";
-include_once $_SERVER['DOCUMENT_ROOT']."/php/classes/DatabaseModule.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/php/classes/DatabaseHandler.php";
 class SebenzaServer {
     public static function start() {
         //Used in open-html.php and AJAX handling below
@@ -69,14 +69,14 @@ class SebenzaServer {
         if ($session->exists("dbHandler")) {
             $dbHandler = $session->getSessionVariable("dbHandler");
         } else {
-            $dbHandler = new DatabaseHandler("localhost","root","","SebenzaSA_Database");
+            $dbHandler = new DatabaseHandler("localhost","root","Sebenza","SebenzaSA_Database");
             $session->setSessionVariable("dbHandler", $dbHandler);
         }
         return $dbHandler;
     }
 
     public static function createAndResetDatabase():bool {
-        $dbHandler = new DatabaseHandler("localhost","root","","");
+        $dbHandler = new DatabaseHandler("localhost","root","Sebenza","");
         $success = $dbHandler->executeSQLScriptFile("database/SebenzaSA_Database.sql");
         self::fetchSessionHandler()->setSessionVariable("dbHandler", $dbHandler);
         return $success;
@@ -114,7 +114,7 @@ if (!empty($_POST)) {
                 }
                 break;
             case 'logout':
-                $response = json_encode("logged Out");
+                $response = json_encode(true);
                 SebenzaServer::logout();
                 break;
             default:
