@@ -11,13 +11,7 @@ include $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 
 ?>
     <div class="content-view">
-        <?php
-        $test = SebenzaServer::fetchSessionHandler();
-        var_dump($test->variableCount());
-        var_dump($test->getSessionVariable('Username'));
-        var_dump($test->getSessionVariable('UserType'));
 
-        ?>
             <div class="row collapse tab-styler">
 
                 <div class="large-3 columns">

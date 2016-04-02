@@ -35,3 +35,26 @@ function handleLoginResponse(response) {
         }
     }
 }
+
+function attemptLogout() {
+    console.log("The following is username " + $('#uname').val() + " the following is password: " + $('#pword').val())
+    $.ajax({
+        type: 'POST',
+        url: 'php/classes/SebenzaModule.php',
+        data: { action:'logout' },
+        success: handleLogoutResponse
+    });
+    //This line prevents the submission from redirecting (refreshing) the page - the default action of submit input tags
+    return false;
+    function handleLogoutResponse(response) {
+        console.log("The following is the response:" + response);
+
+        var success = JSON.parse(response);
+        console.log("The following is the response:" + response);
+        if (success) {
+            window.location = 'index.php';
+        } else {
+            console.log("Logout Failed")
+        }
+    }
+}

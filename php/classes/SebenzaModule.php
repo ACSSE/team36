@@ -51,7 +51,7 @@ class SebenzaServer {
         //Clear and end the current session
         self::fetchSessionHandler()->endSession();
         //Redirect to index
-        self::redirect("index.php");
+        //self::redirect("index.php");
     }
 
     //This must be called before any output is sent to the client, so in the beginning of the open-html.php file.
@@ -112,6 +112,10 @@ if (!empty($_POST)) {
                 } else {
                     $response = json_encode(false);
                 }
+                break;
+            case 'logout':
+                $response = json_encode("logged Out");
+                SebenzaServer::logout();
                 break;
             default:
                 //If the action was not one of the handled cases, respond appropriately

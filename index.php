@@ -15,11 +15,11 @@ include $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
                 <ul class="orbit-container">
                     <button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>
                     <button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>
+                    <li class="orbit-slide is-active">
+                        <div id="googleMap" class="map-sizer"></div>
+                    </li>
                     <li class="orbit-slide">
                         <img class="orbit-image" src="Images/construction-hard-hat.jpg" alt="Space">
-                    </li>
-                    <li class="is-active orbit-slide">
-                        <div id="googleMap" class="map-sizer"></div>
                     </li>
                     <li class="orbit-slide">
                         <img class="orbit-image" src="Images/construction-hard-hat.jpg" alt="Space">

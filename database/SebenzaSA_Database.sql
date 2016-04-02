@@ -70,7 +70,12 @@ INSERT 	 INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUs
 			('fourthUser', 'user4@email.co.za', '0832543673', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name4', 'surname4'),
 			('fifthUser', 'user5@email.co.za', '0832345235', 1, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name5', 'surname5'),
 			('sixthUser', 'user6@email.co.za', '0832886435', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name6', 'surname6'),
-			('seventhUser', 'user7@email.co.za', '0831234675', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name7', 'surname7');
+			('seventhUser', 'user7@email.co.za', '0831234675', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name7', 'surname7'),
+			('contractor', 'user8@email.co.za', '0837543215', 1, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name8', 'surname8'),
+			('homeUser', 'user9@email.co.za', '0831234325', 2, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name9', 'surname9'),
+			('TradeWorker', 'user10@email.co.za', '0831212675', 0, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name10', 'surname10');
+
+
 
 INSERT 	 INTO `LOCATIONS` ( `locationName`, `Coordinates`)
 	VALUES	('Edenvale', '0:0'),

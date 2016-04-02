@@ -58,11 +58,11 @@
                         <div class="large-2 columns end" style="padding-left:0.35em"><input type="number" name="ptQuantity"></div>
                     </div></li>
                 <li style="padding-top: 1em"><a data-open="submitModal" class="success button"><i class="fi-list"></i> <span>Submit Job Request</span></a></li>
-                <li><a href="homeUserView.php"  class="alert button"><i class="fi-list"></i> <span>Cancel Job Request</span></a></li>
+                <li><a href="userPage.php"  class="alert button"><i class="fi-list"></i> <span>Cancel Job Request</span></a></li>
             </ul>
             <div class="reveal" id="submitModal" data-reveal data-animation-in="spin-in">
                 <p class="lead">We'll keep you posted on your request.</p>
-                <button class="close-button" data-close aria-label="Close modal" type="button" onclick="window.location = 'homeUserView.php';">
+                <button class="close-button" data-close aria-label="Close modal" type="button" onclick="window.location = 'userPage.php';">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>

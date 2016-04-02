@@ -67,6 +67,16 @@ html, body {
     display:none;/* hide initially http://foundation.zurb.com/forum/posts/37588-toggler-with-motion-ui---hide-element-initially*/
 }
 
+#areainformation-medium-large {
+    position:absolute;
+    top: 7rem; /*must be same as logo height*/
+    right: 0;
+    width: 16em;
+    padding-bottom: 1em;
+    z-index: 1; /*raise the element above the others so that it is clickable*/
+    display:none;/* hide initially http://foundation.zurb.com/forum/posts/37588-toggler-with-motion-ui---hide-element-initially*/
+}
+
 .smaller-input-box {
     font-size: 0.75rem;
     height: 1.5rem;
