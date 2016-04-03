@@ -9,6 +9,9 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/open-html.php";
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 
 ?>
+<script>
+    google.maps.event.addDomListener(window, 'load', initialize);
+</script>
     <div class="content-view">
         <div>
             <div class="orbit" aria-label="Favorite Home Pictures" data-orbit data-use-m-u-i="false">

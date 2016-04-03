@@ -62,7 +62,7 @@ function handleLogoutResponse(response) {
     }
 }
 
-var alphaNumericRE = /^\w+$/; //a-zA-Z0-9_
+var alphaNumericRE = /^\w*$/; //a-zA-Z0-9_
 
 function validateForm(formID) {
     var success = true;
