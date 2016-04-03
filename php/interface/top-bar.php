@@ -63,21 +63,24 @@ $utype = $test->getSessionVariable('UserType');
 <!--http://foundation.zurb.com/sites/docs/toggler.html-->
 <div class="background-colour hide-for-small-only" id="login-medium-large" data-toggler data-animate="hinge-in-from-top hinge-out-from-top">
     <!--http://foundation.zurb.com/sites/docs/forms.html-->
-    <form>
+    <form id="login-form">
         <div class="row">
             <div class="columns">
                 <label><b>Username</b>
-                    <input type="text" class="smaller-input-box" name="uname" id="uname" placeholder="Username" required/>
+                    <input type="text" class="smaller-input-box AN_VAL" name="uname" id="uname" placeholder="Username"/>
                 </label>
+                <div class="additional-info top-padding" id="uname-info" data-toggler data-animate="fade-in fade-out">
+                    <p class="help-text no-margins">Username must be filled in and be alpha-numeric characters. E.g. bOb_93</p>
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="columns">
                 <label><b>Password</b>
-                    <input type="password" class="smaller-input-box" name="pword" id="pword" placeholder="Password" required/>
+                    <input type="password" class="smaller-input-box REQ_VAL" name="pword" id="pword" placeholder="Password"/>
                 </label>
-                <div class="additional-info top-padding" id="wrong-password-text" data-toggler data-animate="fade-in fade-out">
-                    <p class="help-text no-margins">Invalid username or password. You can try retrieve forgotten passwords <span><a href="#">here</a>.</span></p>
+                <div class="additional-info top-padding" id="pword-info" data-toggler data-animate="fade-in fade-out">
+                    <p class="help-text no-margins">Password must be filled in.</p>
                 </div>
             </div>
         </div>
@@ -93,6 +96,9 @@ $utype = $test->getSessionVariable('UserType');
                 <a type="button" class="button full-width login-button" href="register.php">
                     Register
                 </a>
+            </div>
+            <div class="credentials-info top-padding" id="wrong-password-text" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">Invalid username or password. You can try retrieve forgotten passwords <span><a href="#">here</a>.</span></p>
             </div>
         </div>
     </form>

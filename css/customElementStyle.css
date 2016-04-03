@@ -280,6 +280,15 @@ ul[class~="menu"] li {
     align-self: center;
 }
 
+.tab-styler{
+    margin: 0;
+    background-image: url('../Images/construction-hard-hat.jpg');
+    height: 100%;
+    max-width: inherit;
+    background-size: cover;
+    background-repeat: no-repeat;
+    min-height: 100%;
+}
 .tab-button{
     background-color: #ffae00;
     color: #0a0a0a;
