@@ -4,7 +4,7 @@
  * Date: 2016/02/15
  * Time: 1:16 AM
  */
-include_once $_SERVER['DOCUMENT_ROOT']."/php/classes/SessionModule.php";
+include_once $_SERVER['DOCUMENT_ROOT']."/php/classes/Session.php";
 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/classes/DatabaseHandler.php";
 class SebenzaServer {
     public static function start() {

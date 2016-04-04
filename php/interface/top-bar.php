@@ -4,8 +4,6 @@
  * Date: 2016/03/20
  * Time: 10:06 AM
  */
-$test = SebenzaServer::fetchSessionHandler();
-$utype = $test->getSessionVariable('UserType');
 ?>
 <header class="sebenza-top-bar">
     <div class="row collapse logo-height full-width">
@@ -37,7 +35,7 @@ $utype = $test->getSessionVariable('UserType');
                                             </button>';
                                 }
                                 else{
-                                    echo '<button type="button" class="top-bar-button button" id="logout-button">
+                                    echo '<button type="button" class="top-bar-button button" id="logout-button" onclick="sendAJAXRequest(\'logout\',handleLogoutResponse);">
                                                 Log Out
                                                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
                                             </button>';
@@ -67,9 +65,10 @@ $utype = $test->getSessionVariable('UserType');
         <div class="row">
             <div class="columns">
                 <label><b>Username</b>
-                    <input type="text" class="smaller-input-box AN_VAL" name="uname" id="uname" placeholder="Username"/>
+                    <input type="text" class="smaller-input-box AN_VAL REQ_VAL" name="username" id="username"
+                           placeholder="Username"/>
                 </label>
-                <div class="additional-info top-padding" id="uname-info" data-toggler data-animate="fade-in fade-out">
+                <div class="additional-info top-padding" id="username-info" data-toggler data-animate="fade-in fade-out">
                     <p class="help-text no-margins">Username must be filled in and be alpha-numeric characters. E.g. bOb_93</p>
                 </div>
             </div>
@@ -77,16 +76,16 @@ $utype = $test->getSessionVariable('UserType');
         <div class="row">
             <div class="columns">
                 <label><b>Password</b>
-                    <input type="password" class="smaller-input-box REQ_VAL" name="pword" id="pword" placeholder="Password"/>
+                    <input type="password" class="smaller-input-box REQ_VAL" name="password" id="password" placeholder="Password"/>
                 </label>
-                <div class="additional-info top-padding" id="pword-info" data-toggler data-animate="fade-in fade-out">
+                <div class="additional-info top-padding" id="password-info" data-toggler data-animate="fade-in fade-out">
                     <p class="help-text no-margins">Password must be filled in.</p>
                 </div>
             </div>
         </div>
         <div class="row top-padding">
             <div class="columns">
-                <button type="submit" class="success button full-width login-button" id="login-button">
+                <button type="submit" class="success button full-width login-button" id="login-button" onclick="sendAJAXRequest('login',handleLoginResponse,'login-form');">
                     Log In
                 </button>
             </div>
@@ -97,7 +96,7 @@ $utype = $test->getSessionVariable('UserType');
                     Register
                 </a>
             </div>
-            <div class="credentials-info top-padding" id="wrong-password-text" data-toggler data-animate="fade-in fade-out">
+            <div class="credentials-info top-padding" id="invalid-credentials-message" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Invalid username or password. You can try retrieve forgotten passwords <span><a href="#">here</a>.</span></p>
             </div>
         </div>

@@ -5,7 +5,7 @@
  * Date: 2016/02/15
  * Time: 1:16 AM
  */
-    include_once $_SERVER['DOCUMENT_ROOT'] . "/php/classes/SebenzaModule.php";
+    include_once $_SERVER['DOCUMENT_ROOT'] . "/php/classes/SebenzaServer.php";
     SebenzaServer::start();
 ?>
 
@@ -33,6 +33,12 @@
     var_dump($dbHandler->getResults());
     var_dump(SebenzaServer::fetchDatabaseHandler()->getResults());
     $sessionHandler->setSessionVariable('testVariable', $dbHandler->getResultsInJSON());
+    if ($sessionHandler->exists("testVariable")) {
+        echo "The test variable stored in the session is: ".$sessionHandler->getSessionVariable('testVariable')."."."\n";
+    } else {
+        echo "The test variable does not exist in the session."."\n";
+    }
+    $sessionHandler->unsetSessionVariable("testVariable");
     if ($sessionHandler->exists("testVariable")) {
         echo "The test variable stored in the session is: ".$sessionHandler->getSessionVariable('testVariable')."."."\n";
     } else {
