@@ -119,3 +119,15 @@ function validateForm(formID) {
     }
     return success;
 }
+/*Discuss the following two functions with the group*/
+function redirectToHome() {
+    if (window.location.href != "http://localhost:31335/") {
+    window.location = '/';
+    }
+    else
+    window.location = '/userPage.php';
+
+}
+function redirectToMain(){
+    window.location = '/userPage.php';
+}

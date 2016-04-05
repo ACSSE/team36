@@ -22,6 +22,17 @@ html, body {
 .blue-link:visited , .blue-link:hover {
     color: #74beec;
 }
+/*This will probably be changed just using for the time being*/
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid black;
+    margin: 1em 0;
+    padding: 0;
+    background-color: black;
+    color: black;
+}
 
 .full-width {
     width: 100%;
@@ -139,6 +150,7 @@ html, body {
     align-items: center;
     justify-content: center;
 }
+
 
 .top-bar-button {
     height: 70%;

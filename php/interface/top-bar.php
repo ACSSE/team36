@@ -7,7 +7,7 @@
 ?>
 <header class="sebenza-top-bar">
     <div class="row collapse logo-height full-width">
-        <div class="shrink columns logo-width full-height background-colour">
+        <div class="shrink columns logo-width full-height background-colour" onclick="redirectToHome()">
             <img class="logo-height background-colour" type="image/svg+xml" src="Images/logo.svg" alt="logo"/>
         </div>
         <div class="small-expand medium-expand large-expand columns full-height background-colour">
@@ -35,7 +35,10 @@
                                             </button>';
                                 }
                                 else{
-                                    echo '<button type="button" class="top-bar-button button" id="logout-button" onclick="sendAJAXRequest(\'logout\',handleLogoutResponse);">
+                                    echo '<li><button type="button" class="success top-bar-button button" onclick="redirectToMain()">
+                                                Main
+                                                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/info-icon.svg" alt="logo"/>
+                                            </button></li><button type="button" class="top-bar-button button" id="logout-button" onclick="sendAJAXRequest(\'logout\',handleLogoutResponse);">
                                                 Log Out
                                                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
                                             </button>';

@@ -12,7 +12,6 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 ?>
 <div class="content-view">
     <?php
-    echo "The following is username and usertype:".SebenzaServer::fetchSessionHandler()->getSessionVariable('Username').SebenzaServer::fetchSessionHandler()->getSessionVariable('UserType');
     if(isset($USER_TYPE)) {
         switch ($USER_TYPE) {
             case 0:
