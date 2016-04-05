@@ -35,9 +35,9 @@
                                             </button>';
                                 }
                                 else{
-                                    echo '<li><button type="button" class="success top-bar-button button" onclick="redirectToMain()">
+                                    echo '<li><button type="button" class="success top-bar-button button" onclick="redirectToHome()">
                                                 Main
-                                                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/info-icon.svg" alt="logo"/>
+                                                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/menu-icon.svg" alt="logo"/>
                                             </button></li><button type="button" class="top-bar-button button" id="logout-button" onclick="sendAJAXRequest(\'logout\',handleLogoutResponse);">
                                                 Log Out
                                                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
