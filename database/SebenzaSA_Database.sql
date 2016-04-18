@@ -128,6 +128,18 @@ CREATE TABLE `QUOTE_REQUEST` (
   FOREIGN KEY (`HomeUser`) REFERENCES REGISTERED_USER(`Username`)
 );
 
+DROP TABLE IF EXISTS `BOOKMARKED`;
+CREATE TABLE `BOOKMARKED` (
+  `BookmarkID` integer not null auto_increment,
+  `UserSet` varchar(40) not null unique,
+  `BookmarkedUser` varchar(40) not null unique,
+  `WorkType` varchar(15) not null unique,
+  PRIMARY KEY (`BookmarkID`),
+  FOREIGN KEY (`UserSet`) REFERENCES REGISTERED_USER(`Username`),
+  FOREIGN KEY (`BookmarkedUser`) REFERENCES REGISTERED_USER(`Username`),
+  FOREIGN KEY (`WorkType`) REFERENCES SPECIALIZATIONS_PER_USER(`WorkType`)
+);
+
 
 INSERT 	 INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`)
 	VALUES	('firstUser', 'user1@email.co.za', '0831231234', 0, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name1', 'surname1'),
