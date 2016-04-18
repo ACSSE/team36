@@ -116,8 +116,8 @@ CREATE TABLE `JOB_PER_USER` (
   FOREIGN KEY (`QuoteNumber`) REFERENCES QUOTE_PER_USER(`QuoteNumber`)
 );
 
-DROP TABLE IF EXISTS `HOMEUSER`;
-CREATE TABLE `HOMEUSER` (
+DROP TABLE IF EXISTS `QUOTE_REQUEST`;
+CREATE TABLE `QUOTE_REQUEST` (
   `RequestID` integer not null auto_increment,
   `RequestedUser` varchar(40) not null unique,
   `HomeUser` varchar(40) not null unique,
