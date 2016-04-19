@@ -14,7 +14,7 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
         <div class="background-colour centered-div">
             <h1>Contact Details:</h1>
             <h5>Brandon Faul:</h5><p>215040496@student.uj.ac.za</p><br>
-            <h5>Nick:</h5><p>@student.uj.ac.za</p><br>
+            <h5>Nick:</h5><p>201325732@student.uj.ac.za</p><br>
             <h5>Zahkele:</h5><p>@student.uj.ac.za</p><br>
         </div>
         </div>
