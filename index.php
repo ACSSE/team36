@@ -9,6 +9,19 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/open-html.php";
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 
 ?>
+    <script>
+        function initialize() {
+            var mapProp = {
+                center:new google.maps.LatLng(-26.1657905,28.163748),
+                zoom:8,
+                mapTypeId:google.maps.MapTypeId.ROADMAP
+            };
+            var map=new google.maps.Map(document.getElementById("googleMap"), mapProp);
+        }
+        google.maps.event.addDomListener(window, 'load', initialize);
+        //need to have the map resize without affecting the other elements.
+        //google.maps.event.addDomListener(window, 'resize', initialize);
+    </script>
     <div class="content-view">
         <div>
             <div class="orbit" aria-label="Favorite Home Pictures" data-orbit data-use-m-u-i="false">

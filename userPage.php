@@ -12,9 +12,8 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 ?>
 <div class="content-view">
     <?php
-    echo "The following is username and usertype:".SebenzaServer::fetchSessionHandler()->getSessionVariable('Username').SebenzaServer::fetchSessionHandler()->getSessionVariable('UserType');
-    if(isset($utype)) {
-        switch ($utype) {
+    if(isset($USER_TYPE)) {
+        switch ($USER_TYPE) {
             case 0:
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-main-page.php";
                 break;
@@ -25,12 +24,11 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-main-page.php";
                 break;
             default:
-                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/temporary-main-page.php";
+                SebenzaServer::redirect("/");
                 break;
         }
-    }
-    else{
-        include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/temporary-main-page.php";
+    } else {
+        SebenzaServer::redirect("/");
     }
     ?>
 </div>
@@ -38,6 +36,3 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/bottom-bar.php";
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/close-html.php";
 ?>
-
-
-

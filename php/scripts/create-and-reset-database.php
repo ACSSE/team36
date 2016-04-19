@@ -5,7 +5,7 @@
  * Date: 3/31/16
  * Time: 10:51 PM
  */
-include_once $_SERVER['DOCUMENT_ROOT'] . "/php/classes/SebenzaModule.php";
+include_once $_SERVER['DOCUMENT_ROOT'] . "/php/classes/SebenzaServer.php";
 SebenzaServer::start();
 ?>
 

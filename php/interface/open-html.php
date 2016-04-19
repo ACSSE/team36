@@ -5,10 +5,13 @@
  * Date: 2016/03/28
  * Time: 3:23 PM
  */
-include_once $_SERVER['DOCUMENT_ROOT']."/php/classes/SebenzaModule.php";
-//Any php redirect related code should happen here (e.g. logout)
-
-
+include_once $_SERVER['DOCUMENT_ROOT'] . "/php/classes/SebenzaServer.php";
+if (SebenzaServer::fetchSessionHandler()->exists('UserType')) {
+    $USER_TYPE = SebenzaServer::fetchSessionHandler()->getSessionVariable("UserType");
+} else {
+    $USER_TYPE = -1;
+}
+//Any php redirect related code should happen here, before text is sent to the client
 SebenzaServer::start();
 ?>
 <!DOCTYPE html>
@@ -32,20 +35,6 @@ SebenzaServer::start();
     <script src="foundation-6/js/jquery.js"></script>
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="javascript/sebenza.js"></script>
-
-    <script>
-        function initialize() {
-            var mapProp = {
-                center:new google.maps.LatLng(-26.1657905,28.163748),
-                zoom:8,
-                mapTypeId:google.maps.MapTypeId.ROADMAP
-            };
-            var map=new google.maps.Map(document.getElementById("googleMap"), mapProp);
-        }
-        google.maps.event.addDomListener(window, 'load', initialize);
-        //need to have the map resize without affecting the other elements.
-        //google.maps.event.addDomListener(window, 'resize', initialize);
-    </script>
 </head>
 <body>
     <div class="page-container">

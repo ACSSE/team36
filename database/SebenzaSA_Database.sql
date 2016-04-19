@@ -12,6 +12,7 @@ CREATE TABLE `REGISTERED_USER` (
   `ContactNumber` varchar(15) not null,
 	`TypeOfUser` tinyint not null,
   `Password` varchar(255) not null,
+  `PositiveUserRating` integer not null,
 	PRIMARY KEY (`UserID`)
 );
 
@@ -62,6 +63,83 @@ CREATE TABLE `SPECIALIZATIONS_PER_USER` (
   FOREIGN KEY (`Username`) REFERENCES TRADE_WORKER(`Username`),
   FOREIGN KEY (`WorkType`) REFERENCES SPECIALIZATIONS(`WorkType`)
 );
+
+DROP TABLE IF EXISTS `CONTRACTOR`;
+CREATE TABLE `CONTRACTOR` (
+  `contractorID` integer not null auto_increment,
+  `Username` varchar(40) not null unique,
+  `BusinessName` varchar(40) not null unique,
+  `BusinessDescription` varchar(40) not null,
+  `BusinessHours` varchar(40) not null,
+  `WorkType` varchar(15) not null,
+  `Availability` boolean not null,
+  PRIMARY KEY (`contractorID`),
+  FOREIGN KEY (`Username`) REFERENCES REGISTERED_USER(`Username`),
+  FOREIGN KEY (`WorkType`) REFERENCES SPECIALIZATIONS(`WorkType`)
+);
+
+DROP TABLE IF EXISTS `HOMEUSER`;
+CREATE TABLE `HOMEUSER` (
+	`homeuserID` integer not null auto_increment,
+	`Username` varchar(40) not null unique,
+  `Subscribed` boolean not null,
+	PRIMARY KEY (`homeuserID`),
+	FOREIGN KEY (`Username`) REFERENCES REGISTERED_USER(`Username`)
+);
+
+DROP TABLE IF EXISTS `QUOTE_PER_USER`;
+CREATE TABLE `QUOTE_PER_USER` (
+  `QuoteID` integer not null auto_increment,
+  `QuoteNumber` integer not null unique,
+  `QuotedUser` varchar(40) not null,
+  `QuoteProducer` varchar(40) not null,
+  `QuoteDescription` varchar(40) not null,
+  `DateInitialised` date not null,
+  `QuoteProceedDate` date not null,
+  `QuotePrice` double not null,
+  `QuotedTime` integer not null,
+  `JobProceedDate` date not null,
+  `Status` boolean not null,
+  PRIMARY KEY (`QuoteID`),
+  FOREIGN KEY (`QuoteProducer`) REFERENCES REGISTERED_USER(`Username`)
+);
+
+DROP TABLE IF EXISTS `JOB_PER_USER`;
+CREATE TABLE `JOB_PER_USER` (
+  `JobID` integer not null auto_increment,
+  `QuoteNumber` integer not null unique,
+  `JobProceedDate` date not null,
+  `AgreedPrice` double not null,
+  `EstimatedCompletionDate` date not null,
+  `Status` boolean not null,
+  PRIMARY KEY (`JobID`),
+  FOREIGN KEY (`QuoteNumber`) REFERENCES QUOTE_PER_USER(`QuoteNumber`)
+);
+
+DROP TABLE IF EXISTS `QUOTE_REQUEST`;
+CREATE TABLE `QUOTE_REQUEST` (
+  `RequestID` integer not null auto_increment,
+  `RequestedUser` varchar(40) not null unique,
+  `HomeUser` varchar(40) not null unique,
+  `DateInitialised` date not null,
+  `Status` boolean not null,
+  PRIMARY KEY (`RequestID`),
+  FOREIGN KEY (`RequestedUser`) REFERENCES REGISTERED_USER(`Username`),
+  FOREIGN KEY (`HomeUser`) REFERENCES REGISTERED_USER(`Username`)
+);
+
+DROP TABLE IF EXISTS `BOOKMARKED`;
+CREATE TABLE `BOOKMARKED` (
+  `BookmarkID` integer not null auto_increment,
+  `UserSet` varchar(40) not null unique,
+  `BookmarkedUser` varchar(40) not null unique,
+  `WorkType` varchar(15) not null unique,
+  PRIMARY KEY (`BookmarkID`),
+  FOREIGN KEY (`UserSet`) REFERENCES REGISTERED_USER(`Username`),
+  FOREIGN KEY (`BookmarkedUser`) REFERENCES REGISTERED_USER(`Username`),
+  FOREIGN KEY (`WorkType`) REFERENCES SPECIALIZATIONS_PER_USER(`WorkType`)
+);
+
 
 INSERT 	 INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`)
 	VALUES	('firstUser', 'user1@email.co.za', '0831231234', 0, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name1', 'surname1'),
