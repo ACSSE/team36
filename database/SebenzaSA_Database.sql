@@ -12,7 +12,7 @@ CREATE TABLE `REGISTERED_USER` (
   `ContactNumber` varchar(15) not null,
 	`TypeOfUser` tinyint not null,
   `Password` varchar(255) not null,
-  `PositiveUserRating` integer not null,
+  `UserRecommendationRating` integer not null,
 	PRIMARY KEY (`UserID`)
 );
 

@@ -3239,7 +3239,7 @@ table.hover tr:nth-of-type(even):hover {
       color:black; }
 
 .tabs-content {
-  background: #fefefe;
+  background: rgba(188, 188, 188, 0.5);
   transition: all 0.5s ease;
   border: 1px solid #e6e6e6;
   border-top: 0; }
@@ -3251,7 +3251,8 @@ table.hover tr:nth-of-type(even):hover {
 .tabs-panel {
   display: none;
   padding: 1rem black;
-background-color: #ffae00}
+background-color: rgba(188, 188, 188, 0)
+}
   .tabs-panel.is-active {
     display: block; }
 

@@ -7,9 +7,6 @@
 $PAGE_TITLE = "Register";
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/open-html.php";
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
-    if(isset($USER_TYPE)) {
-        SebenzaServer::redirect("/userPage.php");
-    }
 ?>
 
     <div class="content-view">
