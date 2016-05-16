@@ -24,10 +24,6 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 
     </script>
     <div class="content-view">
-        <?php
-        echo 'This is the type of user'.$USER_TYPE.'<br>';
-        echo 'This is the session variable user_type'.isset($USER_TYPE);
-        ?>
         <div>
             <div class="orbit" aria-label="Favorite Home Pictures" data-orbit data-use-m-u-i="false">
                 <ul class="orbit-container">

@@ -18,9 +18,9 @@ SebenzaServer::start();
 <?php
 echo "<pre>";
     if (SebenzaServer::createAndResetDatabase()) {
-        echo 'Database created and reset.\n';
+        echo 'Database created and reset.';
     } else {
-        echo 'Could not successfully create and reset the database.\n';
+        echo 'Could not successfully create and reset the database.';
         var_dump(SebenzaServer::fetchDatabaseHandler()->getCommandsReport());
     }
 echo "</pre>";

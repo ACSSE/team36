@@ -7,15 +7,17 @@
  */?>
 
 <div class="row collapse background-image">
-    <div class="large-3 columns">
-        <ul class="tabs vertical" id="example-vert-tabs" data-tabs>
+    <div class="large-3 columns full-height">
+        <ul class="tabs vertical full-height" id="example-vert-tabs" data-tabs>
             <li class="tabs-title is-active"><a class="tab-button" href="#panel1v">Manage profile</a></li>
             <li class="tabs-title"><a class="tab-button" href="#panel2v">Manage Job Requests</a></li>
             <li class="tabs-title"><a class="tab-button" href="#panel3v">View Job History</a></li>
+            <li class="tabs-title"><a class="tab-button" href="#panel4v">Quote management</a></li>
+            <li class="tabs-title"><a class="tab-button" href="#panel5v">Job History</a></li>
         </ul>
     </div>
-    <div class="large-9 columns">
-        <div class="tabs-content vertical" data-tabs-content="example-vert-tabs">
+    <div class="large-9 columns  full-height">
+        <div class="tabs-content vertical full-height" data-tabs-content="example-vert-tabs">
             <div class="tabs-panel is-active" id="panel1v">
                 <h1>Manage profile</h1>
                 <div class="row">
@@ -48,7 +50,7 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="large-12 columns">
+                    <div class="large-12 columns full-height">
                         <label>speciality</label>
                         <select>
                             <option value="Painter">Painter</option>
@@ -85,14 +87,52 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel" id="panel2v">
+            <div class="tabs-panel full-height" id="panel2v">
                 <h1>Manage Job Requests</h1>
                The following still needs to be added
             </div>
-            <div class="tabs-panel" id="panel3v">
+            <div class="tabs-panel full-height" id="panel3v">
                 <h1>View Job History</h1>
                 The following still needs to be added
             </div>
+            <div class="tabs-panel full-height" id="panel4v">
+                <div class="row">
+                    <div class="large-12 medium-12 columns">
+                        <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
+                        <input type="radio" name="contractor" value="contractor1" id="contractor1"><label for="contractor1">Paint Co</label><label for="contractor1">R4500</label><label for="contractor1">Commencement date: 25/04/16</label><hr>
+                        <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
+                        <input type="radio" name="contractor" value="contractor2" id="contractor2"><label for="contractor2">Paint Co1</label><label for="contractor2">R4200</label><label for="contractor2"></label><label for="contractor1">Commencement date: 01/05/16</label>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="large-12 medium-12 columns">
+                        <a href="#" class="float-left medium secondary button radius">View Quote</a>
+                    </div>
+                </div>
+            </div>
+            <div class="tabs-panel full-height" id="panel5v" style="max-height: 600px;overflow-y: scroll">
+                <div class="row">
+                    <div class="large-12 medium-12 columns full-height">
+                        <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
+                        <input type="radio" name="manageJob" value="contractor1" id="contractor1"><label for="contractor1">Job 1</label><label for="contractor1">Paint Co</label><label for="contractor1">R4500</label><label for="contractor1">Completion date: 01/01/16</label><label for="contractor1">Job rating: like</label><label for="contractor1">Contractor rating: like</label><hr>
+                        <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
+                        <input type="radio" name="manageJob" value="worker2" id="worker2"><label for="worker2">Job 1</label><label for="worker2">Joe Mason</label><label for="worker2">R1000</label><label for="worker2">Completion date: 15/01/16</label><label for="worker2">Job rating: no rating provided</label><label for="worker2">Worker rating: no rating provided</label><hr>
+                        <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
+                        <input type="radio" name="manageJob" value="contractor3" id="contractor3"><label for="contractor3">Job 1</label><label for="contractor3">Paver Co</label><label for="contractor3">R4500</label><label for="contractor3">Completion date: 20/02/16</label><label for="contractor3">Job rating: like</label><label for="contractor3">Contractor rating: no rating provided</label><hr>
+                        <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
+                        <input type="radio" name="manageJob" value="worker4" id="worker4"><label for="worker4">Job 1</label><label for="worker4">Dill Harper</label><label for="worker4">R2500</label><label for="worker4">Completion date: 15/03/16</label><label for="worker4">Job rating: like</label><label for="worker4">Worker rating: like</label>
+                        <input type="radio" name="manageJob" value="worker5" id="worker5"><label for="worker5">Job 2</label><label for="worker5">Dill Harper</label><label for="worker5">R1500</label><label for="worker5">Completion date: 25/03/16</label><label for="worker4">Job rating: like</label><label for="worker5">Worker rating: like</label>
+                    </div>
+                </div>
+                <hr>
+                <div class="row">
+                    <div class="large-12 medium-12 columns">
+                        <a href="#" class="float-left medium secondary button radius">View Job details</a>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 </div>

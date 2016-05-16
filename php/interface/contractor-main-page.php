@@ -7,20 +7,20 @@
  */?>
 
 <div class="row collapse background-image">
-    <div class="large-3 columns">
-        <ul class="tabs vertical" id="example-vert-tabs" data-tabs>
-            <li class="tabs-title is-active"><a class="tab-button" href="#panel1v">Manage Jobs</a></li>
-            <li class="tabs-title"><a class="tab-button" href="#panel2v">Manage Quotes</a></li>
-            <li class="tabs-title"><a class="tab-button" href="#panel3v">Manage Teams</a></li>
-            <li class="tabs-title"><a class="tab-button" href="#panel4v">Manage Account</a></li>
-            <li class="tabs-title"><a class="tab-button" href="#panel5v">Manage Profile</a></li>
-            <li class="tabs-title"><a class="tab-button" href="#panel6v">View Job History</a></li>
-            <li class="tabs-title"><a class="tab-button" href="#panel7v">Create New Job</a></li>
+    <div class="small-3 columns full-height">
+        <ul class="tabs vertical full-height" id="example-vert-tabs" data-tabs>
+            <li class="tabs-title is-active"><a href="#panel1v">Manage Jobs</a></li>
+            <li class="tabs-title"><a href="#panel2v">Manage Quotes</a></li>
+            <li class="tabs-title"><a href="#panel3v">Manage Teams</a></li>
+            <li class="tabs-title"><a href="#panel4v">Manage Account</a></li>
+            <li class="tabs-title"><a href="#panel5v">Manage Profile</a></li>
+            <li class="tabs-title"><a href="#panel6v">View Job History</a></li>
+            <li class="tabs-title"><a href="#panel7v">Create New Job</a></li>
         </ul>
     </div>
-    <div class="large-9 columns">
-        <div class="tabs-content vertical" data-tabs-content="example-vert-tabs">
-            <div class="tabs-panel is-active" id="panel1v">
+    <div class="small-9 columns full-height">
+        <div class="tabs-content vertical full-height" data-tabs-content="example-vert-tabs">
+            <div class="tabs-panel full-height is-active" id="panel1v">
                 <h3>Job Management</h3>
                 <hr>
                 <div class="row">
@@ -49,7 +49,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel" id="panel2v">
+            <div class="tabs-panel full-height" id="panel2v">
                 <h3>Manage Quotes</h3>
                 <hr>
                 <div class="row">
@@ -84,7 +84,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel" id="panel3v">
+            <div class="tabs-panel full-height" id="panel3v">
                 <h3> Manage Teams </h3>
                 <hr>
                 <div class="row">
@@ -113,16 +113,16 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel" id="panel4v">
+            <div class="tabs-panel full-height" id="panel4v">
                 <h3>Manage Account</h3>
             </div>
-            <div class="tabs-panel" id="panel5v">
+            <div class="tabs-panel full-height" id="panel5v">
                 <h3>Manage Profile</h3>
             </div>
-            <div class="tabs-panel" id="panel6v">
+            <div class="tabs-panel full-height" id="panel6v">
                 <h3>View Job History</h3>
             </div>
-            <div class="tabs-panel" id="panel7v">
+            <div class="tabs-panel full-height" id="panel7v">
                 <h3>Create New Job</h3>
             </div>
         </div>
