@@ -21,6 +21,7 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
         google.maps.event.addDomListener(window, 'load', initialize);
         //need to have the map resize without affecting the other elements.
         //google.maps.event.addDomListener(window, 'resize', initialize);
+
     </script>
     <div class="content-view">
         <div>

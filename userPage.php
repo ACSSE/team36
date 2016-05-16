@@ -11,6 +11,7 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/open-html.php";
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 ?>
 <div class="content-view">
+    <!--Notification pull starts here-->
     <?php
     if(isset($USER_TYPE)) {
         switch ($USER_TYPE) {
@@ -21,6 +22,7 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/contractor-main-page.php";
                 break;
             case 2:
+                //echo 'UserID: '.SebenzaServer::fetchSessionHandler()->getSessionVariable("UserID");
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-main-page.php";
                 break;
             default:

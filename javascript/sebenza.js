@@ -9,6 +9,52 @@ $(document).ready(function () {
     $('form').submit(function () {return false;});
 });
 
+var NOTIFICATION_DISPLAY_TIMEOUT = 5000;  //How long a notification shows
+var NEXT_NOTIFICATION_DELAY = 1000;  //How long between notifications - has to be longer than notification animation
+var NOTIFICATION_PULL_INTERVAL = 15000; //How often notifications are pulled from the server
+var notificationArray = []; //Stores the notifications fetched from the server
+
+function startNotificationPulls() {
+    sendAJAXRequest('fetch_notifications', handleNotifications);
+    setInterval(sendAJAXRequest, NOTIFICATION_PULL_INTERVAL, 'fetch_notifications', handleNotifications);
+}
+
+function handleNotifications(response) {
+    var notifications = JSON.parse(response);
+    var originalNotificationCount = notificationArray.length;
+    if (Array.isArray(notifications) && notifications.length >= 1) {
+        for (var i = 0; i < notifications.length; i++) {
+            if (typeof notifications[i] == 'string') {
+                notificationArray.push(notifications[i]);
+                console.log("Added notification: " + notifications[i]);
+            }
+        }
+        if (originalNotificationCount == 0) {
+            showNotification();
+        }
+    }
+}
+
+function showNotification() {
+    if (notificationArray.length > 0 && typeof notificationArray[0] == 'string') {
+        document.getElementById('notification-content').innerHTML = notificationArray[0];
+        toggleNotification();
+        setTimeout(closeNotification, NOTIFICATION_DISPLAY_TIMEOUT);
+    }
+}
+
+function closeNotification() {
+    toggleNotification();
+    notificationArray.shift();
+    if (notificationArray.length > 0) {
+        setTimeout(showNotification, NEXT_NOTIFICATION_DELAY);
+    }
+}
+
+function toggleNotification() {
+    $('#notification-panel').foundation('toggle');
+}
+
 function sendAJAXRequest (action, responseFunction, formID) {
     //Check the types of the parameters
     if (typeof action == 'string' && typeof responseFunction == 'function' && (typeof formID == 'string' || formID == null)) {

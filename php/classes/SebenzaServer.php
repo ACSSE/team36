@@ -32,13 +32,14 @@ class SebenzaServer {
             $dbHandler = self::fetchDatabaseHandler();
             $sessionHandler = self::fetchSessionHandler();
             //Fetch the relevant user's data
-            $dbHandler->runCommand("SELECT `Password`,`Username`,`TypeOfUser` FROM REGISTERED_USER WHERE `Username` = ?", $username);
+            $dbHandler->runCommand("SELECT `Password`,`UserID`,`Username`,`TypeOfUser` FROM REGISTERED_USER WHERE `Username` = ?", $username);
             $result = $dbHandler->getResults();
             //If a single result was returned and the password matches the hashed password stored in the database
             if (count($result) == 1 && password_verify($password, $result[0]['Password'])) {
                 //Mark success
                 $successfulLogin = true;
                 //Set any variables you want access to in the session
+                $sessionHandler->setSessionVariable("UserID",$result[0]['UserID']);
                 $sessionHandler->setSessionVariable("Username", $result[0]['Username']);
                 $sessionHandler->setSessionVariable("UserType", $result[0]['TypeOfUser']);
             }
@@ -93,6 +94,35 @@ class SebenzaServer {
     public static function hashPassword($password):string {
         return password_hash($password,PASSWORD_DEFAULT);
     }
+    
+    public static function addNotification($userID, $message):bool {
+        $returnValue = false;
+        if (is_int($userID) && is_string($message)) {
+            $dbHandler = self::fetchDatabaseHandler();
+            $command = "INSERT INTO `NOTIFICATION` (`UserID`,`Message`) VALUES (?, ?)";
+            $returnValue = $dbHandler->runCommand($command, $userID, $message);
+        }
+        return $returnValue;
+    }
+
+    public static function pullNotifications():array {
+        $returnValue = array();
+        if (self::fetchSessionHandler()->exists('UserID')) {
+            $uid = self::fetchSessionHandler()->getSessionVariable('UserID');
+            $command = "SELECT `NotificationID`,`Message` FROM `NOTIFICATION` WHERE `UserID` = ? AND `Pulled` = false AND `Pushed` = false AND `Expired` = false";
+            $dbHandler = self::fetchDatabaseHandler();
+            if ($dbHandler->runCommand($command, $uid)) {
+                $results = $dbHandler->getResults();
+                if (count($results) > 0) {
+                    foreach ($results as $result) {
+                        $returnValue[] = $result['Message'];
+                        $dbHandler->runCommand("UPDATE `NOTIFICATION` SET `Pulled` = true WHERE `NotificationID` = ?", $result['NotificationID']);
+                    }
+                }
+            }
+        }
+        return $returnValue;
+    }
 }
 
 //The following code handles ajax requests sent to SessionModule.php as in sebenza.js for the login functionality
@@ -104,6 +134,9 @@ if (!empty($_POST)) {
     if (isset($_POST['action'])) {
         $action = $_POST['action'];
         switch ($action) {
+            case 'fetch_notifications':
+                $response = json_encode(SebenzaServer::pullNotifications());
+                break;
             case 'login':
                 if (isset($_POST['username']) && isset($_POST['password'])) {
                     $response = json_encode(SebenzaServer::login($_POST['username'], $_POST['password']));

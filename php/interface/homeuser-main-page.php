@@ -4,22 +4,24 @@
  * User: Brandon Faul
  * Date: 2016/04/01
  * Time: 7:09 PM
- */?>
+ */
+    //SebenzaServer::addNotification(9,"This is a new notification(duplication)");
+?>
 <div class="row collapse background-image" xmlns="http://www.w3.org/1999/html">
-    <div class="large-3 columns">
-        <ul class="tabs vertical" id="example-vert-tabs" data-tabs>
-            <li class="tabs-title is-active"><a class="tab-button" href="#panel1v">Request trade worker(s)</a></li>
-            <li class="tabs-title"><a class="tab-button" href="#panel2v">Request contractor(s)</a></li>
-            <li class="tabs-title"><a class="tab-button" href="#panel3v">Job management</a></li>
-            <li class="tabs-title"><a class="tab-button" href="#panel4v">Quote management</a></li>
-            <li class="tabs-title"><a class="tab-button" href="#panel5v">Job History</a></li>
-            <li class="tabs-title"><a class="tab-button" href="#panel6v">Profile Management</a></li>
-            <li class="tabs-title"><a class="tab-button" href="#panel7v">Bookmarked tradeworkers/contractors</a></li>
+    <div class="small-3 columns full-height">
+        <ul class="tabs vertical full-height" id="example-vert-tabs" data-tabs>
+            <li class="tabs-title is-active"><a href="#panel1v">Request trade worker(s)</a></li>
+            <li class="tabs-title"><a href="#panel2v">Request contractor(s)</a></li>
+            <li class="tabs-title"><a href="#panel3v">Job management</a></li>
+            <li class="tabs-title"><a href="#panel4v">Quote management</a></li>
+            <li class="tabs-title"><a href="#panel5v">Job History</a></li>
+            <li class="tabs-title"><a href="#panel6v">Profile Management</a></li>
+            <li class="tabs-title"><a href="#panel7v">Bookmarked tradeworkers/contractors</a></li>
         </ul>
     </div>
-    <div class="large-9 columns">
-        <div class="tabs-content vertical" data-tabs-content="example-vert-tabs">
-            <div class="tabs-panel is-active" id="panel1v">
+    <div class="small-9 columns full-height">
+        <div class="tabs-content vertical full-height" data-tabs-content="example-vert-tabs" style="max-height: 100%">
+            <div class="tabs-panel full-height is-active" id="panel1v">
                 <h1>Request Trade Workers</h1>
                 <div class="row">
                     <div class="large-12 medium-12 columns">
@@ -46,7 +48,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel" id="panel2v">
+            <div class="tabs-panel full-height" id="panel2v">
                 <h1>Request Trade Workers</h1>
                 <div class="row">
                     <div class="large-12 medium-12 columns">
@@ -73,7 +75,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel" id="panel3v">
+            <div class="tabs-panel full-height" id="panel3v">
                 <div class="row">
                     <div class="large-12 medium-12 columns">
                         <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
@@ -93,7 +95,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel" id="panel4v">
+            <div class="tabs-panel full-height" id="panel4v">
                 <div class="row">
                     <div class="large-12 medium-12 columns">
                         <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
@@ -109,7 +111,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel" id="panel5v" style="max-height: 800px;overflow-y: scroll">
+            <div class="tabs-panel full-height" id="panel5v" style="max-height: 800px;overflow-y: scroll">
                 <div class="row">
                     <div class="large-12 medium-12 columns">
                         <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
@@ -130,7 +132,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel" id="panel6v">
+            <div class="tabs-panel full-height" id="panel6v">
                 <form>
                     <h1>Registration form: Trade Worker</h1>
                     <div class="row">
@@ -178,7 +180,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel" id="panel7v">
+            <div class="tabs-panel full-height" id="panel7v">
                 <div class="row">
                     <div class="large-12 medium-12 columns">
                         <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">

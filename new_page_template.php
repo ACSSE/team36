@@ -9,7 +9,7 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/open-html.php";
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 ?>
     <div class="content-view">
-
+        
     </div>
 <?php
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/bottom-bar.php";
