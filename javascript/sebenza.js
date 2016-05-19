@@ -55,6 +55,10 @@ function toggleNotification() {
     $('#notification-panel').foundation('toggle');
 }
 
+function modalToggler(){
+    redirectToHome();
+}
+
 function sendAJAXRequest (action, responseFunction, formID) {
     //Check the types of the parameters
     if (typeof action == 'string' && typeof responseFunction == 'function' && (typeof formID == 'string' || formID == null)) {
@@ -174,4 +178,10 @@ function redirectToHome(){
     }
     else
     window.location = '/userPage.php';
+}
+
+/*The following function fills up the userPageModal-medium-large with information related to it*/
+function homeUserModalFill(type,location) {
+    console.log("Filling job details");
+    document.getElementById("jobDescript").innerHTML = "<h4>Job Description</h4><hr>" + "The type of job:" + type + "<br> The location of the job:" + location;
 }

@@ -20,32 +20,64 @@
     </div>
     <div class="small-9 columns full-height">
         <div class="tabs-content vertical full-height" data-tabs-content="example-vert-tabs">
-            <div class="tabs-panel full-height is-active" id="panel1v">
-                <h3>Job Management</h3>
-                <hr>
-                <div class="row">
-                    <div class="large-6 columns">
-                        <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of Job." style="width: 150px;height: 150px;">
-                        <input type="radio" name="Job" value="Job1" id="Job1"><label for="Job1">Painting Job <br> Location: Soweto</label>
+            <div class="tabs-panel full-height is-active large-12" style="padding: 0;overflow: auto" id="panel1v">
+
+                <ul class="tabs" data-tabs id="example-tabs">
+                    <li class="tabs-title is-active"><a href="#panel1" aria-selected="true">Job Request</a></li>
+                    <li class="tabs-title"><a href="#panel2">Ongoing Jobs</a></li>
+                    <li class="tabs-title"><a href="#panel3">Finished Jobs</a></li>
+                    <li class="tabs-title"><a href="#panel4">Unfinished Jobs</a></li>
+                </ul>
+                <div class="tabs-content" data-tabs-content="example-tabs">
+                    <div class="tabs-panel is-active small-12 large-12 " id="panel1">
+                        <div class="row">
+                            <div class="large-6 small-12 columns">
+                                <label>Sort By:</label>
+                                <select>
+                                    <option value="date">Date</option>
+                                    <option value="price">Price</option>
+                                    <option value="duration">Duration</option>
+                                </select>
+                            </div>
+                            <div class="large-6 small-12 columns">
+                                <label>Search:</label>
+                                <input type="text" placeholder="Live Search"/>
+                            </div>
+                            <div class="large-12 small-12 columns"><p>Select from the following list to further interact:<p></div>
+                        </div>
+                        <div class="row" data-toggle="userPageModal-medium-large" onclick='homeUserModalFill("Painting","Soweto")'>
+                            <div class="large-6 small-12 columns">
+                                <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of Job." style="width: 150px;height: 150px;">
+                                <input type="radio" name="Job" value="Job1" id="Job1"><label for="Job1">Painting Job <br> Location: Soweto</label>
+                            </div>
+                        </div>
+                        <div class="row" data-toggle="userPageModal-medium-large" onclick='homeUserModalFill("Building","Kruger Park")'>
+                            <div class="large-6 small-12 columns">
+                                <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of Job." style="width: 150px;height: 150px;">
+                                <input type="radio" name="Job" value="Job2" id="Job2"><label for="Job2">Building Job <br> Location: Kruger Park</label>
+                            </div>
+                        </div>
+                        <div class="row" data-toggle="userPageModal-medium-large" onclick='homeUserModalFill("Tiling","Soweto")'>
+                            <div class="large-6 small-12 columns">
+                                <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of Job." style="width: 150px;height: 150px;">
+                                <input type="radio" name="Job" value="Job3" id="Job3"><label for="Job3">Tiling Job <br> Location: Soweto</label>
+                            </div>
+                        </div>
+                        <div class="row" data-toggle="userPageModal-medium-large" onclick='homeUserModalFill("Painting","Heidelburg")'>
+                            <div class="large-6 small-12 columns">
+                                <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of Job." style="width: 150px;height: 150px;">
+                                <input type="radio" name="Job" value="Job4" id="Job4"><label for="Job4">Painting Job <br> Location: Heidelburg</label>
+                            </div>
+                        </div>
                     </div>
-                    <div class="large-6 columns">
-                        <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of Job." style="width: 150px;height: 150px;">
-                        <input type="radio" name="Job" value="Job2" id="Job2"><label for="Job2">Building Job <br> Location: Kruger Park</label>
+                    <div class="tabs-panel full-height large-12" id="panel2">
+                        <p>Suspendisse dictum feugiat nisl ut dapibus.  Vivamus hendrerit arcu sed erat molestie vehicula. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.  Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor.</p>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="large-6 columns">
-                        <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of Job." style="width: 150px;height: 150px;">
-                        <input type="radio" name="Job" value="Job3" id="Job3"><label for="Job3">Tiling Job <br> Location: Soweto</label>
+                    <div class="tabs-panel full-height large-12" id="panel3">
+                        <p>Suspendisse dictum feugiat nisl ut dapibus.  Vivamus hendrerit arcu sed erat molestie vehicula. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.  Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor.</p>
                     </div>
-                    <div class="large-6 columns">
-                        <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of Job." style="width: 150px;height: 150px;">
-                        <input type="radio" name="Job" value="Job4" id="Job4"><label for="Job4">Painting Job <br> Location: Heidelburg</label>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="large-12 medium-12 columns">
-                        <a href="#" class="float-left medium secondary button radius">Job Management</a>
+                    <div class="tabs-panel full-height large-12" id="panel4">
+                        <p>Suspendisse dictum feugiat nisl ut dapibus.  Vivamus hendrerit arcu sed erat molestie vehicula. Ut in nulla enim. Phasellus molestie magna non est bibendum non venenatis nisl tempor.  Sed auctor neque eu tellus rhoncus ut eleifend nibh porttitor.</p>
                     </div>
                 </div>
             </div>
@@ -80,7 +112,7 @@
                 </div>
                 <div class="row">
                     <div class="large-12 medium-12 columns">
-                        <a href="#" class="float-left medium secondary button radius">Manage Quotes</a>
+                        <a href="#" class="sebenza-select-button medium secondary button radius">Manage Quotes</a>
                     </div>
                 </div>
             </div>
@@ -115,6 +147,7 @@
             </div>
             <div class="tabs-panel full-height" id="panel4v">
                 <h3>Manage Account</h3>
+
             </div>
             <div class="tabs-panel full-height" id="panel5v">
                 <h3>Manage Profile</h3>
@@ -124,6 +157,27 @@
             </div>
             <div class="tabs-panel full-height" id="panel7v">
                 <h3>Create New Job</h3>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="background-colour hide-for-small-only" id="userPageModal-medium-large" data-toggler data-closable data-animate="hinge-in-from-top hinge-out-from-bottom">
+    <!--http://foundation.zurb.com/sites/docs/forms.html-->
+    <button class="close-button" data-close>&times;</button>
+    <div id="jobDescript">
+    </div>
+    <div class="sebenza-select-button">
+        <div class="row">
+            <div class="columns">
+                <button type="button" class="alert button login-button" id=reject-button">
+                    Reject
+                </button>
+            </div>
+            <div class="columns">
+                <button type="button" class="success button login-button" id=success-button">
+                    Accept
+                </button>
             </div>
         </div>
     </div>
