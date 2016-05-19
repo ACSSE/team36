@@ -181,7 +181,16 @@ function redirectToHome(){
 }
 
 /*The following function fills up the userPageModal-medium-large with information related to it*/
-function homeUserModalFill(type,location) {
+function homeUserJobRequestModalFill(type, location) {
     console.log("Filling job details");
     document.getElementById("jobDescript").innerHTML = "<h4>Job Description</h4><hr>" + "The type of job:" + type + "<br> The location of the job:" + location;
+    var button = ' <div class="sebenza-select-button"><div class="row align-center"><div class="columns"><button type="button" class="alert button login-button" id=reject-job-button">Reject</button></div><div class="columns"><button type="button" class="success button login-button" id=complete-button">Accept</button></div></div></div>';
+    document.getElementById("jobDescript").innerHTML += button;
+}
+
+function homeUserOngoingJobModalFill(type, location){
+    document.getElementById("jobDescript").innerHTML = "<h4>Job Description</h4><hr>" + "The type of job:" + type + "<br> The location of the job:" + location;
+    var button = ' <div class="sebenza-select-button"><div class="row"><div class="columns"><button type="button" class="alert button login-button" id=terminate-job-button">Terminate</button></div><div class="columns align-center"><button type="button" class="warning button login-button" id=extend-button">Extend</button></div><div class="columns"><button type="button" class="success button login-button" id=complete-button">Complete</button></div></div></div>';
+    document.getElementById("jobDescript").innerHTML += button;
+
 }
