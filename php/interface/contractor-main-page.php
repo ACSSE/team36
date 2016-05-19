@@ -103,7 +103,7 @@
                     </div>
 
                 </div>
-            <div class="tabs-panel full-height" id="panel2v">
+            <div class="tabs-panel full-height" style="padding: 0;overflow: auto" id="panel2v">
                 <h3>Manage Quotes</h3>
                 <hr>
                 <div class="row">
@@ -138,7 +138,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel full-height" id="panel3v">
+            <div class="tabs-panel full-height" style="padding: 0;overflow: auto" id="panel3v">
                 <h3> Manage Teams </h3>
                 <hr>
                 <div class="row">
@@ -167,19 +167,64 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel full-height" id="panel4v">
+            <div class="tabs-panel full-height" style="padding: 0;overflow: auto" id="panel4v">
                 <h3>Manage Account</h3>
 
             </div>
-            <div class="tabs-panel full-height" id="panel5v">
-                <h3>Manage Profile</h3><hr>
-                <?php
-                    $dbHandler = SebenzaServer::fetchDatabaseHandler();
-                    $userID = SebenzaServer::fetchSessionHandler()->getSessionVariable("UserID");
-                    $dbHandler->runCommand('SELECT * FROM REGISTERED_USER WHERE UserID=?',$userID);
-                    echo 'This is a test userID: '.$userID;
-                    var_dump($dbHandler->getResults());
-                ?>
+            <div class="tabs-panel full-height" style="padding: 0;overflow-y: auto;overflow-x: hidden" id="panel5v">
+                <div class="row align-center">
+                    <div class="column small-12 large-8">
+                        <h3>User Details</h3>
+                    </div>
+                    <?php
+                        $dbHandler = SebenzaServer::fetchDatabaseHandler();
+                        $userID = SebenzaServer::fetchSessionHandler()->getSessionVariable("UserID");
+                        $dbHandler->runCommand('SELECT * FROM REGISTERED_USER WHERE UserID=?',$userID);
+                        $userResults = $dbHandler->getResults();
+                        $dbHandler->runCommand('SELECT * FROM CONTRACTOR WHERE Username=?',SebenzaServer::fetchSessionHandler()->getSessionVariable("Username"));
+                        $contractorResults = $dbHandler->getResults();
+                       // echo 'This is a test userID: '.$userID."This is the first value: ".$userResults[0]["UserID"]."<br>";
+                        //var_dump($userResults);
+                        //echo '<br>';
+                        //var_dump($contractorResults);
+                        echo '
+                                <div class="column small-8 large-8">
+                                    <label >name</label><input type="text" name="name" value="'.$userResults[0]["Name"].'" required>
+                                </div>
+                                <div class="column small-8 large-8">
+                                    <label >surname</label><input type="text" name="surname" value="'.$userResults[0]["Surname"].'" required>
+                                </div>
+                                <div class="column small-8 large-8">
+                                    <label >username</label><input type="text" name="username" value="'.$userResults[0]["Username"].'" required>
+                                </div>
+                                <div class="column small-8 large-8">
+                                    <label >email</label><input type="email" name="email" value="'.$userResults[0]["Email"].'" required>
+                                </div>
+                                <div class=" small-8 large-8">
+                                    <label >Cellphone Number</label>
+                                    <div class="input-group" style="">
+                                        <span class="input-group-label">+27</span>
+                                        <input type="text" value="'.substr($userResults[0]["ContactNumber"],1).'" class="input-group-field" required/>
+                                    </div>
+                                </div>
+                                 <div class="column small-8 large-8">
+                                    <label >Business Name</label><input type="text" name="businessName" value="'.$contractorResults[0]["BusinessName"].'" required>
+                                </div>
+                                 <div class="column small-8 large-8">
+                                    <label >Business Description</label><input type="text" name="businessDescription" value="'.$contractorResults[0]["BusinessDescription"].'" required>
+                                </div>
+                                 <div class="column small-8 large-8">
+                                    <label >Business Hours</label><input type="text" name="businessHours" value="'.$contractorResults[0]["BusinessHours"].'" required>
+                                </div>
+                        ';
+                    ?>
+                </div>
+                    <div class="row align-center">
+                        <div class="column small-8 large-8">
+                            <button type="button" class="success button" id=terminate-job-button">Update</button>
+                        </div>
+                    </div>
+
             </div>
             <div class="tabs-panel full-height" id="panel6v">
                 <h3>View Job History</h3>
