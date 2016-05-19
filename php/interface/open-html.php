@@ -29,9 +29,9 @@ SebenzaServer::start();
     <link rel="stylesheet" href="css/customElementStyle.css" />
     <link rel="icon" type="image/png" href="Images/favicon.png"/>
     <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
-    <script src="foundation-6/bower_components/jquery/dist/jquery.js"></script>
-    <script src="foundation-6/bower_components/what-input/what-input.js"></script>
-    <script src="foundation-6/bower_components/foundation-sites/dist/foundation.js"></script>
+    <script src="foundation-6/js/jquery.js"></script>
+    <script src="foundation-6/js/what-input.js"></script>
+    <script src="foundation-6/js/foundation.js"></script>
     <script src="foundation-6/js/app.js"></script>
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="javascript/sebenza.js"></script>

@@ -1246,7 +1246,7 @@ a {
     border: 0; }
 
 hr {
-  max-width: 75rem;
+  max-width: inherit;
   height: 0;
   border-right: 0;
   border-top: 0;
