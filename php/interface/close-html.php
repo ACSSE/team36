@@ -8,11 +8,14 @@
     <!--DOCUMENT END-->
         </div>
         <!-- Foundation required code-->
-        <script src="foundation-6/js/what-input.js"></script>
-        <script src="foundation-6/js/foundation.js"></script>
-        <script src="foundation-6/js/app.js"></script>
+
         <script>
             $(document).foundation();
+            <?php
+                if ($USER_TYPE != -1) {
+                    echo "startNotificationPulls();\n";
+                }
+            ?>
         </script>
         <!--End Foundation requirements-->
     </body>

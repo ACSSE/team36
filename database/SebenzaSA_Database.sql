@@ -12,7 +12,7 @@ CREATE TABLE `REGISTERED_USER` (
   `ContactNumber` varchar(15) not null,
 	`TypeOfUser` tinyint not null,
   `Password` varchar(255) not null,
-  `PositiveUserRating` integer not null,
+  `UserRecommendationRating` integer not null,
 	PRIMARY KEY (`UserID`)
 );
 
@@ -140,6 +140,18 @@ CREATE TABLE `BOOKMARKED` (
   FOREIGN KEY (`WorkType`) REFERENCES SPECIALIZATIONS_PER_USER(`WorkType`)
 );
 
+DROP TABLE IF EXISTS `NOTIFICATION`;
+CREATE TABLE `NOTIFICATION` (
+  `NotificationID` integer not null auto_increment,
+  `UserID` integer not null,
+  `Message` varchar(60) not null,
+  `Pulled` boolean not null DEFAULT false,
+  `Pushed` boolean not null DEFAULT false,
+  `Expired` boolean not null DEFAULT false,
+  PRIMARY KEY (`NotificationID`),
+  FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
+);
+
 
 INSERT 	 INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`)
 	VALUES	('firstUser', 'user1@email.co.za', '0831231234', 0, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name1', 'surname1'),
@@ -188,3 +200,7 @@ INSERT 	 INTO `LOCATIONS_PER_USER` (`Username`,`locationName`)
 			('seventhUser', 'Soweto'),
 			('seventhUser', 'Germiston'),
 			('seventhUser', 'Benoni');
+
+INSERT INTO `NOTIFICATION` (`UserID`,`Message`)
+    VALUES (9,'Welcome!'),
+      (9, 'This is a second notification!');

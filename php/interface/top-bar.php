@@ -10,51 +10,57 @@
         <div class="shrink columns logo-width full-height background-colour" onclick="redirectToHome()">
             <img class="logo-height background-colour" type="image/svg+xml" src="Images/logo.svg" alt="logo"/>
         </div>
-        <div class="small-expand medium-expand large-expand columns full-height background-colour">
-            <div class="row collapse navBarBackgroundHeight full-width">
-                <!--Place holder row for background colour-->
-            </div>
-            <div class="row collapse navigation-bar-colour full-width navBarHeight">
-                <div class="expanded columns full-height">
-                    <div class="navigation-bar">
-                        <!--http://foundation.zurb.com/sites/docs/button-group.html-->
-                        <!--http://foundation.zurb.com/sites/docs/button.html-->
-                        <ul class="menu align-right hide-for-small-only">
-                            <li>
-                                <button type="button" class="warning top-bar-button button" data-toggle="areainformation-medium-large">
-                                    Area Information
-                                    <img class="top-bar-button-icon" type="image/svg+xml" src="Images/info-icon.svg" alt="logo"/>
-                                </button>
-                            </li>
-                            <li>
-                                <?php
-                                if(!SebenzaServer::fetchSessionHandler()->exists('UserType')){
-                                    echo '<button type="button" class="top-bar-button button" data-toggle="login-medium-large">
-                                                Log In
-                                                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
-                                            </button>';
-                                }
-                                else{
-                                    echo '<li><button type="button" class="success top-bar-button button" onclick="redirectToHome()">
-                                                Main
-                                                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/menu-icon.svg" alt="logo"/>
-                                            </button></li><button type="button" class="top-bar-button button" id="logout-button" onclick="sendAJAXRequest(\'logout\',handleLogoutResponse);">
-                                                Log Out
-                                                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
-                                            </button>';
-                                }
-                                ?>
-                            </li>
-                        </ul>
-                        <ul class="menu align-right show-for-small-only">
-                            <li>
-                                <button type="button" class="button top-bar-button" >
-                                    Menu
-                                    <img class="top-bar-button-icon" type="image/svg+xml" src="Images/menu-icon.svg" alt="logo"/>
-                                </button>
-                            </li>
-                        </ul>
+        <div class="small-expand columns full-height background-colour">
+            <div class="row expanded column navBarBackgroundHeight">
+                <div class="full-height full-height center-contents">
+                    <div class="callout no-margins center-contents" id="notification-panel" data-toggler data-animate="slide-in-down fade-out">
+                        <p><span><img class="notify-icon" type="image/svg+xml" src="Images/notify-icon.svg" alt="icon"/></span>
+                            <span id="notification-content">Welcome! a;lkjasdf ;alk wt;lakdjf ;alkwje l;kansfg;lskjq;wlkasdjf;kljasd af</span>
+                        </p>
                     </div>
+                </div>
+            </div>
+            <div class="row expanded column navigation-bar-colour navBarHeight">
+                <div class="navigation-bar">
+                    <!--http://foundation.zurb.com/sites/docs/button-group.html-->
+                    <!--http://foundation.zurb.com/sites/docs/button.html-->
+                    <ul class="menu align-right hide-for-small-only">
+                        <li>
+                            <button type="button" class="warning button top-bar-button" data-toggle="areainformation-medium-large">
+                                Area Information
+                                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/info-icon.svg" alt="logo"/>
+                            </button>
+                        </li>
+                        <li>
+                            <?php
+                            if(!SebenzaServer::fetchSessionHandler()->exists('UserType')){
+                                echo '<button type="button" class="top-bar-button button" data-toggle="login-medium-large">
+                                            Log In
+                                            <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
+                                        </button>';
+                            }
+                            else{
+                                echo '<!--<button type="button" class="success top-bar-button button" onclick="redirectToHome()">
+                                        Main
+                                        <img class="top-bar-button-icon" type="image/svg+xml" src="Images/menu-icon.svg" alt="logo"/>
+                                      </button>
+                                      </li>-->
+                                      <li><button type="button" class="top-bar-button button" id="logout-button" onclick="sendAJAXRequest(\'logout\',handleLogoutResponse);">
+                                            Log Out
+                                            <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
+                                        </button>';
+                            }
+                            ?>
+                        </li>
+                    </ul>
+                    <ul class="menu align-right show-for-small-only">
+                        <li>
+                            <button type="button" class="button top-bar-button" >
+                                Menu
+                                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/menu-icon.svg" alt="logo"/>
+                            </button>
+                        </li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -100,7 +106,7 @@
                 </a>
             </div>
             <div class="credentials-info top-padding" id="invalid-credentials-message" data-toggler data-animate="fade-in fade-out">
-                <p class="help-text no-margins">Invalid username or password. You can try retrieve forgotten passwords <span><a href="#">here</a>.</span></p>
+                <p class="help-text no-margins">Invalid username or password. You can try retrieve forgotten passwords <span><a class="blue-link" href="#">here</a>.</span></p>
             </div>
         </div>
     </form>

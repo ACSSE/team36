@@ -9,6 +9,56 @@ $(document).ready(function () {
     $('form').submit(function () {return false;});
 });
 
+var NOTIFICATION_DISPLAY_TIMEOUT = 5000;  //How long a notification shows
+var NEXT_NOTIFICATION_DELAY = 1000;  //How long between notifications - has to be longer than notification animation
+var NOTIFICATION_PULL_INTERVAL = 15000; //How often notifications are pulled from the server
+var notificationArray = []; //Stores the notifications fetched from the server
+
+function startNotificationPulls() {
+    sendAJAXRequest('fetch_notifications', handleNotifications);
+    setInterval(sendAJAXRequest, NOTIFICATION_PULL_INTERVAL, 'fetch_notifications', handleNotifications);
+}
+
+function handleNotifications(response) {
+    var notifications = JSON.parse(response);
+    var originalNotificationCount = notificationArray.length;
+    if (Array.isArray(notifications) && notifications.length >= 1) {
+        for (var i = 0; i < notifications.length; i++) {
+            if (typeof notifications[i] == 'string') {
+                notificationArray.push(notifications[i]);
+                console.log("Added notification: " + notifications[i]);
+            }
+        }
+        if (originalNotificationCount == 0) {
+            showNotification();
+        }
+    }
+}
+
+function showNotification() {
+    if (notificationArray.length > 0 && typeof notificationArray[0] == 'string') {
+        document.getElementById('notification-content').innerHTML = notificationArray[0];
+        toggleNotification();
+        setTimeout(closeNotification, NOTIFICATION_DISPLAY_TIMEOUT);
+    }
+}
+
+function closeNotification() {
+    toggleNotification();
+    notificationArray.shift();
+    if (notificationArray.length > 0) {
+        setTimeout(showNotification, NEXT_NOTIFICATION_DELAY);
+    }
+}
+
+function toggleNotification() {
+    $('#notification-panel').foundation('toggle');
+}
+
+function modalToggler(){
+    redirectToHome();
+}
+
 function sendAJAXRequest (action, responseFunction, formID) {
     //Check the types of the parameters
     if (typeof action == 'string' && typeof responseFunction == 'function' && (typeof formID == 'string' || formID == null)) {
@@ -128,4 +178,19 @@ function redirectToHome(){
     }
     else
     window.location = '/userPage.php';
+}
+
+/*The following function fills up the userPageModal-medium-large with information related to it*/
+function homeUserJobRequestModalFill(type, location) {
+    console.log("Filling job details");
+    document.getElementById("jobDescript").innerHTML = "<h4>Job Description</h4><hr>" + "The type of job:" + type + "<br> The location of the job:" + location;
+    var button = ' <div class="sebenza-select-button"><div class="row align-center"><div class="columns"><button type="button" class="alert button login-button" id=reject-job-button">Reject</button></div><div class="columns"><button type="button" class="success button login-button" id=complete-button">Accept</button></div></div></div>';
+    document.getElementById("jobDescript").innerHTML += button;
+}
+
+function homeUserOngoingJobModalFill(type, location){
+    document.getElementById("jobDescript").innerHTML = "<h4>Job Description</h4><hr>" + "The type of job:" + type + "<br> The location of the job:" + location;
+    var button = ' <div class="sebenza-select-button"><div class="row"><div class="columns"><button type="button" class="alert button login-button" id=terminate-job-button">Terminate</button></div><div class="columns align-center"><button type="button" class="warning button login-button" id=extend-button">Extend</button></div><div class="columns"><button type="button" class="success button login-button" id=complete-button">Complete</button></div></div></div>';
+    document.getElementById("jobDescript").innerHTML += button;
+
 }
