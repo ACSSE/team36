@@ -7,7 +7,7 @@
  */?>
 
 <div class="row collapse background-image">
-    <div class="small-3 columns full-height">
+    <div class="large-3 columns full-height">
         <ul class="tabs vertical full-height" style="overflow: hidden" id="example-vert-tabs" data-tabs>
             <li class="tabs-title is-active"><a href="#panel1v">Manage Jobs</a></li>
             <li class="tabs-title"><a href="#panel3v">Manage Teams</a></li>
