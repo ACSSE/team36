@@ -6,8 +6,10 @@
  * Time: 3:23 PM
  */
 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/classes/SebenzaServer.php";
-if (SebenzaServer::fetchSessionHandler()->exists('UserType')) {
+include_once $_SERVER['DOCUMENT_ROOT'] ."/php/externalClasses/PHPMailer-master/PHPMailer-master/PHPMailerAutoload.php";
+if (SebenzaServer::fetchSessionHandler()->exists('UserType') && SebenzaServer::fetchSessionHandler()->exists('UserConfirmation')) {
     $USER_TYPE = SebenzaServer::fetchSessionHandler()->getSessionVariable("UserType");
+    $USER_CONFIRMATION = SebenzaServer::fetchSessionHandler()->getSessionVariable("UserConfirmation");
 } else {
     $USER_TYPE = -1;
 }

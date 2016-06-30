@@ -16,7 +16,7 @@
             <li class="tabs-title"><a href="#panel7v">Create New Job</a></li>
         </ul>
     </div>
-    <div class="small-9 columns full-height">
+    <div class="large-9 columns full-height">
         <div class="tabs-content vertical full-height" data-tabs-content="example-vert-tabs">
             <div class="tabs-panel full-height is-active large-12" style="padding: 0;overflow: auto" id="panel1v">
                 <ul class="tabs" data-tabs id="example-tabs">

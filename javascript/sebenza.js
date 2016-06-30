@@ -113,6 +113,19 @@ function handleLoginResponse(response) {
     }
 }
 
+function handleRegisterResponse(response) {
+
+    var success = JSON.parse(response);
+    console.log("Registering: response " + success);
+    if (success) {
+        document.getElementById("register-modal-button").click();
+    }
+    else{
+        console.log("Registration failed");
+    }
+
+}
+
 function handleLogoutResponse(response) {
     var success = JSON.parse(response);
     if (success) {
@@ -182,7 +195,6 @@ function redirectToHome(){
 
 /*The following function fills up the userPageModal-medium-large with information related to it*/
 function homeUserJobRequestModalFill(type, location) {
-    console.log("Filling job details");
     document.getElementById("jobDescript").innerHTML = "<h4>Job Description</h4><hr>" + "The type of job:" + type + "<br> The location of the job:" + location;
     var button = ' <div class="sebenza-select-button"><div class="row align-center"><div class="columns"><button type="button" class="alert button login-button" id=reject-job-button">Reject</button></div><div class="columns"><button type="button" class="success button login-button" id=complete-button">Accept</button></div></div></div>';
     document.getElementById("jobDescript").innerHTML += button;
