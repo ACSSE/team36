@@ -190,31 +190,17 @@ class SebenzaServer {
     }
 
     public static function mailClient($to,$key):bool{
-        /*$subject = "SebenzaSA Confirmation link";
-
-        $msg = "Test - <a href='".$link."'>".$title."</a><br/>";
-        //We welcome you to the Sebenza South Africa Community <br/>We strive to give everyone equal opportunity while providing a worthwhile experience.<br/>
-        //<br/>Please click on the link that follows to gain access to the site
-        $headers = "MIME-Version: 1.0" . "\r\n";
-        $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
-        $headers .= 'From: <SebenzaSA@sebenza.co.za>' . "\r\n";
-        echo 'This is mail client to'.$to;
-
-        return mail($to,$subject,$msg,$headers);
-        */
-        //The following source is where I came across how to set up a mailer for php using the external class PHPMailer
-        //http://phpmailer.worxware.com/index.php?pg=examplebmail
         require $_SERVER['DOCUMENT_ROOT'] ."/php/externalClasses/PHPMailer-master/PHPMailer-master/PHPMailerAutoload.php";
         $mail = new PHPMailer;
 
-//$mail->SMTPDebug = 3;                               // Enable verbose debug output
+        //$mail->SMTPDebug = 3;                               // Enable verbose debug output
         $link = "http://localhost:31335/index.php?email=".$to."&key=".$key;
         $title = "Sebenza South Africa";
         $mail->isSMTP();                                      // Set mailer to use SMTP
         $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
         $mail->Username = '215040496@student.uj.ac.za';                 // SMTP username
-        $mail->Password = '******';                           // SMTP password
+        $mail->Password = '';                           // SMTP password
         $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
         $mail->Port = 587;                                    // TCP port to connect to
         $mail->IsHTML(true);
@@ -257,6 +243,14 @@ class SebenzaServer {
                 }
         }
         return $returnValue;
+    }
+
+    public static function returnWorkTypes() {
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "Select `WorkType`,`workTypeID` FROM SPECIALIZATIONS";
+        $dbhandler->runCommand($command);
+        $results = $dbhandler->getResults();
+        return $results;
     }
 }
 //The following is currently used to receive the confirmation requests from the user
@@ -316,6 +310,9 @@ if (!empty($_POST)) {
                 } else{
                     $response = json_encode(false);
                 }
+                break;
+            case 'fetch_work_types':
+                $response = json_encode(SebenzaServer::returnWorkTypes());
                 break;
             default:
                 //If the action was not one of the handled cases, respond appropriately

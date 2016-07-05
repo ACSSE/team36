@@ -13,6 +13,7 @@ var NOTIFICATION_DISPLAY_TIMEOUT = 5000;  //How long a notification shows
 var NEXT_NOTIFICATION_DELAY = 1000;  //How long between notifications - has to be longer than notification animation
 var NOTIFICATION_PULL_INTERVAL = 15000; //How often notifications are pulled from the server
 var notificationArray = []; //Stores the notifications fetched from the server
+var skillCounter = 0;
 
 function startNotificationPulls() {
     sendAJAXRequest('fetch_notifications', handleNotifications);
@@ -205,4 +206,50 @@ function homeUserOngoingJobModalFill(type, location){
     var button = ' <div class="sebenza-select-button"><div class="row"><div class="columns"><button type="button" class="alert button login-button" id=terminate-job-button">Terminate</button></div><div class="columns align-center"><button type="button" class="warning button login-button" id=extend-button">Extend</button></div><div class="columns"><button type="button" class="success button login-button" id=complete-button">Complete</button></div></div></div>';
     document.getElementById("jobDescript").innerHTML += button;
 
+}
+
+function addSkillColumn(){
+
+    //var html = '<div class="column medium-8 large-8" ><select id="contractor-work-type-' + skillCounter + '" name="contractor-work-type-' + skillCounter + '"><option value=""></option><script>requestWorkTypes();</script></select></div><div class="column large-offset-2 medium-2 large-2" > <button class="button success" onclick="addSkillColumn()">+</button></div>';
+    //document.getElementById("additional-contractor-skills").innerHTML = html;
+    //console.log("The following is the counter for the skills: " + skillCounter);
+    //console.log("The following is the class: " + document.getElementById("additional-contractor-skill-0").className);
+    if(skillCounter < 3) {
+        document.getElementById("additional-contractor-skill-" + skillCounter).className = "column medium-8 large-8";
+        skillCounter++;
+        if (skillCounter == 1) {
+            document.getElementById("additional-contractor-skill-" + skillCounter++).className = "column large-offset-2 medium-2 large-2";
+        }
+    }
+    //console.log("This is the classes: " + document.getElementById("test").className);
+    //document.getElementById("test").className = "column medium-8 large-8";
+    //console.log("This is the classes: " + document.getElementById("test").className);
+}
+
+function requestWorkTypes(){
+    sendAJAXRequest('fetch_work_types', handleWorkRequestResponse);
+}
+
+function handleWorkRequestResponse(response){
+    var workTypeArray = JSON.parse(response);
+    if (workTypeArray) {
+        var test = workTypeArray[0];
+        console.log("Work Type Retrieval successful: " + workTypeArray.length);
+        if(workTypeArray.length > 0){
+
+            //document.getElementById("contractor-work-type").innerHTML = "This is a test".htmlText;
+            var htmlText = '<option value=""></option>';
+            for(var i = 0;i<workTypeArray.length;i++){
+                htmlText += '<option value="' + workTypeArray[i]["workTypeID"] + '">' + workTypeArray[i]["WorkType"] + '</option>';
+            }
+
+            document.getElementById("contractor-work-type").innerHTML = htmlText;
+            document.getElementById("contractor-work-type-1").innerHTML = htmlText;
+            document.getElementById("contractor-work-type-2").innerHTML = htmlText;
+        }
+
+    }
+    else{
+        console.log("Registration failed");
+    }
 }

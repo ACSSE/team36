@@ -10,19 +10,59 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 
 ?>
     <script>
-        function initialize() {
-            var mapProp = {
-                center:new google.maps.LatLng(-26.1657905,28.163748),
-                zoom:8,
-                mapTypeId:google.maps.MapTypeId.ROADMAP
-            };
-            var map=new google.maps.Map(document.getElementById("googleMap"), mapProp);
+        function initMap() {
+            var marker;
+            var mapProp;
+            var myLatlng = {lat: -26.1657905, lng: 28.163748};
+            var map = new google.maps.Map(document.getElementById('googleMap'), {
+                zoom: 8,
+                center: myLatlng
+            });
+//            var marker = new google.maps.Marker({
+//                position: myLatlng,
+//                map: map,
+//                title: 'Click to zoom'
+//            });
+            //Add listener
+//            google.maps.event.addListener(marker, "click", function (event) {
+//                var latitude = event.latLng.lat();
+//                var longitude = event.latLng.lng();
+//                console.log( latitude + ', ' + longitude );
+//            }); //end addListener
+
+            var geocoder = new google.maps.Geocoder;
+            var infowindow = new google.maps.InfoWindow;
+
+            geocodeLatLng(geocoder, map, infowindow,myLatlng);
         }
-        google.maps.event.addDomListener(window, 'load', initialize);
+//        google.maps.event.addDomListener(window, 'load', initialize);
         //need to have the map resize without affecting the other elements.
         //google.maps.event.addDomListener(window, 'resize', initialize);
-
+        function geocodeLatLng(geocoder, map, infowindow,myLatLng) {
+            //var input = document.getElementById('latlng').value;
+            var latlng = myLatLng;
+            //var latlngStr = input.split(',', 2);
+            //var latlng = {lat: parseFloat(latlngStr[0]), lng: parseFloat(latlngStr[1])};
+            geocoder.geocode({'location': latlng}, function(results, status) {
+                if (status === google.maps.GeocoderStatus.OK) {
+                    if (results[1]) {
+                        map.setZoom(11);
+                        var marker = new google.maps.Marker({
+                            position: latlng,
+                            map: map
+                        });
+                        infowindow.setContent(results[1].formatted_address);
+                        infowindow.open(map, marker);
+                    } else {
+                        window.alert('No results found');
+                    }
+                } else {
+                    window.alert('Geocoder failed due to: ' + status);
+                }
+            });
+        }
     </script>
+
     <div class="content-view">
         <div>
             <div class="orbit" aria-label="Favorite Home Pictures" data-orbit data-use-m-u-i="false">

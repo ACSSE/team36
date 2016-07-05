@@ -35,6 +35,10 @@ SebenzaServer::start();
     <script src="foundation-6/js/what-input.js"></script>
     <script src="foundation-6/js/foundation.js"></script>
     <script src="foundation-6/js/app.js"></script>
+    <!-- If you want to enable geocoding for
+    <script
+    async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOhOzd9iCUl2GHC1o-ztn95gN3-XKxMmU&callback=initMap">
+    </script>-->
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="javascript/sebenza.js"></script>
 </head>
