@@ -148,33 +148,33 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <select id="contractor-work-type" name="contractor-work-type" required>
+            <select id="contractor-work-type-0" name="contractor-work-type" required>
                 <script>
                     requestWorkTypes();
                 </script>
             </select>
         </div>
         <div class="column medium-1 large-1">
-            <button class="button success" data-toggle="additional-contractor-skill-1 additional-contractor-skill-0">
+            <button class="button success" data-toggle="additional-contractor-skill-1 additional-contractor-skill-0" name="toggle-switch-0" id="toggle-switch-0" type="button" onclick="toggleSwitch('toggle-switch-0')">
                 +
             </button>
         </div>
     </div>
     <div class="row">
         <div class="columns medium-11 large-11 hide-initially"  data-toggler data-animate="hinge-in-from-right spin-out" id="additional-contractor-skill-0">
-            <select id="contractor-work-type-1" name="contractor-work-type-1">
+            <select id="contractor-work-type-1" name="contractor-work-type-1" required>
 
             </select>
         </div>
         <div class="columns medium-1 large-1 hide-initially"  data-toggler data-animate="hinge-in-from-right spin-out" id="additional-contractor-skill-1">
-            <button class="button success" data-toggle="additional-contractor-skill-2">
+            <button class="button success" data-toggle="additional-contractor-skill-2" name="toggle-switch-1" id="toggle-switch-1" type="button" onclick="toggleSwitch('toggle-switch-1')">
                 +
             </button>
         </div>
     </div>
     <div class="row">
         <div class="column medium-11 large-11 hide-initially" id="additional-contractor-skill-2" data-toggler data-animate="hinge-in-from-right spin-out" >
-            <select id="contractor-work-type-2" name="contractor-work-type-2">
+            <select id="contractor-work-type-2" name="contractor-work-type-2" required>
 
             </select>
         </div>
@@ -206,7 +206,7 @@
             </div>
         </div>
         <div class="column medium-1 large-1" style="margin-top: 24.44px">
-            <label></label><button class="button success" onclick="addContractorLocation()">
+            <label></label><button class="button success" type="button" onclick="addContractorLocation()">
                 +
             </button>
         </div>

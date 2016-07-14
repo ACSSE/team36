@@ -250,9 +250,9 @@ function handleWorkRequestResponse(response){
                 htmlText += '<option value="' + workTypeArray[i]["workTypeID"] + '">' + workTypeArray[i]["WorkType"] + '</option>';
             }
 
-            document.getElementById("contractor-work-type").innerHTML = htmlText;
-            document.getElementById("contractor-work-type-1").innerHTML = htmlText;
-            document.getElementById("contractor-work-type-2").innerHTML = htmlText;
+            for(var j = 0;j<3;j++){
+                document.getElementById("contractor-work-type-" + j).innerHTML = htmlText;
+            }
         }
 
     }
@@ -265,4 +265,21 @@ function addContractorLocation(){
     contractorLocation++;
     var html = '<div class="row"><div class="column large-11 medium 11"><label>Area Name</label><input type="text" name="areaname' + contractorLocation + '0" id="areaname' + contractorLocation + '" placeholder="Edenvale" class="REQ_VAL"><div class="additional-info top-padding" id="areaname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">An area found within the city E.g. Edenvale</p></div></div></div><div class="row"><div class="column large-11 medium 11"><label>City Name</label><input type="text" name="cityname' + contractorLocation + '" id="cityname' + contractorLocation + '" placeholder="Johannesburg" class="REQ_VAL"><div class="additional-info top-padding" id="cityname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p></div></div></div><div class="row"><div class="column large-11 medium 11"><label>Province Name</label><input type="text" name="provincename' + contractorLocation + '" id="provincename' + contractorLocation + '" placeholder="Gauteng" class="REQ_VAL"><div class="additional-info top-padding" id="provincename' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A province within South Africa E.g. Gauteng</p></div></div><div class="column medium-1 large-1" style="margin-top: 24.44px"><label></label><button class="button success" onclick="addContractorLocation()">+</button></div>';
     document.getElementById("extraLocations").innerHTML += html;
+}
+
+function toggleSwitch(id){
+    console.log("Switching " + document.getElementById(id).innerHTML + " and this is the value :" + document.getElementById(id).value);
+
+        console.log("This is the value of the other blah - " + document.getElementById('additional-contractor-skill-2').style.display);
+    if(document.getElementById(id).innerHTML.trim() == "+")
+        document.getElementById(id).innerHTML = "-";
+    else{
+        if(document.getElementById("toggle-switch-1").innerHTML.trim() == "-" && id == "toggle-switch-0"){
+            document.getElementById("toggle-switch-1").innerHTML = "+";
+            $("#additional-contractor-skill-2").foundation('toggle');
+        }
+        document.getElementById(id).innerHTML = "+";
+    }
+
+
 }
