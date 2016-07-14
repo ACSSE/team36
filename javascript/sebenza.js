@@ -13,6 +13,8 @@ var NOTIFICATION_DISPLAY_TIMEOUT = 5000;  //How long a notification shows
 var NEXT_NOTIFICATION_DELAY = 1000;  //How long between notifications - has to be longer than notification animation
 var NOTIFICATION_PULL_INTERVAL = 15000; //How often notifications are pulled from the server
 var notificationArray = []; //Stores the notifications fetched from the server
+var skillCounter = 0;
+var contractorLocation = 0;
 
 function startNotificationPulls() {
     sendAJAXRequest('fetch_notifications', handleNotifications);
@@ -113,6 +115,19 @@ function handleLoginResponse(response) {
     }
 }
 
+function handleRegisterResponse(response) {
+
+    var success = JSON.parse(response);
+    console.log("Registering: response " + success);
+    if (success) {
+        document.getElementById("register-modal-button").click();
+    }
+    else{
+        console.log("Registration failed");
+    }
+
+}
+
 function handleLogoutResponse(response) {
     var success = JSON.parse(response);
     if (success) {
@@ -136,27 +151,33 @@ function validateForm(formID) {
                 var i;
                 for (i = 0; i < inputTags.length; i++) {
                     inputTag = inputTags[i];
-                    var toggleID = inputTag.name + '-info';
-                    var foundationID = '#' + toggleID;
-                    var className = inputTag.className;
-                    var displayProperty = document.getElementById(toggleID).style.display.toLowerCase();
-                    var currentInputSuccess = true;
-                    //Alpha-numeric validation
-                    if (className.indexOf("AN_VAL") > -1 && !inputTag.value.match(alphaNumericRE)) {
-                        currentInputSuccess = false;
+                    console.log("The following is the input tag " + inputTag.name + " and its value: " +inputTag.value);
+                    if (inputTag.name.substring(0,6) != "ignore") {
+
+                        var toggleID = inputTag.name + '-info';
+                        //remove the line underneath once all forms have been completed
+                        console.log("These are the input tag names: " + inputTag.name);
+                        var foundationID = '#' + toggleID;
+                        var className = inputTag.className;
+                        var displayProperty = document.getElementById(toggleID).style.display.toLowerCase();
+                        var currentInputSuccess = true;
+                        //Alpha-numeric validation
+                        if (className.indexOf("AN_VAL") > -1 && !inputTag.value.match(alphaNumericRE)) {
+                            currentInputSuccess = false;
+                        }
+                        //Required field validation
+                        if (className.indexOf("REQ_VAL") > -1 && inputTag.value.length == 0) {
+                            currentInputSuccess = false;
+                        }
+                        //Toggle display of messages
+                        if (currentInputSuccess && displayProperty != '' && displayProperty != 'none') {
+                            $(foundationID).foundation('toggle');
+                        } else if (!currentInputSuccess && (displayProperty == '' || displayProperty == 'none')) {
+                            $(foundationID).foundation('toggle');
+                        }
+                        //Set success to false if applicable
+                        success &= currentInputSuccess;
                     }
-                    //Required field validation
-                    if (className.indexOf("REQ_VAL") > -1 && inputTag.value.length == 0) {
-                        currentInputSuccess = false;
-                    }
-                    //Toggle display of messages
-                    if (currentInputSuccess && displayProperty != '' && displayProperty != 'none') {
-                        $(foundationID).foundation('toggle');
-                    } else if (!currentInputSuccess && (displayProperty == '' || displayProperty == 'none')) {
-                        $(foundationID).foundation('toggle');
-                    }
-                    //Set success to false if applicable
-                    success &= currentInputSuccess;
                 }
             } else {
                 console.log("The form " + formID + " had no input elements to validate.");
@@ -182,7 +203,6 @@ function redirectToHome(){
 
 /*The following function fills up the userPageModal-medium-large with information related to it*/
 function homeUserJobRequestModalFill(type, location) {
-    console.log("Filling job details");
     document.getElementById("jobDescript").innerHTML = "<h4>Job Description</h4><hr>" + "The type of job:" + type + "<br> The location of the job:" + location;
     var button = ' <div class="sebenza-select-button"><div class="row align-center"><div class="columns"><button type="button" class="alert button login-button" id=reject-job-button">Reject</button></div><div class="columns"><button type="button" class="success button login-button" id=complete-button">Accept</button></div></div></div>';
     document.getElementById("jobDescript").innerHTML += button;
@@ -192,5 +212,74 @@ function homeUserOngoingJobModalFill(type, location){
     document.getElementById("jobDescript").innerHTML = "<h4>Job Description</h4><hr>" + "The type of job:" + type + "<br> The location of the job:" + location;
     var button = ' <div class="sebenza-select-button"><div class="row"><div class="columns"><button type="button" class="alert button login-button" id=terminate-job-button">Terminate</button></div><div class="columns align-center"><button type="button" class="warning button login-button" id=extend-button">Extend</button></div><div class="columns"><button type="button" class="success button login-button" id=complete-button">Complete</button></div></div></div>';
     document.getElementById("jobDescript").innerHTML += button;
+
+}
+
+function addSkillColumn(){
+
+    //var html = '<div class="column medium-8 large-8" ><select id="contractor-work-type-' + skillCounter + '" name="contractor-work-type-' + skillCounter + '"><option value=""></option><script>requestWorkTypes();</script></select></div><div class="column large-offset-2 medium-2 large-2" > <button class="button success" onclick="addSkillColumn()">+</button></div>';
+    //document.getElementById("additional-contractor-skills").innerHTML = html;
+    //console.log("The following is the counter for the skills: " + skillCounter);
+    //console.log("The following is the class: " + document.getElementById("additional-contractor-skill-0").className);
+    if(skillCounter < 3) {
+        document.getElementById("additional-contractor-skill-" + skillCounter).className = "column medium-8 large-8";
+        skillCounter++;
+        if (skillCounter == 1) {
+            document.getElementById("additional-contractor-skill-" + skillCounter++).className = "column large-offset-2 medium-2 large-2";
+        }
+    }
+    //console.log("This is the classes: " + document.getElementById("test").className);
+    //document.getElementById("test").className = "column medium-8 large-8";
+    //console.log("This is the classes: " + document.getElementById("test").className);
+}
+
+function requestWorkTypes(){
+    sendAJAXRequest('fetch_work_types', handleWorkRequestResponse);
+}
+
+function handleWorkRequestResponse(response){
+    var workTypeArray = JSON.parse(response);
+    if (workTypeArray) {
+        var test = workTypeArray[0];
+        console.log("Work Type Retrieval successful: " + workTypeArray.length);
+        if(workTypeArray.length > 0){
+
+            //document.getElementById("contractor-work-type").innerHTML = "This is a test".htmlText;
+            var htmlText = '<option value=""></option>';
+            for(var i = 0;i<workTypeArray.length;i++){
+                htmlText += '<option value="' + workTypeArray[i]["workTypeID"] + '">' + workTypeArray[i]["WorkType"] + '</option>';
+            }
+
+            for(var j = 0;j<3;j++){
+                document.getElementById("contractor-work-type-" + j).innerHTML = htmlText;
+            }
+        }
+
+    }
+    else{
+        console.log("Registration failed");
+    }
+}
+
+function addContractorLocation(){
+    contractorLocation++;
+    var html = '<div class="row"><div class="column large-11 medium 11"><label>Area Name</label><input type="text" name="areaname' + contractorLocation + '0" id="areaname' + contractorLocation + '" placeholder="Edenvale" class="REQ_VAL"><div class="additional-info top-padding" id="areaname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">An area found within the city E.g. Edenvale</p></div></div></div><div class="row"><div class="column large-11 medium 11"><label>City Name</label><input type="text" name="cityname' + contractorLocation + '" id="cityname' + contractorLocation + '" placeholder="Johannesburg" class="REQ_VAL"><div class="additional-info top-padding" id="cityname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p></div></div></div><div class="row"><div class="column large-11 medium 11"><label>Province Name</label><input type="text" name="provincename' + contractorLocation + '" id="provincename' + contractorLocation + '" placeholder="Gauteng" class="REQ_VAL"><div class="additional-info top-padding" id="provincename' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A province within South Africa E.g. Gauteng</p></div></div><div class="column medium-1 large-1" style="margin-top: 24.44px"><label></label><button class="button success" onclick="addContractorLocation()">+</button></div>';
+    document.getElementById("extraLocations").innerHTML += html;
+}
+
+function toggleSwitch(id){
+    console.log("Switching " + document.getElementById(id).innerHTML + " and this is the value :" + document.getElementById(id).value);
+
+        console.log("This is the value of the other blah - " + document.getElementById('additional-contractor-skill-2').style.display);
+    if(document.getElementById(id).innerHTML.trim() == "+")
+        document.getElementById(id).innerHTML = "-";
+    else{
+        if(document.getElementById("toggle-switch-1").innerHTML.trim() == "-" && id == "toggle-switch-0"){
+            document.getElementById("toggle-switch-1").innerHTML = "+";
+            $("#additional-contractor-skill-2").foundation('toggle');
+        }
+        document.getElementById(id).innerHTML = "+";
+    }
+
 
 }

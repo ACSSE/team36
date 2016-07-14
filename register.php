@@ -16,7 +16,7 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
     <div class="content-view">
         <div class="row collapse background-image">
             <div class="large-3 columns full-height">
-                <ul class="tabs vertical full-height" id="example-vert-tabs" data-tabs>
+                <ul class="tabs vertical full-height" style="overflow: hidden" id="example-vert-tabs" data-tabs>
                     <li class="tabs-title is-active"><a href="#panel1v">Register as Tradeworker</a></li>
                     <li class="tabs-title"><a href="#panel2v">Register as Homeuser</a></li>
                     <li class="tabs-title"><a href="#panel3v">Register as Contracotor</a></li>
@@ -24,142 +24,20 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
             </div>
             <div class="large-9 columns full-height">
                 <div class="tabs-content vertical full-height" data-tabs-content="example-vert-tabs">
-                    <div class="tabs-panel is-active full-height" id="panel1v">
-                        <form>
-                            <h1>Registration form: Trade Worker</h1>
-                            <div class="row">
-                                <div class="column medium-6 large-6">
-                                    <label >name</label><input type="text" name="name" placeholder="John" required>
-                                </div>
-                                <div class="column medium-6 large-6">
-                                    <label >surname</label><input type="text" name="surname" placeholder="Doe" required>
-                                </div>
-                                <div class="column medium-12 large-12">
-                                    <label >username</label><input type="text" name="username" placeholder="BobTheBuilder" required>
-                                </div>
-                                <div class="column medium-6 large-6">
-                                    <label >Password</label><input type="password" name="password" placeholder="password" required>
-                                </div>
-                                <div class="column medium-6 large-6">
-                                    <label >Confirm Password</label><input type="password" name="confirmPassword" placeholder="password" required>
-                                </div>
-                                <div class="column medium-6 large-6">
-                                    <label >email</label><input type="email" name="email" placeholder="email" required>
-                                </div>
-                                <div class="column medium-6 large-6">
-                                    <label >Confirm email</label><input type="email" name="confirmEmail" placeholder="email" required>
-                                </div>
-                                <div class="column medium-6 large-6">
-                                    <label >Cellphone Number</label>
-                                    <div class="input-group">
-                                        <span class="input-group-label">+27</span>
-                                        <input type="number" placeholder="12 345 6789" class="input-group-field" required/>
-                                    </div>
-                                </div>
-                                <div class="column medium-6 large-6">
-                                    <label >Home Contact Number</label>
-                                    <div class="input-group">
-                                        <span class="input-group-label">+27</span>
-                                        <input type="number" placeholder="12 345 6789" class="input-group-field" required/>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="large-12 medium-12 columns">
-                                    <a href="#" class="float-left medium secondary button radius">Register</a>
-                                </div>
-                            </div>
-                        </form>
+                    <div class="tabs-panel full-height is-active large-12" style="padding: 1em;overflow-y: auto; overflow-x: hidden" id="panel1v">
+                        <?php
+                        include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworkerRegistrationForm.php";
+                        ?>
                     </div>
-                    <div class="tabs-panel full-height" id="panel2v">
-                        <h1>Registration form: Homeuser</h1>
-                        <div class="row">
-                            <div class="column medium-6 large-6">
-                                <label >name</label><input type="text" name="name" placeholder="John" required>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >surname</label><input type="text" name="surname" placeholder="Doe" required>
-                            </div>
-                            <div class="column medium-12 large-12">
-                                <label >username</label><input type="text" name="username" placeholder="BobTheBuilder" required>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >Password</label><input type="password" name="password" placeholder="password" required>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >Confirm Password</label><input type="password" name="confirmPassword" placeholder="password" required>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >email</label><input type="email" name="email" placeholder="email" required>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >Confirm email</label><input type="email" name="confirmEmail" placeholder="email" required>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >Cellphone Number</label>
-                                <div class="input-group">
-                                    <span class="input-group-label">+27</span>
-                                    <input type="text" placeholder="12 345 6789" class="input-group-field" required/>
-                                </div>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >Home Contact Number</label>
-                                <div class="input-group">
-                                    <span class="input-group-label">+27</span>
-                                    <input type="text" placeholder="12 345 6789" class="input-group-field" required/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="large-12 medium-12 columns">
-                                <a href="#" class="float-left medium secondary button radius">Register</a>
-                            </div>
-                        </div>
+                    <div class="tabs-panel full-height" style="padding: 1em;overflow-y: auto; overflow-x: hidden" id="panel2v">
+                        <?php
+                        include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuserRegistrationForm.php";
+                        ?>
                     </div>
-                    <div class="tabs-panel full-height" id="panel3v">
-                        <h1>Registration form: Contractor</h1>
-                        <div class="row">
-                            <div class="column medium-6 large-6">
-                                <label >name</label><input type="text" name="name" placeholder="John" required>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >surname</label><input type="text" name="surname" placeholder="Doe" required>
-                            </div>
-                            <div class="column medium-12 large-12">
-                                <label >username</label><input type="text" name="username" placeholder="BobTheBuilder" required>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >Password</label><input type="password" name="password" placeholder="password" required>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >Confirm Password</label><input type="password" name="confirmPassword" placeholder="password" required>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >email</label><input type="email" name="email" placeholder="email" required>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >Confirm email</label><input type="email" name="confirmEmail" placeholder="email" required>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >Cellphone Number</label>
-                                <div class="input-group">
-                                    <span class="input-group-label">+27</span>
-                                    <input type="text" placeholder="12 345 6789" class="input-group-field" required/>
-                                </div>
-                            </div>
-                            <div class="column medium-6 large-6">
-                                <label >Home Contact Number</label>
-                                <div class="input-group">
-                                    <span class="input-group-label">+27</span>
-                                    <input type="text" placeholder="12 345 6789" class="input-group-field" required/>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="large-12 medium-12 columns">
-                                <a href="#" class="float-left medium secondary button radius">Register</a>
-                            </div>
-                        </div>
+                    <div class="tabs-panel full-height" style="padding: 1em;overflow-y: auto; overflow-x: hidden" id="panel3v">
+                        <?php
+                            include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/contractorRegistrationForm.php";
+                        ?>
                     </div>
                 </div>
             </div>

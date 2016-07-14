@@ -1,5 +1,6 @@
 /*Center things: https://www.w3.org/Style/Examples/007/center.en.html*/
 /*Font setup*/
+/*h4: has been set to always be underlined*/
 html, body {
     font-family: Ubuntu, sans-serif;
     font-size: 1em;
@@ -116,6 +117,11 @@ hr {
 .additional-info {
     display:none;
 }
+
+.hide-initially {
+    display:none;
+}
+
 .credentials-info {
     text-align: center;
     display:none;
@@ -314,6 +320,11 @@ ul[class~="menu"] li {
     width: 50%;
     min-height: 50%;
     align-self: center;
+}
+
+
+h4 {
+    text-decoration: underline;
 }
 
 .tab-styler{

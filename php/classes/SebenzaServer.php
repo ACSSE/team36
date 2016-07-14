@@ -32,7 +32,7 @@ class SebenzaServer {
             $dbHandler = self::fetchDatabaseHandler();
             $sessionHandler = self::fetchSessionHandler();
             //Fetch the relevant user's data
-            $dbHandler->runCommand("SELECT `Password`,`UserID`,`Username`,`TypeOfUser` FROM REGISTERED_USER WHERE `Username` = ?", $username);
+            $dbHandler->runCommand("SELECT `Password`,`UserID`,`Username`,`TypeOfUser`,`Confirmation` FROM REGISTERED_USER WHERE `Username` = ?", $username);
             $result = $dbHandler->getResults();
             //If a single result was returned and the password matches the hashed password stored in the database
             if (count($result) == 1 && password_verify($password, $result[0]['Password'])) {
@@ -42,6 +42,7 @@ class SebenzaServer {
                 $sessionHandler->setSessionVariable("UserID",$result[0]['UserID']);
                 $sessionHandler->setSessionVariable("Username", $result[0]['Username']);
                 $sessionHandler->setSessionVariable("UserType", $result[0]['TypeOfUser']);
+                $sessionHandler->setSessionVariable("UserConfirmation", $result[0]['Confirmation']);
             }
         }
         return $successfulLogin;
@@ -123,7 +124,148 @@ class SebenzaServer {
         }
         return $returnValue;
     }
+    /*The following function will register the user according to his type, confirmation of email will be required from all
+    users, to ensure that the email account exists.*/
+    public static function register(array $input, $type){
+        $returnValue = false;
+        $email = $input[1];
+        $username = $input[0];
+        $keyToSend = self::hashPassword($email + $username + time());
+        $condition = self::mailClient($email,$keyToSend,$input);
+       if($condition)
+            switch ($type){
+                case 'contractor':
+                    $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`) VALUES (?,?,?,?,?,?,?)";
+                    $contactNumber = $input[2];
+                    $password = self::hashPassword($input[3]);
+                    $name = $input[5];
+                    $surname = $input[4];
+                    $dbHandler = self::fetchDatabaseHandler();
+                    if($dbHandler->runCommand($command,$username,$email,$contactNumber,1,$password,$surname,$name)){
+                    $id = $dbHandler->getInsertID();
+                    $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
+                    //TODO: create a combination of values to hash that the key will be unique for each email sent out as well as create a method to send an email(to,from,message) where the message will contain the link to activate the account
+                    $returnValue = $dbHandler->runCommand($command,$id,$keyToSend);
+                    //A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
+                    }
+                    return $returnValue;
+                    break;
+                case 'homeuser':
+                    $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`) VALUES (?,?,?,?,?,?,?)";
+                    $contactNumber = $input[2];
+                    $password = self::hashPassword($input[3]);
+                    $name = $input[5];
+                    $surname = $input[4];
+                    $dbHandler = self::fetchDatabaseHandler();
+                    if($dbHandler->runCommand($command,$username,$email,$contactNumber,2,$password,$surname,$name)){
+                        $id = $dbHandler->getInsertID();
+                        $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
+                        //TODO: create a combination of values to hash that the key will be unique for each email sent out as well as create a method to send an email(to,from,message) where the message will contain the link to activate the account
+                        $returnValue = $dbHandler->runCommand($command,$id,$keyToSend);
+                        //A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
+                    }
+                    return $returnValue;
+                    break;
+                case 'tradeworker':
+                    $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`) VALUES (?,?,?,?,?,?,?)";
+                    $contactNumber = $input[2];
+                    $password = self::hashPassword($input[3]);
+                    $name = $input[5];
+                    $surname = $input[4];
+                    $dbHandler = self::fetchDatabaseHandler();
+                    if($dbHandler->runCommand($command,$username,$email,$contactNumber,0,$password,$surname,$name)){
+                        $id = $dbHandler->getInsertID();
+                        $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
+                        //TODO: create a combination of values to hash that the key will be unique for each email sent out as well as create a method to send an email(to,from,message) where the message will contain the link to activate the account
+                        $returnValue = $dbHandler->runCommand($command,$id,$keyToSend);
+                        //A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
+                    }
+                    return $returnValue;
+                    break;
+                default:
+                    return $returnValue;
+                    break;
+            }
+        return $returnValue;
+    }
+
+    public static function mailClient($to,$key):bool{
+        require $_SERVER['DOCUMENT_ROOT'] ."/php/externalClasses/PHPMailer-master/PHPMailer-master/PHPMailerAutoload.php";
+        $mail = new PHPMailer;
+
+        //$mail->SMTPDebug = 3;                               // Enable verbose debug output
+        $link = "http://localhost:31335/index.php?email=".$to."&key=".$key;
+        $title = "Sebenza South Africa";
+        $mail->isSMTP();                                      // Set mailer to use SMTP
+        $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
+        $mail->SMTPAuth = true;                               // Enable SMTP authentication
+        $mail->Username = '215040496@student.uj.ac.za';                 // SMTP username
+        $mail->Password = '';                           // SMTP password
+        $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
+        $mail->Port = 587;                                    // TCP port to connect to
+        $mail->IsHTML(true);
+        $mail->setFrom('215040496@student.uj.ac.za', 'Mailer');
+        $mail->addAddress($to, 'Joe User');       // Name is optional
+        $mail->addReplyTo('215040496@student.uj.ac.za', 'Information');
+
+        $mail->Subject = 'SebenzaSA Confirmation';
+        $mail->Body    = 'This is the HTML message body <b>in bold!</b><br/><a href="'.$link.'">'.$title.'</a>';
+        return $mail->send();
+    }
+    //The following function is used to confirm a user who has clicked on the link within an email he received
+    public static function userConfirm($email,$key):bool{
+        $returnValue = false;
+        $command = "SELECT `UserID`,`Confirmation` FROM `REGISTERED_USER` WHERE `Email` = ?";
+        $dbhandler = self::fetchDatabaseHandler();
+        //Check whether the email exists within the database
+        if($dbhandler->runCommand($command,$email)){
+            $results = $dbhandler->getResults();
+
+            //Check whether the user has been confirmed or not
+            if(count($results)> 0)
+                if(!$results[0]['Confirmation']){
+                    $command = "SELECT `Key` FROM `CONFIRMATIONS` WHERE `UserID` = ?";
+                    //Retrieve the key associated with the user upon the account registration
+                    if($dbhandler->runCommand($command,$results[0]['UserID'])) {
+                        $storedKey = $dbhandler->getResults();
+                        //Test whether the keys from database and from email are the same value
+                        if ($storedKey[0]["Key"] === $key) {
+                            $command = "UPDATE `REGISTERED_USER` SET `Confirmation` = TRUE WHERE `UserID`=?";
+                            //Set the confirmation to true
+                            if ($dbhandler->runCommand($command, $results[0]['UserID'])) {
+                                //Delete the entry required to test confirmation
+                                if($dbhandler->runCommand("DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?", $results[0]['UserID'])){
+                                    $returnValue = true;
+                                }
+                            }
+                        }
+                    }
+                }
+        }
+        return $returnValue;
+    }
+
+    public static function returnWorkTypes() {
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "Select `WorkType`,`workTypeID` FROM SPECIALIZATIONS";
+        $dbhandler->runCommand($command);
+        $results = $dbhandler->getResults();
+        return $results;
+    }
 }
+//The following is currently used to receive the confirmation requests from the user
+if (!empty($_GET)){
+    if(isset($_GET['email']) && isset($_GET['key'])){
+        //If this returns false one could log the false returns to see if unwanted entry into the server occurred
+            $result = SebenzaServer::userConfirm($_GET['email'],$_GET['key']);
+
+        if($result){
+            SebenzaServer::logout();
+        }
+        //Email link e.g. localhost:31335/index.php?email="teat@test.com"&key="test"
+    }
+}
+
 
 //The following code handles ajax requests sent to SessionModule.php as in sebenza.js for the login functionality
 if (!empty($_POST)) {
@@ -147,6 +289,31 @@ if (!empty($_POST)) {
             case 'logout':
                 $response = json_encode(true);
                 SebenzaServer::logout();
+                break;
+            case 'register-contractor':
+
+                if(isset($_POST['username']) && isset($_POST['name']) && isset($_POST['surname']) && isset($_POST['password']) && isset($_POST['email']) && isset($_POST['cellnumber']) && isset($_POST['homeNumber']) && isset($_POST['busName']) && isset($_POST['address']) && isset($_POST['reg']) && isset($_POST['vat']) && isset($_POST['areaname0']) && isset($_POST['cityname0']) && isset($_POST['provincename0'])){
+                    $response = json_encode(SebenzaServer::register([$_POST['username'],$_POST['email'],$_POST['cellnumber'],$_POST['password'],$_POST['surname'],$_POST['name']],'contractor'));
+                } else{
+                    $response = json_encode(false);
+                }
+                break;
+            case 'register-tradeworker':
+                if(isset($_POST['username']) && isset($_POST['name']) && isset($_POST['surname']) && isset($_POST['password']) && isset($_POST['email']) && isset($_POST['cellnumber']) && isset($_POST['homeNumber'])){
+                    $response = json_encode(SebenzaServer::register([$_POST['username'],$_POST['email'],$_POST['cellnumber'],$_POST['password'],$_POST['surname'],$_POST['name']],'tradeworker'));
+                } else{
+                    $response = json_encode(false);
+                }
+                break;
+            case 'register-homeuser':
+                if(isset($_POST['username']) && isset($_POST['name']) && isset($_POST['surname']) && isset($_POST['password']) && isset($_POST['email']) && isset($_POST['cellnumber']) && isset($_POST['homeNumber'])){
+                    $response = json_encode(SebenzaServer::register([$_POST['username'],$_POST['email'],$_POST['cellnumber'],$_POST['password'],$_POST['surname'],$_POST['name']],'homeuser'));
+                } else{
+                    $response = json_encode(false);
+                }
+                break;
+            case 'fetch_work_types':
+                $response = json_encode(SebenzaServer::returnWorkTypes());
                 break;
             default:
                 //If the action was not one of the handled cases, respond appropriately
