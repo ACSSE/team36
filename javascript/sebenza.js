@@ -263,23 +263,43 @@ function handleWorkRequestResponse(response){
 
 function addContractorLocation(){
     contractorLocation++;
-    var html = '<div class="row"><div class="column large-11 medium 11"><label>Area Name</label><input type="text" name="areaname' + contractorLocation + '0" id="areaname' + contractorLocation + '" placeholder="Edenvale" class="REQ_VAL"><div class="additional-info top-padding" id="areaname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">An area found within the city E.g. Edenvale</p></div></div></div><div class="row"><div class="column large-11 medium 11"><label>City Name</label><input type="text" name="cityname' + contractorLocation + '" id="cityname' + contractorLocation + '" placeholder="Johannesburg" class="REQ_VAL"><div class="additional-info top-padding" id="cityname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p></div></div></div><div class="row"><div class="column large-11 medium 11"><label>Province Name</label><input type="text" name="provincename' + contractorLocation + '" id="provincename' + contractorLocation + '" placeholder="Gauteng" class="REQ_VAL"><div class="additional-info top-padding" id="provincename' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A province within South Africa E.g. Gauteng</p></div></div><div class="column medium-1 large-1" style="margin-top: 24.44px"><label></label><button class="button success" onclick="addContractorLocation()">+</button></div>';
+    var html = '<div class="row"><div class="column large-11 medium 11"><label>Area Name</label><input type="text" name="areaname' + contractorLocation + '" id="areaname' + contractorLocation + '" placeholder="Edenvale" class="REQ_VAL"><div class="additional-info top-padding" id="areaname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">An area found within the city E.g. Edenvale</p></div></div></div><div class="row"><div class="column large-11 medium 11"><label>City Name</label><input type="text" name="cityname' + contractorLocation + '" id="cityname' + contractorLocation + '" placeholder="Johannesburg" class="REQ_VAL"><div class="additional-info top-padding" id="cityname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p></div></div></div><div class="row"><div class="column large-11 medium 11"><label>Province Name</label><input type="text" name="provincename' + contractorLocation + '" id="provincename' + contractorLocation + '" placeholder="Gauteng" class="REQ_VAL"><div class="additional-info top-padding" id="provincename' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A province within South Africa E.g. Gauteng</p></div></div><div class="column medium-1 large-1" style="margin-top: 24.44px"><label></label><button class="button success" onclick="addContractorLocation()">+</button></div>';
     document.getElementById("extraLocations").innerHTML += html;
 }
 
-function toggleSwitch(id){
-    console.log("Switching " + document.getElementById(id).innerHTML + " and this is the value :" + document.getElementById(id).value);
+function addContractorLocations(current){
+    if(document.getElementById("toggle-area-" + contractorLocation).innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">'){
+    contractorLocation++;
+    current *= 3;
+    var html = '<div class="row" data-toggler data-animate="hinge-in-from-right spin-out" id="additional-area-' + current + '"><div class="column large-11 medium 11"><label>Area Name</label><input type="text" name="areaname' + contractorLocation + '" id="areaname' + contractorLocation + '" placeholder="Edenvale" class="REQ_VAL"><div class="additional-info top-padding" id="areaname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">An area found within the city E.g. Edenvale</p></div></div></div><div class="row" data-toggler data-animate="hinge-in-from-right spin-out" id="additional-area-' + current + 1 + '"><div class="column large-11 medium 11"><label>City Name</label><input type="text" name="cityname' + contractorLocation + '" id="cityname' + contractorLocation + '" placeholder="Johannesburg" class="REQ_VAL"><div class="additional-info top-padding" id="cityname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p></div></div></div><div class="row" data-toggler data-animate="hinge-in-from-right spin-out" id="additional-area-' + current + 2 + '"><div class="column large-11 medium 11"><label>Province Name</label><input type="text" name="provincename' + contractorLocation + '" id="provincename' + contractorLocation + '" placeholder="Gauteng" class="REQ_VAL"><div class="additional-info top-padding" id="provincename' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A province within South Africa E.g. Gauteng</p></div></div><div class="column medium-1 large-1" style="margin-top: 24.44px">' + '<a data-toggle="additional-area-'+ (current + 1) * 2 +' additional-area-'+ (current + 1) * 2 + 1 +' additional-area-'+ (current + 1) * 2 + 2 +'" name="toggle-area-'+ current + 1 +'" id="toggle-area-'+ current + 1 +'" onclick="addContractorLocations('+ current + 1 +')"><img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/></a></div>';
 
-        console.log("This is the value of the other blah - " + document.getElementById('additional-contractor-skill-2').style.display);
-    if(document.getElementById(id).innerHTML.trim() == "+")
-        document.getElementById(id).innerHTML = "-";
-    else{
-        if(document.getElementById("toggle-switch-1").innerHTML.trim() == "-" && id == "toggle-switch-0"){
-            document.getElementById("toggle-switch-1").innerHTML = "+";
+    document.getElementById("extraLocations").innerHTML += html;
+    document.getElementById("toggle-area-" + contractorLocation - 1).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>';
+    }
+    //$("#additional-area-0").foundation('toggle');
+    //$("#additional-area-1").foundation('toggle');
+    //$("#additional-area-2").foundation('toggle');
+}
+
+function toggleSwitch(id){
+    console.log("Switching " + document.getElementById(id).innerHTML.trim());
+
+        //console.log("This is the value of the other blah - " + document.getElementById('image-toggle-0').src);
+    if(document.getElementById(id).innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">')
+        document.getElementById(id).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>';
+    else {
+        if (document.getElementById("toggle-switch-1").innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo">' && id == "toggle-switch-0") {
+            document.getElementById("toggle-switch-1").innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>';
             $("#additional-contractor-skill-2").foundation('toggle');
         }
-        document.getElementById(id).innerHTML = "+";
+        document.getElementById(id).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>';
     }
+    console.log(" --End Switching-- ");
 
-
+    if(id == "toggle-switch-0"){
+        $("#additional-contractor-skill-0").foundation('toggle');
+        $("#additional-contractor-skill-1").foundation('toggle');
+    }
+    else
+        $("#additional-contractor-skill-2").foundation('toggle');
 }

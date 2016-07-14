@@ -155,9 +155,9 @@
             </select>
         </div>
         <div class="column medium-1 large-1">
-            <button class="button success" data-toggle="additional-contractor-skill-1 additional-contractor-skill-0" name="toggle-switch-0" id="toggle-switch-0" type="button" onclick="toggleSwitch('toggle-switch-0')">
-                +
-            </button>
+            <a data-toggle="additional-contractor-skill-1 additional-contractor-skill-0" name="toggle-switch-0" id="toggle-switch-0" onclick="toggleSwitch('toggle-switch-0')">
+                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
+            </a>
         </div>
     </div>
     <div class="row">
@@ -167,9 +167,9 @@
             </select>
         </div>
         <div class="columns medium-1 large-1 hide-initially"  data-toggler data-animate="hinge-in-from-right spin-out" id="additional-contractor-skill-1">
-            <button class="button success" data-toggle="additional-contractor-skill-2" name="toggle-switch-1" id="toggle-switch-1" type="button" onclick="toggleSwitch('toggle-switch-1')">
-                +
-            </button>
+            <a data-toggle="additional-contractor-skill-2" name="toggle-switch-1" id="toggle-switch-1" onclick="toggleSwitch('toggle-switch-1')">
+                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
+            </a>
         </div>
     </div>
     <div class="row">
@@ -206,13 +206,16 @@
             </div>
         </div>
         <div class="column medium-1 large-1" style="margin-top: 24.44px">
-            <label></label><button class="button success" type="button" onclick="addContractorLocation()">
-                +
-            </button>
+<!--            <label></label><button class="button success" data-toggle="additional-area-0" type="button" onclick="addContractorLocation()">-->
+<!--                +-->
+<!--            </button>-->
+            <a data-toggle="additional-area-0 additional-area-1 additional-area-2" name="toggle-area-0" id="toggle-area-0" onclick="addContractorLocations(0)">
+                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
+            </a>
         </div>
 
     </div>
-    <div id="extraLocations">
+    <div id="extraLocations" style="width:100%;">
 
     </div>
     <hr>
