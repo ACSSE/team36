@@ -291,7 +291,8 @@ if (!empty($_POST)) {
                 SebenzaServer::logout();
                 break;
             case 'register-contractor':
-                if(isset($_POST['username']) && isset($_POST['name']) && isset($_POST['surname']) && isset($_POST['password']) && isset($_POST['email']) && isset($_POST['cellnumber']) && isset($_POST['homeNumber'])){
+
+                if(isset($_POST['username']) && isset($_POST['name']) && isset($_POST['surname']) && isset($_POST['password']) && isset($_POST['email']) && isset($_POST['cellnumber']) && isset($_POST['homeNumber']) && isset($_POST['busName']) && isset($_POST['address']) && isset($_POST['reg']) && isset($_POST['vat']) && isset($_POST['areaname0']) && isset($_POST['cityname0']) && isset($_POST['provincename0'])){
                     $response = json_encode(SebenzaServer::register([$_POST['username'],$_POST['email'],$_POST['cellnumber'],$_POST['password'],$_POST['surname'],$_POST['name']],'contractor'));
                 } else{
                     $response = json_encode(false);

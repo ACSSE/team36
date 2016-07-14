@@ -93,7 +93,7 @@
         <div class="column medium-11 large-11">
             <label>Is your business a VAT registered entity?</label>
             <div class="switch small">
-                <input class="switch-input" id="smallSwitch" type="checkbox" name="exampleSwitch" data-toggle="panel panel1" checked>
+                <input class="switch-input" id="smallSwitch" type="checkbox" name="ignore-exampleSwitch" data-toggle="panel panel1" checked>
                 <label class="switch-paddle" for="smallSwitch">
                     <span class="show-for-sr">VAT Registered Entity</span>
                     <span class="switch-active" aria-hidden="true">Yes</span>
@@ -182,6 +182,40 @@
     <div class="row">
         <h4>Location(s):</h4>
     </div>
+    <div class="row">
+        <div class="column large-11 medium 11">
+            <label>Area Name</label><input type="text" name="areaname0" id="areaname0" placeholder="Edenvale" class="REQ_VAL">
+            <div class="additional-info top-padding" id="areaname0-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">An area found within the city E.g. Edenvale</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column large-11 medium 11">
+            <label>City Name</label><input type="text" name="cityname0" id="cityname0" placeholder="Johannesburg" class="REQ_VAL">
+            <div class="additional-info top-padding" id="cityname0-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column large-11 medium 11">
+            <label>Province Name</label><input type="text" name="provincename0" id="provincename0" placeholder="Gauteng" class="REQ_VAL">
+            <div class="additional-info top-padding" id="provincename0-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">A province within South Africa E.g. Gauteng</p>
+            </div>
+        </div>
+        <div class="column medium-1 large-1" style="margin-top: 24.44px">
+            <label></label><button class="button success" onclick="addContractorLocation()">
+                +
+            </button>
+        </div>
+
+    </div>
+    <div id="extraLocations">
+
+    </div>
+    <hr>
     <div class="row">
         <div class="large-12 medium-12 columns">
             <button type="submit" class="secondary button radius" id="register-button"

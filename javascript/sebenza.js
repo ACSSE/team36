@@ -14,6 +14,7 @@ var NEXT_NOTIFICATION_DELAY = 1000;  //How long between notifications - has to b
 var NOTIFICATION_PULL_INTERVAL = 15000; //How often notifications are pulled from the server
 var notificationArray = []; //Stores the notifications fetched from the server
 var skillCounter = 0;
+var contractorLocation = 0;
 
 function startNotificationPulls() {
     sendAJAXRequest('fetch_notifications', handleNotifications);
@@ -150,27 +151,33 @@ function validateForm(formID) {
                 var i;
                 for (i = 0; i < inputTags.length; i++) {
                     inputTag = inputTags[i];
-                    var toggleID = inputTag.name + '-info';
-                    var foundationID = '#' + toggleID;
-                    var className = inputTag.className;
-                    var displayProperty = document.getElementById(toggleID).style.display.toLowerCase();
-                    var currentInputSuccess = true;
-                    //Alpha-numeric validation
-                    if (className.indexOf("AN_VAL") > -1 && !inputTag.value.match(alphaNumericRE)) {
-                        currentInputSuccess = false;
+                    console.log("The following is the input tag " + inputTag.name + " and its value: " +inputTag.value);
+                    if (inputTag.name.substring(0,6) != "ignore") {
+
+                        var toggleID = inputTag.name + '-info';
+                        //remove the line underneath once all forms have been completed
+                        console.log("These are the input tag names: " + inputTag.name);
+                        var foundationID = '#' + toggleID;
+                        var className = inputTag.className;
+                        var displayProperty = document.getElementById(toggleID).style.display.toLowerCase();
+                        var currentInputSuccess = true;
+                        //Alpha-numeric validation
+                        if (className.indexOf("AN_VAL") > -1 && !inputTag.value.match(alphaNumericRE)) {
+                            currentInputSuccess = false;
+                        }
+                        //Required field validation
+                        if (className.indexOf("REQ_VAL") > -1 && inputTag.value.length == 0) {
+                            currentInputSuccess = false;
+                        }
+                        //Toggle display of messages
+                        if (currentInputSuccess && displayProperty != '' && displayProperty != 'none') {
+                            $(foundationID).foundation('toggle');
+                        } else if (!currentInputSuccess && (displayProperty == '' || displayProperty == 'none')) {
+                            $(foundationID).foundation('toggle');
+                        }
+                        //Set success to false if applicable
+                        success &= currentInputSuccess;
                     }
-                    //Required field validation
-                    if (className.indexOf("REQ_VAL") > -1 && inputTag.value.length == 0) {
-                        currentInputSuccess = false;
-                    }
-                    //Toggle display of messages
-                    if (currentInputSuccess && displayProperty != '' && displayProperty != 'none') {
-                        $(foundationID).foundation('toggle');
-                    } else if (!currentInputSuccess && (displayProperty == '' || displayProperty == 'none')) {
-                        $(foundationID).foundation('toggle');
-                    }
-                    //Set success to false if applicable
-                    success &= currentInputSuccess;
                 }
             } else {
                 console.log("The form " + formID + " had no input elements to validate.");
@@ -252,4 +259,10 @@ function handleWorkRequestResponse(response){
     else{
         console.log("Registration failed");
     }
+}
+
+function addContractorLocation(){
+    contractorLocation++;
+    var html = '<div class="row"><div class="column large-11 medium 11"><label>Area Name</label><input type="text" name="areaname' + contractorLocation + '0" id="areaname' + contractorLocation + '" placeholder="Edenvale" class="REQ_VAL"><div class="additional-info top-padding" id="areaname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">An area found within the city E.g. Edenvale</p></div></div></div><div class="row"><div class="column large-11 medium 11"><label>City Name</label><input type="text" name="cityname' + contractorLocation + '" id="cityname' + contractorLocation + '" placeholder="Johannesburg" class="REQ_VAL"><div class="additional-info top-padding" id="cityname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p></div></div></div><div class="row"><div class="column large-11 medium 11"><label>Province Name</label><input type="text" name="provincename' + contractorLocation + '" id="provincename' + contractorLocation + '" placeholder="Gauteng" class="REQ_VAL"><div class="additional-info top-padding" id="provincename' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A province within South Africa E.g. Gauteng</p></div></div><div class="column medium-1 large-1" style="margin-top: 24.44px"><label></label><button class="button success" onclick="addContractorLocation()">+</button></div>';
+    document.getElementById("extraLocations").innerHTML += html;
 }

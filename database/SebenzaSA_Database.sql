@@ -184,7 +184,6 @@ INSERT 	 INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUs
 INSERT 	 INTO `LOCATIONS` ( `locationName`, `Coordinates`,`Region`,`Province`,`City`)
 	VALUES ('Airdlin','26.0389:28.0638','A','Gauteng','Johannesburg'),
     ('Barbeque Downs', '0:0', 'A','Gauteng','Johannesburg'),
-    ('Barbeque Downs Business Park', '0:0', 'A','Gauteng','Johannesburg'),
     ('Bloubosrand', '0:0', 'A','Gauteng','Johannesburg'),
     ('Blue Hills', '0:0', 'A','Gauteng','Johannesburg'),
     ('Broadacres', '0:0', 'A','Gauteng','Johannesburg'),
@@ -393,7 +392,6 @@ INSERT 	 INTO `LOCATIONS` ( `locationName`, `Coordinates`,`Region`,`Province`,`C
     ('Riviera', '0:0', 'E','Gauteng','Johannesburg'),
     ('Rivonia', '0:0', 'E','Gauteng','Johannesburg'),
     ('Sandton', '0:0', 'E','Gauteng','Johannesburg'),
-    ('Sandton', '0:0', 'E','Gauteng','Johannesburg'),
     ('Savoy Estate', '0:0', 'E','Gauteng','Johannesburg'),
     ('Saxonwold', '0:0', 'E','Gauteng','Johannesburg'),
     ('Simba', '0:0', 'E','Gauteng','Johannesburg'),
@@ -418,7 +416,6 @@ INSERT 	 INTO `LOCATIONS` ( `locationName`, `Coordinates`,`Region`,`Province`,`C
     ('Braamfontein', '0:0', 'F','Gauteng','Johannesburg'),
     ('Braamfontein Werf', '0:0', 'F','Gauteng','Johannesburg'),
     ('Chrisville', '0:0', 'F','Gauteng','Johannesburg'),
-    ('City and Suburban Industrial', '0:0', 'F','Gauteng','Johannesburg'),
     ('City and Suburban', '0:0', 'F','Gauteng','Johannesburg'),
     ('City Deep', '0:0', 'F','Gauteng','Johannesburg'),
     ('City West-Denver', '0:0', 'F','Gauteng','Johannesburg'),
@@ -448,8 +445,6 @@ INSERT 	 INTO `LOCATIONS` ( `locationName`, `Coordinates`,`Region`,`Province`,`C
     ('Highlands', '0:0', 'F','Gauteng','Johannesburg'),
     ('The Hill', '0:0', 'F','Gauteng','Johannesburg'),
     ('Hillbrow', '0:0', 'F','Gauteng','Johannesburg'),
-    ('Houghton Estate', '0:0', 'F','Gauteng','Johannesburg'),
-    ('Jan Hofmeyer', '0:0', 'F','Gauteng','Johannesburg'),
     ('Jeppestown', '0:0', 'F','Gauteng','Johannesburg'),
     ('Jeppestown South', '0:0', 'F','Gauteng','Johannesburg'),
     ('Johannesburg South', '0:0', 'F','Gauteng','Johannesburg'),
@@ -459,7 +454,6 @@ INSERT 	 INTO `LOCATIONS` ( `locationName`, `Coordinates`,`Region`,`Province`,`C
     ('Kensington', '0:0', 'F','Gauteng','Johannesburg'),
     ('Kibler Park', '0:0', 'F','Gauteng','Johannesburg'),
     ('Klipriviersberg', '0:0', 'F','Gauteng','Johannesburg'),
-    ('Klipriviersberg Estate', '0:0', 'F','Gauteng','Johannesburg'),
     ('La Rochelle', '0:0', 'F','Gauteng','Johannesburg'),
     ('Lake View Estate', '0:0', 'F','Gauteng','Johannesburg'),
     ('Liefde en Vrede', '0:0', 'F','Gauteng','Johannesburg'),
@@ -551,14 +545,13 @@ INSERT 	 INTO `SPECIALIZATIONS_PER_USER` (`Username`,`WorkType`)
 			('seventhUser', 'Tree-Feller');
 
 INSERT 	 INTO `LOCATIONS_PER_USER` (`Username`,`locationName`)
-	VALUES	('thirdUser','Glenadrienne'),
-			('thirdUser', 'Troyeville'),
-			('sixthUser', 'Selby'),
-			('seventhUser', 'Lenasia'),
-			('seventhUser', 'Germiston'),
-			('seventhUser', 'Sandton');
+	VALUES	('thirdUser','Turffontein'),
+			('thirdUser', 'Turffontein'),
+			('sixthUser', 'Turffontein'),
+			('seventhUser', 'Turffontein'),
+			('seventhUser', 'Turffontein'),
+			('seventhUser', 'Turffontein');
 
 INSERT INTO `NOTIFICATION` (`UserID`,`Message`)
     VALUES (9,'Welcome!'),
       (9, 'This is a second notification!');
-
