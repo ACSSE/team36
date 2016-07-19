@@ -127,6 +127,7 @@ function handleLoginResponse(response) {
 }
 
 function handleRegisterResponse(response) {
+    console.log("Handling register response: ");
     var success = JSON.parse(response);
     console.log("Registering: response " + success);
     if (success) {

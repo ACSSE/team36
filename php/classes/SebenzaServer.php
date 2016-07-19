@@ -128,8 +128,6 @@ class SebenzaServer {
     users, to ensure that the email account exists.*/
     public static function register(array $input, $type){
         //TODO: Order the thing in such a way that it will not remove entries already removed etc, so remove the condition variables and add what is to be done at the end of the for loops last run instead.
-        $returnValue = false;
-        return $returnValue;
         $locationsToRemove = 0;
         $locationsPerUserToRemove = 0;
         $skillsPerUserToRemove = 0;
@@ -146,6 +144,7 @@ class SebenzaServer {
         //$condition = self::mailClient($email,$keyToSend,$input);
         $condition = true;
         $test = "";
+        $returnValue = "";
        if($condition)
             switch ($type){
                 case 'contractor':
@@ -157,6 +156,7 @@ class SebenzaServer {
                     $condition = true;
                     $region = "A";
                     $coordinates = "0:0";
+                    $returnValue = $test;
                     for($k = 0; (($k < $numLocations) && $condition);$k++){
                         if($dbHandler->runCommand($command,$_POST["areaname-contractor-".$k])) {
                             $test .= " Running through areas: ";
@@ -173,6 +173,7 @@ class SebenzaServer {
                                     $locationsToRemove[$locationsToRemoveAmount++] = $dbHandler->getInsertID();
                                 }
                                 else{
+                                    $test .= "no locations added from k =".$k;
                                     $k = $numLocations + 5;
                                     $condition = false;
                                     //dbhandler has failed to run for some reason remove all locations added to LOCATIONS
@@ -185,6 +186,7 @@ class SebenzaServer {
                         }
                         else{
                             //dbhandler has failed to run for some reason remove all locations added to LOCATIONS if any
+                            $test .= "Couldnt run dbhandler to locate areas";
                             $locationsToRemove = $k - 1;
                             $k = $numLocations + 5;
                             $condition = false;
@@ -294,8 +296,9 @@ class SebenzaServer {
                     }
                     else{
                         //TODO:remove inserted elements from LOCATIONS and set $returnValue to false - correct
+                        $returnValue = $test;
                     }
-                    return $returnValue;
+                    return "This is a test";
                     break;
                 case 'homeuser':
                     $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`) VALUES (?,?,?,?,?,?,?)";
@@ -438,17 +441,14 @@ if (!empty($_POST)) {
             case 'register-contractor':
                 //Ensure all skill are set
                 $condition = true;
-                $test = "";
                 if(isset($_POST['ignore-sillsAdded-contractor'])){
                     for($k = 0; $k < $_POST['ignore-sillsAdded-contractor'];$k++){
                         if(!isset($_POST['contractor-work-type-'.$k])){
                             $condition = false;
-                            $test .= "1:false ".$k." ";
                         }
                     }
                 }
                 else {
-                    $test .= "2:false ";
                     $condition = false;
                 }
 
@@ -458,22 +458,18 @@ if (!empty($_POST)) {
                     for($k = 0; $k < $_POST['ignore-locationsAdded-contractor'];$k++){
                         if(!isset($_POST['areaname-contractor-'.$k])){
                             $condition = false;
-                            $test .= "3:false ";
                         }
                         if(!isset($_POST['cityname-contractor-'.$k])){
                             $condition = false;
-                            $test .= "4:false ";
                         }
                         if(!isset($_POST['provincename-contractor-'.$k])){
                             $condition = false;
-                            $test .= "5:false ";
                         }
-                        $test .= $_POST['provincename-contractor-'.$k]." ".$_POST['cityname-contractor-'.$k]." ".$_POST['areaname-contractor-'.$k]." ";
+                        //$test .= $_POST['provincename-contractor-'.$k]." ".$_POST['cityname-contractor-'.$k]." ".$_POST['areaname-contractor-'.$k]." ";
                     }
                 }
                 else{
                     $condition = false;
-                    $test .= "6:false ";
                 }
 
                 //Ensure that if the business is VAT registered to store appropriate details like the business registration number and the business's vat number
@@ -482,22 +478,23 @@ if (!empty($_POST)) {
                         //TODO: not 100% sure on this if statement must definitely test it
                         if(!isset($_POST['reg-contractor']) || !isset($_POST['vat-contractor']) ) {
                             $condition = false;
-                            $test .= "7:false ";
                         }
 
                     }
                 }
-                else
+                else{
                     $condition = false;
+                }
 
-                $test .= " ".$_POST['ignore-sillsAdded-contractor']." ".$_POST['ignore-locationsAdded-contractor']." ".$_POST['ignore-exampleSwitch']." ";
+
+                //$test .= " ".$_POST['ignore-sillsAdded-contractor']." ".$_POST['ignore-locationsAdded-contractor']." ".$_POST['ignore-exampleSwitch']." ";
                 //Ensure all the rest of the variables are set
                 if($condition) {
                     if (isset($_POST['name-contractor']) && isset($_POST['surname-contractor']) && isset($_POST['username-contractor']) && isset($_POST['password-contractor']) && isset($_POST['confirmPassword-contractor']) && isset($_POST['email-contractor']) && isset($_POST['confirmEmail-contractor']) && isset($_POST['cellnumber-contractor']) && isset($_POST['homeNumber-contractor']) && isset($_POST['busName']) && isset($_POST['address-contractor']) && isset($_POST['areaname-contractor-0']) && isset($_POST['cityname-contractor-0']) && isset($_POST['provincename-contractor-0'])) {
-                        $response = json_encode(SebenzaServer::register([$_POST['username-contractor'], $_POST['email-contractor'], $_POST['cellnumber-contractor'], $_POST['password-contractor'], $_POST['surname-contractor'], $_POST['name-contractor'], $_POST['ignore-locationsAdded-contractor'],$_POST['busName'],$_POST['address-contractor'],$_POST['ignore-sillsAdded-contractor']], 'contractor'));
-                        //$response = json_encode(false);
+                        //$response = json_encode(SebenzaServer::register([$_POST['username-contractor'], $_POST['email-contractor'], $_POST['cellnumber-contractor'], $_POST['password-contractor'], $_POST['surname-contractor'], $_POST['name-contractor'], $_POST['ignore-locationsAdded-contractor'],$_POST['busName'],$_POST['address-contractor'],$_POST['ignore-sillsAdded-contractor']], 'contractor'));
+                        $response = json_encode("It got here");
                     } else {
-                        $response = json_encode($test);
+                        $response = json_encode(false);
                     }
                 }
                 else{
@@ -527,7 +524,6 @@ if (!empty($_POST)) {
                 break;
         }
     }
-//    echo $response;
     echo $response;
     //Flush the output buffer
     SebenzaServer::stop();
