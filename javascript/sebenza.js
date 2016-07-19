@@ -16,6 +16,7 @@ var notificationArray = []; //Stores the notifications fetched from the server
 var skillCounter = 0;
 var contractorLocation = 0;
 var locationAmount = 0;
+var locationsElements = [];
 
 function startNotificationPulls() {
     sendAJAXRequest('fetch_notifications', handleNotifications);
@@ -74,12 +75,21 @@ function sendAJAXRequest (action, responseFunction, formID) {
                 var form = document.getElementById(formID);
                 if (form != null) {
                     var inputTags = form.getElementsByTagName('input');
+                    var selectTags = form.getElementsByTagName('select');
                     if (inputTags.length > 0) {
                         var inputTag;
                         var i;
                         for (i = 0; i < inputTags.length; i++) {
                             inputTag = inputTags[i];
                             objectJSON += ', "' + inputTag.name + '":"' + inputTag.value + '"';
+                        }
+                    }
+                    if (selectTags.length > 0) {
+                        var selectTag;
+                        var j;
+                        for (j = 0; j < selectTags.length; j++) {
+                            selectTag = selectTags[j];
+                            objectJSON += ', "' + selectTag.name + '":"' + selectTag.value + '"';
                         }
                     }
                 }
@@ -117,7 +127,6 @@ function handleLoginResponse(response) {
 }
 
 function handleRegisterResponse(response) {
-
     var success = JSON.parse(response);
     console.log("Registering: response " + success);
     if (success) {
@@ -153,6 +162,7 @@ function validateForm(formID) {
                 var selectTag;
                 for(var j = 0; j < selectTags.length; j++){
                     selectTag = selectTags[j];
+                    console.log(selectTag.name);
                     if (selectTag.name.substring(0,6) != "ignore") {
 
                         var selectToggleID = selectTag.name + '-info';
@@ -161,7 +171,7 @@ function validateForm(formID) {
                         var selectFoundationID = '#' + selectToggleID;
                         var selectClassName = selectTag.className;
                         var selectDisplayProperty = document.getElementById(selectToggleID).style.display.toLowerCase();
-                        console.log("These are the select tag names: " + selectTag.name);
+                        //console.log("These are the select tag names: " + selectTag.name);
                         //Required field validation
                         if (selectClassName.indexOf("REQ_VAL") > -1 && selectTag.value.length == 0) {
                             currentInputSuccess = false;
@@ -184,12 +194,12 @@ function validateForm(formID) {
                 var i;
                 for (i = 0; i < inputTags.length; i++) {
                     inputTag = inputTags[i];
-                    //console.log("The following is the input tag " + inputTag.name + " and its value: " +inputTag.value);
+                    console.log(inputTag.name);
                     if (inputTag.name.substring(0,6) != "ignore") {
 
                         var inputToggleID = inputTag.name + '-info';
                         //remove the line underneath once all forms have been completed
-                        console.log("These are the input tag names: " + inputTag.name);
+                        //console.log("These are the input tag names: " + inputTag.name);
                         var inputFoundationID = '#' + inputToggleID;
                         var inputClassName = inputTag.className;
                         var inputDisplayProperty = document.getElementById(inputToggleID).style.display.toLowerCase();
@@ -248,24 +258,6 @@ function homeUserOngoingJobModalFill(type, location){
 
 }
 
-function addSkillColumn(){
-
-    //var html = '<div class="column medium-8 large-8" ><select id="contractor-work-type-' + skillCounter + '" name="contractor-work-type-' + skillCounter + '"><option value=""></option><script>requestWorkTypes();</script></select></div><div class="column large-offset-2 medium-2 large-2" > <button class="button success" onclick="addSkillColumn()">+</button></div>';
-    //document.getElementById("additional-contractor-skills").innerHTML = html;
-    //console.log("The following is the counter for the skills: " + skillCounter);
-    //console.log("The following is the class: " + document.getElementById("additional-contractor-skill-0").className);
-    if(skillCounter < 3) {
-        document.getElementById("additional-contractor-skill-" + skillCounter).className = "column medium-8 large-8";
-        skillCounter++;
-        if (skillCounter == 1) {
-            document.getElementById("additional-contractor-skill-" + skillCounter++).className = "column large-offset-2 medium-2 large-2";
-        }
-    }
-    //console.log("This is the classes: " + document.getElementById("test").className);
-    //document.getElementById("test").className = "column medium-8 large-8";
-    //console.log("This is the classes: " + document.getElementById("test").className);
-}
-
 function requestWorkTypes(){
     sendAJAXRequest('fetch_work_types', handleWorkRequestResponse);
 }
@@ -277,7 +269,7 @@ function handleWorkRequestResponse(response){
         if(workTypeArray.length > 0){
 
             //document.getElementById("contractor-work-type").innerHTML = "This is a test".htmlText;
-            var htmlText = '<option value=""></option>';
+            var htmlText = '<option value="test" selected>Test</option>';
             for(var i = 0;i<workTypeArray.length;i++){
                 htmlText += '<option value="' + workTypeArray[i]["workTypeID"] + '">' + workTypeArray[i]["WorkType"] + '</option>';
             }
@@ -293,16 +285,11 @@ function handleWorkRequestResponse(response){
     }
 }
 
-function addContractorLocation(){
-    contractorLocation++;
-    var html = '<div class="row"><div class="column large-11 medium 11"><label>Area Name</label><input type="text" name="areaname' + contractorLocation + '" id="areaname' + contractorLocation + '" placeholder="Edenvale" class="REQ_VAL"><div class="additional-info top-padding" id="areaname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">An area found within the city E.g. Edenvale</p></div></div></div><div class="row"><div class="column large-11 medium 11"><label>City Name</label><input type="text" name="cityname' + contractorLocation + '" id="cityname' + contractorLocation + '" placeholder="Johannesburg" class="REQ_VAL"><div class="additional-info top-padding" id="cityname' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p></div></div></div><div class="row"><div class="column large-11 medium 11"><label>Province Name</label><input type="text" name="provincename' + contractorLocation + '" id="provincename' + contractorLocation + '" placeholder="Gauteng" class="REQ_VAL"><div class="additional-info top-padding" id="provincename' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A province within South Africa E.g. Gauteng</p></div></div><div class="column medium-1 large-1" style="margin-top: 24.44px"><label></label><button class="button success" onclick="addContractorLocation()">+</button></div>';
-    document.getElementById("extraLocations").innerHTML += html;
-}
-
+//Used in contractor registration to add more locations no limit to amount of locations that a user can add, however they are required and need to be filled in.
+//I need to decide whether: if user clicks remove locations at a certain tab, if all the locations after are to be removed or only the one directly below the remove button pressed, currently the former is in place.
 function addContractorLocations(current){
-    //console.log("The following is current: " + current + " The following is contractorLocation: " + contractorLocation);
     if(document.getElementById("toggle-area-" + current).innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">' && current == contractorLocation){
-        //console.log("Inserting toggle");
+        //The following statement adds a toggle-able area to the html page which is toggled later and not removed to 'save' time.
         contractorLocation++;
         newCurrent = current *= 3;
         var placeHolder = 1;
@@ -311,10 +298,8 @@ function addContractorLocations(current){
         document.getElementById("toggle-area-" + parseFloat(contractorLocation - 1)).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>';
         //Have tried to implement the following to-do but it doesn't seem to persist over the function calls.
         //TODO: Add a global variable that handles the areas so that the classes need not be created each time.
-        //TODO: Add ignore- to the appropriate tags so that they will not be validated
         for(var i = 0 ; i <= parseFloat(((contractorLocation - 1) * 3) + 2) ; i++){
             var temp = "";
-            //console.log("The following is 3 % i : " + (3% i) + " where i is :" + i);
             if(i % 3 == 0){
                 temp = "provincename-contractor-" + placeHolder + "-info";
             }
@@ -326,40 +311,44 @@ function addContractorLocations(current){
                 placeHolder++;
             }
 
-            new Foundation.Toggler($("#additional-area-" + i) , 'data-animate="hinge-in-from-right spin-out"');
+            locationsElements[i] = new Foundation.Toggler($("#additional-area-" + i) , 'data-animate="hinge-in-from-right spin-out"');
             //console.log(temp);
             new Foundation.Toggler($("#" + temp),'data-animate="fade-in fade-out"');
         }
         if(document.getElementById("additional-area-" + newCurrent).style.display == "none"){
-            //console.log("The following is the display property " + document.getElementById("additional-area-" + newCurrent).style.display);
-
-            //$("#toggle-area-" + current).click();
-            $("#additional-area-" + newCurrent).foundation('toggle');
-            $("#additional-area-" + parseFloat(newCurrent + 1)).foundation('toggle');
-            $("#additional-area-" + parseFloat(newCurrent + 2)).foundation('toggle');
+            locationsElements[newCurrent].toggle();
+            locationsElements[newCurrent + 1].toggle();
+            locationsElements[newCurrent + 2].toggle();
         }
         locationAmount++;
     }
     else{
-        //console.log("Retoggling a previously removed element");
         var iconChange = current + 1;
 
         if(document.getElementById("toggle-area-" + parseFloat(current)).innerHTML == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">') {
+            //The following if statement goes about toggling-on previously added elements
             var newCurrent = current * 3;
-            $("#additional-area-" + newCurrent).foundation('toggle');
-            $("#additional-area-" + parseFloat(newCurrent + 1)).foundation('toggle');
-            $("#additional-area-" + parseFloat(newCurrent + 2)).foundation('toggle');
+            document.getElementById("provincename-contractor-" + iconChange).setAttribute("name","provincename-contractor-" + iconChange);
+            document.getElementById("areaname-contractor-" + iconChange).setAttribute("name","areaname-contractor-" + iconChange);
+            document.getElementById("cityname-contractor-" + iconChange).setAttribute("name","cityname-contractor-" + iconChange);
+            locationsElements[newCurrent].toggle();
+            locationsElements[newCurrent + 1].toggle();
+            locationsElements[newCurrent + 2].toggle();
             document.getElementById("toggle-area-" + parseFloat(current)).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>';
             locationAmount++;
         }
-        else{
+        else {
+            //The following if statement goes about toggling-off previously added elements
             document.getElementById("toggle-area-" + parseFloat(current)).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>';
+            var newCurrent = current;
             var placeHolder = locationAmount;
-            if(current < contractorLocation){
-                for(var j = ((current) * 3);j <= (((placeHolder - 1) * 3) + 2); j ++){
-                    //console.log("Removing " + j);
-                    $("#additional-area-" + j).foundation('toggle');
+            if(newCurrent < contractorLocation){
+                for(var j = ((newCurrent) * 3);j < (((placeHolder) * 3)); j ++){
+                    locationsElements[j].toggle();
                     if(j % 3 == 0){
+                        document.getElementById("provincename-contractor-" + iconChange).setAttribute("name","ignore-provincename-contractor-" + iconChange);
+                        document.getElementById("areaname-contractor-" + iconChange).setAttribute("name","ignore-areaname-contractor-" + iconChange);
+                        document.getElementById("cityname-contractor-" + iconChange).setAttribute("name","ignore-cityname-contractor-" + iconChange);
                         document.getElementById("toggle-area-" + iconChange).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>';
                         iconChange++;
                         locationAmount--;
@@ -368,38 +357,46 @@ function addContractorLocations(current){
             }
         }
     }
-    //$("#additional-area-0").foundation('toggle');
-    //$("#additional-area-1").foundation('toggle');
-    //$("#additional-area-2").foundation('toggle');
     //console.log("The following is the location amount : " + locationAmount);
+    document.getElementById("locationsAdded-contractor").value = parseFloat(locationAmount + 1);
 }
 
+//Used in contractor registration to add more skills up to three maximum
 function toggleSwitch(id,validationID){
     //console.log("Switching " + document.getElementById(id).innerHTML.trim());
-
+    var skillsAvailable = document.getElementById("skillsAdded-contractor").value;
         //console.log("This is the value of the other blah - " + document.getElementById('image-toggle-0').src);
     if(document.getElementById(id).innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">') {
+        //The following if statement toggles on the three toggle-able elements
         document.getElementById(id).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>';
         document.getElementById(validationID).setAttribute("name",validationID);
+        skillsAvailable++;
     }
     else {
         if (document.getElementById("toggle-switch-1").innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo">' && id == "toggle-switch-0") {
+            //The following if statement toggles off the two last toggle-able elements
             document.getElementById("toggle-switch-1").innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>';
             document.getElementById('contractor-work-type-1').setAttribute("name","ignore-" + "contractor-work-type-1");
             document.getElementById('contractor-work-type-2').setAttribute("name","ignore-" + "contractor-work-type-2");
             $("#additional-contractor-skill-2").foundation('toggle');
+            skillsAvailable -= 2;
         }
         else if(document.getElementById("toggle-switch-1").innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">' && id == "toggle-switch-0"){
+            //The following if statement toggles off the 2nd last toggle-able elements
             document.getElementById('contractor-work-type-1').setAttribute("name","ignore-" + "contractor-work-type-1");
+            skillsAvailable -= 1;
         }
         else if(id == "toggle-switch-1"){
+            //The following if statement toggles off the last toggle-able elements
             document.getElementById('contractor-work-type-2').setAttribute("name","ignore-" + "contractor-work-type-2");
+            skillsAvailable -= 1;
         }
 
         document.getElementById(id).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>';
     }
-    //console.log(" --End Switching-- ");
+    document.getElementById("skillsAdded-contractor").value = skillsAvailable;
 
+    //The following does the actual toggling
     if(id == "toggle-switch-0"){
         $("#additional-contractor-skill-0").foundation('toggle');
         $("#additional-contractor-skill-1").foundation('toggle');

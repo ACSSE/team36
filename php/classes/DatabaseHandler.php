@@ -19,6 +19,7 @@
  * This class handles the connection to a database and running any command on that connection. The database language
  * is MySQL.
  */
+//TODO: research into multiple entry additions so that if any entry fails all the previously run commands related to that command will revert - multi commands
 class DatabaseHandler {
     private $dbHost = null;             //String URL of database server
     private $dbUser = null;             //String Database user

@@ -148,8 +148,12 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <select class="REQ_VAL" id="contractor-work-type-0" name="contractor-work-type-0">
+            <select id="contractor-work-type-0" name="contractor-work-type-0" form="register-contractor-form">
+<!--                <option value="test1">Test</option>-->
+<!--                <option value="test2">Test</option>-->
+<!--                <option value="test3">Test</option>-->
                 <script>
+
                     requestWorkTypes();
                 </script>
             </select>
@@ -227,7 +231,7 @@
     <div id="extraLocations" style="width:100%;">
         
     </div>
-    <hr>
+
     <div class="row">
         <div class="large-12 medium-12 columns">
             <button type="submit" class="secondary button radius" id="register-button"
@@ -239,7 +243,8 @@
             </p>
         </div>
     </div>
-
+    <input type="hidden" value="1" id="locationsAdded-contractor" name="ignore-locationsAdded-contractor">
+    <input type="hidden" value="1" id="skillsAdded-contractor" name="ignore-sillsAdded-contractor">
 
     <div class="reveal" id="exampleModal3" data-reveal>
         <h1>You are now Registered!</h1>

@@ -48,57 +48,55 @@ CREATE TABLE `LOCATIONS` (
 
 DROP TABLE IF EXISTS `TRADE_WORKER`;
 CREATE TABLE `TRADE_WORKER` (
-	`userID` integer not null auto_increment,
-	`Username` varchar(40) not null unique,
-	`Locations` varchar(40) not null,
-  `WorkType` varchar(15) not null,
+	`tradeworkerID` integer not null auto_increment,
+	`UserID` integer not null unique,
   `Availability` boolean not null,
-	PRIMARY KEY (`UserID`),
-	FOREIGN KEY (`Username`) REFERENCES REGISTERED_USER(`Username`),
-	FOREIGN KEY (`WorkType`) REFERENCES SPECIALIZATIONS(`WorkType`)
+	PRIMARY KEY (`tradeworkerID`),
+	FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );
 
 DROP TABLE IF EXISTS `LOCATIONS_PER_USER`;
 CREATE TABLE `LOCATIONS_PER_USER` (
   `localID` integer not null auto_increment,
-  `Username` varchar(40) not null,
-  `locationName` varchar(15) not null,
+  `UserID` integer not null,
+  `locationID` integer not null,
   PRIMARY KEY (`localID`),
-  FOREIGN KEY (`Username`) REFERENCES TRADE_WORKER(`Username`),
-  FOREIGN KEY (`locationName`) REFERENCES LOCATIONS(`locationName`)
+  FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`),
+  FOREIGN KEY (`locationID`) REFERENCES LOCATIONS(`locationID`)
 );
 
 DROP TABLE IF EXISTS `SPECIALIZATIONS_PER_USER`;
 CREATE TABLE `SPECIALIZATIONS_PER_USER` (
   `specID` integer not null auto_increment,
-  `Username` varchar(40) not null,
-  `WorkType` varchar(15) not null,
+  `UserID` integer not null,
+  `workTypeID` integer not null,
   PRIMARY KEY (`specID`),
-  FOREIGN KEY (`Username`) REFERENCES TRADE_WORKER(`Username`),
-  FOREIGN KEY (`WorkType`) REFERENCES SPECIALIZATIONS(`WorkType`)
+  FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`),
+  FOREIGN KEY (`workTypeID`) REFERENCES SPECIALIZATIONS(`workTypeID`)
 );
 
 DROP TABLE IF EXISTS `CONTRACTOR`;
 CREATE TABLE `CONTRACTOR` (
   `contractorID` integer not null auto_increment,
-  `Username` varchar(40) not null unique,
+  `UserID` integer not null unique,
+  `BusinessRegistrationNum` integer not null unique,
+  `BusinessVatNum` integer not null unique,
+  `BusinessAddress` VARCHAR(50) not null,
   `BusinessName` varchar(40) not null unique,
   `BusinessDescription` varchar(40) not null,
   `BusinessHours` varchar(40) not null,
-  `WorkType` varchar(15) not null,
   `Availability` boolean not null,
   PRIMARY KEY (`contractorID`),
-  FOREIGN KEY (`Username`) REFERENCES REGISTERED_USER(`Username`),
-  FOREIGN KEY (`WorkType`) REFERENCES SPECIALIZATIONS(`WorkType`)
+  FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );
 
 DROP TABLE IF EXISTS `HOMEUSER`;
 CREATE TABLE `HOMEUSER` (
 	`homeuserID` integer not null auto_increment,
-	`Username` varchar(40) not null unique,
+  `UserID` integer not null unique,
   `Subscribed` boolean not null,
 	PRIMARY KEY (`homeuserID`),
-	FOREIGN KEY (`Username`) REFERENCES REGISTERED_USER(`Username`)
+	FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );
 
 DROP TABLE IF EXISTS `QUOTE_PER_USER`;
@@ -145,13 +143,13 @@ CREATE TABLE `QUOTE_REQUEST` (
 DROP TABLE IF EXISTS `BOOKMARKED`;
 CREATE TABLE `BOOKMARKED` (
   `BookmarkID` integer not null auto_increment,
-  `UserSet` varchar(40) not null unique,
-  `BookmarkedUser` varchar(40) not null unique,
-  `WorkType` varchar(15) not null unique,
+  `UserSet` INTEGER not null unique,
+  `BookmarkedUser` INTEGER not null unique,
+  `WorkTypeID` integer not null unique,
   PRIMARY KEY (`BookmarkID`),
-  FOREIGN KEY (`UserSet`) REFERENCES REGISTERED_USER(`Username`),
-  FOREIGN KEY (`BookmarkedUser`) REFERENCES REGISTERED_USER(`Username`),
-  FOREIGN KEY (`WorkType`) REFERENCES SPECIALIZATIONS_PER_USER(`WorkType`)
+  FOREIGN KEY (`UserSet`) REFERENCES REGISTERED_USER(`UserID`),
+  FOREIGN KEY (`BookmarkedUser`) REFERENCES REGISTERED_USER(`UserID`),
+  FOREIGN KEY (`WorkTypeID`) REFERENCES SPECIALIZATIONS_PER_USER(`specID`)
 );
 
 DROP TABLE IF EXISTS `NOTIFICATION`;
@@ -529,28 +527,6 @@ INSERT 	 INTO `SPECIALIZATIONS` (`WorkType`, `Description`)
 			( 'Tiler', 'Person who tiles floors'),
 			('Paver', 'Person who paves areas'),
 			('Tree-Feller', 'Person who removes trees');
-
-INSERT 	 INTO `TRADE_WORKER` (`Username`, `Locations`, `WorkType`, `Availability`)
-	VALUES	('thirdUser', 'Selby', 'Painter', '1'),
-			('fourthUser', 'Risana', 'Tiler', '1'),
-			('sixthUser', 'Lenasia', 'Paver', '1'),
-			('seventhUser', 'Sandton', 'Tree-Feller', '0');
-
-INSERT 	 INTO `SPECIALIZATIONS_PER_USER` (`Username`,`WorkType`)
-	VALUES	('thirdUser','Painter'),
-			('thirdUser', 'Tiler'),
-			('sixthUser', 'Tiler'),
-			('seventhUser', 'Tiler'),
-			('seventhUser', 'Paver'),
-			('seventhUser', 'Tree-Feller');
-
-INSERT 	 INTO `LOCATIONS_PER_USER` (`Username`,`locationName`)
-	VALUES	('thirdUser','Turffontein'),
-			('thirdUser', 'Turffontein'),
-			('sixthUser', 'Turffontein'),
-			('seventhUser', 'Turffontein'),
-			('seventhUser', 'Turffontein'),
-			('seventhUser', 'Turffontein');
 
 INSERT INTO `NOTIFICATION` (`UserID`,`Message`)
     VALUES (9,'Welcome!'),

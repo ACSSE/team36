@@ -127,26 +127,173 @@ class SebenzaServer {
     /*The following function will register the user according to his type, confirmation of email will be required from all
     users, to ensure that the email account exists.*/
     public static function register(array $input, $type){
+        //TODO: Order the thing in such a way that it will not remove entries already removed etc, so remove the condition variables and add what is to be done at the end of the for loops last run instead.
         $returnValue = false;
+        return $returnValue;
+        $locationsToRemove = 0;
+        $locationsPerUserToRemove = 0;
+        $skillsPerUserToRemove = 0;
+        //should be an integer that will never exist within the database
+        $id = -5;
         $email = $input[1];
         $username = $input[0];
         $keyToSend = self::hashPassword($email + $username + time());
-        $condition = self::mailClient($email,$keyToSend,$input);
+        $numLocations = $input[6];
+        $numSkills = $input[9];
+        $locationID = array($numLocations);
+        $locationsToRemove = array($numLocations);
+        $locationsToRemoveAmount = 0;
+        //$condition = self::mailClient($email,$keyToSend,$input);
+        $condition = true;
+        $test = "";
        if($condition)
             switch ($type){
                 case 'contractor':
-                    $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`) VALUES (?,?,?,?,?,?,?)";
-                    $contactNumber = $input[2];
-                    $password = self::hashPassword($input[3]);
-                    $name = $input[5];
-                    $surname = $input[4];
+                    $test .= "Working with contractor";
+                    $command = "SELECT `locationID`,`locationName` FROM `LOCATIONS` WHERE `locationName` = ?";
+                    $command1 = "INSERT INTO `LOCATIONS` (`locationName`, `Coordinates`, `Region`, `Province`, `City`) VALUES (?,?,?,?,?)";
                     $dbHandler = self::fetchDatabaseHandler();
-                    if($dbHandler->runCommand($command,$username,$email,$contactNumber,1,$password,$surname,$name)){
-                    $id = $dbHandler->getInsertID();
-                    $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
-                    //TODO: create a combination of values to hash that the key will be unique for each email sent out as well as create a method to send an email(to,from,message) where the message will contain the link to activate the account
-                    $returnValue = $dbHandler->runCommand($command,$id,$keyToSend);
-                    //A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
+                    //The following will run through all the areas added by the contractor and areas which don't exist will be added to the database, consider having an admin accept and reject areas according to a standard
+                    $condition = true;
+                    $region = "A";
+                    $coordinates = "0:0";
+                    for($k = 0; (($k < $numLocations) && $condition);$k++){
+                        if($dbHandler->runCommand($command,$_POST["areaname-contractor-".$k])) {
+                            $test .= " Running through areas: ";
+                            //Should always return true, even if a matching area is not found, then that area will be added.
+                            $result = $dbHandler->getResults();
+                            if (count($result) == 0) {
+                                //If the area does not exist in the database add it and gain a handle on the id
+                                $area = $_POST["areaname-contractor-".$k];
+                                $province = $_POST["provincename-contractor-".$k];
+                                $city = $_POST["cityname-contractor-".$k];
+                                //TODO: coordinates can be requested through google maps api - extra
+                                if($dbHandler->runCommand($command1, $area, $coordinates, $region, $province, $city)){
+                                    $locationID[$k] = $dbHandler->getInsertID();
+                                    $locationsToRemove[$locationsToRemoveAmount++] = $dbHandler->getInsertID();
+                                }
+                                else{
+                                    $k = $numLocations + 5;
+                                    $condition = false;
+                                    //dbhandler has failed to run for some reason remove all locations added to LOCATIONS
+                                }
+
+                            } else {
+                                //If the area exists in the database gain a handle on the areaID - there should only be one returned result as the area names should be unique
+                                $locationID[$k] = $result['locationID'];
+                            }
+                        }
+                        else{
+                            //dbhandler has failed to run for some reason remove all locations added to LOCATIONS if any
+                            $locationsToRemove = $k - 1;
+                            $k = $numLocations + 5;
+                            $condition = false;
+                        }
+            }
+                    //Due to LOCATIONS having multiple inserts which run in a for loop $condition exists, can be done when the for loop reaches the last position.
+                    if($condition){
+                        $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`) VALUES (?,?,?,?,?,?,?)";
+                        $contactNumber = $input[2];
+                        $password = self::hashPassword($input[3]);
+                        $name = $input[5];
+                        $surname = $input[4];
+                        if ($dbHandler->runCommand($command, $username, $email, $contactNumber, 1, $password, $surname, $name)) {
+                            //once users are inserted into the REGISTERED_USER table appropriate data will be inserted into the CONFIRMATIONS table
+                            $id = $dbHandler->getInsertID();
+                            $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
+                            if( $dbHandler->runCommand($command, $id, $keyToSend)){
+                                //once users are inserted into the CONFIRMATIONS table appropriate data will be inserted into the CONTRACTOR table
+                                //TODO: Add in the BusinessDescription,BusinessHours,Availability text areas to be added to the database
+                                $busName = $input[7];
+                                $busAddress = $input[8];
+                                //The following is to check whether the contractor is VAT registered or not
+                                if($_POST['ignore-exampleSwitch'] == "on") {
+                                    //This will insert into the database taking into account the business is - VAT registered
+                                    $command = "INSERT INTO `CONTRACTOR` (`UserID`, `BusinessRegistrationNum`, `BusinessVatNum`, `BusinessAddress`, `BusinessName`) VALUES (?,?,?,?,?)";
+                                    if($dbHandler->runCommand($command,$id,$_POST['reg-contractor'],$_POST['vat-contractor'],$busAddress,$busName)){
+                                        $condition2 = true;
+                                        $command = "INSERT INTO `SPECIALIZATIONS_PER_USER` (`UserID`, `workTypeID`) VALUES (?,?)";
+                                        for($j = 0; (($j < $numSkills) && $condition);$j++){
+                                            if($dbHandler->runCommand($command,$id,$_POST['contractor-work-type-'.$j])){
+
+                                            }
+                                            else{
+                                                $condition = false;
+                                            }
+                                        }
+                                        if($condition){
+                                            //TODO:insert locations into LOCATIONS_PER_USER
+                                            $command = "INSERT INTO `LOCATIONS_PER_USER` (`UserID`, `locationID`) VALUES (?,?)";
+                                            for($k = 0;$k<$numLocations && $condition;$k++){
+                                                $returnValue = $dbHandler->runCommand($command,$id,$locationID[$k]);
+                                                if($returnValue){
+
+                                                }
+                                                else{
+                                                    //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS,SPECIALIZATIONS_PER_USER,LOCATIONS_PER_USER and set $returnValue to false
+                                                    $condition = false;
+                                                }
+                                            }
+                                            if(!$condition){
+                                                //TODO:remove all LOCATIONS,REGISTERED_USER,CONFIRMATIONS,LOCATIONS_PER_USER,SPECIALIZATIONS_PER_USER and set $returnValue to false
+                                            }
+                                        }
+                                        else{
+                                            //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS,SPECIALIZATIONS_PER_USER and set $returnValue to false
+                                        }
+
+                                        }
+                                    else{
+                                        //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS and set $returnValue to false
+                                    }
+                                }
+                                else{
+                                    //This will insert into the database taking into account the business is not - VAT registered
+                                    $command = "INSERT INTO `CONTRACTOR` (`UserID`, `BusinessAddress`, `BusinessName`) VALUES (?,?,?)";
+                                    if($dbHandler->runCommand($command,$id,$busAddress,$busName)){
+                                        $command = "INSERT INTO `SPECIALIZATIONS_PER_USER` (`UserID`, `workTypeID`) VALUES (?,?)";
+                                        for($j = 0; ($j < $numSkills) && $condition;$j++){
+                                            if($dbHandler->runCommand($command,$id,$_POST['contractor-work-type-'.$j])){
+
+                                            }
+                                            else{
+                                                $condition = false;
+                                            }
+                                        }
+                                        if($condition){
+                                            //TODO:insert locations into LOCATIONS_PER_USER
+                                            $command = "INSERT INTO `LOCATIONS_PER_USER` (`UserID`, `locationID`) VALUES (?,?)";
+                                            for($k = 0;$k<$numLocations && $condition;$k++){
+                                                $returnValue = $dbHandler->runCommand($command,$id,$locationID[$k]);
+                                                if($returnValue){
+
+                                                }
+                                                else{
+                                                    $condition = false;
+                                                }
+                                            }
+                                            if(!$condition){
+                                                //TODO:remove all LOCATIONS,REGISTERED_USER,CONFIRMATIONS,LOCATIONS_PER_USER,SPECIALIZATIONS_PER_USER and set $returnValue to false
+                                            }
+                                        }
+                                        else{
+                                            //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS,SPECIALIZATIONS_PER_USER and set $returnValue to false
+                                        }
+
+                                    }
+                                    else{
+                                        //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS and set $returnValue to false - correct
+                                    }
+                                }
+                            }
+                            else{
+                                //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER and set $returnValue to false - correct
+                            }
+                            //TODO: A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
+                        }
+                    }
+                    else{
+                        //TODO:remove inserted elements from LOCATIONS and set $returnValue to false - correct
                     }
                     return $returnValue;
                     break;
@@ -160,7 +307,6 @@ class SebenzaServer {
                     if($dbHandler->runCommand($command,$username,$email,$contactNumber,2,$password,$surname,$name)){
                         $id = $dbHandler->getInsertID();
                         $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
-                        //TODO: create a combination of values to hash that the key will be unique for each email sent out as well as create a method to send an email(to,from,message) where the message will contain the link to activate the account
                         $returnValue = $dbHandler->runCommand($command,$id,$keyToSend);
                         //A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
                     }
@@ -176,7 +322,6 @@ class SebenzaServer {
                     if($dbHandler->runCommand($command,$username,$email,$contactNumber,0,$password,$surname,$name)){
                         $id = $dbHandler->getInsertID();
                         $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
-                        //TODO: create a combination of values to hash that the key will be unique for each email sent out as well as create a method to send an email(to,from,message) where the message will contain the link to activate the account
                         $returnValue = $dbHandler->runCommand($command,$id,$keyToSend);
                         //A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
                     }
@@ -200,7 +345,7 @@ class SebenzaServer {
         $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
         $mail->Username = '215040496@student.uj.ac.za';                 // SMTP username
-        $mail->Password = '';                           // SMTP password
+        $mail->Password = '@Uj-436518';                           // SMTP password
         $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
         $mail->Port = 587;                                    // TCP port to connect to
         $mail->IsHTML(true);
@@ -291,10 +436,71 @@ if (!empty($_POST)) {
                 SebenzaServer::logout();
                 break;
             case 'register-contractor':
+                //Ensure all skill are set
+                $condition = true;
+                $test = "";
+                if(isset($_POST['ignore-sillsAdded-contractor'])){
+                    for($k = 0; $k < $_POST['ignore-sillsAdded-contractor'];$k++){
+                        if(!isset($_POST['contractor-work-type-'.$k])){
+                            $condition = false;
+                            $test .= "1:false ".$k." ";
+                        }
+                    }
+                }
+                else {
+                    $test .= "2:false ";
+                    $condition = false;
+                }
 
-                if(isset($_POST['username']) && isset($_POST['name']) && isset($_POST['surname']) && isset($_POST['password']) && isset($_POST['email']) && isset($_POST['cellnumber']) && isset($_POST['homeNumber']) && isset($_POST['busName']) && isset($_POST['address']) && isset($_POST['reg']) && isset($_POST['vat']) && isset($_POST['areaname0']) && isset($_POST['cityname0']) && isset($_POST['provincename0'])){
-                    $response = json_encode(SebenzaServer::register([$_POST['username'],$_POST['email'],$_POST['cellnumber'],$_POST['password'],$_POST['surname'],$_POST['name']],'contractor'));
-                } else{
+
+                //Ensure all locations are set
+                if(isset($_POST['ignore-locationsAdded-contractor'])){
+                    for($k = 0; $k < $_POST['ignore-locationsAdded-contractor'];$k++){
+                        if(!isset($_POST['areaname-contractor-'.$k])){
+                            $condition = false;
+                            $test .= "3:false ";
+                        }
+                        if(!isset($_POST['cityname-contractor-'.$k])){
+                            $condition = false;
+                            $test .= "4:false ";
+                        }
+                        if(!isset($_POST['provincename-contractor-'.$k])){
+                            $condition = false;
+                            $test .= "5:false ";
+                        }
+                        $test .= $_POST['provincename-contractor-'.$k]." ".$_POST['cityname-contractor-'.$k]." ".$_POST['areaname-contractor-'.$k]." ";
+                    }
+                }
+                else{
+                    $condition = false;
+                    $test .= "6:false ";
+                }
+
+                //Ensure that if the business is VAT registered to store appropriate details like the business registration number and the business's vat number
+                if(isset($_POST['ignore-exampleSwitch'])) {
+                    if($_POST['ignore-exampleSwitch'] == "on"){
+                        //TODO: not 100% sure on this if statement must definitely test it
+                        if(!isset($_POST['reg-contractor']) || !isset($_POST['vat-contractor']) ) {
+                            $condition = false;
+                            $test .= "7:false ";
+                        }
+
+                    }
+                }
+                else
+                    $condition = false;
+
+                $test .= " ".$_POST['ignore-sillsAdded-contractor']." ".$_POST['ignore-locationsAdded-contractor']." ".$_POST['ignore-exampleSwitch']." ";
+                //Ensure all the rest of the variables are set
+                if($condition) {
+                    if (isset($_POST['name-contractor']) && isset($_POST['surname-contractor']) && isset($_POST['username-contractor']) && isset($_POST['password-contractor']) && isset($_POST['confirmPassword-contractor']) && isset($_POST['email-contractor']) && isset($_POST['confirmEmail-contractor']) && isset($_POST['cellnumber-contractor']) && isset($_POST['homeNumber-contractor']) && isset($_POST['busName']) && isset($_POST['address-contractor']) && isset($_POST['areaname-contractor-0']) && isset($_POST['cityname-contractor-0']) && isset($_POST['provincename-contractor-0'])) {
+                        $response = json_encode(SebenzaServer::register([$_POST['username-contractor'], $_POST['email-contractor'], $_POST['cellnumber-contractor'], $_POST['password-contractor'], $_POST['surname-contractor'], $_POST['name-contractor'], $_POST['ignore-locationsAdded-contractor'],$_POST['busName'],$_POST['address-contractor'],$_POST['ignore-sillsAdded-contractor']], 'contractor'));
+                        //$response = json_encode(false);
+                    } else {
+                        $response = json_encode($test);
+                    }
+                }
+                else{
                     $response = json_encode(false);
                 }
                 break;
@@ -321,6 +527,7 @@ if (!empty($_POST)) {
                 break;
         }
     }
+//    echo $response;
     echo $response;
     //Flush the output buffer
     SebenzaServer::stop();
