@@ -76,6 +76,7 @@ function sendAJAXRequest (action, responseFunction, formID) {
                 if (form != null) {
                     var inputTags = form.getElementsByTagName('input');
                     var selectTags = form.getElementsByTagName('select');
+                    var textareaTags = form.getElementsByTagName('textarea');
                     if (inputTags.length > 0) {
                         var inputTag;
                         var i;
@@ -90,6 +91,14 @@ function sendAJAXRequest (action, responseFunction, formID) {
                         for (j = 0; j < selectTags.length; j++) {
                             selectTag = selectTags[j];
                             objectJSON += ', "' + selectTag.name + '":"' + selectTag.value + '"';
+                        }
+                    }
+                    if (textareaTags.length > 0) {
+                        var textareaTag;
+                        var k;
+                        for (k = 0; k < textareaTags.length; k++) {
+                            textareaTag = textareaTags[k];
+                            objectJSON += ', "' + textareaTag.name + '":"' + textareaTag.value + '"';
                         }
                     }
                 }
@@ -127,7 +136,7 @@ function handleLoginResponse(response) {
 }
 
 function handleRegisterResponse(response) {
-    console.log("Handling register response: ");
+    console.log("Handling register response: " + response);
     var success = JSON.parse(response);
     console.log("Registering: response " + success);
     if (success) {
@@ -158,12 +167,13 @@ function validateForm(formID) {
         if (form != null) {
             var inputTags = form.getElementsByTagName('input');
             var selectTags = form.getElementsByTagName('select');
+            var textareaTags = form.getElementsByTagName('textarea');
             var currentInputSuccess = true;
             if(selectTags.length > 0){
                 var selectTag;
                 for(var j = 0; j < selectTags.length; j++){
                     selectTag = selectTags[j];
-                    console.log(selectTag.name);
+                    console.log(selectTag.name + " " + selectTag.value);
                     if (selectTag.name.substring(0,6) != "ignore") {
 
                         var selectToggleID = selectTag.name + '-info';
@@ -190,12 +200,41 @@ function validateForm(formID) {
                 console.log("The form " + formID + " had no select elements to validate.");
             }
 
+            if(textareaTags.length > 0){
+                var textareaTag;
+                for(var l = 0; l < textareaTags.length; l++){
+                    textareaTag = textareaTags[l];
+                    console.log(" The follwoing is the text area:" + textareaTag);
+                    console.log(textareaTag.name + " " + textareaTag.value);
+                    if (textareaTag.name.substring(0,6) != "ignore") {
+                        var textareaToggleID = textareaTag.name + '-info';
+                        var textareaFoundationID = '#' + textareaToggleID;
+                        var textareaClassName = textareaTag.className;
+                        var textareaDisplayProperty = document.getElementById(textareaToggleID).style.display.toLowerCase();
+                        //console.log("These are the select tag names: " + textareaTag.name);
+                        //Required field validation
+                        if (textareaClassName.indexOf("REQ_VAL") > -1 && textareaTag.value.length == 0) {
+                            currentInputSuccess = false;
+                        }
+                        //Toggle display of messages
+                        if (currentInputSuccess && textareaDisplayProperty != '' && textareaDisplayProperty != 'none') {
+                            $(textareaFoundationID).foundation('toggle');
+                        } else if (!currentInputSuccess && (textareaDisplayProperty == '' || textareaDisplayProperty == 'none')) {
+                            $(textareaFoundationID).foundation('toggle');
+                        }
+                    }
+                }
+            }
+            else {
+                console.log("The form " + formID + " had no textarea elements to validate.");
+            }
+
             if (inputTags.length > 0) {
                 var inputTag;
                 var i;
                 for (i = 0; i < inputTags.length; i++) {
                     inputTag = inputTags[i];
-                    console.log(inputTag.name);
+                    console.log(inputTag.name + " " + inputTag.value);
                     if (inputTag.name.substring(0,6) != "ignore") {
 
                         var inputToggleID = inputTag.name + '-info';

@@ -138,17 +138,28 @@ class SebenzaServer {
         $keyToSend = self::hashPassword($email + $username + time());
         $numLocations = $input[6];
         $numSkills = $input[9];
+        $busDescription = $input[10];
+        $busTimeFrom = $input[11];
+        $busTimeTo = $input[12];
+        $contractorAvailability = $input[13];
+        if($contractorAvailability == "on"){
+            $contractorAvailability = 1;
+        }
+        else if($contractorAvailability == "off"){
+            $contractorAvailability = 0;
+        }
+        //TODO: double check that all entries are of the right types etc, if malicious user tries remove the javascript validation then validation can occur on server too.
         $locationID = array($numLocations);
         $locationsToRemove = array($numLocations);
         $locationsToRemoveAmount = 0;
-        //$condition = self::mailClient($email,$keyToSend,$input);
-        $condition = true;
-        $test = "";
-        $returnValue = "";
+        $condition = self::mailClient($email,$keyToSend,$input);
+//        $condition = true;
+        //$test = "";
+        $returnValue = true;
        if($condition)
             switch ($type){
                 case 'contractor':
-                    $test .= "Working with contractor";
+                    //$test .= "Working with contractor";
                     $command = "SELECT `locationID`,`locationName` FROM `LOCATIONS` WHERE `locationName` = ?";
                     $command1 = "INSERT INTO `LOCATIONS` (`locationName`, `Coordinates`, `Region`, `Province`, `City`) VALUES (?,?,?,?,?)";
                     $dbHandler = self::fetchDatabaseHandler();
@@ -156,42 +167,48 @@ class SebenzaServer {
                     $condition = true;
                     $region = "A";
                     $coordinates = "0:0";
-                    $returnValue = $test;
+
                     for($k = 0; (($k < $numLocations) && $condition);$k++){
+                        //$test .= $k." ";
                         if($dbHandler->runCommand($command,$_POST["areaname-contractor-".$k])) {
-                            $test .= " Running through areas: ";
-                            //Should always return true, even if a matching area is not found, then that area will be added.
+                            //$test .= " Running through areas: ";
+//                            //Should always return true, even if a matching area is not found, then that area will be added.
                             $result = $dbHandler->getResults();
+
                             if (count($result) == 0) {
-                                //If the area does not exist in the database add it and gain a handle on the id
+//                                //If the area does not exist in the database add it and gain a handle on the id
                                 $area = $_POST["areaname-contractor-".$k];
                                 $province = $_POST["provincename-contractor-".$k];
                                 $city = $_POST["cityname-contractor-".$k];
                                 //TODO: coordinates can be requested through google maps api - extra
                                 if($dbHandler->runCommand($command1, $area, $coordinates, $region, $province, $city)){
+                                    //$test .= "Area added: ".$area." ".$province." ".$city."\n";
                                     $locationID[$k] = $dbHandler->getInsertID();
-                                    $locationsToRemove[$locationsToRemoveAmount++] = $dbHandler->getInsertID();
+//                                    $locationsToRemove = $k + 1;
+                                    $locationsToRemove[++$locationsToRemoveAmount] = $dbHandler->getInsertID();
                                 }
                                 else{
-                                    $test .= "no locations added from k =".$k;
-                                    $k = $numLocations + 5;
+                                    //$test .= "no locations added from k =".$k;
+                                    //$k = $numLocations + 5;
                                     $condition = false;
+                                    $returnValue = false;
                                     //dbhandler has failed to run for some reason remove all locations added to LOCATIONS
                                 }
-
                             } else {
-                                //If the area exists in the database gain a handle on the areaID - there should only be one returned result as the area names should be unique
-                                $locationID[$k] = $result['locationID'];
+                                //$test .= " Areas to run through: ".count($result)."The values contained withing the result: id - ".$result[0]['locationID']." Name - ".$result[0]['locationName'];
+//                                //If the area exists in the database gain a handle on the areaID - there should only be one returned result as the area names should be unique
+                                $locationID[$k] = $result[0]['locationID'];
                             }
                         }
                         else{
                             //dbhandler has failed to run for some reason remove all locations added to LOCATIONS if any
-                            $test .= "Couldnt run dbhandler to locate areas";
-                            $locationsToRemove = $k - 1;
-                            $k = $numLocations + 5;
+                            //$test .= "Couldnt run dbhandler to locate areas";
+//                            $locationsToRemove = $k - 1;
+                            //$k = $numLocations + 5;
                             $condition = false;
+                            $returnValue = false;
                         }
-            }
+                    }
                     //Due to LOCATIONS having multiple inserts which run in a for loop $condition exists, can be done when the for loop reaches the last position.
                     if($condition){
                         $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`) VALUES (?,?,?,?,?,?,?)";
@@ -200,6 +217,7 @@ class SebenzaServer {
                         $name = $input[5];
                         $surname = $input[4];
                         if ($dbHandler->runCommand($command, $username, $email, $contactNumber, 1, $password, $surname, $name)) {
+                            //$test .= "\nSuccessfully added the following user to REGISTERED_USER: ".$username." ".$email." ".$contactNumber." "."1"." ".$password." ".$surname." ".$name;
                             //once users are inserted into the REGISTERED_USER table appropriate data will be inserted into the CONFIRMATIONS table
                             $id = $dbHandler->getInsertID();
                             $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
@@ -211,9 +229,11 @@ class SebenzaServer {
                                 //The following is to check whether the contractor is VAT registered or not
                                 if($_POST['ignore-exampleSwitch'] == "on") {
                                     //This will insert into the database taking into account the business is - VAT registered
-                                    $command = "INSERT INTO `CONTRACTOR` (`UserID`, `BusinessRegistrationNum`, `BusinessVatNum`, `BusinessAddress`, `BusinessName`) VALUES (?,?,?,?,?)";
-                                    if($dbHandler->runCommand($command,$id,$_POST['reg-contractor'],$_POST['vat-contractor'],$busAddress,$busName)){
-                                        $condition2 = true;
+                                    //$test .= "\nInserting details for VAT registered entity";
+                                    $command = "INSERT INTO `CONTRACTOR` (`UserID`, `BusinessRegistrationNum`, `BusinessVatNum`, `BusinessAddress`, `BusinessName`, `VatRegistered`, `BusinessDescription`,`BusinessHoursFrom`,`BusinessHoursTo`,`Availability`) VALUES (?,?,?,?,?,?,?,?,?,?)";
+                                    if($dbHandler->runCommand($command,$id,$_POST['reg-contractor'],$_POST['vat-contractor'],$busAddress,$busName,1,$busDescription,$busTimeFrom,$busTimeTo,$contractorAvailability)){
+                                        //$test .= "\nThe following entries have been inserted into CONTRACTOR: ".$id." ".$_POST['reg-contractor']." ".$_POST['vat-contractor']." ".$busAddress." ".$busName;
+//                                        $condition2 = true;
                                         $command = "INSERT INTO `SPECIALIZATIONS_PER_USER` (`UserID`, `workTypeID`) VALUES (?,?)";
                                         for($j = 0; (($j < $numSkills) && $condition);$j++){
                                             if($dbHandler->runCommand($command,$id,$_POST['contractor-work-type-'.$j])){
@@ -234,41 +254,51 @@ class SebenzaServer {
                                                 else{
                                                     //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS,SPECIALIZATIONS_PER_USER,LOCATIONS_PER_USER and set $returnValue to false
                                                     $condition = false;
+
                                                 }
                                             }
                                             if(!$condition){
                                                 //TODO:remove all LOCATIONS,REGISTERED_USER,CONFIRMATIONS,LOCATIONS_PER_USER,SPECIALIZATIONS_PER_USER and set $returnValue to false
+                                                $returnValue = false;
                                             }
                                         }
                                         else{
                                             //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS,SPECIALIZATIONS_PER_USER and set $returnValue to false
+                                            $returnValue = false;
                                         }
 
                                         }
                                     else{
                                         //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS and set $returnValue to false
+                                        //$test .= "\n Failed to insert entries into the CONTRACTOR table";
+                                        $returnValue = false;
                                     }
                                 }
                                 else{
                                     //This will insert into the database taking into account the business is not - VAT registered
-                                    $command = "INSERT INTO `CONTRACTOR` (`UserID`, `BusinessAddress`, `BusinessName`) VALUES (?,?,?)";
-                                    if($dbHandler->runCommand($command,$id,$busAddress,$busName)){
+                                    //$test .= "\nInserting details for a non VAT registered entity";
+                                    $command = "INSERT INTO `CONTRACTOR` (`UserID`, `BusinessAddress`, `BusinessName`,`VatRegistered`, `BusinessDescription`,`BusinessHoursFrom`,`BusinessHoursTo`,`Availability`) VALUES (?,?,?,?,?,?,?,?)";
+                                    if($dbHandler->runCommand($command,$id,$busAddress,$busName,0,$busDescription,$busTimeFrom,$busTimeTo,$contractorAvailability)){
+                                        //$test .= "\nThe following entries have been inserted into CONTRACTOR: ".$id." ".$busAddress." ".$busName;
                                         $command = "INSERT INTO `SPECIALIZATIONS_PER_USER` (`UserID`, `workTypeID`) VALUES (?,?)";
                                         for($j = 0; ($j < $numSkills) && $condition;$j++){
                                             if($dbHandler->runCommand($command,$id,$_POST['contractor-work-type-'.$j])){
-
+                                                //$test .= "\nThe following entries have been inserted into SPECIALIZATIONS_PER_USER: ".$id." ".$_POST['contractor-work-type-'.$j];
                                             }
                                             else{
+                                                //$test .= "\nFailed to insert specialization";
                                                 $condition = false;
                                             }
                                         }
                                         if($condition){
+                                            //$test .= "All specializations per user have been added successfully";
                                             //TODO:insert locations into LOCATIONS_PER_USER
                                             $command = "INSERT INTO `LOCATIONS_PER_USER` (`UserID`, `locationID`) VALUES (?,?)";
                                             for($k = 0;$k<$numLocations && $condition;$k++){
+                                                //$test .= "\nInserting in locations:";
                                                 $returnValue = $dbHandler->runCommand($command,$id,$locationID[$k]);
                                                 if($returnValue){
-
+                                                    //$test .= "The following locations have been added to the user: ".;
                                                 }
                                                 else{
                                                     $condition = false;
@@ -276,29 +306,42 @@ class SebenzaServer {
                                             }
                                             if(!$condition){
                                                 //TODO:remove all LOCATIONS,REGISTERED_USER,CONFIRMATIONS,LOCATIONS_PER_USER,SPECIALIZATIONS_PER_USER and set $returnValue to false
+                                                $returnValue = false;
                                             }
                                         }
                                         else{
                                             //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS,SPECIALIZATIONS_PER_USER and set $returnValue to false
+                                            //$test .= "All specializations per user have NOT been added";
+                                            $returnValue = false;
                                         }
 
                                     }
                                     else{
                                         //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS and set $returnValue to false - correct
+                                        //$test .= "\n Failed to insert entries into the CONTRACTOR table";
+                                        $returnValue = false;
                                     }
                                 }
                             }
                             else{
                                 //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER and set $returnValue to false - correct
+                                //$test .= "\nFailed to insert entries into CONFIRMATIONS need to remove entries inserted into locations,registered_user";
+                                $returnValue = false;
                             }
                             //TODO: A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
+                        }
+                        else{
+                            //TODO:remove inserted elements from LOCATIONS and set $returnValue to false - correct
+                            //$test .= "\nFailed to insert entries into REGISTERED_USERS need to remove entries inserted into locations";
+                            $returnValue = false;
                         }
                     }
                     else{
                         //TODO:remove inserted elements from LOCATIONS and set $returnValue to false - correct
-                        $returnValue = $test;
+                        //$test .= "\nVery first condition has failed - only should occur if entries failed to add to the locations database";
+                        $returnValue = false;
                     }
-                    return "This is a test";
+                    return $returnValue;
                     break;
                 case 'homeuser':
                     $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`) VALUES (?,?,?,?,?,?,?)";
@@ -348,7 +391,7 @@ class SebenzaServer {
         $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
         $mail->Username = '215040496@student.uj.ac.za';                 // SMTP username
-        $mail->Password = '@Uj-436518';                           // SMTP password
+        $mail->Password = '';                           // SMTP password
         $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
         $mail->Port = 587;                                    // TCP port to connect to
         $mail->IsHTML(true);
@@ -451,7 +494,9 @@ if (!empty($_POST)) {
                 else {
                     $condition = false;
                 }
-
+                if(!isset($_POST['ignore-availability-contractor'])) {
+                    $condition = false;
+                }
 
                 //Ensure all locations are set
                 if(isset($_POST['ignore-locationsAdded-contractor'])){
@@ -470,6 +515,7 @@ if (!empty($_POST)) {
                 }
                 else{
                     $condition = false;
+                    //$response = json_encode("It got here1");
                 }
 
                 //Ensure that if the business is VAT registered to store appropriate details like the business registration number and the business's vat number
@@ -484,17 +530,20 @@ if (!empty($_POST)) {
                 }
                 else{
                     $condition = false;
+                    //$response = json_encode("It got here3");
                 }
 
 
                 //$test .= " ".$_POST['ignore-sillsAdded-contractor']." ".$_POST['ignore-locationsAdded-contractor']." ".$_POST['ignore-exampleSwitch']." ";
                 //Ensure all the rest of the variables are set
                 if($condition) {
-                    if (isset($_POST['name-contractor']) && isset($_POST['surname-contractor']) && isset($_POST['username-contractor']) && isset($_POST['password-contractor']) && isset($_POST['confirmPassword-contractor']) && isset($_POST['email-contractor']) && isset($_POST['confirmEmail-contractor']) && isset($_POST['cellnumber-contractor']) && isset($_POST['homeNumber-contractor']) && isset($_POST['busName']) && isset($_POST['address-contractor']) && isset($_POST['areaname-contractor-0']) && isset($_POST['cityname-contractor-0']) && isset($_POST['provincename-contractor-0'])) {
-                        //$response = json_encode(SebenzaServer::register([$_POST['username-contractor'], $_POST['email-contractor'], $_POST['cellnumber-contractor'], $_POST['password-contractor'], $_POST['surname-contractor'], $_POST['name-contractor'], $_POST['ignore-locationsAdded-contractor'],$_POST['busName'],$_POST['address-contractor'],$_POST['ignore-sillsAdded-contractor']], 'contractor'));
-                        $response = json_encode("It got here");
+
+                    if (isset($_POST['name-contractor']) && isset($_POST['surname-contractor']) && isset($_POST['username-contractor']) && isset($_POST['password-contractor']) && isset($_POST['confirmPassword-contractor']) && isset($_POST['email-contractor']) && isset($_POST['confirmEmail-contractor']) && isset($_POST['cellnumber-contractor']) && isset($_POST['homeNumber-contractor']) && isset($_POST['busName']) && isset($_POST['address-contractor']) && isset($_POST['areaname-contractor-0']) && isset($_POST['cityname-contractor-0']) &&isset($_POST['business-description-contractor']) && isset($_POST['business-hours-from-contractor']) && isset($_POST['business-hours-to-contractor']) && isset($_POST['provincename-contractor-0'])) {
+                        $response = json_encode(SebenzaServer::register([$_POST['username-contractor'], $_POST['email-contractor'], $_POST['cellnumber-contractor'], $_POST['password-contractor'], $_POST['surname-contractor'], $_POST['name-contractor'], $_POST['ignore-locationsAdded-contractor'],$_POST['busName'],$_POST['address-contractor'],$_POST['ignore-sillsAdded-contractor'],$_POST['business-description-contractor'],$_POST['business-hours-from-contractor'],$_POST['business-hours-to-contractor'],$_POST['ignore-availability-contractor']], 'contractor'));
+                        //$response = json_encode("It got here");
                     } else {
                         $response = json_encode(false);
+                        //$response = json_encode("It got here2");
                     }
                 }
                 else{
@@ -525,6 +574,7 @@ if (!empty($_POST)) {
         }
     }
     echo $response;
+//    var_dump(json_encode($_POST));
     //Flush the output buffer
     SebenzaServer::stop();
 }

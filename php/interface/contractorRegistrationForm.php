@@ -87,20 +87,20 @@
         </div>
     </div>
     <div class="row">
-        <h4>Business Details:</h4>
-    </div>
-    <div class="row">
         <div class="column medium-11 large-11">
-            <label>Is your business a VAT registered entity?</label>
-            <div class="switch small">
-                <input class="switch-input" id="smallSwitch" type="checkbox" name="ignore-exampleSwitch" data-toggle="panel panel1" checked>
-                <label class="switch-paddle" for="smallSwitch">
-                    <span class="show-for-sr">VAT Registered Entity</span>
+            <label>Are you currently available to be requested by users to do the specified work you have selected:</label>
+            <div class="switch large">
+                <input class="switch-input" id="availability-contractor" type="checkbox" name="ignore-availability-contractor" checked>
+                <label class="switch-paddle" for="availability-contractor">
+                    <span class="show-for-sr">Availability</span>
                     <span class="switch-active" aria-hidden="true">Yes</span>
-                    <span class="switch-inactive" aria-hidden="true">No</span>
+                    <span class="switch-inactive" aria-hidden="true">no</span>
                 </label>
             </div>
         </div>
+    </div>
+    <div class="row">
+        <h4>Business Details:</h4>
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
@@ -117,6 +117,41 @@
                                           class="REQ_VAL">
             <div class="additional-info top-padding" id="address-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Please enter in the address of where your business is located, if company is home run it will be your home address</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column medium-11 large-11">
+            <label>Business Description</label><textarea  name="business-description-contractor" id="business-description-contractor" placeholder="This is a professional business that will deal with all the needs you require"
+                                                  class="REQ_VAL"></textarea>
+            <div class="additional-info top-padding" id="business-description-contractor-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">Please enter in a short description of your business and what services you provide and at what quality</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column medium-11 large-11">
+            <label>Business Hours</label>
+            <label>from:</label><input type="time" name="business-hours-from-contractor" id="business-hours-from-contractor" class="REQ_VAL">
+            <div class="additional-info top-padding" id="business-hours-from-contractor-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">Please ensure to select a time from: e.g.08:00 AM</p>
+            </div>
+            <label>to:</label><input type="time" name="business-hours-to-contractor" id="business-hours-to-contractor" class="REQ_VAL">
+            <div class="additional-info top-padding" id="business-hours-to-contractor-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">Please ensure to select a time to: e.g.06:00 PM</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column medium-11 large-11">
+            <label>Is your business a VAT registered entity?</label>
+            <div class="switch large">
+                <input class="switch-input" id="smallSwitch" type="checkbox" name="ignore-exampleSwitch" data-toggle="panel panel1" checked>
+                <label class="switch-paddle" for="smallSwitch">
+                    <span class="show-for-sr">VAT Registered Entity</span>
+                    <span class="switch-active" aria-hidden="true">Yes</span>
+                    <span class="switch-inactive" aria-hidden="true">No</span>
+                </label>
             </div>
         </div>
     </div>

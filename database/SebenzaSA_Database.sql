@@ -84,7 +84,9 @@ CREATE TABLE `CONTRACTOR` (
   `BusinessAddress` VARCHAR(50) not null,
   `BusinessName` varchar(40) not null unique,
   `BusinessDescription` varchar(40) not null,
-  `BusinessHours` varchar(40) not null,
+  `BusinessHoursFrom` varchar(40) not null,
+  `BusinessHoursTo` varchar(40) not null,
+  `VatRegistered` BOOLEAN NOT NULL,
   `Availability` boolean not null,
   PRIMARY KEY (`contractorID`),
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
