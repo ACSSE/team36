@@ -30,6 +30,9 @@
                 <p class="help-text no-margins">Username must be filled in and be alpha-numeric characters. E.g.
                     bOb_93</p>
             </div>
+            <div class="additional-info top-padding" id="unique-username-contractor-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">The following username is already in use</p>
+            </div>
         </div>
     </div>
     <div class="row">
@@ -57,6 +60,12 @@
             <div class="additional-info top-padding" id="email-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Email must be filled in and be alpha-numeric characters as well as
                     contain the @ symbol. E.g. bOb93@userEmail.com</p>
+            </div>
+            <div class="additional-info top-padding" id="unique-email-contractor-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">The following email address is already in use</p>
+            </div>
+            <div class="additional-info top-padding" id="unreachable-email-contractor-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">The email address provided could not be reached, please ensure you have typed it in correctly</p>
             </div>
         </div>
         <div class="column medium-11 large-11">
@@ -108,6 +117,9 @@
                                           class="REQ_VAL">
             <div class="additional-info top-padding" id="busName-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Please enter in the name of your business!</p>
+            </div>
+            <div class="additional-info top-padding" id="unique-busName-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">This business name is already in use</p>
             </div>
         </div>
     </div>
@@ -162,6 +174,9 @@
             <div class="additional-info top-padding" id="reg-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Company registration number must be filled in so automatic invoicing can occur</p>
             </div>
+            <div class="additional-info top-padding" id="unique-reg-contractor-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">Company registration number is already in use</p>
+            </div>
         </div>
     </div>
     <div class="row" id="panel1" data-toggler data-animate="hinge-in-from-right spin-out">
@@ -170,6 +185,9 @@
                                           class="REQ_VAL">
             <div class="additional-info top-padding" id="vat-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Vat number must be filled in so that automatic invoicing can occur</p>
+            </div>
+            <div class="additional-info top-padding" id="unique-vat-contractor-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">VAT number is already in use</p>
             </div>
         </div>
     </div>

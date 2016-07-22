@@ -139,11 +139,99 @@ function handleRegisterResponse(response) {
     console.log("Handling register response: " + response);
     var success = JSON.parse(response);
     console.log("Registering: response " + success);
+    if(typeof success == 'boolean'){
     if (success) {
         document.getElementById("register-modal-button").click();
     }
     else{
         console.log("Registration failed");
+    }
+    }
+    else{
+        console.log("Return type is not a boolean it is: " + typeof success);
+        if(typeof success == 'number'){
+            var errorCode = parseFloat(success);
+            while(errorCode != 1){
+                if(errorCode % 2 == 0){
+                    var displayProperty = document.getElementById('unique-username-contractor-info').style.display.toLowerCase();
+                    if (displayProperty == '' || displayProperty == 'none') {
+                        $('#unique-username-contractor-info').foundation('toggle');
+                    }
+                    errorCode /= 2;
+                }
+                else {
+                    var displayProperty = document.getElementById('unique-username-contractor-info').style.display.toLowerCase();
+                    if (displayProperty != 'block') {
+                        $('#unique-username-contractor-info').foundation('toggle');
+                    }
+                }
+                if(errorCode % 3 == 0){
+                    var displayProperty = document.getElementById('unique-email-contractor-info').style.display.toLowerCase();
+                    if (displayProperty == '' || displayProperty == 'none') {
+                        $('#unique-email-contractor-info').foundation('toggle');
+                    }
+                    errorCode /= 3;
+                }
+                    else{
+                    var displayProperty = document.getElementById('unique-email-contractor-info').style.display.toLowerCase();
+                    if (displayProperty == 'block') {
+                        $('#unique-email-contractor-info').foundation('toggle');
+                    }
+                }
+                if(errorCode % 5 == 0){
+                    var displayProperty = document.getElementById('unique-vat-contractor-info').style.display.toLowerCase();
+                    if (displayProperty == '' || displayProperty == 'none') {
+                        $('#unique-vat-contractor-info').foundation('toggle');
+                    }
+                    errorCode /= 5;
+                }
+                    else{
+                    var displayProperty = document.getElementById('unique-vat-contractor-info').style.display.toLowerCase();
+                    if (displayProperty == 'block') {
+                        $('#unique-vat-contractor-info').foundation('toggle');
+                    }
+                }
+                if(errorCode % 7 == 0){
+                    var displayProperty = document.getElementById('unique-reg-contractor-info').style.display.toLowerCase();
+                    if (displayProperty == '' || displayProperty == 'none') {
+                        $('#unique-reg-contractor-info').foundation('toggle');
+                    }
+                    errorCode /= 7;
+                }
+                    else{
+                    var displayProperty = document.getElementById('unique-reg-contractor-info').style.display.toLowerCase();
+                    if (displayProperty == 'block') {
+                        $('#unique-reg-contractor-info').foundation('toggle');
+                    }
+                }
+                if(errorCode % 11 == 0){
+                    var displayProperty = document.getElementById('unique-busName-info').style.display.toLowerCase();
+                    if (displayProperty == '' || displayProperty == 'none') {
+                        $('#unique-busName-info').foundation('toggle');
+                    }
+                    errorCode /= 11;
+                }
+                    else{
+                    var displayProperty = document.getElementById('unique-busName-info').style.display.toLowerCase();
+                    if (displayProperty == 'block') {
+                        $('#unique-busName-info').foundation('toggle');
+                    }
+                }
+                if(errorCode % 13 == 0){
+                    var displayProperty = document.getElementById('unreachable-email-contractor-info').style.display.toLowerCase();
+                    if (displayProperty == '' || displayProperty == 'none') {
+                        $('#unreachable-email-contractor-info').foundation('toggle');
+                    }
+                    errorCode /= 13;
+                }
+                else{
+                    var displayProperty = document.getElementById('unreachable-email-contractor-info').style.display.toLowerCase();
+                    if (displayProperty == 'block') {
+                        $('#unreachable-email-contractor-info').foundation('toggle');
+                    }
+                }
+            }
+        }
     }
 
 }

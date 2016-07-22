@@ -153,7 +153,7 @@ class SebenzaServer {
         $locationsToRemove = array($numLocations);
         $locationsToRemoveAmount = 0;
         $condition = self::mailClient($email,$keyToSend,$input);
-//        $condition = true;
+        $condition = true;
         //$test = "";
         $returnValue = true;
        if($condition)
@@ -259,18 +259,54 @@ class SebenzaServer {
                                             }
                                             if(!$condition){
                                                 //TODO:remove all LOCATIONS,REGISTERED_USER,CONFIRMATIONS,LOCATIONS_PER_USER,SPECIALIZATIONS_PER_USER and set $returnValue to false
+                                                $command = "DELETE FROM `LOCATIONS_PER_USER` WHERE `UserID` = ?";
+                                                $dbHandler->runCommand($command,$id);
+                                                $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                                                for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                                    //Technically one should test if this fails too
+                                                    $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                                }
+                                                $command = "DELETE FROM `CONTRACTOR` WHERE `UserID` = ?";
+                                                $dbHandler->runCommand($command,$id);
+                                                $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
+                                                $dbHandler->runCommand($command,$id);
+                                                $command = "DELETE FROM `SPECIALIZATIONS_PER_USER` WHERE `UserID` = ?";
+                                                $dbHandler->runCommand($command,$id);
+                                                $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                                                $dbHandler->runCommand($command,$id);
                                                 $returnValue = false;
                                             }
                                         }
                                         else{
                                             //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS,SPECIALIZATIONS_PER_USER and set $returnValue to false
+                                            $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                                            for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                                //Technically one should test if this fails too
+                                                $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                            }
+                                            $command = "DELETE FROM `CONTRACTOR` WHERE `UserID` = ?";
+                                            $dbHandler->runCommand($command,$id);
+                                            $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
+                                            $dbHandler->runCommand($command,$id);
+                                            $command = "DELETE FROM `SPECIALIZATIONS_PER_USER` WHERE `UserID` = ?";
+                                            $dbHandler->runCommand($command,$id);
+                                            $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                                            $dbHandler->runCommand($command,$id);
                                             $returnValue = false;
                                         }
 
                                         }
                                     else{
-                                        //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS and set $returnValue to false
-                                        //$test .= "\n Failed to insert entries into the CONTRACTOR table";
+                                        $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                                        for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                            //Technically one should test if this fails too
+                                            $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                        }
+
+                                        $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
+                                        $dbHandler->runCommand($command,$id);
+                                        $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                                        $dbHandler->runCommand($command,$id);
                                         $returnValue = false;
                                     }
                                 }
@@ -306,39 +342,86 @@ class SebenzaServer {
                                             }
                                             if(!$condition){
                                                 //TODO:remove all LOCATIONS,REGISTERED_USER,CONFIRMATIONS,LOCATIONS_PER_USER,SPECIALIZATIONS_PER_USER and set $returnValue to false
+                                                $command = "DELETE FROM `LOCATIONS_PER_USER` WHERE `UserID` = ?";
+                                                $dbHandler->runCommand($command,$id);
+                                                $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                                                for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                                    //Technically one should test if this fails too
+                                                    $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                                }
+                                                $command = "DELETE FROM `CONTRACTOR` WHERE `UserID` = ?";
+                                                $dbHandler->runCommand($command,$id);
+                                                $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
+                                                $dbHandler->runCommand($command,$id);
+                                                $command = "DELETE FROM `SPECIALIZATIONS_PER_USER` WHERE `UserID` = ?";
+                                                $dbHandler->runCommand($command,$id);
+                                                $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                                                $dbHandler->runCommand($command,$id);
                                                 $returnValue = false;
                                             }
                                         }
                                         else{
                                             //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS,SPECIALIZATIONS_PER_USER and set $returnValue to false
-                                            //$test .= "All specializations per user have NOT been added";
+                                            $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                                            for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                                //Technically one should test if this fails too
+                                                $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                            }
+                                            $command = "DELETE FROM `CONTRACTOR` WHERE `UserID` = ?";
+                                            $dbHandler->runCommand($command,$id);
+                                            $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
+                                            $dbHandler->runCommand($command,$id);
+                                            $command = "DELETE FROM `SPECIALIZATIONS_PER_USER` WHERE `UserID` = ?";
+                                            $dbHandler->runCommand($command,$id);
+                                            $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                                            $dbHandler->runCommand($command,$id);
                                             $returnValue = false;
                                         }
 
                                     }
                                     else{
                                         //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS and set $returnValue to false - correct
-                                        //$test .= "\n Failed to insert entries into the CONTRACTOR table";
+                                        $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                                        for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                            //Technically one should test if this fails too
+                                            $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                        }
+                                        $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
+                                        $dbHandler->runCommand($command,$id);
+                                        $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                                        $dbHandler->runCommand($command,$id);
                                         $returnValue = false;
                                     }
                                 }
                             }
                             else{
                                 //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER and set $returnValue to false - correct
-                                //$test .= "\nFailed to insert entries into CONFIRMATIONS need to remove entries inserted into locations,registered_user";
+                                $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                                for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                    //Technically one should test if this fails too
+                                    $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                }
+                                $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                                $dbHandler->runCommand($command,$id);
                                 $returnValue = false;
                             }
                             //TODO: A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
                         }
                         else{
-                            //TODO:remove inserted elements from LOCATIONS and set $returnValue to false - correct
-                            //$test .= "\nFailed to insert entries into REGISTERED_USERS need to remove entries inserted into locations";
+                            $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                            for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                //Technically one should test if this fails too
+                                $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                            }
                             $returnValue = false;
                         }
                     }
                     else{
-                        //TODO:remove inserted elements from LOCATIONS and set $returnValue to false - correct
-                        //$test .= "\nVery first condition has failed - only should occur if entries failed to add to the locations database";
+                        $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                        for($k=0;$k<$locationsToRemoveAmount;$k++){
+                        //Technically one should test if this fails too
+                            $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                        }
                         $returnValue = false;
                     }
                     return $returnValue;
@@ -443,6 +526,41 @@ class SebenzaServer {
         $results = $dbhandler->getResults();
         return $results;
     }
+
+    public static function isUnique($value,$condition,$type){
+        switch($type){
+            case "registered_users":
+                $dbhandler = self::fetchDatabaseHandler();
+                $command = "SELECT * FROM `REGISTERED_USER` WHERE `".$condition."` = ?";
+                $dbhandler->runCommand($command,$value);
+                $results = $dbhandler->getResults();
+
+                if(count($results) > 0){
+                    return false;
+                }
+                else{
+                    return true;
+                }
+                break;
+            case "contractor":
+                $dbhandler = self::fetchDatabaseHandler();
+                $command = "SELECT * FROM `CONTRACTOR` WHERE `".$condition."` = ?";
+                $dbhandler->runCommand($command,$value);
+                $results = $dbhandler->getResults();
+
+                if(count($results) > 0){
+                    return false;
+                }
+                else{
+                    return true;
+                }
+                break;
+            default:
+                return false;
+                break;
+        }
+
+    }
 }
 //The following is currently used to receive the confirmation requests from the user
 if (!empty($_GET)){
@@ -484,6 +602,7 @@ if (!empty($_POST)) {
             case 'register-contractor':
                 //Ensure all skill are set
                 $condition = true;
+                $test = 1;
                 if(isset($_POST['ignore-sillsAdded-contractor'])){
                     for($k = 0; $k < $_POST['ignore-sillsAdded-contractor'];$k++){
                         if(!isset($_POST['contractor-work-type-'.$k])){
@@ -525,6 +644,18 @@ if (!empty($_POST)) {
                         if(!isset($_POST['reg-contractor']) || !isset($_POST['vat-contractor']) ) {
                             $condition = false;
                         }
+                        if(isset($_POST['reg-contractor'])){
+                            $boolean = SebenzaServer::isUnique(intval($_POST['reg-contractor']), "BusinessRegistrationNum", "contractor");
+                            if (!$boolean)
+                                $test *= 7;
+
+                        }
+                        if(isset($_POST['vat-contractor'])){
+                            $boolean = SebenzaServer::isUnique(intval($_POST['vat-contractor']), "BusinessVatNum", "contractor");
+                            if (!$boolean)
+                                $test *= 5;
+                        }
+
 
                     }
                 }
@@ -539,7 +670,24 @@ if (!empty($_POST)) {
                 if($condition) {
 
                     if (isset($_POST['name-contractor']) && isset($_POST['surname-contractor']) && isset($_POST['username-contractor']) && isset($_POST['password-contractor']) && isset($_POST['confirmPassword-contractor']) && isset($_POST['email-contractor']) && isset($_POST['confirmEmail-contractor']) && isset($_POST['cellnumber-contractor']) && isset($_POST['homeNumber-contractor']) && isset($_POST['busName']) && isset($_POST['address-contractor']) && isset($_POST['areaname-contractor-0']) && isset($_POST['cityname-contractor-0']) &&isset($_POST['business-description-contractor']) && isset($_POST['business-hours-from-contractor']) && isset($_POST['business-hours-to-contractor']) && isset($_POST['provincename-contractor-0'])) {
-                        $response = json_encode(SebenzaServer::register([$_POST['username-contractor'], $_POST['email-contractor'], $_POST['cellnumber-contractor'], $_POST['password-contractor'], $_POST['surname-contractor'], $_POST['name-contractor'], $_POST['ignore-locationsAdded-contractor'],$_POST['busName'],$_POST['address-contractor'],$_POST['ignore-sillsAdded-contractor'],$_POST['business-description-contractor'],$_POST['business-hours-from-contractor'],$_POST['business-hours-to-contractor'],$_POST['ignore-availability-contractor']], 'contractor'));
+                        $boolean = SebenzaServer::isUnique($_POST['busName'],"BusinessName", "contractor");
+                        if(!$boolean)
+                            $test *= 11;
+                        $boolean = SebenzaServer::isUnique($_POST['email-contractor'],"Email", "registered_users");
+                        if(!$boolean)
+                            $test *= 3;
+                        $boolean = SebenzaServer::isUnique($_POST['username-contractor'],"Username", "registered_users");
+                        if(!$boolean)
+                            $test *= 2;
+
+
+                        if($test == 1){
+                            $response = json_encode(SebenzaServer::register([$_POST['username-contractor'], $_POST['email-contractor'], $_POST['cellnumber-contractor'], $_POST['password-contractor'], $_POST['surname-contractor'], $_POST['name-contractor'], $_POST['ignore-locationsAdded-contractor'],$_POST['busName'],$_POST['address-contractor'],$_POST['ignore-sillsAdded-contractor'],$_POST['business-description-contractor'],$_POST['business-hours-from-contractor'],$_POST['business-hours-to-contractor'],$_POST['ignore-availability-contractor']], 'contractor'));
+                        }
+                        else{
+                            $response = $test;
+                        }
+
                         //$response = json_encode("It got here");
                     } else {
                         $response = json_encode(false);
