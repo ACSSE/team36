@@ -8,15 +8,42 @@
     SebenzaServer::addNotification(9,"This is a new notification(duplication)");
 ?>
 <div class="row collapse background-image" xmlns="http://www.w3.org/1999/html">
-    <div class="small-3 columns full-height">
-        <ul class="tabs vertical full-height" id="example-vert-tabs" data-tabs>
-            <li class="tabs-title is-active"><a href="#panel1v">Request trade worker(s)</a></li>
-            <li class="tabs-title"><a href="#panel2v">Request contractor(s)</a></li>
-            <li class="tabs-title"><a href="#panel3v">Job management</a></li>
-            <li class="tabs-title"><a href="#panel4v">Quote management</a></li>
-            <li class="tabs-title"><a href="#panel5v">Job History</a></li>
-            <li class="tabs-title"><a href="#panel6v">Profile Management</a></li>
-            <li class="tabs-title"><a href="#panel7v">Bookmarked tradeworkers/contractors</a></li>
+    <div class="small-3 columns full-height" style="background-color: rgba(20, 20, 20, 0.9)">
+<!--        <ul class="tabs vertical full-height" id="example-vert-tabs" data-tabs>-->
+<!--            <li class="tabs-title is-active"><a href="#panel1v">Request trade worker(s)</a></li>-->
+<!--            <li class="tabs-title"><a href="#panel2v">Request contractor(s)</a></li>-->
+<!--            <li class="tabs-title"><a href="#panel3v">Job management</a></li>-->
+<!--            <li class="tabs-title"><a href="#panel4v">Quote management</a></li>-->
+<!--            <li class="tabs-title"><a href="#panel5v">Job History</a></li>-->
+<!--            <li class="tabs-title"><a href="#panel6v">Profile Management</a></li>-->
+<!--            <li class="tabs-title"><a href="#panel7v">Bookmarked tradeworkers/contractors</a></li>-->
+<!--        </ul>-->
+        <ul class="tabs large vertical menu" data-accordion-menu style="border: 0px" id="example-vert-tabs" data-tabs>
+            <li class="tabs-title">
+                <a href="#">Job Requests</a>
+                <ul class="menu vertical nested">
+                    <li class="tabs-title is-active" aria-selected="true"><a href="homeuser-request-tradeworker.php">Request Tradeworker<span class="badge" style="margin-left: 30px">1</span></a></li>
+                    <li class="tabs-title"><a href="#panel2v">Request Contractor</a></li>
+                </ul>
+            </li>
+            <li class="tabs-title"><a href="#">Job Management</a>
+                <ul class="menu vertical nested">
+                        <li><a href="#panel1v">Jobs</a>
+                            <ul class="menu vertical nested">
+                                <li class="tabs-title"><a href="#panel3v">On going jobs</a></li>
+                                <li class="tabs-title"><a href="#panel4v">Job requests</a></li>
+                            </ul>
+                        </li>
+                    <li class="tabs-title"><a href="#panel5v">Job history</a></li>
+                </ul>
+            </li>
+            <li class="tabs-title">
+                <a href="#">Profile management</a>
+                <ul class="menu vertical nested">
+                    <li class="tabs-title"><a href="#panel6v">Edit Details</a></li>
+                    <li class="tabs-title"><a href="#panel7v">Manage Bookmarked users</a></li>
+                </ul>
+            </li>
         </ul>
     </div>
     <div class="small-9 columns full-height">
@@ -57,7 +84,7 @@
                 </div>
             </div>
             <div class="tabs-panel full-height" id="panel2v">
-                <h1>Request Trade Workers</h1>
+                <h1>Request Contractors</h1>
                 <div class="row">
                     <div class="large-12 medium-12 columns">
                         <input id="checkbox1" type="checkbox"><label for="checkbox1">Painter</label>

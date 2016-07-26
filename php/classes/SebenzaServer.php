@@ -153,7 +153,7 @@ class SebenzaServer {
         $locationsToRemove = array($numLocations);
         $locationsToRemoveAmount = 0;
         $condition = self::mailClient($email,$keyToSend,$input);
-        $condition = true;
+//        $condition = true;
         //$test = "";
         $returnValue = true;
        if($condition)
@@ -474,7 +474,7 @@ class SebenzaServer {
         $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
         $mail->Username = '215040496@student.uj.ac.za';                 // SMTP username
-        $mail->Password = '';                           // SMTP password
+        $mail->Password = '@Uj-436518';                           // SMTP password
         $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
         $mail->Port = 587;                                    // TCP port to connect to
         $mail->IsHTML(true);
@@ -519,7 +519,7 @@ class SebenzaServer {
         return $returnValue;
     }
 
-    public static function returnWorkTypes() {
+    public static function returnWorkTypes(){
         $dbhandler = self::fetchDatabaseHandler();
         $command = "Select `WorkType`,`workTypeID` FROM SPECIALIZATIONS";
         $dbhandler->runCommand($command);
@@ -714,6 +714,7 @@ if (!empty($_POST)) {
                 break;
             case 'fetch_work_types':
                 $response = json_encode(SebenzaServer::returnWorkTypes());
+//                $response = json_encode("This is a test");
                 break;
             default:
                 //If the action was not one of the handled cases, respond appropriately

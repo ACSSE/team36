@@ -249,6 +249,7 @@ var alphaNumericRE = /^\w*$/; //a-zA-Z0-9_
 
 function validateForm(formID) {
     var success = true;
+    var focus = false;
     if (typeof formID == 'string') {
         //Collect input tags belonging to the form
         var form = document.getElementById(formID);
@@ -261,7 +262,7 @@ function validateForm(formID) {
                 var selectTag;
                 for(var j = 0; j < selectTags.length; j++){
                     selectTag = selectTags[j];
-                    console.log(selectTag.name + " " + selectTag.value);
+                    //console.log(selectTag.name + " " + selectTag.value);
                     if (selectTag.name.substring(0,6) != "ignore") {
 
                         var selectToggleID = selectTag.name + '-info';
@@ -270,16 +271,22 @@ function validateForm(formID) {
                         var selectFoundationID = '#' + selectToggleID;
                         var selectClassName = selectTag.className;
                         var selectDisplayProperty = document.getElementById(selectToggleID).style.display.toLowerCase();
-                        //console.log("These are the select tag names: " + selectTag.name);
+                        //console.log("These are the select tag names: " + selectTag.name + "the following is the length of the select tag: " + selectTag.value.length);
                         //Required field validation
                         if (selectClassName.indexOf("REQ_VAL") > -1 && selectTag.value.length == 0) {
                             currentInputSuccess = false;
+                            if(!focus){
+                                console.log("Focusing on " + selectTag.name);
+                                document.getElementById(selectTag.name).focus();
+                                focus = true;
+                            }
                         }
                         //Toggle display of messages
                         if (currentInputSuccess && selectDisplayProperty != '' && selectDisplayProperty != 'none') {
                             $(selectFoundationID).foundation('toggle');
                         } else if (!currentInputSuccess && (selectDisplayProperty == '' || selectDisplayProperty == 'none')) {
                             $(selectFoundationID).foundation('toggle');
+
                         }
                     }
                 }
@@ -287,13 +294,13 @@ function validateForm(formID) {
             else {
                 console.log("The form " + formID + " had no select elements to validate.");
             }
-
+            currentInputSuccess = true;
             if(textareaTags.length > 0){
                 var textareaTag;
                 for(var l = 0; l < textareaTags.length; l++){
                     textareaTag = textareaTags[l];
-                    console.log(" The follwoing is the text area:" + textareaTag);
-                    console.log(textareaTag.name + " " + textareaTag.value);
+                    //console.log(" The follwoing is the text area:" + textareaTag);
+                    //console.log(textareaTag.name + " " + textareaTag.value);
                     if (textareaTag.name.substring(0,6) != "ignore") {
                         var textareaToggleID = textareaTag.name + '-info';
                         var textareaFoundationID = '#' + textareaToggleID;
@@ -303,12 +310,18 @@ function validateForm(formID) {
                         //Required field validation
                         if (textareaClassName.indexOf("REQ_VAL") > -1 && textareaTag.value.length == 0) {
                             currentInputSuccess = false;
+                            if(!focus){
+                                console.log("Focusing on " + textareaTag.name);
+                                document.getElementById(textareaTag.name).focus();
+                                focus = true;
+                            }
                         }
                         //Toggle display of messages
                         if (currentInputSuccess && textareaDisplayProperty != '' && textareaDisplayProperty != 'none') {
                             $(textareaFoundationID).foundation('toggle');
                         } else if (!currentInputSuccess && (textareaDisplayProperty == '' || textareaDisplayProperty == 'none')) {
                             $(textareaFoundationID).foundation('toggle');
+
                         }
                     }
                 }
@@ -316,13 +329,13 @@ function validateForm(formID) {
             else {
                 console.log("The form " + formID + " had no textarea elements to validate.");
             }
-
+            currentInputSuccess = true;
             if (inputTags.length > 0) {
                 var inputTag;
                 var i;
                 for (i = 0; i < inputTags.length; i++) {
                     inputTag = inputTags[i];
-                    console.log(inputTag.name + " " + inputTag.value);
+                    //console.log(inputTag.name + " " + inputTag.value);
                     if (inputTag.name.substring(0,6) != "ignore") {
 
                         var inputToggleID = inputTag.name + '-info';
@@ -335,10 +348,20 @@ function validateForm(formID) {
                         //Alpha-numeric validation
                         if (inputClassName.indexOf("AN_VAL") > -1 && !inputTag.value.match(alphaNumericRE)) {
                             currentInputSuccess = false;
+                            if(!focus){
+                                console.log("Focusing on " + inputToggleID);
+                                document.getElementById(inputTag.name).focus();
+                                focus = true;
+                            }
                         }
                         //Required field validation
                         if (inputClassName.indexOf("REQ_VAL") > -1 && inputTag.value.length == 0) {
                             currentInputSuccess = false;
+                            if(!focus){
+                                console.log("Focusing on " + inputToggleID.substring(0,inputToggleID.length-5) + " " + inputTag.name);
+                                document.getElementById(inputTag.name).focus();
+                                focus = true;
+                            }
                         }
                         //Toggle display of messages
                         if (currentInputSuccess && inputDisplayProperty != '' && inputDisplayProperty != 'none') {
@@ -393,11 +416,11 @@ function requestWorkTypes(){
 function handleWorkRequestResponse(response){
     var workTypeArray = JSON.parse(response);
     if (workTypeArray) {
-        console.log("Work Type Retrieval successful: " + workTypeArray.length);
+        //console.log("Work Type Retrieval successful: " + workTypeArray.length + "The following is contained in array: " + workTypeArray.toString());
         if(workTypeArray.length > 0){
 
             //document.getElementById("contractor-work-type").innerHTML = "This is a test".htmlText;
-            var htmlText = '<option value="test" selected>Test</option>';
+            var htmlText = '<option value="" selected></option>';
             for(var i = 0;i<workTypeArray.length;i++){
                 htmlText += '<option value="' + workTypeArray[i]["workTypeID"] + '">' + workTypeArray[i]["WorkType"] + '</option>';
             }
@@ -406,26 +429,48 @@ function handleWorkRequestResponse(response){
                 document.getElementById("contractor-work-type-" + j).innerHTML = htmlText;
             }
         }
+        else{
+            console.log("There are no specialities that were retrieved" + workTypeArray)
+        }
 
     }
     else{
         console.log("Worktype Retrievals Failed");
     }
 }
-
+var clocations = 0;
 //Used in contractor registration to add more locations no limit to amount of locations that a user can add, however they are required and need to be filled in.
 //I need to decide whether: if user clicks remove locations at a certain tab, if all the locations after are to be removed or only the one directly below the remove button pressed, currently the former is in place.
 function addContractorLocations(current){
+
+    var location = [];
+    var k = 0;
+    for(var t = 0; t < locationAmount + 1;t++){
+        //console.log("The following is location stored info at location["+ t +"]: " + "provincename-contractor-" + t + ": " + document.getElementById("provincename-contractor-" + t).value + "areaname-contractor-" + t + ": " + document.getElementById("areaname-contractor-" + t).value + "cityname-contractor-" + t + ": " + document.getElementById("cityname-contractor-" + t).value);
+        var province = document.getElementById("provincename-contractor-" + t).value;
+        var area = document.getElementById("areaname-contractor-" + t).value;
+        var city = document.getElementById("cityname-contractor-" + t).value;
+        location[k++] = province;
+        location[k++] = area;
+        location[k++] = city;
+
+
+        //console.log('he following is stored in the array: ' + location[k-3] + location[k-2]+ location[k-1]);
+    }
+
     if(document.getElementById("toggle-area-" + current).innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">' && current == contractorLocation){
         //The following statement adds a toggle-able area to the html page which is toggled later and not removed to 'save' time.
         contractorLocation++;
         newCurrent = current *= 3;
         var placeHolder = 1;
-        var html = '<div class="row" data-animate="hinge-in-from-right spin-out" id="additional-area-' + newCurrent + '" style="display: none"><div class="column large-11 medium 11"><label>Area Name</label><input type="text" name="areaname-contractor-' + contractorLocation + '" id="areaname-contractor-' + contractorLocation + '" placeholder="Edenvale" class="REQ_VAL"><div class="additional-info top-padding" id="areaname-contractor-' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">An area found within the city E.g. Edenvale</p></div></div></div><div class="row" data-toggle  data-animate="hinge-in-from-right spin-out" id="additional-area-' + parseFloat(newCurrent + 1) + '" style="display: none"><div class="column large-11 medium 11"><label>City Name</label><input type="text" name="cityname-contractor-' + contractorLocation + '" id="cityname-contractor-' + contractorLocation + '" placeholder="Johannesburg" class="REQ_VAL"><div class="additional-info top-padding" id="cityname-contractor-' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p></div></div></div><div class="row" data-toggle  data-animate="hinge-in-from-right spin-out" id="additional-area-' + parseFloat(newCurrent + 2) + '" style="display: none"><div class="column large-11 medium 11"><label>Province Name</label><input type="text" name="provincename-contractor-' + contractorLocation + '" id="provincename-contractor-' + contractorLocation + '" placeholder="Gauteng" class="REQ_VAL"><div class="additional-info top-padding" id="provincename-contractor-' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A province within South Africa E.g. Gauteng</p></div></div><div class="column medium-1 large-1" style="margin-top: 24.44px">' + '<a data-toggle="additional-area-'+ parseFloat(contractorLocation * 3) +' additional-area-'+ parseFloat((contractorLocation * 3) + 1)  +' additional-area-'+ parseFloat((contractorLocation * 3) + 2) +'" name="toggle-area-'+ contractorLocation +'" id="toggle-area-'+ contractorLocation +'" onclick="addContractorLocations('+ contractorLocation +')"><img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/></a></div>';
+        clocations++;
+        var html = '<div class="row" data-animate="hinge-in-from-right spin-out" id="additional-area-' + newCurrent + '" style="display: none"><div class="column large-11 medium 11"><label>Area Name</label><input readonly type="text" name="areaname-contractor-' + contractorLocation + '" id="areaname-contractor-' + contractorLocation + '" placeholder="Edenvale" class="REQ_VAL"><div class="additional-info top-padding" id="areaname-contractor-' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">An area found within the city E.g. Edenvale</p></div></div></div><div class="row" data-toggle  data-animate="hinge-in-from-right spin-out" id="additional-area-' + parseFloat(newCurrent + 1) + '" style="display: none"><div class="column large-11 medium 11"><label>City Name</label><input readonly type="text" name="cityname-contractor-' + contractorLocation + '" id="cityname-contractor-' + contractorLocation + '" placeholder="Johannesburg" class="REQ_VAL"><div class="additional-info top-padding" id="cityname-contractor-' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p></div></div></div><div class="row" data-toggle  data-animate="hinge-in-from-right spin-out" id="additional-area-' + parseFloat(newCurrent + 2) + '" style="display: none"><div class="column large-11 medium 11"><label>Province Name</label><input readonly type="text" name="provincename-contractor-' + contractorLocation + '" id="provincename-contractor-' + contractorLocation + '" placeholder="Gauteng" class="REQ_VAL"><div class="additional-info top-padding" id="provincename-contractor-' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A province within South Africa E.g. Gauteng</p></div></div><div class="column medium-1 large-1" style="margin-top: 24.44px">' + '<a data-toggle="additional-area-'+ parseFloat(contractorLocation * 3) +' additional-area-'+ parseFloat((contractorLocation * 3) + 1)  +' additional-area-'+ parseFloat((contractorLocation * 3) + 2) +'" name="toggle-area-'+ contractorLocation +'" id="toggle-area-'+ contractorLocation +'" onclick="addContractorLocations('+ contractorLocation +')"><img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/></a></div>';
         document.getElementById("extraLocations").innerHTML += html;
+        //console.log("The following area should be toggled: " + "toggle-area-" + parseFloat(contractorLocation - 1))
         document.getElementById("toggle-area-" + parseFloat(contractorLocation - 1)).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>';
         //Have tried to implement the following to-do but it doesn't seem to persist over the function calls.
         //TODO: Add a global variable that handles the areas so that the classes need not be created each time.
+
         for(var i = 0 ; i <= parseFloat(((contractorLocation - 1) * 3) + 2) ; i++){
             var temp = "";
             if(i % 3 == 0){
@@ -439,7 +484,10 @@ function addContractorLocations(current){
                 placeHolder++;
             }
 
+
+
             locationsElements[i] = new Foundation.Toggler($("#additional-area-" + i) , 'data-animate="hinge-in-from-right spin-out"');
+
             //console.log(temp);
             new Foundation.Toggler($("#" + temp),'data-animate="fade-in fade-out"');
         }
@@ -456,6 +504,7 @@ function addContractorLocations(current){
         if(document.getElementById("toggle-area-" + parseFloat(current)).innerHTML == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">') {
             //The following if statement goes about toggling-on previously added elements
             var newCurrent = current * 3;
+            clocations++;
             document.getElementById("provincename-contractor-" + iconChange).setAttribute("name","provincename-contractor-" + iconChange);
             document.getElementById("areaname-contractor-" + iconChange).setAttribute("name","areaname-contractor-" + iconChange);
             document.getElementById("cityname-contractor-" + iconChange).setAttribute("name","cityname-contractor-" + iconChange);
@@ -468,6 +517,7 @@ function addContractorLocations(current){
         else {
             //The following if statement goes about toggling-off previously added elements
             document.getElementById("toggle-area-" + parseFloat(current)).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>';
+
             var newCurrent = current;
             var placeHolder = locationAmount;
             if(newCurrent < contractorLocation){
@@ -477,7 +527,11 @@ function addContractorLocations(current){
                         document.getElementById("provincename-contractor-" + iconChange).setAttribute("name","ignore-provincename-contractor-" + iconChange);
                         document.getElementById("areaname-contractor-" + iconChange).setAttribute("name","ignore-areaname-contractor-" + iconChange);
                         document.getElementById("cityname-contractor-" + iconChange).setAttribute("name","ignore-cityname-contractor-" + iconChange);
+                        document.getElementById("provincename-contractor-" + iconChange).value = "";
+                        document.getElementById("areaname-contractor-" + iconChange).value = "";
+                        document.getElementById("cityname-contractor-" + iconChange).value = "";
                         document.getElementById("toggle-area-" + iconChange).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>';
+                        clocations--;
                         iconChange++;
                         locationAmount--;
                     }
@@ -485,8 +539,20 @@ function addContractorLocations(current){
             }
         }
     }
-    //console.log("The following is the location amount : " + locationAmount);
+    k = 3;
+    for(var c = 1; c < locationAmount;c++){
+        //console.log("he following is stored in the array: " + location[c]["provincename-contractor"] + location[c]["areaname-contractor"] + location[c]["cityname-contractor"]);
+        //console.log("Inserting back removed values");
+
+        //console.log('he following is stored in the array: ' + location[k-3] + location[k-2]+ location[k-1]);
+        document.getElementById("provincename-contractor-" + c).value = location[k++];
+        document.getElementById("areaname-contractor-" + c).value = location[k++];
+        document.getElementById("cityname-contractor-" + c).value = location[k++];
+
+    }
+    console.log("The following is the location amount : " + locationAmount);
     document.getElementById("locationsAdded-contractor").value = parseFloat(locationAmount + 1);
+
 }
 
 //Used in contractor registration to add more skills up to three maximum
@@ -532,3 +598,88 @@ function toggleSwitch(id,validationID){
     else
         $("#additional-contractor-skill-2").foundation('toggle');
 }
+
+//Google related Javascript - https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform
+var placeSearch, autocomplete;
+var componentForm = {
+    street_number: 'short_name',
+    route: 'long_name',
+    locality: 'long_name',
+    sublocality_level_1: 'long_name',
+    administrative_area_level_1: 'short_name',
+    country: 'long_name',
+    postal_code: 'short_name'
+};
+
+function initAutocomplete() {
+    // Create the autocomplete object, restricting the search to geographical
+    // location types.
+    autocomplete = new google.maps.places.Autocomplete(
+        /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
+        {types: ['geocode']});
+
+    // When the user selects an address from the dropdown, populate the address
+    // fields in the form.
+    autocomplete.addListener('place_changed', fillInAddress);
+}
+
+function fillInAddress() {
+    // Get the place details from the autocomplete object.
+    console.log("The following is cLocation: " + clocations);
+    if(clocations <= locationAmount) {
+        var place = autocomplete.getPlace();
+
+        //for (var component in componentForm) {
+        //document.getElementById(component).value = '';
+        //document.getElementById(component).disabled = false;
+        //}
+
+        // Get each component of the address from the place details
+        // and fill the corresponding field on the form.
+        for (var i = 0; i < place.address_components.length; i++) {
+            var addressType = place.address_components[i].types[0];
+            console.log("The following is value's val" + addressType);
+            if (componentForm[addressType]) {
+                var val = place.address_components[i][componentForm[addressType]];
+                //document.getElementById(addressType).value = val;
+                console.log("The following is the address type: " + addressType);
+                if (addressType == 'locality') {
+                    document.getElementById("areaname-contractor-" + clocations).value = val;
+                    console.log("it got here!" + val);
+                }
+                else if (addressType == 'administrative_area_level_1') {
+                    document.getElementById("cityname-contractor-" + clocations).value = val;
+                    console.log("it got here!" + val);
+                }
+                else if (addressType == 'country') {
+                    document.getElementById("provincename-contractor-" + clocations).value = val;
+                    console.log("it got here!" + val);
+                }
+            }
+        }
+        if(clocations<locationAmount)
+        clocations++;
+    }
+    else{
+        console.log("Toggle another area on first");
+    }
+}
+
+// Bias the autocomplete object to the user's geographical location,
+// as supplied by the browser's 'navigator.geolocation' object.
+function geolocate() {
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var geolocation = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+            };
+            var circle = new google.maps.Circle({
+                center: geolocation,
+                radius: position.coords.accuracy
+            });
+            autocomplete.setBounds(circle.getBounds());
+        });
+    }
+}
+//End Google related Javascript

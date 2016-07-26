@@ -201,12 +201,8 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <select id="contractor-work-type-0" name="contractor-work-type-0" form="register-contractor-form">
-<!--                <option value="test1">Test</option>-->
-<!--                <option value="test2">Test</option>-->
-<!--                <option value="test3">Test</option>-->
+            <select id="contractor-work-type-0" name="contractor-work-type-0" form="register-contractor-form" class="REQ_VAL">
                 <script>
-
                     requestWorkTypes();
                 </script>
             </select>
@@ -249,8 +245,20 @@
         <h4>Location(s):</h4>
     </div>
     <div class="row">
+        <h5>Enter into the box that follows and select option that is displayed by clicking on it, click the addition button to add areas</h5>
+    </div>
+    <div class="row">
         <div class="column large-11 medium 11">
-            <label>Area Name</label><input type="text" name="areaname-contractor-0" id="areaname-contractor-0" placeholder="Edenvale" class="REQ_VAL">
+            <div id="locationField">
+                <input name="ignore" id="autocomplete" placeholder="Enter your address"
+                       onFocus="geolocate()" onclick="initAutocomplete()" type="text" autocomplete="off"/>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="column large-11 medium 11">
+            <label>Area Name</label><input type="text" name="areaname-contractor-0" id="areaname-contractor-0" placeholder="Edenvale" class="REQ_VAL" readonly>
             <div class="additional-info top-padding" id="areaname-contractor-0-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">An area found within the city E.g. Edenvale</p>
             </div>
@@ -258,7 +266,7 @@
     </div>
     <div class="row">
         <div class="column large-11 medium 11">
-            <label>City Name</label><input type="text" name="cityname-contractor-0" id="cityname-contractor-0" placeholder="Johannesburg" class="REQ_VAL">
+            <label>City Name</label><input type="text" name="cityname-contractor-0" id="cityname-contractor-0" placeholder="Johannesburg" class="REQ_VAL" readonly>
             <div class="additional-info top-padding" id="cityname-contractor-0-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p>
             </div>
@@ -266,7 +274,7 @@
     </div>
     <div class="row">
         <div class="column large-11 medium 11">
-            <label>Province Name</label><input type="text" name="provincename-contractor-0" id="provincename-contractor-0" placeholder="Gauteng" class="REQ_VAL">
+            <label>Province Name</label><input type="text" name="provincename-contractor-0" id="provincename-contractor-0" placeholder="Gauteng" class="REQ_VAL" readonly>
             <div class="additional-info top-padding" id="provincename-contractor-0-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">A province within South Africa E.g. Gauteng</p>
             </div>
@@ -309,3 +317,5 @@
         </button>
     </div>
 </form>
+
+

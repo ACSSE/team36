@@ -39,7 +39,9 @@ SebenzaServer::start();
     <script
     async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCOhOzd9iCUl2GHC1o-ztn95gN3-XKxMmU&callback=initMap">
     </script>-->
-    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCrJJPwQCz_wuuuYyfD1q4e6mFO7OBHk8Y&libraries=places"
+            async defer></script>
+<!--    <script src="http://maps.googleapis.com/maps/api/js"></script>-->
     <script src="javascript/sebenza.js"></script>
 </head>
 <body>
