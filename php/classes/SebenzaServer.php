@@ -527,6 +527,11 @@ class SebenzaServer {
         return $results;
     }
 
+    public static function homeuserRequestTradeworker(){
+        $result = "amazing it got here 0.0";
+        return $result;
+    }
+
     public static function isUnique($value,$condition,$type){
         switch($type){
             case "registered_users":
@@ -715,6 +720,9 @@ if (!empty($_POST)) {
             case 'fetch_work_types':
                 $response = json_encode(SebenzaServer::returnWorkTypes());
 //                $response = json_encode("This is a test");
+                break;
+            case 'homeuser-rTradeworker':
+                $response = json_encode(SebenzaServer::homeuserRequestTradeworker());
                 break;
             default:
                 //If the action was not one of the handled cases, respond appropriately

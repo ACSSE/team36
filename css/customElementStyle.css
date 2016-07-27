@@ -399,3 +399,12 @@ h4 {
 @media only screen and (max-width: 600px) and (orientation: landscape) {
     /*Override classes here*/
 }
+
+/*test*/
+.accordion-navigation > a:after {
+    content: "↡";
+    padding-left: 5px;
+    float: right;
+    font-size: 20px; }
+.accordion-navigation.active > a:after {
+    content: "↟"; }

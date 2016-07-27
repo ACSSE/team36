@@ -262,7 +262,7 @@ function validateForm(formID) {
                 var selectTag;
                 for(var j = 0; j < selectTags.length; j++){
                     selectTag = selectTags[j];
-                    //console.log(selectTag.name + " " + selectTag.value);
+                    console.log(selectTag.name + " " + selectTag.value);
                     if (selectTag.name.substring(0,6) != "ignore") {
 
                         var selectToggleID = selectTag.name + '-info';
@@ -300,7 +300,7 @@ function validateForm(formID) {
                 for(var l = 0; l < textareaTags.length; l++){
                     textareaTag = textareaTags[l];
                     //console.log(" The follwoing is the text area:" + textareaTag);
-                    //console.log(textareaTag.name + " " + textareaTag.value);
+                    console.log(textareaTag.name + " " + textareaTag.value);
                     if (textareaTag.name.substring(0,6) != "ignore") {
                         var textareaToggleID = textareaTag.name + '-info';
                         var textareaFoundationID = '#' + textareaToggleID;
@@ -335,7 +335,7 @@ function validateForm(formID) {
                 var i;
                 for (i = 0; i < inputTags.length; i++) {
                     inputTag = inputTags[i];
-                    //console.log(inputTag.name + " " + inputTag.value);
+                    console.log(inputTag.name + " " + inputTag.value);
                     if (inputTag.name.substring(0,6) != "ignore") {
 
                         var inputToggleID = inputTag.name + '-info';
@@ -409,8 +409,50 @@ function homeUserOngoingJobModalFill(type, location){
 
 }
 
+var workTypeSelectTagID;
+function requestGenericWorkTypes(inputID){
+    workTypeSelectTagID = inputID;
+    sendAJAXRequest('fetch_work_types', handleGenericWorkRequestResponse);
+}
+
+function handleGenericWorkRequestResponse(response){
+    var workTypeArray = JSON.parse(response);
+    if (workTypeArray) {
+        //console.log("Work Type Retrieval successful: " + workTypeArray.length + "The following is contained in array: " + workTypeArray.toString());
+        if(workTypeArray.length > 0){
+
+            //document.getElementById("contractor-work-type").innerHTML = "This is a test".htmlText;
+            var htmlText = '<option value="" selected></option>';
+            for(var i = 0;i<workTypeArray.length;i++){
+                htmlText += '<option value="' + workTypeArray[i]["workTypeID"] + '">' + workTypeArray[i]["WorkType"] + '</option>';
+            }
+
+
+            document.getElementById(workTypeSelectTagID).innerHTML = htmlText;
+
+        }
+        else{
+            console.log("There are no specialities that were retrieved" + workTypeArray)
+        }
+
+    }
+    else{
+        console.log("Worktype Retrievals Failed");
+    }
+}
+
 function requestWorkTypes(){
     sendAJAXRequest('fetch_work_types', handleWorkRequestResponse);
+}
+
+function handlerTradeworkerResponse(response){
+    var workTypeArray = JSON.parse(response);
+    if(workTypeArray){
+        console.log("The work request was successful: " + response);
+    }
+    else{
+        console.log("The work request was unsuccessful: " + response);
+    }
 }
 
 function handleWorkRequestResponse(response){
@@ -555,6 +597,23 @@ function addContractorLocations(current){
 
 }
 
+function toggleUserPageArea(toToggle){
+    var containers = document.getElementsByClassName("test");
+    if(containers.length > 0) {
+        console.log("The following is how many test class containers exist " + containers.length + " " + containers[0].id);
+        var i;
+        for (i=0; i < containers.length;i++) {
+            var toggleID = containers[i].id;
+            console.log("The following is the toggle id:" + toggleID);
+            document.getElementById(toggleID).style.display = 'none';
+        }
+        document.getElementById(toToggle).style.display = 'block';
+    }
+    else{
+        console.log("There are no such elements with the class test on this page:");
+    }
+}
+
 //Used in contractor registration to add more skills up to three maximum
 function toggleSwitch(id,validationID){
     //console.log("Switching " + document.getElementById(id).innerHTML.trim());
@@ -600,7 +659,7 @@ function toggleSwitch(id,validationID){
 }
 
 //Google related Javascript - https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform
-var placeSearch, autocomplete;
+var placeSearch, autocomplete, fillInAddressID;
 var componentForm = {
     street_number: 'short_name',
     route: 'long_name',
@@ -610,6 +669,55 @@ var componentForm = {
     country: 'long_name',
     postal_code: 'short_name'
 };
+
+//This will only work for one field at a time, however as long as the user clicks on the tag as currently set up that is when it initialises so it should handle multiple instances on a page
+function genericInitAutocomplete(inputID){
+    // Create the autocomplete object, restricting the search to geographical
+    // location types.
+    if(typeof inputID == 'string') {
+        autocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */(document.getElementById(inputID)),
+            {types: ['geocode']});
+        fillInAddressID = inputID.substring(0,inputID.length - 12);
+        // When the user selects an address from the dropdown, populate the address
+        // fields in the form.
+        autocomplete.addListener('place_changed', genericFillInAddress);
+    }
+    else{
+        console.log("inputID is wrong type should be String is: " + typeof inputID)
+    }
+}
+
+function genericFillInAddress(){
+    console.log("The following is the value coming in to the genericFillInAddress: " + fillInAddressID);
+    var place = autocomplete.getPlace();
+
+    //for (var component in componentForm) {
+    //document.getElementById(component).value = '';
+    //document.getElementById(component).disabled = false;
+    //}
+
+    // Get each component of the address from the place details
+    // and fill the corresponding field on the form.
+    // the following address_components.types refer to the following there are some that appear that are not defined in the componentForm and so the if statement will never occur
+    // administrative_area_level_1 - Province(Gauteng Province)
+    // country - Country(South Africe)
+    // streest_number - House number(house number 14)
+    // route - Road(Avenues/Streets/etc)
+    // sublocality_level_1 - Subarea(Eastleigh is to Edenvale)
+    // locality - Area(Edenvale)
+    // postal_code = postal code(1201)
+
+    for (var i = 0; i < place.address_components.length; i++) {
+        var addressType = place.address_components[i].types[0];
+        console.log("The following is value's val" + addressType);
+        if (componentForm[addressType]) {
+            var val = place.address_components[i][componentForm[addressType]];
+            console.log("The following is value's val" + addressType + "The value of addressType:" + val);
+            document.getElementById(fillInAddressID + addressType).value = val;
+        }
+    }
+}
 
 function initAutocomplete() {
     // Create the autocomplete object, restricting the search to geographical

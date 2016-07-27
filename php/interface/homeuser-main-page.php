@@ -18,72 +18,54 @@
 <!--            <li class="tabs-title"><a href="#panel6v">Profile Management</a></li>-->
 <!--            <li class="tabs-title"><a href="#panel7v">Bookmarked tradeworkers/contractors</a></li>-->
 <!--        </ul>-->
-        <ul class="tabs large vertical menu" data-accordion-menu style="border: 0px" id="example-vert-tabs" data-tabs>
-            <li class="tabs-title">
+<!--        <ul class="tabs large vertical menu" data-accordion-menu style="border: 0px" id="example-vert-tabs" data-tabs>-->
+<!--            <li class="tabs-title">-->
+<!--                <a href="#">Job Requests</a>-->
+<!--                <ul class="menu vertical nested">-->
+<!--                    <li class="tabs-title is-active" aria-selected="true"><a href="#panel1v">Request Tradeworker<span class="badge" style="margin-left: 30px">1</span></a></li>-->
+<!--                    <li class="tabs-title"><a href="#panel2v">Request Contractor</a></li>-->
+<!--                </ul>-->
+<!--            </li>-->
+<!--            <li class="tabs-title"><a href="#">Job Management</a>-->
+<!--                <ul class="menu vertical nested">-->
+<!--                        <li><a href="#panel1v">Jobs</a>-->
+<!--                            <ul class="menu vertical nested">-->
+<!--                                <li class="tabs-title accordion-navigation"><a href="#panel3v">On going jobs</a></li>-->
+<!--                                <li class="tabs-title accordion-navigation"><a href="#panel4v">Job requests</a></li>-->
+<!--                            </ul>-->
+<!--                        </li>-->
+<!--                    <li class="tabs-title"><a href="#panel5v">Job history</a></li>-->
+<!--                </ul>-->
+<!--            </li>-->
+<!--            <li class="tabs-title">-->
+<!--                <a href="#">Profile management</a>-->
+<!--                <ul class="menu vertical nested">-->
+<!--                    <li class="tabs-title"><a href="#panel6v">Edit Details</a></li>-->
+<!--                    <li class="tabs-title"><a href="#panel7v">Manage Bookmarked users</a></li>-->
+<!--                </ul>-->
+<!--            </li>-->
+<!--        </ul>-->
+        <ul class="vertical menu" data-accordion-menu>
+            <li>
                 <a href="#">Job Requests</a>
                 <ul class="menu vertical nested">
-                    <li class="tabs-title is-active" aria-selected="true"><a href="homeuser-request-tradeworker.php">Request Tradeworker<span class="badge" style="margin-left: 30px">1</span></a></li>
-                    <li class="tabs-title"><a href="#panel2v">Request Contractor</a></li>
+                    <li><a onclick="toggleUserPageArea('panel1v')">Request Tradeworker</a></li>
+
+                    <li><a onclick="toggleUserPageArea('panel2v')">Request Contractor</a></li>
                 </ul>
             </li>
-            <li class="tabs-title"><a href="#">Job Management</a>
-                <ul class="menu vertical nested">
-                        <li><a href="#panel1v">Jobs</a>
-                            <ul class="menu vertical nested">
-                                <li class="tabs-title"><a href="#panel3v">On going jobs</a></li>
-                                <li class="tabs-title"><a href="#panel4v">Job requests</a></li>
-                            </ul>
-                        </li>
-                    <li class="tabs-title"><a href="#panel5v">Job history</a></li>
-                </ul>
-            </li>
-            <li class="tabs-title">
-                <a href="#">Profile management</a>
-                <ul class="menu vertical nested">
-                    <li class="tabs-title"><a href="#panel6v">Edit Details</a></li>
-                    <li class="tabs-title"><a href="#panel7v">Manage Bookmarked users</a></li>
-                </ul>
-            </li>
+            <li><a onclick="toggleUserPageArea('panel3v')">Item 2</a></li>
         </ul>
+
     </div>
     <div class="small-9 columns full-height">
-        <div class="tabs-content vertical full-height" data-tabs-content="example-vert-tabs" style="max-height: 100%">
-            <div class="tabs-panel full-height is-active" id="panel1v">
-                <h1>Request Trade Workers</h1>
-                <div class="row">
-                    <div class="large-6 small-12 columns">
-                        <label>Sort By:</label>
-                        <select>
-                            <option value="option1">Painter</option>
-                            <option value="option2">Tiler</option>
-                            <option value="option3">Paver</option>
-                            <option value="option4">Tree-Feller</option>
-
-                        </select>
-                    </div>
-
-                </div>
-                <div class="row">
-
-                    <div class="large-12 medium-12 columns">
-                        <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of User." style="width: 100px;height: 100px;">
-                        <input type="radio" name="worker" value="worker1" id="worker1"><label for="worker1">Joe Mason</label>
-                        <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of User." style="width: 100px;height: 100px;">
-                        <input type="radio" name="worker" value="worker2" id="worker2"><label for="worker2">Dill Harper</label>
-                        <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of User." style="width: 100px;height: 100px;">
-                        <input type="radio" name="worker" value="worker3" id="worker3"><label for="worker3">Fred Kruger</label>
-                        <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of User." style="width: 100px;height: 100px;">
-                        <input type="radio" name="worker" value="worker4" id="worker4"><label for="worker4">Tom B</label>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="large-12 medium-12 columns">
-                        <a href="#" class="float-left medium secondary button radius">Request TradeWorker</a>
-                    </div>
-                </div>
+        <div class="full-height" style="max-height: 100%">
+            <div class="tabs-panel full-height test" id="panel1v" style="display: block;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+                <?php
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-request-tradeworker.php";
+                ?>
             </div>
-            <div class="tabs-panel full-height" id="panel2v">
+            <div class="tabs-panel full-height test" id="panel2v" style="display: none">
                 <h1>Request Contractors</h1>
                 <div class="row">
                     <div class="large-12 medium-12 columns">
@@ -110,7 +92,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel full-height" id="panel3v">
+            <div class="tabs-panel full-height test" id="panel3v" style="display: none">
                 <div class="row">
                     <div class="large-12 medium-12 columns">
                         <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
@@ -130,7 +112,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel full-height" id="panel4v">
+            <div class="tabs-panel full-height test" id="panel4v" style="display: none">
                 <div class="row">
                     <div class="large-6 small-12 columns">
                         <label>Sort By:</label>
@@ -161,7 +143,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel full-height" id="panel5v" style="max-height: 800px;overflow-y: scroll">
+            <div class="tabs-panel full-height test" id="panel5v" style="max-height: 800px;overflow-y: scroll;display: none">
                 <div class="row">
                     <div class="large-12 medium-12 columns">
                         <div class="row">
@@ -198,7 +180,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel full-height" id="panel6v">
+            <div class="tabs-panel full-height test" id="panel6v" style="display: none">
                 <form>
                     <h1>Registration form: Trade Worker</h1>
                     <div class="row">
@@ -246,7 +228,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel full-height" id="panel7v">
+            <div class="tabs-panel full-height test" id="panel7v" style="display: none">
                 <div class="row">
                     <div class="large-12 medium-12 columns">
                         <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
