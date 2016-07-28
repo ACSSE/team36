@@ -6,7 +6,7 @@
             <h4>Date Needing To start by:</h4>
         </div>
         <div class="row">
-            <h5>Please give at least 5 days for request to be accepted, once accepted date willing to commence will be suggested by the tradeworker</h5>
+            <h5>Please give at least 5 days for request to be accepted, once accepted - date willing to commence will be suggested by the tradeworker</h5>
         </div>
         <div class="row">
             <div class="column medium-11 large-11">
@@ -16,7 +16,7 @@
                 </div>
             </div>
         </div>
-
+        <!-- TODO:Javascript generated fields adding more skill types to form, will be limited to having filled in a fields before being able to add a new type, think along arrays to do this also add a hidden input field keeping track of how many types of workers are being requested-->
         <div class="row">
             <h4>Job Type(s):</h4>
         </div>
@@ -35,20 +35,34 @@
         </div>
         <div class="row">
             <div class="column medium-11 large-11">
-                <label>Number of tradeworkers to request</label><input type="number" name="nTradeworkers-homeuser-rTradeworker" id="nTradeworkers-homeuser-rTradeworker" placeholder="3" class="REQ_VAL">
-                <div class="additional-info top-padding" id="nTradeworkers-homeuser-rTradeworker-info" data-toggler data-animate="fade-in fade-out">
+                <label>Job Description</label><textarea  name="job-description-homeuser-rTradeworker-0" id="job-description-homeuser-rTradeworker-0" placeholder="I would like to have a 4 X 4 square meter area tiled"
+                                                         class="REQ_VAL"></textarea>
+                <div class="additional-info top-padding" id="job-description-homeuser-rTradeworker-0-info" data-toggler data-animate="fade-in fade-out">
+                    <p class="help-text no-margins">Please enter in a short description of what you would like done for the job type selected</p>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="column medium-11 large-11">
+                <label>Number of tradeworkers to request</label><input type="number" name="nTradeworkers-homeuser-rTradeworker-0" id="nTradeworkers-homeuser-rTradeworker-0" placeholder="3" class="REQ_VAL">
+                <div class="additional-info top-padding" id="nTradeworkers-homeuser-rTradeworker-0-info" data-toggler data-animate="fade-in fade-out">
                     <p class="help-text no-margins">Please fill in amount of tradeworkers that you would like of the speciality specified. E.g. 3</p>
                 </div>
             </div>
-            <div class="column medium-1 large-1">
-                <a data-toggle="additional-homeuser-rTradeworker-skill-1" name="homeuser-rTradeworker-toggle-switch-0" id="homeuser-rTradeworker-toggle-switch-0">
+            <div class="column medium-1 large-1" style="margin-top:1.75rem">
+                <a data-toggle="additional-homeuser-rTradeworker-skill-1" name="homeuser-rTradeworker-toggle-switch-0" id="homeuser-rTradeworker-toggle-switch-0" onclick="homeuserReqTradeworkerAdditionalLocationsToggler(1)">
                     <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
                 </a>
             </div>
         </div>
+
+        <input type="hidden" value="1" id="actual-nTradeworkers-homeuser-rTradeworker" name="ignore-actual-nTradeworkers-homeuser-rTradeworker" />
+
+
         <div id="additional-area-homeuser-rTradeworker">
-        <!-- TODO:Javascript generated fields adding more skill types to form, will be limited to having filled in a fields before being able to add a new type, think along arrays to do this also add a hidden input field keeping track of how many types of workers are being requested-->
+
         </div>
+
         <!--The following deals with the location that is used by the homeuser for where the job will be done-->
         <div class="row">
             <h4>Job Location:</h4>
@@ -144,6 +158,5 @@
                 </p>
             </div>
         </div>
-        <input type="hidden" value="1" id="locationsAdded-contractor" name="ignore-locationsAdded-contractor">
     </form>
 </div>

@@ -133,13 +133,18 @@ CREATE TABLE `JOB_PER_USER` (
 DROP TABLE IF EXISTS `QUOTE_REQUEST`;
 CREATE TABLE `QUOTE_REQUEST` (
   `RequestID` integer not null auto_increment,
-  `RequestedUser` varchar(40) not null unique,
-  `HomeUser` varchar(40) not null unique,
+  `UserID` INTEGER not null,
+  `RequestedUser` INTEGER not null,
+  `workTypeID` integer not null,
+  `HomeUser` INTEGER not null unique,
   `DateInitialised` date not null,
-  `Status` boolean not null,
+  `JobCommencementDate` date not null,
+  `Accepted` boolean not null DEFAULT FALSE,
   PRIMARY KEY (`RequestID`),
-  FOREIGN KEY (`RequestedUser`) REFERENCES REGISTERED_USER(`Username`),
-  FOREIGN KEY (`HomeUser`) REFERENCES REGISTERED_USER(`Username`)
+  FOREIGN KEY (`RequestedUser`) REFERENCES REGISTERED_USER(`UserID`),
+  FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`),
+  FOREIGN KEY (`workTypeID`) REFERENCES SPECIALIZATIONS(`workTypeID`),
+  FOREIGN KEY (`HomeUser`) REFERENCES REGISTERED_USER(`UserID`)
 );
 
 DROP TABLE IF EXISTS `BOOKMARKED`;

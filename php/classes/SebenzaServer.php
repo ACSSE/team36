@@ -127,7 +127,6 @@ class SebenzaServer {
     /*The following function will register the user according to his type, confirmation of email will be required from all
     users, to ensure that the email account exists.*/
     public static function register(array $input, $type){
-        //TODO: Order the thing in such a way that it will not remove entries already removed etc, so remove the condition variables and add what is to be done at the end of the for loops last run instead.
         $locationsToRemove = 0;
         $locationsPerUserToRemove = 0;
         $skillsPerUserToRemove = 0;
@@ -148,7 +147,6 @@ class SebenzaServer {
         else if($contractorAvailability == "off"){
             $contractorAvailability = 0;
         }
-        //TODO: double check that all entries are of the right types etc, if malicious user tries remove the javascript validation then validation can occur on server too.
         $locationID = array($numLocations);
         $locationsToRemove = array($numLocations);
         $locationsToRemoveAmount = 0;
@@ -180,7 +178,7 @@ class SebenzaServer {
                                 $area = $_POST["areaname-contractor-".$k];
                                 $province = $_POST["provincename-contractor-".$k];
                                 $city = $_POST["cityname-contractor-".$k];
-                                //TODO: coordinates can be requested through google maps api - extra
+                                //TODO: coordinates can be requested through google maps api - extra - may make marking a google map for information a lot easier later
                                 if($dbHandler->runCommand($command1, $area, $coordinates, $region, $province, $city)){
                                     //$test .= "Area added: ".$area." ".$province." ".$city."\n";
                                     $locationID[$k] = $dbHandler->getInsertID();
@@ -223,7 +221,6 @@ class SebenzaServer {
                             $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
                             if( $dbHandler->runCommand($command, $id, $keyToSend)){
                                 //once users are inserted into the CONFIRMATIONS table appropriate data will be inserted into the CONTRACTOR table
-                                //TODO: Add in the BusinessDescription,BusinessHours,Availability text areas to be added to the database
                                 $busName = $input[7];
                                 $busAddress = $input[8];
                                 //The following is to check whether the contractor is VAT registered or not
@@ -244,7 +241,6 @@ class SebenzaServer {
                                             }
                                         }
                                         if($condition){
-                                            //TODO:insert locations into LOCATIONS_PER_USER
                                             $command = "INSERT INTO `LOCATIONS_PER_USER` (`UserID`, `locationID`) VALUES (?,?)";
                                             for($k = 0;$k<$numLocations && $condition;$k++){
                                                 $returnValue = $dbHandler->runCommand($command,$id,$locationID[$k]);
@@ -252,13 +248,11 @@ class SebenzaServer {
 
                                                 }
                                                 else{
-                                                    //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS,SPECIALIZATIONS_PER_USER,LOCATIONS_PER_USER and set $returnValue to false
                                                     $condition = false;
 
                                                 }
                                             }
                                             if(!$condition){
-                                                //TODO:remove all LOCATIONS,REGISTERED_USER,CONFIRMATIONS,LOCATIONS_PER_USER,SPECIALIZATIONS_PER_USER and set $returnValue to false
                                                 $command = "DELETE FROM `LOCATIONS_PER_USER` WHERE `UserID` = ?";
                                                 $dbHandler->runCommand($command,$id);
                                                 $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
@@ -278,7 +272,6 @@ class SebenzaServer {
                                             }
                                         }
                                         else{
-                                            //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS,SPECIALIZATIONS_PER_USER and set $returnValue to false
                                             $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
                                             for($k=0;$k<$locationsToRemoveAmount;$k++){
                                                 //Technically one should test if this fails too
@@ -328,7 +321,6 @@ class SebenzaServer {
                                         }
                                         if($condition){
                                             //$test .= "All specializations per user have been added successfully";
-                                            //TODO:insert locations into LOCATIONS_PER_USER
                                             $command = "INSERT INTO `LOCATIONS_PER_USER` (`UserID`, `locationID`) VALUES (?,?)";
                                             for($k = 0;$k<$numLocations && $condition;$k++){
                                                 //$test .= "\nInserting in locations:";
@@ -341,7 +333,6 @@ class SebenzaServer {
                                                 }
                                             }
                                             if(!$condition){
-                                                //TODO:remove all LOCATIONS,REGISTERED_USER,CONFIRMATIONS,LOCATIONS_PER_USER,SPECIALIZATIONS_PER_USER and set $returnValue to false
                                                 $command = "DELETE FROM `LOCATIONS_PER_USER` WHERE `UserID` = ?";
                                                 $dbHandler->runCommand($command,$id);
                                                 $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
@@ -361,7 +352,6 @@ class SebenzaServer {
                                             }
                                         }
                                         else{
-                                            //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS,SPECIALIZATIONS_PER_USER and set $returnValue to false
                                             $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
                                             for($k=0;$k<$locationsToRemoveAmount;$k++){
                                                 //Technically one should test if this fails too
@@ -380,7 +370,6 @@ class SebenzaServer {
 
                                     }
                                     else{
-                                        //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER,CONFIRMATIONS and set $returnValue to false - correct
                                         $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
                                         for($k=0;$k<$locationsToRemoveAmount;$k++){
                                             //Technically one should test if this fails too
@@ -395,7 +384,6 @@ class SebenzaServer {
                                 }
                             }
                             else{
-                                //TODO:remove inserted elements from LOCATIONS,REGISTERED_USER and set $returnValue to false - correct
                                 $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
                                 for($k=0;$k<$locationsToRemoveAmount;$k++){
                                     //Technically one should test if this fails too
@@ -474,7 +462,7 @@ class SebenzaServer {
         $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
         $mail->Username = '215040496@student.uj.ac.za';                 // SMTP username
-        $mail->Password = '@Uj-436518';                           // SMTP password
+        $mail->Password = '';                           // SMTP password
         $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
         $mail->Port = 587;                                    // TCP port to connect to
         $mail->IsHTML(true);
@@ -528,7 +516,8 @@ class SebenzaServer {
     }
 
     public static function homeuserRequestTradeworker(){
-        $result = "amazing it got here 0.0";
+        $result = 100;
+        //TODO: Lol request the tradeworker you know you can do it
         return $result;
     }
 
@@ -580,7 +569,7 @@ if (!empty($_GET)){
     }
 }
 
-
+//TODO:I think second-level validation should occur here for in case the sebenza.js file is overwritten with a malicious version
 //The following code handles ajax requests sent to SessionModule.php as in sebenza.js for the login functionality
 if (!empty($_POST)) {
     //Synchronise the time and start output buffering (an AJAX request can happen separate from an official page load)
@@ -722,7 +711,32 @@ if (!empty($_POST)) {
 //                $response = json_encode("This is a test");
                 break;
             case 'homeuser-rTradeworker':
-                $response = json_encode(SebenzaServer::homeuserRequestTradeworker());
+                $condition = 0;
+
+                if(isset($_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker'])){
+                    for($j =0;$j<$_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker'];$j++){
+                        $condition += 1;
+                        if(!isset($_POST['homeuser-rTradeworker-work-type-'.$j]) || !isset($_POST['nTradeworkers-homeuser-rTradeworker-'.$j]) || !isset($_POST['job-description-homeuser-rTradeworker-'.$j])){
+                            $condition -= 50;
+                        }
+                    }
+
+                }
+                else{
+                    $condition = -10;
+                }
+
+                if($condition > 0){
+                    if(isset($_POST['commencement-homeuser-rTradeworker']) && isset($_POST['homeuser-rTradeworker-street_number']) && isset($_POST['homeuser-rTradeworker-route']) && isset($_POST['homeuser-rTradeworker-sublocality_level_1']) && isset($_POST['homeuser-rTradeworker-locality']) && isset($_POST['homeuser-rTradeworker-administrative_area_level_1']) && isset($_POST['homeuser-rTradeworker-postal_code']) && isset($_POST['homeuser-rTradeworker-country'])){
+                        $condition += 100;
+                        $condition = json_encode(SebenzaServer::homeUserRequestTradeworker());
+                    }
+                    else{
+                        $condition -=1000;
+                    }
+                }
+
+                $response = json_encode($condition);
                 break;
             default:
                 //If the action was not one of the handled cases, respond appropriately

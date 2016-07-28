@@ -257,7 +257,7 @@ function validateForm(formID) {
             var inputTags = form.getElementsByTagName('input');
             var selectTags = form.getElementsByTagName('select');
             var textareaTags = form.getElementsByTagName('textarea');
-            var currentInputSuccess = true;
+            var currentSelectSuccess = true;
             if(selectTags.length > 0){
                 var selectTag;
                 for(var j = 0; j < selectTags.length; j++){
@@ -274,27 +274,28 @@ function validateForm(formID) {
                         //console.log("These are the select tag names: " + selectTag.name + "the following is the length of the select tag: " + selectTag.value.length);
                         //Required field validation
                         if (selectClassName.indexOf("REQ_VAL") > -1 && selectTag.value.length == 0) {
-                            currentInputSuccess = false;
+                            currentSelectSuccess = false;
                             if(!focus){
-                                console.log("Focusing on " + selectTag.name);
+                                //console.log("Focusing on " + selectTag.name);
                                 document.getElementById(selectTag.name).focus();
                                 focus = true;
                             }
                         }
                         //Toggle display of messages
-                        if (currentInputSuccess && selectDisplayProperty != '' && selectDisplayProperty != 'none') {
+                        if (currentSelectSuccess && selectDisplayProperty != '' && selectDisplayProperty != 'none') {
                             $(selectFoundationID).foundation('toggle');
-                        } else if (!currentInputSuccess && (selectDisplayProperty == '' || selectDisplayProperty == 'none')) {
+                        } else if (!currentSelectSuccess && (selectDisplayProperty == '' || selectDisplayProperty == 'none')) {
                             $(selectFoundationID).foundation('toggle');
 
                         }
+                        success &= currentSelectSuccess;
                     }
                 }
             }
             else {
                 console.log("The form " + formID + " had no select elements to validate.");
             }
-            currentInputSuccess = true;
+            var currentTextareaSuccess = true;
             if(textareaTags.length > 0){
                 var textareaTag;
                 for(var l = 0; l < textareaTags.length; l++){
@@ -309,26 +310,29 @@ function validateForm(formID) {
                         //console.log("These are the select tag names: " + textareaTag.name);
                         //Required field validation
                         if (textareaClassName.indexOf("REQ_VAL") > -1 && textareaTag.value.length == 0) {
-                            currentInputSuccess = false;
+                            currentTextareaSuccess = false;
                             if(!focus){
-                                console.log("Focusing on " + textareaTag.name);
+                                //console.log("Focusing on " + textareaTag.name);
                                 document.getElementById(textareaTag.name).focus();
                                 focus = true;
                             }
                         }
                         //Toggle display of messages
-                        if (currentInputSuccess && textareaDisplayProperty != '' && textareaDisplayProperty != 'none') {
+                        if (currentTextareaSuccess && textareaDisplayProperty != '' && textareaDisplayProperty != 'none') {
                             $(textareaFoundationID).foundation('toggle');
-                        } else if (!currentInputSuccess && (textareaDisplayProperty == '' || textareaDisplayProperty == 'none')) {
+                        } else if (!currentTextareaSuccess && (textareaDisplayProperty == '' || textareaDisplayProperty == 'none')) {
                             $(textareaFoundationID).foundation('toggle');
 
                         }
+
+                        success &= currentTextareaSuccess;
                     }
                 }
             }
             else {
                 console.log("The form " + formID + " had no textarea elements to validate.");
             }
+            //todo: use individual checks and && the booleans at the end to see if the form is successful or not
             currentInputSuccess = true;
             if (inputTags.length > 0) {
                 var inputTag;
@@ -349,7 +353,7 @@ function validateForm(formID) {
                         if (inputClassName.indexOf("AN_VAL") > -1 && !inputTag.value.match(alphaNumericRE)) {
                             currentInputSuccess = false;
                             if(!focus){
-                                console.log("Focusing on " + inputToggleID);
+                                //console.log("Focusing on " + inputToggleID);
                                 document.getElementById(inputTag.name).focus();
                                 focus = true;
                             }
@@ -358,7 +362,7 @@ function validateForm(formID) {
                         if (inputClassName.indexOf("REQ_VAL") > -1 && inputTag.value.length == 0) {
                             currentInputSuccess = false;
                             if(!focus){
-                                console.log("Focusing on " + inputToggleID.substring(0,inputToggleID.length-5) + " " + inputTag.name);
+                                //console.log("Focusing on " + inputToggleID.substring(0,inputToggleID.length-5) + " " + inputTag.name);
                                 document.getElementById(inputTag.name).focus();
                                 focus = true;
                             }
@@ -414,17 +418,17 @@ function requestGenericWorkTypes(inputID){
     workTypeSelectTagID = inputID;
     sendAJAXRequest('fetch_work_types', handleGenericWorkRequestResponse);
 }
-
+var homeuserWorkTypeArray;
 function handleGenericWorkRequestResponse(response){
-    var workTypeArray = JSON.parse(response);
-    if (workTypeArray) {
-        //console.log("Work Type Retrieval successful: " + workTypeArray.length + "The following is contained in array: " + workTypeArray.toString());
-        if(workTypeArray.length > 0){
+    homeuserWorkTypeArray = JSON.parse(response);
+    if (homeuserWorkTypeArray) {
+        //console.log("Work Type Retrieval successful: " + homeuserWorkTypeArray.length + "The following is contained in array: " + homeuserWorkTypeArray.toString());
+        if(homeuserWorkTypeArray.length > 0){
 
             //document.getElementById("contractor-work-type").innerHTML = "This is a test".htmlText;
             var htmlText = '<option value="" selected></option>';
-            for(var i = 0;i<workTypeArray.length;i++){
-                htmlText += '<option value="' + workTypeArray[i]["workTypeID"] + '">' + workTypeArray[i]["WorkType"] + '</option>';
+            for(var i = 0;i<homeuserWorkTypeArray.length;i++){
+                htmlText += '<option value="' + homeuserWorkTypeArray[i]["workTypeID"] + '">' + homeuserWorkTypeArray[i]["WorkType"] + '</option>';
             }
 
 
@@ -432,7 +436,32 @@ function handleGenericWorkRequestResponse(response){
 
         }
         else{
-            console.log("There are no specialities that were retrieved" + workTypeArray)
+            console.log("There are no specialities that were retrieved" + homeuserWorkTypeArray)
+        }
+
+    }
+    else{
+        console.log("Worktype Retrievals Failed");
+    }
+}
+//If homeuserWorkTypeArray has been previously set this can be used to fill a dynamically generated select tag field
+function genericFillSkillsSelectTag(workTypeSelectTagID){
+    if (homeuserWorkTypeArray) {
+        //console.log("Work Type Retrieval successful: " + homeuserWorkTypeArray.length + "The following is contained in array: " + homeuserWorkTypeArray.toString());
+        if(homeuserWorkTypeArray.length > 0){
+
+            //document.getElementById("contractor-work-type").innerHTML = "This is a test".htmlText;
+            var htmlText = '<option value="" selected></option>';
+            for(var i = 0;i<homeuserWorkTypeArray.length;i++){
+                htmlText += '<option value="' + homeuserWorkTypeArray[i]["workTypeID"] + '">' + homeuserWorkTypeArray[i]["WorkType"] + '</option>';
+            }
+
+
+            document.getElementById(workTypeSelectTagID).innerHTML = htmlText;
+
+        }
+        else{
+            console.log("There are no specialities that were retrieved" + homeuserWorkTypeArray)
         }
 
     }
@@ -453,6 +482,132 @@ function handlerTradeworkerResponse(response){
     else{
         console.log("The work request was unsuccessful: " + response);
     }
+}
+
+var homeuserReqTradeWorkerToggleAmount = 0;
+var homeuserReqTradeWorkerToggleAmountVisible = 0;
+function homeuserReqTradeworkerAdditionalLocationsToggler(nextElement){
+    var condition = true;
+    //console.log("The following is the amount of toggleAble area's added: " + homeuserReqTradeWorkerToggleAmount);
+    //console.log("Value 1 = " + document.getElementById("homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1)).value + " Value 2 = " + document.getElementById("nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1)).value);
+
+    var valueArray = [homeuserReqTradeWorkerToggleAmount * 3];
+    var f = 1;
+    for(var t = 1;t <= homeuserReqTradeWorkerToggleAmount * 2;t+=3){
+        valueArray[t] = document.getElementById("homeuser-rTradeworker-work-type-" + f).value;
+
+        valueArray[t + 1] = document.getElementById("nTradeworkers-homeuser-rTradeworker-" + f).value;
+        valueArray[t + 2] = document.getElementById("job-description-homeuser-rTradeworker-" + f).value;
+        f++;
+    }
+
+    if(document.getElementById("homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1)).value == "" || document.getElementById("nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1)).value == ""){
+        condition = false;
+        //console.log("The following is the skills display: " + document.getElementById("homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1) + "-info").style.display);
+        //console.log("The following is the nTradeworkers display: " + document.getElementById("nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").style.display);
+        //console.log("The following is nTradeworkers value: " + document.getElementById("nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1)).value + " the type: " + typeof document.getElementById("nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1)).value);
+        //console.log("The following is type value: " + document.getElementById("homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1)).value);
+        if(document.getElementById("homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1)).value == "" && (document.getElementById("homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1) + "-info").style.display == 'none' ||document.getElementById("homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1) + "-info").style.display == ''))
+            $("#homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1) + "-info").foundation("toggle");
+
+        if(document.getElementById("nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1)).value == "" && (document.getElementById("nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").style.display == 'none'|| document.getElementById("nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").style.display == ''))
+            $("#nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").foundation("toggle");
+
+        if(document.getElementById("job-description-homeuser-rTradeworker-" + parseInt(nextElement - 1)).value == "" && (document.getElementById("job-description-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").style.display == 'none'|| document.getElementById("job-description-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").style.display == ''))
+            $("#job-description-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").foundation("toggle");
+
+    }
+    if(document.getElementById("homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1)).value != "" && document.getElementById("homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1) + "-info").style.display == "block"){
+        //console.log("Toggling off I should be FUCCKCKCKKCCKCK");
+        $("#homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1) + "-info").foundation("toggle");
+    }
+    if(document.getElementById("nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1)).value != "" && document.getElementById("nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").style.display == 'block'){
+        //console.log("Toggling off I should be SHHIIITTTT");
+        $("#nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").foundation("toggle");
+    }
+    if(document.getElementById("job-description-homeuser-rTradeworker-" + parseInt(nextElement - 1)).value != "" && document.getElementById("job-description-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").style.display == 'block'){
+        //console.log("Toggling off I should be SHHIIITTTT");
+        $("#job-description-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").foundation("toggle");
+    }
+
+
+    if(condition){
+
+        if(document.getElementById("homeuser-rTradeworker-toggle-switch-" + parseFloat(nextElement - 1)).innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">' && nextElement > homeuserReqTradeWorkerToggleAmount){
+            //console.log("Inserting new elements");
+            //Injecting html into the document and making sure all toggleable elements are created
+            var html = '<div class="full-width full-height" data-toggler data-animate="hinge-in-from-right spin-out" id="additional-homeuser-rTradeworker-skill-' + nextElement + '" style="display: none"><div class="row"><div class="column medium-11 large-11"><label>Select Work Type</label> <select id="homeuser-rTradeworker-work-type-' + nextElement + '" name="homeuser-rTradeworker-work-type-' + nextElement + '" form="register-homeuser-rTradeworker-form" class="REQ_VAL" onfocus="genericFillSkillsSelectTag(\'homeuser-rTradeworker-work-type-' + nextElement + '\')"> </select> <div class="additional-info top-padding" id="homeuser-rTradeworker-work-type-' + nextElement + '-info" data-toggler data-animate="fade-in fade-out"> <p class="help-text no-margins">Please select one of the supplied options from the drop down box</p> </div> </div> </div><div class="row"></div> <div class="row"> <div class="column medium-11 large-11"> <label>Job Description</label><textarea  name="job-description-homeuser-rTradeworker-' + nextElement + '" id="job-description-homeuser-rTradeworker-' + nextElement + '" placeholder="I would like to have a 4 X 4 square meter area tiled" class="REQ_VAL"></textarea> <div class="additional-info top-padding" id="job-description-homeuser-rTradeworker-' + nextElement + '-info" data-toggler data-animate="fade-in fade-out"> <p class="help-text no-margins">Please enter in a short description of what you would like done for the job type selected</p> </div> </div> </div> <div class="row"> <div class="column medium-11 large-11"> <label>Number of tradeworkers to request</label><input type="number" name="nTradeworkers-homeuser-rTradeworker-' + nextElement + '" id="nTradeworkers-homeuser-rTradeworker-' + nextElement + '" placeholder="3" class="REQ_VAL"> <div class="additional-info top-padding" id="nTradeworkers-homeuser-rTradeworker-' + nextElement + '-info" data-toggler data-animate="fade-in fade-out"> <p class="help-text no-margins">Please fill in amount of tradeworkers that you would like of the speciality specified. E.g. 3</p> </div> </div> <div class="column medium-1 large-1" style="margin-top:1.75rem"> <a name="homeuser-rTradeworker-toggle-switch-' + nextElement + '" id="homeuser-rTradeworker-toggle-switch-' + nextElement + '" onclick="homeuserReqTradeworkerAdditionalLocationsToggler(' + parseInt(nextElement + 1) + ')"> <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/> </a> </div> </div> </div>';
+            document.getElementById("additional-area-homeuser-rTradeworker").innerHTML += html;
+
+            for(var j = 1;j <= nextElement;j++) {
+                var areaToggleID = "#additional-homeuser-rTradeworker-skill-" + j;
+                var areaToggleID1 = "#homeuser-rTradeworker-work-type-" + j + "-info";
+                var areaToggleID2 = "#job-description-homeuser-rTradeworker-" + j + "-info";
+                var areaToggleID3 = "#nTradeworkers-homeuser-rTradeworker-" + j + "-info";
+                //console.log("These are the id's being set to be toggleable: " + areaToggleID + " : " + areaToggleID1 + " : " + areaToggleID3);
+                new Foundation.Toggler($(areaToggleID), 'data-animate="hinge-in-from-right spin-out"');
+                new Foundation.Toggler($(areaToggleID1), 'data-animate="hinge-in-from-right spin-out"');
+                new Foundation.Toggler($(areaToggleID2), 'data-animate="hinge-in-from-right spin-out"');
+                new Foundation.Toggler($(areaToggleID3), 'data-animate="hinge-in-from-right spin-out"');
+            }
+            $(areaToggleID).foundation("toggle");
+            document.getElementById("homeuser-rTradeworker-toggle-switch-" + parseFloat(nextElement - 1)).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>';
+            homeuserReqTradeWorkerToggleAmount++;
+            homeuserReqTradeWorkerToggleAmountVisible++;
+        }
+        else if(document.getElementById("homeuser-rTradeworker-toggle-switch-" + parseFloat(nextElement - 1)).innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">' && nextElement <= homeuserReqTradeWorkerToggleAmount){
+            //Toggle on a previously toggled off element
+            //console.log("Retoggling removed element");
+            var areaToggleID = "#additional-homeuser-rTradeworker-skill-" + nextElement;
+            document.getElementById("homeuser-rTradeworker-work-type-" + nextElement).setAttribute("name","homeuser-rTradeworker-work-type-" + nextElement);
+            document.getElementById("nTradeworkers-homeuser-rTradeworker-" + nextElement).setAttribute("name","nTradeworkers-homeuser-rTradeworker-" + nextElement);
+            document.getElementById("job-description-homeuser-rTradeworker-" + nextElement).setAttribute("name","job-description-homeuser-rTradeworker-" + nextElement);
+            document.getElementById("homeuser-rTradeworker-toggle-switch-" + parseFloat(nextElement - 1)).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>';
+            $(areaToggleID).foundation("toggle");
+            homeuserReqTradeWorkerToggleAmountVisible++;
+        }
+        else if(document.getElementById("homeuser-rTradeworker-toggle-switch-" + parseFloat(nextElement - 1)).innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo">'){
+            //Toggle off elements
+            //console.log("Toggling off an element");
+            for(var r = homeuserReqTradeWorkerToggleAmountVisible;r >= nextElement;r--){
+                var areaToggleID = "#additional-homeuser-rTradeworker-skill-" + r;
+                document.getElementById("homeuser-rTradeworker-work-type-" + r).setAttribute("name","ignore-homeuser-rTradeworker-work-type-" + r);
+                document.getElementById("job-description-homeuser-rTradeworker-" + r).setAttribute("name","ignore-job-description-homeuser-rTradeworker-" + r);
+                document.getElementById("nTradeworkers-homeuser-rTradeworker-" + r).setAttribute("name","ignore-nTradeworkers-homeuser-rTradeworker-" + r);
+                document.getElementById("homeuser-rTradeworker-work-type-" + r).value = "";
+                document.getElementById("job-description-homeuser-rTradeworker-" + r).value = "";
+                document.getElementById("nTradeworkers-homeuser-rTradeworker-" + r).value = "";
+                document.getElementById("homeuser-rTradeworker-toggle-switch-" + parseFloat(r - 1)).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>';
+                $(areaToggleID).foundation("toggle");
+                homeuserReqTradeWorkerToggleAmountVisible--;
+            }
+
+        }
+    }
+    else{
+        console.log("Elements need to be filled in before more areas can be toggled");
+
+        //    var areaToggleID = "#additional-homeuser-rTradeworker-skill-" + nextElement;
+        //if(nextElement <= homeuserReqTradeWorkerToggleAmount){
+        //    console.log("This is the area toggle id: " + areaToggleID);
+        //    $(areaToggleID).foundation("toggle");
+        //}
+
+
+    }
+    //check to see that previous elements have been filled in before allowing to toggle a new one
+
+    //Use index to see whether to add a toggleable area or to just toggle a previously removed area
+    document.getElementById("actual-nTradeworkers-homeuser-rTradeworker").value = parseInt(homeuserReqTradeWorkerToggleAmountVisible + 1);
+    console.log("The following is the visible amount of tags: " + homeuserReqTradeWorkerToggleAmountVisible + " compared to tags currently created: " + homeuserReqTradeWorkerToggleAmount);
+    var l = 1;
+    for(var h = 1;h <= ((homeuserReqTradeWorkerToggleAmountVisible - 1));h++){
+        document.getElementById("homeuser-rTradeworker-work-type-" + h).value = valueArray[l];
+        document.getElementById("nTradeworkers-homeuser-rTradeworker-" + h).value = valueArray[l + 1];
+        document.getElementById("job-description-homeuser-rTradeworker-" + h).value = valueArray[l + 2];
+        l+=3;
+    }
+
 }
 
 function handleWorkRequestResponse(response){
@@ -689,7 +844,7 @@ function genericInitAutocomplete(inputID){
 }
 
 function genericFillInAddress(){
-    console.log("The following is the value coming in to the genericFillInAddress: " + fillInAddressID);
+    //console.log("The following is the value coming in to the genericFillInAddress: " + fillInAddressID);
     var place = autocomplete.getPlace();
 
     //for (var component in componentForm) {
@@ -710,10 +865,10 @@ function genericFillInAddress(){
 
     for (var i = 0; i < place.address_components.length; i++) {
         var addressType = place.address_components[i].types[0];
-        console.log("The following is value's val" + addressType);
+        //console.log("The following is value's val" + addressType);
         if (componentForm[addressType]) {
             var val = place.address_components[i][componentForm[addressType]];
-            console.log("The following is value's val" + addressType + "The value of addressType:" + val);
+            //console.log("The following is value's val" + addressType + "The value of addressType:" + val);
             document.getElementById(fillInAddressID + addressType).value = val;
         }
     }
