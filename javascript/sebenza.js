@@ -518,21 +518,17 @@ function homeuserReqTradeworkerAdditionalLocationsToggler(nextElement){
 
     }
     if(document.getElementById("homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1)).value != "" && document.getElementById("homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1) + "-info").style.display == "block"){
-        //console.log("Toggling off I should be FUCCKCKCKKCCKCK");
         $("#homeuser-rTradeworker-work-type-" + parseInt(nextElement - 1) + "-info").foundation("toggle");
     }
     if(document.getElementById("nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1)).value != "" && document.getElementById("nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").style.display == 'block'){
-        //console.log("Toggling off I should be SHHIIITTTT");
         $("#nTradeworkers-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").foundation("toggle");
     }
     if(document.getElementById("job-description-homeuser-rTradeworker-" + parseInt(nextElement - 1)).value != "" && document.getElementById("job-description-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").style.display == 'block'){
-        //console.log("Toggling off I should be SHHIIITTTT");
         $("#job-description-homeuser-rTradeworker-" + parseInt(nextElement - 1) + "-info").foundation("toggle");
     }
 
 
     if(condition){
-
         if(document.getElementById("homeuser-rTradeworker-toggle-switch-" + parseFloat(nextElement - 1)).innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">' && nextElement > homeuserReqTradeWorkerToggleAmount){
             //console.log("Inserting new elements");
             //Injecting html into the document and making sure all toggleable elements are created
@@ -586,18 +582,8 @@ function homeuserReqTradeworkerAdditionalLocationsToggler(nextElement){
     }
     else{
         console.log("Elements need to be filled in before more areas can be toggled");
-
-        //    var areaToggleID = "#additional-homeuser-rTradeworker-skill-" + nextElement;
-        //if(nextElement <= homeuserReqTradeWorkerToggleAmount){
-        //    console.log("This is the area toggle id: " + areaToggleID);
-        //    $(areaToggleID).foundation("toggle");
-        //}
-
-
     }
-    //check to see that previous elements have been filled in before allowing to toggle a new one
 
-    //Use index to see whether to add a toggleable area or to just toggle a previously removed area
     document.getElementById("actual-nTradeworkers-homeuser-rTradeworker").value = parseInt(homeuserReqTradeWorkerToggleAmountVisible + 1);
     console.log("The following is the visible amount of tags: " + homeuserReqTradeWorkerToggleAmountVisible + " compared to tags currently created: " + homeuserReqTradeWorkerToggleAmount);
     var l = 1;

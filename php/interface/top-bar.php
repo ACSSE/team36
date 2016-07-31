@@ -15,7 +15,7 @@
                 <div class="full-height full-height center-contents">
                     <div class="callout no-margins center-contents" id="notification-panel" data-toggler data-animate="slide-in-down fade-out">
                         <p><span><img class="notify-icon" type="image/svg+xml" src="Images/notify-icon.svg" alt="icon"/></span>
-                            <span id="notification-content">Welcome! a;lkjasdf ;alk wt;lakdjf ;alkwje l;kansfg;lskjq;wlkasdjf;kljasd af</span>
+                            <span id="notification-content">Welcome!</span>
                         </p>
                     </div>
                 </div>

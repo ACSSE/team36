@@ -35,7 +35,7 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
                 SebenzaServer::redirect("/");
             }
         } else{
-            SebenzaServer::redirect("/");
+            SebenzaServer::logout();
         }
     } else {
         SebenzaServer::redirect("/");
