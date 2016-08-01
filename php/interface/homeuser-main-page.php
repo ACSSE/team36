@@ -66,32 +66,10 @@
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-request-tradeworker.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height test" id="panel2v" style="display: none">
-                <h1>Request Contractors</h1>
-                <div class="row">
-                    <div class="large-12 medium-12 columns">
-                        <input id="checkbox1" type="checkbox"><label for="checkbox1">Painter</label>
-                        <input id="checkbox2" type="checkbox"><label for="checkbox2">Tiler</label>
-                        <input id="checkbox3" type="checkbox"><label for="checkbox3">Paver</label>
-                        <input id="checkbox4" type="checkbox"><label for="checkbox4">Tree-Feller</label>
-                    </div>
-                    <div class="large-12 medium-12 columns">
-                        <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
-                        <input type="radio" name="contractor" value="contractor1" id="contractor1"><label for="contractor1">Paint Co</label>
-                        <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
-                        <input type="radio" name="contractor" value="contractor2" id="contractor2"><label for="contractor2">Tiler Co</label>
-                        <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
-                        <input type="radio" name="contractor" value="contractor3" id="contractor3"><label for="contractor3">Paver Co</label>
-                        <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
-                        <input type="radio" name="contractor" value="contractor4" id="contractor4"><label for="contractor4">Tree-Feller Co</label>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="large-12 medium-12 columns">
-                        <a href="#" class="float-left medium secondary button radius">Request Contractor</a>
-                    </div>
-                </div>
+            <div class="tabs-panel full-height test" id="panel2v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+                <?php
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-request-contractor.php";
+                ?>
             </div>
             <div class="tabs-panel full-height test" id="panel3v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
