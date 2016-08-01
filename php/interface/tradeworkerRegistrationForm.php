@@ -10,13 +10,13 @@
     <h4>User Details:</h4>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>names</label><input type="text" name="name-tradeWorker" id="name-tradeWorker" placeholder="Jabu" class="REQ_VAL">
+            <label>First Name(s): </label><input type="text" name="name-tradeWorker" id="name-tradeWorker" placeholder="Jabu" class="REQ_VAL">
             <div class="additional-info top-padding" id="name-tradeWorker-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Name must be filled in and be alphabetic characters. E.g. Name</p>
             </div>
         </div>
         <div class="column medium-11 large-11">
-            <label>surname</label><input type="text" name="surname-tradeWorker" id="surname-tradeWorker" placeholder="Dube" class="REQ_VAL">
+            <label>Surname: </label><input type="text" name="surname-tradeWorker" id="surname-tradeWorker" placeholder="Dube" class="REQ_VAL">
             <div class="additional-info top-padding" id="surname-tradeWorker-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Surname must be filled in and be alphabetic characters. E.g. Surname</p>
             </div>
@@ -24,7 +24,7 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>username</label><input type="text" name="username-tradeWorker" id="username-tradeWorker" placeholder="JabuPainter53"
+            <label>Username:</label><input type="text" name="username-tradeWorker" id="username-tradeWorker" placeholder="JabuPainter53"
                                           class="REQ_VAL">
             <div class="additional-info top-padding" id="username-tradeWorker-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Username must be filled in and be alpha-numeric characters. E.g.
@@ -37,7 +37,7 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>Password</label><input type="password" name="password-tradeWorker" id="password-tradeWorker" placeholder="password"
+            <label>Password: </label><input type="password" name="password-tradeWorker" id="password-tradeWorker" placeholder="password"
                                           class="REQ_VAL">
             <div class="additional-info top-padding" id="password-tradeWorker-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Password must be filled in and be of a length greater than 11. E.g.
@@ -45,7 +45,7 @@
             </div>
         </div>
         <div class="column medium-11 large-11">
-            <label>Confirm Password</label><input type="password" name="confirmPassword-tradeWorker" id="confirmPassword-tradeWorker"
+            <label>Confirm Password: </label><input type="password" name="confirmPassword-tradeWorker" id="confirmPassword-tradeWorker"
                                                   placeholder="password" class="REQ_VAL">
             <div class="additional-info top-padding" id="confirmPassword-tradeWorker-info" data-toggler
                  data-animate="fade-in fade-out">
@@ -56,7 +56,7 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>email</label><input type="email" name="email-tradeWorker" id="email-tradeWorker" placeholder="email" class="REQ_VAL">
+            <label>Email Address:</label><input type="email" name="email-tradeWorker" id="email-tradeWorker" placeholder="email" class="REQ_VAL">
             <div class="additional-info top-padding" id="email-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Email must be filled in and be alpha-numeric characters as well as
                     contain the @ symbol. E.g. jabudube@userEmail.com</p>
@@ -69,7 +69,7 @@
             </div>
         </div>
         <div class="column medium-11 large-11">
-            <label>Confirm email</label><input type="email" name="confirmEmail-tradeWorker" id="confirmEmail-tradeWorker" placeholder="email"
+            <label>Confirm Email Address:</label><input type="email" name="confirmEmail-tradeWorker" id="confirmEmail-tradeWorker" placeholder="email"
                                                class="REQ_VAL">
             <div class="additional-info top-padding" id="confirmEmail-tradeWorker-info" data-toggler
                  data-animate="fade-in fade-out">
@@ -80,7 +80,7 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>Cellphone Number</label><input type="text" placeholder="011 345 1789" class="REQ_VAL"
+            <label>Cellphone Number: </label><input type="text" placeholder="011 345 1789" class="REQ_VAL"
                                                   name="cellnumber-tradeWorker" id="cellnumber-tradeWorker">
             <div class="additional-info top-padding" id="cellnumber-tradeWorker-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Cellphone number must be filled in and be numeric characters. E.g.
@@ -88,7 +88,7 @@
             </div>
         </div>
         <div class="column medium-11 large-11">
-            <label>Home Contact Number</label><input type="text" placeholder="012 345 6789" class="REQ_VAL"
+            <label>Home Contact Number: </label><input type="text" placeholder="012 345 6789" class="REQ_VAL"
                                                      name="homeNumber-tradeWorker" id="homeNumber-tradeWorker">
             <div class="additional-info top-padding" id="homeNumber-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Home contact number must be numeric characters. E.g. 0114578993</p>
@@ -109,11 +109,15 @@
         </div>
     </div>
     <div class="row">
+        <div class="column medium-11 large-11">
         <h4>Skill set:(e.g paving)</h4>
+            </div>
     </div>
     <div class="row">
+        <div class="column medium-11 large-11">
         <h5>Choose at least one, it can't be the blank option. Click the + button if you would like to add more skills
             limit is 3</h5>
+            </div>
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
@@ -161,10 +165,14 @@
         </div>
     </div>
     <div class="row">
+        <div class="column medium-11 large-11">
         <h4>Location(s):</h4>
+            </div>
     </div>
     <div class="row">
+        <div class="column medium-11 large-11">
         <h5>Enter into the box that follows and select option that is displayed by clicking on it, click the addition button to add areas</h5>
+            </div>
     </div>
     <div class="row">
         <div class="column large-11 medium 11">
@@ -177,7 +185,7 @@
 
     <div class="row">
         <div class="column large-11 medium 11">
-            <label>Area Name</label><input type="text" name="areaname-tradeWorker-0" id="areaname-tradeWorker-0" placeholder="Soweto" class="REQ_VAL" readonly>
+            <label>Area Name: </label><input type="text" name="areaname-tradeWorker-0" id="areaname-tradeWorker-0" placeholder="Soweto" class="REQ_VAL" readonly>
             <div class="additional-info top-padding" id="areaname-tradeWorker-0-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">An area found within the city E.g. Soweto</p>
             </div>
@@ -185,7 +193,7 @@
     </div>
     <div class="row">
         <div class="column large-11 medium 11">
-            <label>City Name</label><input type="text" name="cityname-tradeWorker-0" id="cityname-tradeWorker-0" placeholder="Johannesburg" class="REQ_VAL" readonly>
+            <label>City Name: </label><input type="text" name="cityname-tradeWorker-0" id="cityname-tradeWorker-0" placeholder="Johannesburg" class="REQ_VAL" readonly>
             <div class="additional-info top-padding" id="cityname-tradeWorker-0-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p>
             </div>
@@ -193,7 +201,7 @@
     </div>
     <div class="row">
         <div class="column large-11 medium 11">
-            <label>Province Name</label><input type="text" name="provincename-tradeWorker-0" id="provincename-tradeWorker-0" placeholder="Gauteng" class="REQ_VAL" readonly>
+            <label>Province Name: </label><input type="text" name="provincename-tradeWorker-0" id="provincename-tradeWorker-0" placeholder="Gauteng" class="REQ_VAL" readonly>
             <div class="additional-info top-padding" id="provincename-tradeWorker-0-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">A province within South Africa E.g. Gauteng</p>
             </div>
