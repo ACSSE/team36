@@ -23,9 +23,9 @@
         <div class="row">
             <div class="column medium-11 large-11">
                 <!--Can use the onChange event to set up what-ever is necessary according to the type selected-->
-                <label>Select Work Type</label> <select id="homeuser-rContractor-work-type-0" name="homeuser-rContractor-work-type-0" form="register-homeuser-rContractor-form" class="REQ_VAL">
+                <label>Select Work Type</label> <select id="homeuser-rContractor-work-type-0" name="homeuser-rContractor-work-type-0" form="register-homeuser-rContractor-form" class="REQ_VAL" onclick="genericFillSkillsSelectTag('homeuser-rContractor-work-type-0')">
                     <script>
-                        requestGenericWorkTypes('homeuser-rContractor-work-type-0');
+
                     </script>
                 </select>
                 <div class="additional-info top-padding" id="homeuser-rContractor-work-type-0-info" data-toggler data-animate="fade-in fade-out">
