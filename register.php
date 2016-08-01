@@ -19,7 +19,7 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
                 <ul class="tabs vertical full-height" style="overflow: hidden" id="example-vert-tabs" data-tabs>
                     <li class="tabs-title is-active"><a href="#panel1v">Register as Tradeworker</a></li>
                     <li class="tabs-title"><a href="#panel2v">Register as Homeuser</a></li>
-                    <li class="tabs-title"><a href="#panel3v">Register as Contracotor</a></li>
+                    <li class="tabs-title"><a href="#panel3v">Register as Contractor</a></li>
                 </ul>
             </div>
             <div class="large-9 columns full-height">
