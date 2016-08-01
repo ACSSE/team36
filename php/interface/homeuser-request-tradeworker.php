@@ -3,7 +3,7 @@
         <h1>Request Tradeworker</h1>
 
         <div class="row">
-            <h4>Date Needing To start by:</h4>
+            <h4>Date Available to meet with tradeworker:</h4>
         </div>
         <div class="row">
             <h5>Please give at least 5 days for request to be accepted, once accepted - date willing to commence will be suggested by the tradeworker</h5>

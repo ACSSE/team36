@@ -398,6 +398,59 @@ function redirectToHome(){
     else
     window.location = '/userPage.php';
 }
+var jobRequestArray;
+function handleHomeuserFetchJobRequests(response){
+    jobRequestArray = JSON.parse(response);
+    //console.log("It got here:" + response);
+    if(typeof jobRequestArray == 'object'){
+        console.log(jobRequestArray);
+        var html = "";
+        var street;
+        var streetNumber;
+        var subLocality;
+        var locality;
+        var province;
+        var tableIndex;
+        var jobDescription;
+        var jobType;
+        var dateInitialised;
+        var commencementDate;
+        var status;
+        html += "<table>";
+        console.log("FIlling job requests table " + jobRequestArray.length);
+        for(var j = 0;j < jobRequestArray.length; j++){
+            console.log("FIlling job requests table");
+         street = jobRequestArray[j]["2"];
+         streetNumber = jobRequestArray[j]["1"];
+         subLocality = jobRequestArray[j]["3"];
+         locality = jobRequestArray[j]["4"];
+         province = jobRequestArray[j]["5"];
+         tableIndex = jobRequestArray[j]["RequestID"];
+         jobDescription = jobRequestArray[j]["JobDescription"];
+         dateInitialised = jobRequestArray[j]["DateInitialised"];
+         commencementDate = jobRequestArray[j]["JobCommencementDate"];
+         status = jobRequestArray[j]["Accepted"];
+         jobType = jobRequestArray[j]["0"];
+
+            html += '<tr> <td class="label">Address</td> <td><input type="text" name="homeuser-manageRTradeworker-street_number-' + j + '" id="homeuser-manageRTradeworker-street_number-' + j + '" value="' + street + '"  readonly> </td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-route-' + j + '" id="homeuser-manageRTradeworker-route-' + j + '" value="' + streetNumber + '"  readonly> </td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-sublocality_level_1-' + j + '" id="homeuser-manageRTradeworker-sublocality_level_1-' + j + '" value="' + subLocality + '"  readonly> </td> </tr> <tr> <td></td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-locality-' + j + '" value="' + locality + '"  readonly> </td> <td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-country-' + j + '" id="homeuser-manageRTradeworker-country-' + j + '" value="' + province + '"  readonly> </td> </tr> <tr> <td class="label">Date initialised:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-initialisedDate-' + j + '" value="' + dateInitialised + '"  readonly> </td> <td class="label" colspan="1">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-commenceDate-' + j + '" value="' + commencementDate + '"  readonly> </td> </tr> <tr> <td class="label">Job Description:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-WorkType-' + j + '" id="homeuser-manageRTradeworker-WorkType-' + j + '" value="' + jobType + '"  readonly> </td> <td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-jobDescription-' + j + '" value="' + jobDescription + '"  readonly> </td> </tr> <tr> <td class="label">Status</td> <td colspan="4"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-locality-' + j + '" value="' + status + '"  readonly> </td> <td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="selected" id="homeuser-manageRTradeworker-locality-' + j + '" value="' + tableIndex + '" readonly></div> </td> </tr> <tr style="height: 0.5em;background-color: #0a0a0a"> <td colspan="6"></td> </tr>';
+
+        }
+        html += "</table>";
+        document.getElementById("homeuser-manageRTradeworker-areainformation").innerHTML = html;
+
+    }
+    else if(typeof jobRequestArray == 'boolean'){
+        if(jobRequestArray == false)
+        console.log("Job request failed: " + jobRequestArray);
+        else if(jobRequestArray == true){
+            console.log("Job array filled");
+        }
+    }
+    else{
+        console.log("Response not recognized" + typeof jobRequestArray + " value: " + jobRequestArray);
+    }
+}
+
 
 /*The following function fills up the userPageModal-medium-large with information related to it*/
 function homeUserJobRequestModalFill(type, location) {
@@ -932,3 +985,47 @@ function geolocate() {
     }
 }
 //End Google related Javascript
+
+//Code used from stack overflow - http://stackoverflow.com/questions/1129216/sort-array-of-objects-by-string-property-value-in-javascript
+
+function dynamicSort(property) {
+    var sortOrder = 1;
+    if(property[0] === "-") {
+        sortOrder = -1;
+        property = property.substr(1);
+    }
+    return function (a,b) {
+        var result = (a[property] < b[property]) ? -1 : (a[property] > b[property]) ? 1 : 0;
+        return result * sortOrder;
+    }
+}
+
+function dynamicSortMultiple() {
+    /*
+     * save the arguments object as it will be overwritten
+     * note that arguments object is an array-like object
+     * consisting of the names of the properties to sort by
+     */
+    var props = arguments;
+    return function (obj1, obj2) {
+        var i = 0, result = 0, numberOfProperties = props.length;
+        /* try getting a different result from 0 (equal)
+         * as long as we have extra properties to compare
+         */
+        while(result === 0 && i < numberOfProperties) {
+            result = dynamicSort(props[i])(obj1, obj2);
+            i++;
+        }
+        return result;
+    }
+}
+/**
+ *
+ * var People = [{Name: "Name", Surname: "Surname"},{Name:"AAA", Surname:"ZZZ"},{Name: "Name", Surname: "AAA"}];
+ * People.sort(dynamicSort("Name"));
+ * People.sort(dynamicSort("Surname"));
+ * People.sort(dynamicSort("-Surname"));
+ * People.sort(dynamicSortMultiple("Name", "-Surname"));
+ */
+
+// End of stack overflow added code

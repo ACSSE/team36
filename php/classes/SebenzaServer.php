@@ -7,6 +7,8 @@
 include_once $_SERVER['DOCUMENT_ROOT']."/php/classes/Session.php";
 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/classes/DatabaseHandler.php";
 class SebenzaServer {
+    //Take note a method has been added to add to security please just check it out and use it in your methods that you make, I will refactor them into the other applicable methods there may be one or two that won't
+    //use it like login
     public static function start() {
         //Used in open-html.php and AJAX handling below
         //Start output buffering - server only sends the output once per page vs for every "echo" or "print" command
@@ -62,6 +64,16 @@ class SebenzaServer {
             //End script execution of current page
             exit(0);
         }
+    }
+    //TODO:The following method should be run to ensure that a session is in session before any other method is run, just for added security, there may be more security checks one can do - research
+    public static function serverSecurityCheck(): bool {
+        $sessionHandler = self::fetchSessionHandler();
+        $result = $sessionHandler->getSessionVariable("UserID");
+
+        if($result != null)
+            return true;
+        else
+            return false;
     }
 
     public static function fetchDatabaseHandler():DatabaseHandler {
@@ -519,6 +531,7 @@ class SebenzaServer {
     //currently just checks if TW available in $area for a given $workType will check when was the last time they worked if there is more than one and send the one
     //with the date that is the lowest.
     public static function fetchAvailableTradeworker($workTypeID,$areaID){
+        //TODO: Check that the tradeworker requested doesn't already have a notification else till he accepts the job his date will remain the lowest perhaps allow for 5 notifications per tradeworker before removing the id from the valid list
         $returnValue = true;
         //Fetch userID's from LOCATIONS_PER_USER,SPECIALIZATIONS_PER_USER where locations equal areaID and work types equal workTypeID
         $dbhandler = self::fetchDatabaseHandler();
@@ -596,7 +609,9 @@ class SebenzaServer {
 
     public static function homeuserRequestTradeworker(){
         //TODO: take in the inputs from the form and not have them pre-existing, also run for loop for all the different skill types requested as well as set up a quote per number requested per skill
+
         $dbhandler = self::fetchDatabaseHandler();
+        $route = "15th Avenue";
         $workType = 6;
         $area = "Edenvale";
         $subArea = "Edenvale";
@@ -626,8 +641,8 @@ class SebenzaServer {
             }
             else {
                 //This one can occur it just means the street address and area need to be added to the database
-                $command = "INSERT INTO `AREA_PER_LOCATION` (`StreetNumber`,`AreaName`,`locationID`) VALUES (?,?,?)";
-                if($dbhandler->runCommand($command, $streetNumber, $subArea, $locationID)){
+                $command = "INSERT INTO `AREA_PER_LOCATION` (`StreetNumber`,`AreaName`,`locationID`,`Road`) VALUES (?,?,?,?)";
+                if($dbhandler->runCommand($command, $streetNumber, $subArea, $locationID,$route)){
                     $addressID = $dbhandler->getInsertID();
                 }
                 else{
@@ -685,6 +700,74 @@ class SebenzaServer {
         }
 
         return $result;
+    }
+
+    public static function fetchAreasPerLocationDetails($addressID){
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "SELECT `StreetNumber`,`AreaName`,`locationID`,`Road` FROM `AREA_PER_LOCATION` WHERE `AreaID` = ?";
+        $dbhandler->runCommand($command,$addressID);
+        $results = $dbhandler->getResults();
+
+        if(count($results)> 0){
+            return $results;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public static function fetchLocationDetails($locationID){
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "SELECT `locationName`,`Province` FROM `LOCATIONS` WHERE `locationID` = ?";
+        $dbhandler->runCommand($command,$locationID);
+        $results = $dbhandler->getResults();
+
+        if(count($results)> 0){
+            return $results;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public static function fetchHomeuserJobRequests($userID){
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "SELECT `RequestID`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate`,`Accepted` FROM `QUOTE_REQUEST` WHERE `UserID` = ?";
+        $dbhandler->runCommand($command,$userID);
+        $result = $dbhandler->getResults();
+        $worktypes = self::returnWorkTypes();
+
+        //TODO:Retrieve according to address get the
+        //If results contains information then the fetching of areas and locations should be able to occur, because the address column is directly related to AREAS_PER_LOCATION which is also related to LOCATIONS
+        if(count($result) > 0 && count($worktypes) > 0) {
+
+            for ($i = 0; $i < count($result); $i++) {
+                $found = false;
+                $areas = self::fetchAreasPerLocationDetails($result[$i]['Address']);
+                $locations = self::fetchLocationDetails($areas[0]['locationID']);
+                for($j = 0; $j < count($worktypes) && !$found;$j++){
+                    if($result[$i]['workTypeID'] == $worktypes[$j]['workTypeID']){
+                        $found = true;
+                        array_push($result[$i],$worktypes[$j]['WorkType'],$areas[0]['StreetNumber'],$areas[0]['Road'],$areas[0]['AreaName'],$locations[0]['locationName'],$locations[0]['Province']);
+                    }
+                }
+
+
+            }
+            return $result;
+        }
+        else
+            return "It failed";
+    }
+
+    public static function fetchUserType(){
+        $sessionHandler = self::fetchSessionHandler();
+        $result = $sessionHandler->getSessionVariable("UserType");
+        if($result != null)
+            return $result;
+        else
+            return -1;
+
     }
 
     public static function isUnique($value,$condition,$type){
@@ -869,6 +952,36 @@ if (!empty($_POST)) {
                 if(isset($_POST['username']) && isset($_POST['name']) && isset($_POST['surname']) && isset($_POST['password']) && isset($_POST['email']) && isset($_POST['cellnumber']) && isset($_POST['homeNumber'])){
                     $response = json_encode(SebenzaServer::register([$_POST['username'],$_POST['email'],$_POST['cellnumber'],$_POST['password'],$_POST['surname'],$_POST['name']],'homeuser'));
                 } else{
+                    $response = json_encode(false);
+                }
+                break;
+            case 'fetch-job-requests':
+                if(SebenzaServer::serverSecurityCheck()){
+                    $result = SebenzaServer::fetchUserType();
+                    //Due to information being sent back being different for all the users switch case to check the type of user before calling the function
+                    $response = json_encode($result);
+                    switch ($result){
+                        case "1":
+                            //Contractor
+                            $response = json_encode("Should be dealing with contractor request job management");
+                            break;
+                        case "2":
+                            //Homeuser
+//                            $response = json_encode("Should be dealing with homeuser request job management");
+                            $response = json_encode(SebenzaServer::fetchHomeuserJobRequests(SebenzaServer::fetchSessionHandler()->getSessionVariable("UserID")));
+                            break;
+                        case "0":
+                            //Tradeworker
+                            $response = json_encode("Should be dealing with tradeworker request job management");
+                            break;
+                        default:
+                            $response = json_encode("Unrecognized");
+                            break;
+                    }
+
+
+                }
+                else{
                     $response = json_encode(false);
                 }
                 break;

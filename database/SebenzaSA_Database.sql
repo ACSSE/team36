@@ -51,6 +51,7 @@ DROP TABLE IF EXISTS `AREA_PER_LOCATION`;
 CREATE TABLE `AREA_PER_LOCATION` (
   `AreaID` integer not null auto_increment,
   `StreetNumber` varchar(50) not null,
+  `Road` varchar(50) not null,
   `AreaName` varchar(50) not null,
   `locationID` integer not null,
   PRIMARY KEY (`AreaID`),

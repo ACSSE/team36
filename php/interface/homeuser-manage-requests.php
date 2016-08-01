@@ -1,22 +1,53 @@
-<div class="full-height full-width">
+<div class="full-height full-width" xmlns="http://www.w3.org/1999/html">
+    <script>
+        sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+    </script>
 <h1>Manage Job Request</h1>
-    <?php
-    $dbhandler = SebenzaServer::fetchDatabaseHandler();
-    $command = "SELECT `RequestedUser`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate`,`Accepted` FROM `QUOTE_REQUEST` WHERE `UserID`=?";
-    $id = SebenzaServer::fetchSessionHandler()->getSessionVariable("UserID");
-    $dbhandler->runCommand($command,$id);
-    $result = $dbhandler->getResults();
-    if(count($result)){
-        var_dump($result);
+<!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->
+    <div class="row">
+        <div class="column large-11">
+            <label>Search:</label>
+            <input type="text" name="homeuser-manageRTradeworker-search-0" id="homeuser-manageRTradeworker-search-0"/>
+        </div>
+        <div class="column large-1">
 
-        for($j=0;$j<count($result);$j++){
+        </div>
+    </div>
+    <div class="row">
+        <div class="column large-11">
+            <label>Sort By:</label>
+            <select id="homeuser-manageRTradeworker-sortBy-0" name="homeuser-manageRTradeworker-sortBy-0">
+            <option value="WorkType">Work Type</option>
+            <option value="initialDate">Date Request is sent</option>
+            <option value="commencementDate">Commencement Date</option>
+            <option value="accepted">Status</option>
+            <option value="Sub_locality">Area</option>
+            </select>
+        </div>
+        <div class="column large-1">
 
-        }
+        </div>
+    </div>
+    <div class="row">
+        <div class="column large-11">
+            <div class=" full-width" id="homeuser-manageRTradeworker-areainformation" style="overflow-y: hidden; height: 400px">
 
-    }
-    else{
-        echo '<h4>You currently have no job being requested</h4>';
-    }
+            </div>
+        </div>
+    </div>
 
-    ?>
+
+    <div class="row">
+        <div class="large-4 large-offset-4 medium-offset-4 medium-4 columns">
+            <button type="button" class="button" style="background-color: #3aff29">
+                Edit
+                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
+            </button>
+        </div>
+        <div class="large-4 medium-4 columns">
+            <button type="button" class="button" style="background-color: #ff3914">
+                Delete
+            </button>
+        </div>
+    </div>
 </div>
