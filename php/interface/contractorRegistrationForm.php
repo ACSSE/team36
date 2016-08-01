@@ -10,13 +10,13 @@
     <h4>User Details:</h4>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>names</label><input type="text" name="name-contractor" id="name-contractor" placeholder="John Smith" class="REQ_VAL">
+            <label>First Name(s):</label><input type="text" name="name-contractor" id="name-contractor" placeholder="John Smith" class="REQ_VAL">
             <div class="additional-info top-padding" id="name-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Name must be filled in and be alphabetic characters. E.g. John Smith</p>
             </div>
         </div>
         <div class="column medium-11 large-11">
-            <label>surname</label><input type="text" name="surname-contractor" id="surname-contractor" placeholder="Doe" class="REQ_VAL">
+            <label>Surname: </label><input type="text" name="surname-contractor" id="surname-contractor" placeholder="Doe" class="REQ_VAL">
             <div class="additional-info top-padding" id="surname-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Surname must be filled in and be alphabetic characters. E.g. Doe</p>
             </div>
@@ -24,7 +24,7 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>username</label><input type="text" name="username-contractor" id="username-contractor" placeholder="BobTheBuilder"
+            <label>Username:</label><input type="text" name="username-contractor" id="username-contractor" placeholder="BobTheBuilder"
                                           class="REQ_VAL">
             <div class="additional-info top-padding" id="username-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Username must be filled in and be alpha-numeric characters. E.g.
@@ -37,7 +37,7 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>Password</label><input type="password" name="password-contractor" id="password-contractor" placeholder="password"
+            <label>Password:</label><input type="password" name="password-contractor" id="password-contractor" placeholder="password"
                                           class="REQ_VAL">
             <div class="additional-info top-padding" id="password-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Password must be filled in and be of a length greater than 11. E.g.
@@ -45,7 +45,7 @@
             </div>
         </div>
         <div class="column medium-11 large-11">
-            <label>Confirm Password</label><input type="password" name="confirmPassword-contractor" id="confirmPassword-contractor"
+            <label>Confirm Password: </label><input type="password" name="confirmPassword-contractor" id="confirmPassword-contractor"
                                                   placeholder="password" class="REQ_VAL">
             <div class="additional-info top-padding" id="confirmPassword-contractor-info" data-toggler
                  data-animate="fade-in fade-out">
@@ -56,7 +56,7 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>email</label><input type="email" name="email-contractor" id="email-contractor" placeholder="email" class="REQ_VAL">
+            <label>Email Address:</label><input type="email" name="email-contractor" id="email-contractor" placeholder="email" class="REQ_VAL">
             <div class="additional-info top-padding" id="email-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Email must be filled in and be alpha-numeric characters as well as
                     contain the @ symbol. E.g. bOb93@userEmail.com</p>
@@ -69,7 +69,7 @@
             </div>
         </div>
         <div class="column medium-11 large-11">
-            <label>Confirm email</label><input type="email" name="confirmEmail-contractor" id="confirmEmail-contractor" placeholder="email"
+            <label>Confirm Email Address:</label><input type="email" name="confirmEmail-contractor" id="confirmEmail-contractor" placeholder="email"
                                                class="REQ_VAL">
             <div class="additional-info top-padding" id="confirmEmail-contractor-info" data-toggler
                  data-animate="fade-in fade-out">
@@ -80,7 +80,7 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>Cellphone Number</label><input type="text" placeholder="011 345 1789" class="REQ_VAL"
+            <label>Cellphone Number:</label><input type="text" placeholder="011 345 1789" class="REQ_VAL"
                                                   name="cellnumber-contractor" id="cellnumber-contractor">
             <div class="additional-info top-padding" id="cellnumber-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Cellphone number must be filled in and be numeric characters. E.g.
@@ -88,7 +88,7 @@
             </div>
         </div>
         <div class="column medium-11 large-11">
-            <label>Home Contact Number</label><input type="text" placeholder="012 345 6789" class="REQ_VAL"
+            <label>Home Contact Number:</label><input type="text" placeholder="012 345 6789" class="REQ_VAL"
                                                      name="homeNumber-contractor" id="homeNumber-contractor">
             <div class="additional-info top-padding" id="homeNumber-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Home contact number must be numeric characters. E.g. 0114578993</p>
@@ -109,11 +109,13 @@
         </div>
     </div>
     <div class="row">
+        <div class="column medium-11 large-11">
         <h4>Business Details:</h4>
+            </div>
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>Business Name</label><input type="text" name="busName" id="busName" placeholder="BobTheBuilderCO"
+            <label>Business Name:</label><input type="text" name="busName" id="busName" placeholder="BobTheBuilderCO"
                                           class="REQ_VAL">
             <div class="additional-info top-padding" id="busName-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Please enter in the name of your business!</p>
@@ -125,7 +127,7 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>Business Address</label><input type="text" name="address-contractor" id="address-contractor" placeholder="BobTheBuilder Avenue"
+            <label>Business Address:</label><input type="text" name="address-contractor" id="address-contractor" placeholder="BobTheBuilder Avenue"
                                           class="REQ_VAL">
             <div class="additional-info top-padding" id="address-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Please enter in the address of where your business is located, if company is home run it will be your home address</p>
@@ -134,7 +136,7 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>Business Description</label><textarea  name="business-description-contractor" id="business-description-contractor" placeholder="This is a professional business that will deal with all the needs you require"
+            <label>Business Description:</label><textarea  name="business-description-contractor" id="business-description-contractor" placeholder="This is a professional business that will deal with all the needs you require"
                                                   class="REQ_VAL"></textarea>
             <div class="additional-info top-padding" id="business-description-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Please enter in a short description of your business and what services you provide and at what quality</p>
@@ -143,12 +145,12 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>Business Hours</label>
-            <label>from:</label><input type="time" name="business-hours-from-contractor" id="business-hours-from-contractor" class="REQ_VAL">
+            <label>Business Hours:</label>
+            <label>From:</label><input type="time" name="business-hours-from-contractor" id="business-hours-from-contractor" class="REQ_VAL">
             <div class="additional-info top-padding" id="business-hours-from-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Please ensure to select a time from: e.g.08:00 AM</p>
             </div>
-            <label>to:</label><input type="time" name="business-hours-to-contractor" id="business-hours-to-contractor" class="REQ_VAL">
+            <label>To:</label><input type="time" name="business-hours-to-contractor" id="business-hours-to-contractor" class="REQ_VAL">
             <div class="additional-info top-padding" id="business-hours-to-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Please ensure to select a time to: e.g.06:00 PM</p>
             </div>
@@ -169,7 +171,7 @@
     </div>
     <div class="row" id="panel" data-toggler data-animate="hinge-in-from-right spin-out">
         <div class="column medium-11 large-11">
-            <label>Company Registration number</label><input type="text" name="reg-contractor" id="reg-contractor" placeholder="#32145678213"
+            <label>Company Registration number : </label><input type="text" name="reg-contractor" id="reg-contractor" placeholder="#32145678213"
                                           class="REQ_VAL">
             <div class="additional-info top-padding" id="reg-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Company registration number must be filled in so automatic invoicing can occur</p>
@@ -181,7 +183,7 @@
     </div>
     <div class="row" id="panel1" data-toggler data-animate="hinge-in-from-right spin-out">
         <div class="column medium-11 large-11">
-            <label>Vat Number</label><input type="text" name="vat-contractor" id="vat-contractor" placeholder="#1234567890"
+            <label>Vat Number :</label><input type="text" name="vat-contractor" id="vat-contractor" placeholder="#1234567890"
                                           class="REQ_VAL">
             <div class="additional-info top-padding" id="vat-contractor-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">Vat number must be filled in so that automatic invoicing can occur</p>
@@ -193,11 +195,15 @@
     </div>
 
     <div class="row">
+        <div class="column medium-11 large-11">
         <h4>Skill set:(e.g paving)</h4>
+            </div>
     </div>
     <div class="row">
+        <div class="column medium-11 large-11">
         <h5>Choose at least one, it can't be the blank option. Click the + button if you would like to add more skills
             limit is 3</h5>
+            </div>
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
@@ -237,15 +243,19 @@
 
             </select>
             <div class="additional-info top-padding" id="contractor-work-type-2-info" data-toggler data-animate="fade-in fade-out">
-                <p class="help-text no-margins">Please select one of the supplied options from the drop down box</p>
+                <p class="help-text no-smargins">Please select one of the supplied options from the drop down box</p>
             </div>
         </div>
     </div>
     <div class="row">
+        <div class="column medium-11 large-11">
         <h4>Location(s):</h4>
+            </div>
     </div>
     <div class="row">
+        <div class="column medium-11 large-11">
         <h5>Enter into the box that follows and select option that is displayed by clicking on it, click the addition button to add areas</h5>
+            </div>
     </div>
     <div class="row">
         <div class="column large-11 medium 11">
