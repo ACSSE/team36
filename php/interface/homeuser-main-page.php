@@ -52,6 +52,7 @@
                     <li><a onclick="toggleUserPageArea('panel1v')">Request Tradeworker</a></li>
 
                     <li><a onclick="toggleUserPageArea('panel2v')">Request Contractor</a></li>
+                    <li><a onclick="toggleUserPageArea('panel3v')">Manage Job Requests</a></li>
                 </ul>
             </li>
             <li><a onclick="toggleUserPageArea('panel3v')">Item 2</a></li>
@@ -92,25 +93,10 @@
                     </div>
                 </div>
             </div>
-            <div class="tabs-panel full-height test" id="panel3v" style="display: none">
-                <div class="row">
-                    <div class="large-12 medium-12 columns">
-                        <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
-                        <input type="radio" name="manageJob" value="contractor1" id="contractor1"><label for="contractor1">Paint Co</label>
-                        <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
-                        <input type="radio" name="manageJob" value="worker2" id="worker2"><label for="worker2">Joe Mason</label>
-                        <img class="thumbnail" src="Images/tempContractorImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
-                        <input type="radio" name="manageJob" value="contractor3" id="contractor3"><label for="contractor3">Paver Co</label>
-                        <img class="thumbnail" src="Images/tempUserImage.png" alt="Photo of Contractor." style="width: 100px;height: 100px;">
-                        <input type="radio" name="manageJob" value="worker4" id="worker4"><label for="contractor4">Dill Harper</label>
-                    </div>
-                </div>
-                <hr>
-                <div class="row">
-                    <div class="large-12 medium-12 columns">
-                        <a href="#" class="float-left medium secondary button radius">Manage Job</a>
-                    </div>
-                </div>
+            <div class="tabs-panel full-height test" id="panel3v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+                <?php
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-requests.php";
+                ?>
             </div>
             <div class="tabs-panel full-height test" id="panel4v" style="display: none">
                 <div class="row">
