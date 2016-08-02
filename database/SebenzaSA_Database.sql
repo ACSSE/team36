@@ -64,6 +64,9 @@ CREATE TABLE `TRADE_WORKER` (
 	`UserID` integer not null unique,
   `DateWorked` DATE not null,
   `Availability` boolean not null,
+  `ActiveWorkRequests` integer not null DEFAULT 0,
+  `OverallWorkRequests` integer not null DEFAULT 0,
+  `WorkRequestsMissed` integer not null DEFAULT 0,
 	PRIMARY KEY (`tradeworkerID`),
 	FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );
@@ -102,6 +105,9 @@ CREATE TABLE `CONTRACTOR` (
   `VatRegistered` BOOLEAN NOT NULL,
   `Availability` boolean not null,
   `DateWorked` DATE not null,
+  `ActiveWorkRequests` integer not null DEFAULT 0,
+  `OverallWorkRequests` integer not null DEFAULT 0,
+  `WorkRequestsMissed` integer not null DEFAULT 0,
   PRIMARY KEY (`contractorID`),
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );

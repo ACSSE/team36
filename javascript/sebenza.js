@@ -529,11 +529,20 @@ function requestWorkTypes(){
 
 function handlerTradeworkerResponse(response){
     var workTypeArray = JSON.parse(response);
-    if(workTypeArray){
-        console.log("The work request was successful: " + response);
+    if(typeof workTypeArray == 'boolean') {
+        if (workTypeArray) {
+            console.log("The work request was successful: " + response);
+            //TODO:Display success to user
+        }
+        else {
+            console.log("The work request was unsuccessful: " + response);
+        }
+    }
+    else if(typeof workTypeArray == 'number'){
+        //TODO:Error reporting
     }
     else{
-        console.log("The work request was unsuccessful: " + response);
+        console.log("The variable is of type: " + typeof workTypeArray + " value: " + workTypeArray);
     }
 }
 

@@ -16,7 +16,7 @@
                 </div>
             </div>
         </div>
-        <!-- TODO:Javascript generated fields adding more skill types to form, will be limited to having filled in a fields before being able to add a new type, think along arrays to do this also add a hidden input field keeping track of how many types of workers are being requested-->
+        <!-- TODO: consider For pre-scribed users add an nb field that will send out a request to all available tradeworkers for a job-->
         <div class="row">
             <h4>Job Type(s):</h4>
         </div>
