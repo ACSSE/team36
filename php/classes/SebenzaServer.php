@@ -607,17 +607,18 @@ class SebenzaServer {
         return $returnValue;
     }
 
-    public static function homeuserRequestTradeworker(){
-        //TODO: take in the inputs from the form and not have them pre-existing, also run for loop for all the different skill types requested as well as set up a quote per number requested per skill
-
+    public static function homeuserRequestTradeworker($input){
+        //TODO: run for loop for all the different skill types requested as well as set up a quote per number requested per skill
+//        $_POST['commencement-homeuser-rTradeworker'],$_POST['homeuser-rTradeworker-street_number'],$_POST['homeuser-rTradeworker-route'],$_POST['homeuser-rTradeworker-sublocality_level_1'],$_POST['homeuser-rTradeworker-locality'],$_POST['homeuser-rTradeworker-administrative_area_level_1'],$_POST['homeuser-rTradeworker-postal_code'],$_POST['homeuser-rTradeworker-country'])
         $dbhandler = self::fetchDatabaseHandler();
-        $route = "15th Avenue";
+        $route = $input[2];
         $workType = 6;
-        $area = "Edenvale";
-        $subArea = "Edenvale";
-        $streetNumber = "14";
-        $province = "GP";
-        $date = DateTime::createFromFormat("Y-m-d","2016-08-02");
+        $area = $input[4];
+        $subArea = $input[3];
+        $streetNumber = $input[1];
+        $province = $input[5];
+        $date = $input[0];
+//        $date = DateTime::createFromFormat("Y-m-d",$input[0]);
         $command = "SELECT `locationID` FROM `LOCATIONS` WHERE `locationName` = ?";
         $dbhandler->runCommand($command,$area);
         $result = $dbhandler->getResults();
@@ -675,7 +676,7 @@ class SebenzaServer {
                 $jobDescription = "We will be breaking things out";
                 $address = 1;
                 $command = "INSERT INTO `QUOTE_REQUEST` (`UserID`,`RequestedUser`,`workTypeID`,`JobDescription`,`Address`,`JobCommencementDate`) VALUES (?,?,?,?,?,?)";
-                if($dbhandler->runCommand($command,$id,$tradeworkerID,$workType,$jobDescription,$addressID,"2016-08-02")){
+                if($dbhandler->runCommand($command,$id,$tradeworkerID,$workType,$jobDescription,$addressID,$date)){
                     //The insert was successful send notification to tradeworker
                     if(self::addNotification($tradeworkerID,"Added job request: check under manage jobs - job requests tab")){
                         $result = true;
@@ -686,7 +687,7 @@ class SebenzaServer {
                 }
                 else{
                     //The quote request could not be inserted for some reason error check
-                    $result = "Could not add quote";
+                    $result = "Could not add quote".$date;
                 }
 //                    $result = "Hello";
             }
@@ -1008,7 +1009,7 @@ if (!empty($_POST)) {
                 if($condition > 0){
                     if(isset($_POST['commencement-homeuser-rTradeworker']) && isset($_POST['homeuser-rTradeworker-street_number']) && isset($_POST['homeuser-rTradeworker-route']) && isset($_POST['homeuser-rTradeworker-sublocality_level_1']) && isset($_POST['homeuser-rTradeworker-locality']) && isset($_POST['homeuser-rTradeworker-administrative_area_level_1']) && isset($_POST['homeuser-rTradeworker-postal_code']) && isset($_POST['homeuser-rTradeworker-country'])){
                         $condition += 100;
-                        $condition = json_encode(SebenzaServer::homeUserRequestTradeworker());
+                        $condition = json_encode(SebenzaServer::homeUserRequestTradeworker([$_POST['commencement-homeuser-rTradeworker'],$_POST['homeuser-rTradeworker-street_number'],$_POST['homeuser-rTradeworker-route'],$_POST['homeuser-rTradeworker-sublocality_level_1'],$_POST['homeuser-rTradeworker-locality'],$_POST['homeuser-rTradeworker-administrative_area_level_1'],$_POST['homeuser-rTradeworker-postal_code'],$_POST['homeuser-rTradeworker-country']]));
 //                        $condition = true;
                     }
                     else{

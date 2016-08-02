@@ -794,11 +794,11 @@ function addContractorLocations(current){
 function toggleUserPageArea(toToggle){
     var containers = document.getElementsByClassName("test");
     if(containers.length > 0) {
-        console.log("The following is how many test class containers exist " + containers.length + " " + containers[0].id);
+        //console.log("The following is how many test class containers exist " + containers.length + " " + containers[0].id);
         var i;
         for (i=0; i < containers.length;i++) {
             var toggleID = containers[i].id;
-            console.log("The following is the toggle id:" + toggleID);
+            //console.log("The following is the toggle id:" + toggleID);
             document.getElementById(toggleID).style.display = 'none';
         }
         document.getElementById(toToggle).style.display = 'block';

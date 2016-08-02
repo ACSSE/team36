@@ -6,7 +6,7 @@
             <h4>Date Available to meet with tradeworker:</h4>
         </div>
         <div class="row">
-            <h5>Please give at least 5 days for request to be accepted, once accepted - date willing to commence will be suggested by the tradeworker</h5>
+            <h5>Please give at least 5 days for request to be accepted</h5>
         </div>
         <div class="row">
             <div class="column medium-11 large-11">

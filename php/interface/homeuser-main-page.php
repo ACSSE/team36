@@ -55,7 +55,14 @@
                     <li><a onclick="toggleUserPageArea('panel3v')">Manage Job Requests</a></li>
                 </ul>
             </li>
-            <li><a onclick="toggleUserPageArea('panel3v')">Item 2</a></li>
+            <li><a onclick="toggleUserPageArea('panel4v')">Job Management</a>
+                <ul class="menu vertical nested">
+                    <li><a onclick="toggleUserPageArea('panel5v')">Ongoing Jobs</a></li>
+
+                    <li><a onclick="toggleUserPageArea('panel6v')">Finished Jobs</a></li>
+
+                </ul>
+            </li>
         </ul>
 
     </div>
