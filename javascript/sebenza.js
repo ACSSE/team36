@@ -531,7 +531,7 @@ function handlerTradeworkerResponse(response){
     var workTypeArray = JSON.parse(response);
     if(typeof workTypeArray == 'boolean') {
         if (workTypeArray) {
-            console.log("The work request was successful: " + response);
+            console.log("The work request was successful: " + response + workTypeArray);
             //TODO:Display success to user
         }
         else {
@@ -540,6 +540,7 @@ function handlerTradeworkerResponse(response){
     }
     else if(typeof workTypeArray == 'number'){
         //TODO:Error reporting
+        console.log(workTypeArray + " " + response + typeof workTypeArray);
     }
     else{
         console.log("The variable is of type: " + typeof workTypeArray + " value: " + workTypeArray);
