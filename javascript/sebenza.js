@@ -405,6 +405,14 @@ function handleTradeworkerFetchJobRequests(response){
     //console.log("It got here:" + response);
     if(typeof tradeworkerJobRequestArray == 'object'){
         console.log(tradeworkerJobRequestArray);
+        var output = '';
+        for (var property in tradeworkerJobRequestArray[0]) {
+            output += property;
+            if(tradeworkerJobRequestArray.hasOwnProperty(property)){
+                output += ': ' + tradeworkerJobRequestArray[property]+'; ';
+            }
+        }
+        console.log("The following is a test: " + tradeworkerJobRequestArray[0]['JobDescription']);
     }
     else if(typeof tradeworkerJobRequestArray == 'boolean'){
         if(tradeworkerJobRequestArray == false)
@@ -822,7 +830,7 @@ function addContractorLocations(current){
 }
 
 function toggleUserPageArea(toToggle){
-    var containers = document.getElementsByClassName("test");
+    var containers = document.getElementsByClassName("user-panels");
     if(containers.length > 0) {
         //console.log("The following is how many test class containers exist " + containers.length + " " + containers[0].id);
         var i;

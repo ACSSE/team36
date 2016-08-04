@@ -818,21 +818,21 @@ class SebenzaServer {
                 $fullRequest = $dbhandler->getResults();
                 $command = "SELECT `AreaName`,`locationID` FROM `AREA_PER_LOCATION` WHERE `AreaID` = ?";
                 $dbhandler->runCommand($command,$fullRequest[0]['Address']);
-                $workType = self::returnWorkTypes($fullRequest[0]['workTypeID']);
                 $areaInfo = $dbhandler->getResults();
+                $workType = self::returnWorkTypes($fullRequest[0]['workTypeID']);
                 $command = "SELECT `locationName`,`Province` FROM `LOCATIONS` WHERE `locationID` = ?";
                 $dbhandler->runCommand($command,$areaInfo[0]['locationID']);
                 $locationInfo = $dbhandler->getResults();
                 $returnValue[$r]["QuoteID"] = $result[$r]['QuoteID'];
                 $returnValue[$r]["Status"] = $result[$r]['Status'];
-                $returnValue[$r]["AreaName"] = $fullRequest[0]['AreaName'];
                 $returnValue[$r]["JobDescription"] = $fullRequest[0]['JobDescription'];
                 $returnValue[$r]["JobCommencementDate"] = $fullRequest[0]['JobCommencementDate'];
                 $returnValue[$r]["AreaName"] = $areaInfo[0]['AreaName'];
                 $returnValue[$r]["locationName"] = $locationInfo[0]['locationName'];
                 $returnValue[$r]["Province"] = $locationInfo[0]['Province'];
                 $returnValue[$r]["WorkType"] = $workType[0]['WorkType'];
-//                array_push($returnValue[$r],$result[$r]['QuoteID'],$result[$r]['Status'],$fullRequest[0]['AreaName'],$fullRequest[0]['JobDescription'],$fullRequest[0]['JobCommencementDate'],$areaInfo[0]['AreaName'],$locationInfo[0]['locationName'],$locationInfo[0]['Province'],$workType[0]['WorkType']);
+//                array_push($returnValue,$result[$r]['QuoteID'],$result[$r]['Status'],$fullRequest[0]['AreaName'],$fullRequest[0]['JobDescription'],$fullRequest[0]['JobCommencementDate'],$areaInfo[0]['AreaName'],$locationInfo[0]['locationName'],$locationInfo[0]['Province'],$workType[0]['WorkType']);
+
             }
         }
         else{
@@ -875,7 +875,7 @@ class SebenzaServer {
     public static function fetchUserType(){
         $sessionHandler = self::fetchSessionHandler();
         $result = $sessionHandler->getSessionVariable("UserType");
-        if($result != null)
+        if($result < 3)
             return $result;
         else
             return -1;
