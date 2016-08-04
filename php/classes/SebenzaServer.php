@@ -519,11 +519,19 @@ class SebenzaServer {
         return $returnValue;
     }
 
-    public static function returnWorkTypes(){
-        $dbhandler = self::fetchDatabaseHandler();
-        $command = "Select `WorkType`,`workTypeID` FROM SPECIALIZATIONS";
-        $dbhandler->runCommand($command);
-        $results = $dbhandler->getResults();
+    public static function returnWorkTypes($workTypeID = null){
+        if(is_null($workTypeID)) {
+            $dbhandler = self::fetchDatabaseHandler();
+            $command = "Select `WorkType`,`workTypeID` FROM SPECIALIZATIONS";
+            $dbhandler->runCommand($command);
+            $results = $dbhandler->getResults();
+        }
+        else{
+            $dbhandler = self::fetchDatabaseHandler();
+            $command = "Select `WorkType` FROM SPECIALIZATIONS WHERE `workTypeID` = ?";
+            $dbhandler->runCommand($command,$workTypeID);
+            $results = $dbhandler->getResults();
+        }
         return $results;
     }
 
@@ -797,6 +805,43 @@ class SebenzaServer {
         }
     }
 
+    public static function fetchTradeworkerJobRequests($userID){
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "SELECT `QuoteID`,`RequestID`,`Status` FROM `QUOTE` WHERE `RequestedUser` = ?";
+        $dbhandler->runCommand($command,$userID);
+        $result = $dbhandler->getResults();
+        $returnValue = [];
+        if(count($result)){
+            for($r = 0;$r < count($result);$r++){
+                $command = "SELECT `workTypeID`,`JobDescription`,`Address`,`JobCommencementDate` FROM `QUOTE_REQUEST` WHERE `RequestID` = ?";
+                $dbhandler->runCommand($command,$result[$r]['RequestID']);
+                $fullRequest = $dbhandler->getResults();
+                $command = "SELECT `AreaName`,`locationID` FROM `AREA_PER_LOCATION` WHERE `AreaID` = ?";
+                $dbhandler->runCommand($command,$fullRequest[0]['Address']);
+                $workType = self::returnWorkTypes($fullRequest[0]['workTypeID']);
+                $areaInfo = $dbhandler->getResults();
+                $command = "SELECT `locationName`,`Province` FROM `LOCATIONS` WHERE `locationID` = ?";
+                $dbhandler->runCommand($command,$areaInfo[0]['locationID']);
+                $locationInfo = $dbhandler->getResults();
+                $returnValue[$r]["QuoteID"] = $result[$r]['QuoteID'];
+                $returnValue[$r]["Status"] = $result[$r]['Status'];
+                $returnValue[$r]["AreaName"] = $fullRequest[0]['AreaName'];
+                $returnValue[$r]["JobDescription"] = $fullRequest[0]['JobDescription'];
+                $returnValue[$r]["JobCommencementDate"] = $fullRequest[0]['JobCommencementDate'];
+                $returnValue[$r]["AreaName"] = $areaInfo[0]['AreaName'];
+                $returnValue[$r]["locationName"] = $locationInfo[0]['locationName'];
+                $returnValue[$r]["Province"] = $locationInfo[0]['Province'];
+                $returnValue[$r]["WorkType"] = $workType[0]['WorkType'];
+//                array_push($returnValue[$r],$result[$r]['QuoteID'],$result[$r]['Status'],$fullRequest[0]['AreaName'],$fullRequest[0]['JobDescription'],$fullRequest[0]['JobCommencementDate'],$areaInfo[0]['AreaName'],$locationInfo[0]['locationName'],$locationInfo[0]['Province'],$workType[0]['WorkType']);
+            }
+        }
+        else{
+            $returnValue = false;
+        }
+
+        return $returnValue;
+    }
+
     public static function fetchHomeuserJobRequests($userID){
         $dbhandler = self::fetchDatabaseHandler();
         $command = "SELECT `RequestID`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate` FROM `QUOTE_REQUEST` WHERE `UserID` = ?";
@@ -1039,7 +1084,7 @@ if (!empty($_POST)) {
                             break;
                         case "0":
                             //Tradeworker
-                            $response = json_encode("Should be dealing with tradeworker request job management");
+                            $response = json_encode(SebenzaServer::fetchTradeworkerJobRequests(SebenzaServer::fetchSessionHandler()->getSessionVariable("UserID")));
                             break;
                         default:
                             $response = json_encode("Unrecognized");

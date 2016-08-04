@@ -398,12 +398,32 @@ function redirectToHome(){
     else
     window.location = '/userPage.php';
 }
-var jobRequestArray;
-function handleHomeuserFetchJobRequests(response){
-    jobRequestArray = JSON.parse(response);
+
+var tradeworkerJobRequestArray;
+function handleTradeworkerFetchJobRequests(response){
+    tradeworkerJobRequestArray = JSON.parse(response);
     //console.log("It got here:" + response);
-    if(typeof jobRequestArray == 'object'){
-        console.log(jobRequestArray);
+    if(typeof tradeworkerJobRequestArray == 'object'){
+        console.log(tradeworkerJobRequestArray);
+    }
+    else if(typeof tradeworkerJobRequestArray == 'boolean'){
+        if(tradeworkerJobRequestArray == false)
+            console.log("Job request failed: " + tradeworkerJobRequestArray);
+        else if(tradeworkerJobRequestArray == true){
+            console.log("Job array filled");
+        }
+    }
+    else{
+        console.log("Response not recognized" + typeof tradeworkerJobRequestArray + " value: " + tradeworkerJobRequestArray);
+    }
+}
+
+var homeuserJobRequestArray;
+function handleHomeuserFetchJobRequests(response){
+    homeuserJobRequestArray = JSON.parse(response);
+    //console.log("It got here:" + response);
+    if(typeof homeuserJobRequestArray == 'object'){
+        console.log(homeuserJobRequestArray);
         var html = "";
         var street;
         var streetNumber;
@@ -417,20 +437,20 @@ function handleHomeuserFetchJobRequests(response){
         var commencementDate;
         var status;
         html += "<table>";
-        console.log("FIlling job requests table " + jobRequestArray.length);
-        for(var j = 0;j < jobRequestArray.length; j++){
+        console.log("FIlling job requests table " + homeuserJobRequestArray.length);
+        for(var j = 0;j < homeuserJobRequestArray.length; j++){
             console.log("FIlling job requests table");
-         street = jobRequestArray[j]["2"];
-         streetNumber = jobRequestArray[j]["1"];
-         subLocality = jobRequestArray[j]["3"];
-         locality = jobRequestArray[j]["4"];
-         province = jobRequestArray[j]["5"];
-         tableIndex = jobRequestArray[j]["RequestID"];
-         jobDescription = jobRequestArray[j]["JobDescription"];
-         dateInitialised = jobRequestArray[j]["DateInitialised"];
-         commencementDate = jobRequestArray[j]["JobCommencementDate"];
-         status = jobRequestArray[j]["Accepted"];
-         jobType = jobRequestArray[j]["0"];
+         street = homeuserJobRequestArray[j]["2"];
+         streetNumber = homeuserJobRequestArray[j]["1"];
+         subLocality = homeuserJobRequestArray[j]["3"];
+         locality = homeuserJobRequestArray[j]["4"];
+         province = homeuserJobRequestArray[j]["5"];
+         tableIndex = homeuserJobRequestArray[j]["RequestID"];
+         jobDescription = homeuserJobRequestArray[j]["JobDescription"];
+         dateInitialised = homeuserJobRequestArray[j]["DateInitialised"];
+         commencementDate = homeuserJobRequestArray[j]["JobCommencementDate"];
+         status = homeuserJobRequestArray[j]["Accepted"];
+         jobType = homeuserJobRequestArray[j]["0"];
 
             html += '<tr> <td class="label">Address</td> <td><input type="text" name="homeuser-manageRTradeworker-street_number-' + j + '" id="homeuser-manageRTradeworker-street_number-' + j + '" value="' + street + '"  readonly> </td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-route-' + j + '" id="homeuser-manageRTradeworker-route-' + j + '" value="' + streetNumber + '"  readonly> </td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-sublocality_level_1-' + j + '" id="homeuser-manageRTradeworker-sublocality_level_1-' + j + '" value="' + subLocality + '"  readonly> </td> </tr> <tr> <td></td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-locality-' + j + '" value="' + locality + '"  readonly> </td> <td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-country-' + j + '" id="homeuser-manageRTradeworker-country-' + j + '" value="' + province + '"  readonly> </td> </tr> <tr> <td class="label">Date initialised:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-initialisedDate-' + j + '" value="' + dateInitialised + '"  readonly> </td> <td class="label" colspan="1">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-commenceDate-' + j + '" value="' + commencementDate + '"  readonly> </td> </tr> <tr> <td class="label">Job Description:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-WorkType-' + j + '" id="homeuser-manageRTradeworker-WorkType-' + j + '" value="' + jobType + '"  readonly> </td> <td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-jobDescription-' + j + '" value="' + jobDescription + '"  readonly> </td> </tr> <tr> <td class="label">Status</td> <td colspan="4"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-locality-' + j + '" value="' + status + '"  readonly> </td> <td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="selected" id="homeuser-manageRTradeworker-locality-' + j + '" value="' + tableIndex + '" readonly></div> </td> </tr> <tr style="height: 0.5em;background-color: #0a0a0a"> <td colspan="6"></td> </tr>';
 
@@ -439,15 +459,15 @@ function handleHomeuserFetchJobRequests(response){
         document.getElementById("homeuser-manageRTradeworker-areainformation").innerHTML = html;
 
     }
-    else if(typeof jobRequestArray == 'boolean'){
-        if(jobRequestArray == false)
-        console.log("Job request failed: " + jobRequestArray);
-        else if(jobRequestArray == true){
+    else if(typeof homeuserJobRequestArray == 'boolean'){
+        if(homeuserJobRequestArray == false)
+        console.log("Job request failed: " + homeuserJobRequestArray);
+        else if(homeuserJobRequestArray == true){
             console.log("Job array filled");
         }
     }
     else{
-        console.log("Response not recognized" + typeof jobRequestArray + " value: " + jobRequestArray);
+        console.log("Response not recognized" + typeof homeuserJobRequestArray + " value: " + homeuserJobRequestArray);
     }
 }
 
