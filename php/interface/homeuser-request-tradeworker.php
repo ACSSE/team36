@@ -3,14 +3,18 @@
         <h1>Request Tradeworker</h1>
 
         <div class="row">
+            <div class="column medium-11 large-11">
             <h4>Date Available to meet with tradeworker:</h4>
-        </div>
-        <div class="row">
-            <h5>Please give at least 5 days for request to be accepted</h5>
+                </div>
         </div>
         <div class="row">
             <div class="column medium-11 large-11">
-                <label>Commencement Date</label><input type="date" name="commencement-homeuser-rTradeworker" id="commencement-homeuser-rTradeworker" class="REQ_VAL">
+            <h5>*Please give at least 5 days for request to be accepted</h5>
+                </div>
+        </div>
+        <div class="row">
+            <div class="column medium-11 large-11">
+                <label>Commencement Date:</label><input type="date" name="commencement-homeuser-rTradeworker" id="commencement-homeuser-rTradeworker" class="REQ_VAL">
                 <div class="additional-info top-padding" id="commencement-homeuser-rTradeworker-info" data-toggler data-animate="fade-in fade-out">
                     <p class="help-text no-margins">Please fill in a date you would like to start the job by</p>
                 </div>
@@ -18,12 +22,14 @@
         </div>
         <!-- TODO: consider For pre-scribed users add an nb field that will send out a request to all available tradeworkers for a job-->
         <div class="row">
+            <div class="column medium-11 large-11">
             <h4>Job Type(s):</h4>
+                </div>
         </div>
         <div class="row">
             <div class="column medium-11 large-11">
                 <!--Can use the onChange event to set up what-ever is necessary according to the type selected-->
-                <label>Select Work Type</label> <select id="homeuser-rTradeworker-work-type-0" name="homeuser-rTradeworker-work-type-0" form="register-homeuser-rTradeworker-form" class="REQ_VAL">
+                <label>Select Work Type:</label> <select id="homeuser-rTradeworker-work-type-0" name="homeuser-rTradeworker-work-type-0" form="register-homeuser-rTradeworker-form" class="REQ_VAL">
                     <script>
                         requestGenericWorkTypes('homeuser-rTradeworker-work-type-0');
                     </script>
@@ -35,7 +41,7 @@
         </div>
         <div class="row">
             <div class="column medium-11 large-11">
-                <label>Job Description</label><textarea  name="job-description-homeuser-rTradeworker-0" id="job-description-homeuser-rTradeworker-0" placeholder="I would like to have a 4 X 4 square meter area tiled"
+                <label>Job Description: </label><textarea  name="job-description-homeuser-rTradeworker-0" id="job-description-homeuser-rTradeworker-0" placeholder="I would like to have a 4 X 4 square meter area tiled"
                                                          class="REQ_VAL"></textarea>
                 <div class="additional-info top-padding" id="job-description-homeuser-rTradeworker-0-info" data-toggler data-animate="fade-in fade-out">
                     <p class="help-text no-margins">Please enter in a short description of what you would like done for the job type selected</p>
@@ -44,7 +50,7 @@
         </div>
         <div class="row">
             <div class="column medium-11 large-11">
-                <label>Number of tradeworkers to request</label><input type="number" name="nTradeworkers-homeuser-rTradeworker-0" id="nTradeworkers-homeuser-rTradeworker-0" placeholder="3" class="REQ_VAL">
+                <label>Number of tradeworkers you require: </label><input type="number" name="nTradeworkers-homeuser-rTradeworker-0" id="nTradeworkers-homeuser-rTradeworker-0" placeholder="3" class="REQ_VAL">
                 <div class="additional-info top-padding" id="nTradeworkers-homeuser-rTradeworker-0-info" data-toggler data-animate="fade-in fade-out">
                     <p class="help-text no-margins">Please fill in amount of tradeworkers that you would like of the speciality specified. E.g. 3</p>
                 </div>
@@ -65,15 +71,19 @@
 
         <!--The following deals with the location that is used by the homeuser for where the job will be done-->
         <div class="row">
+            <div class="column medium-11 large-11">
             <h4>Job Location:</h4>
+                </div>
         </div>
         <div class="row">
-            <h5>Enter into the box that follows and select option that is displayed by clicking on it</h5>
+            <div class="column medium-11 large-11">
+            <h5>*Enter into the box that follows and select option that is displayed by clicking on it</h5>
+                </div>
         </div>
         <div class="row">
             <div class="column large-11 medium 11">
                 <div id="homeuser-rTradeworker-locationField">
-                    <label>Search Address</label> <input name="ignore-homeuser-rTradeworker-autocomplete" id="homeuser-rTradeworker-autocomplete" placeholder="Enter in location of job"
+                    <label>Search Address:</label> <input name="ignore-homeuser-rTradeworker-autocomplete" id="homeuser-rTradeworker-autocomplete" placeholder="Enter in location of job"
                             onclick="genericInitAutocomplete('homeuser-rTradeworker-autocomplete')" type="text" autocomplete="off"/>
                 </div>
             </div>
