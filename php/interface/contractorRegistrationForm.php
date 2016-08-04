@@ -5,6 +5,7 @@
  * Date: 2016/06/30
  * Time: 3:21 PM
  */ ?>
+<!--TODO:Add identity number to registration-->
 <form id="register-contractor-form" name="register-contractor-form">
     <h1>Registration form: Contractor</h1>
     <h4>User Details:</h4>

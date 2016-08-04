@@ -530,9 +530,8 @@ class SebenzaServer {
     //The following function is the initial implementation of fetching the next available user, this doesn't take experience into account
     //currently just checks if TW available in $area for a given $workType will check when was the last time they worked if there is more than one and send the one
     //with the date that is the lowest.
-    public static function fetchAvailableTradeworker($workTypeID,$areaID){
-        //TODO: Check that the tradeworker requested doesn't already have a notification else till he accepts the job his date will remain the lowest perhaps allow for 5 notifications per tradeworker before removing the id from the valid list
-        $returnValue = true;
+    public static function fetchAvailableTradeworker($workTypeID,$areaID,$numRequests,$requestID){
+        $returnValue = 1;
         //Fetch userID's from LOCATIONS_PER_USER,SPECIALIZATIONS_PER_USER where locations equal areaID and work types equal workTypeID
         $dbhandler = self::fetchDatabaseHandler();
         $command = "SELECT `UserID` FROM `LOCATIONS_PER_USER` WHERE `locationID` = ?";
@@ -544,7 +543,6 @@ class SebenzaServer {
         $applicants = [];
         //If there are userIDs returned check which ones match and store them in an array
         if(count($locationsResults)>0 && count($userResults)>0){
-            $returnValue = 50;
             for($j = 0;$j<count($locationsResults);$j++){
                 for($k = 0;$k<count($userResults);$k++){
                     if($locationsResults[$j]['UserID'] == $userResults[$k]['UserID']){
@@ -554,11 +552,16 @@ class SebenzaServer {
             }
         }
         else{
-            $returnValue = false;
+            if(count($locationsResults) == 0)
+                $returnValue *= -5;
+            if(count($userResults) == 0)
+                $returnValue *= -7;
         }
         //At this point if the applicants array has any elements in it, it means that there exists a user who has the skill type required and has listed the area as an area he is under
         $applicantsToSend = [];
         if(count($applicants) > 0){
+            $counter = 0;
+            $condition = true;
             for($l = 0; $l <count($applicants); $l++){
                 $command = "SELECT `UserID`,`DateWorked` FROM `TRADE_WORKER` WHERE `UserID` = ? AND `Availability`=TRUE";
                 $dbhandler->runCommand($command,intval($applicants[$l]));
@@ -568,47 +571,81 @@ class SebenzaServer {
 //                    $returnValue .= "\n The following is the available user for that area: ".$result[0]['UserID']." : ".$result[0]['DateWorked'];
                     array_push($applicantsToSend,$result[0]);
                 }
-                else{
-                    $returnValue = false;
-                }
             }
         }
         else{
-            return false;
+            $returnValue *= -13;
+            //this should return that no tradeworkers exist in that location with that specific skill required
         }
-//        $returnValue = "it got here".count($applicantsToSend);
+
+        //Remove all tradeworkers already related to the the request
+        $command = "SELECT * FROM `QUOTE` WHERE `RequestID` = ? AND `RequestedUser` = ?";
+        $continue = true;
+        if(count($applicantsToSend) > 0)
+        while($continue){
+            $toRemove = true;
+            for($e = 0; $e < count($applicantsToSend) && $toRemove;$e++){
+                $dbhandler->runCommand($command,$requestID,$applicantsToSend[$e]['UserID']);
+                $result = $dbhandler->getResults();
+                if(count($result) > 0){
+                    array_slice($applicantsToSend,$e, 1);
+                    $toRemove = false;
+                }
+            }
+            if($e == count($applicantsToSend)){
+                $continue = false;
+            }
+        }
+
         //This will fail if no users are available of users in given area and work type
         //The process of comparing which tradeworker to take currently involves only comparing the last time worked(date) and will return the tradeworker with the lowest date worked
+
         if(count($applicantsToSend) > 0){
+            $returnValue =[];
             if(count($applicantsToSend) == 1){
-                $returnValue =  $applicantsToSend[0]['UserID'];
+                 array_push($returnValue,$applicantsToSend[0]['UserID']);
+            }
+            else if(count($applicantsToSend) < $numRequests ){
+                for($e = 0; $e < count($applicantsToSend);$e++){
+                    array_push($returnValue,$applicantsToSend[$e]['UserID']);
+                }
             }
             else{
-
-                $min = $applicantsToSend[0];
-                $minDate = DateTime::createFromFormat("Y-m-d",$applicantsToSend[0]['DateWorked']);
+                //TODO: Check that the tradeworker requested doesn't already have a notification else till he accepts the job his date will remain the lowest perhaps allow for 5 notifications per tradeworker before removing the id from the valid list
+                //TODO: check amount of notifications
+                $counter = 0;
+                while($counter < $numRequests){
+                    $leastIndex = 0;
+                    $minDate = DateTime::createFromFormat("Y-m-d",$applicantsToSend[0]['DateWorked']);
+                    $activeWorkRequests = $dbhandler->runCommand("SELECT `ActiveWorkRequests` FROM `TRADE_WORKER` WHERE `UserID` = ?",$applicantsToSend[0]['UserID']);
 //                $returnValue = $applicantsToSend[0]['UserID'];
-                for($m = 1;$m < count($applicantsToSend);$m++){
+                    for($m = 1;$m < count($applicantsToSend);$m++){
 //                    $returnValue .= " \n Should be compared with".$applicantsToSend[$m]['DateWorked'];
-                    $date2 = DateTime::createFromFormat("Y-m-d",$applicantsToSend[$m]['DateWorked']);
-                    if($date2 < $minDate){
-                        $minDate = $date2;
-                        $min = $applicantsToSend[$m];
+                        $date2 = DateTime::createFromFormat("Y-m-d",$applicantsToSend[$m]['DateWorked']);
+                        $activeWorkRequests2 = $dbhandler->runCommand("SELECT `ActiveWorkRequests` FROM `TRADE_WORKER` WHERE `UserID` = ?",$applicantsToSend[$m]['UserID']);
+                        if($date2 < $minDate && $activeWorkRequests2 < $activeWorkRequests){
+                            $minDate = $date2;
+                            $activeWorkRequests = $activeWorkRequests2;
+                            $leastIndex = $m;
+                        }
                     }
-                }
-                $returnValue = $min['UserID'];
 
+                    array_push($returnValue,$applicantsToSend[$leastIndex]['UserID']);
+                    array_slice($applicantsToSend,$leastIndex,1);
+                    $counter++;
+                }
             }
         }
         else{
-            $returnValue = false;
+            //Currently no available tradeworkers in the area
+            $returnValue *= -11;
         }
 
         return $returnValue;
     }
 
     public static function homeuserRequestTradeworker($input){
-        //TODO: run for loop for all the different skill types requested as well as set up a quote per number requested per skill
+
 //        $_POST['commencement-homeuser-rTradeworker'],$_POST['homeuser-rTradeworker-street_number'],$_POST['homeuser-rTradeworker-route'],$_POST['homeuser-rTradeworker-sublocality_level_1'],$_POST['homeuser-rTradeworker-locality'],$_POST['homeuser-rTradeworker-administrative_area_level_1'],$_POST['homeuser-rTradeworker-postal_code'],$_POST['homeuser-rTradeworker-country'])
         $dbhandler = self::fetchDatabaseHandler();
         $route = $input[2];
@@ -618,6 +655,7 @@ class SebenzaServer {
         $streetNumber = $input[1];
         $province = $input[5];
         $date = $input[0];
+        $numRequest = $input[8];
 //        $date = DateTime::createFromFormat("Y-m-d",$input[0]);
         $command = "SELECT `locationID` FROM `LOCATIONS` WHERE `locationName` = ?";
         $dbhandler->runCommand($command,$area);
@@ -630,6 +668,8 @@ class SebenzaServer {
         else{
             //TODO:The user needs to be informed that no tradeworker/contractor exists with that skill in the area currently
             //I think to make that if an area has no tradeworkers that the area cannot be added by the homeuser to be the best approach
+            $result = 1;
+            $result *= 2;
         }
         $addressID = -1;
         if($locationID > 0) {
@@ -648,7 +688,8 @@ class SebenzaServer {
                 }
                 else{
                     //area failed to insert for some reason check for errors
-                    $result = false;
+                    $result = 1;
+                    $result *= 3;
                 }
 
             }
@@ -657,47 +698,72 @@ class SebenzaServer {
         $session = self::fetchSessionHandler();
         $id = $session->getSessionVariable('UserID');
 
-        $result = $addressID." ".$locationID;
+        //$result = $addressID." ".$locationID;
+        //TODO: run for loop for all the different skill types requested as well as set up a quote per number requested per skill
         if($addressID > 0 && $locationID > 0 && $id){
             //The following will check if a tradeworker exists with the skills required so that a notification can be sent out immediately
-            $tradeworkerID = self::fetchAvailableTradeworker($workType,$locationID);
+            // outer for loop runs on ignore-actual-nTradeworkers-homeuser-rTradeworker while inner for loop will run on nTradeworkers-homeuser-rTradeworker-0
+            $command = "INSERT INTO `QUOTE_REQUEST` (`UserID`,`NumberOfWorkersRequested`,`workTypeID`,`JobDescription`,`Address`,`JobCommencementDate`) VALUES (?,?,?,?,?,?)";
 
-            if(gettype($tradeworkerID) == "boolean"){
-                //This typically means that a trade worker is not available currently possibly confirm from
-                //user whether system should go about storing the request and trying till a tradeworker applies to the system
-                // with that skill and within that location
-                //TODO:Tell the difference between unavailable users in an area and no users in the area with selected work type so that user can leave the request active for when a tradeworker becomes available the returned values will then be negative integer for errors and if it passes it will be a positive integer
-                $result = $tradeworkerID;
-            }
-            else if(gettype($tradeworkerID) == "integer"){
-                $result = $tradeworkerID;
+            for($z = 0; $z < $numRequest; $z++){
+                $numRequestPerType = $_POST['nTradeworkers-homeuser-rTradeworker-'.$z];
+                $workType = $_POST['homeuser-rTradeworker-work-type-'.$z];
+                $jobDescription = $_POST['job-description-homeuser-rTradeworker-'.$z];
+                if ($dbhandler->runCommand($command, $id, $numRequestPerType, $workType, $jobDescription, $addressID, $date)) {
 
-                $workTypeID = 6;
-                $jobDescription = "We will be breaking things out";
-                $address = 1;
-                $command = "INSERT INTO `QUOTE_REQUEST` (`UserID`,`RequestedUser`,`workTypeID`,`JobDescription`,`Address`,`JobCommencementDate`) VALUES (?,?,?,?,?,?)";
-                if($dbhandler->runCommand($command,$id,$tradeworkerID,$workType,$jobDescription,$addressID,$date)){
-                    //The insert was successful send notification to tradeworker
-                    if(self::addNotification($tradeworkerID,"Added job request: check under manage jobs - job requests tab")){
-                        $result = true;
+                    $requestID = $dbhandler->getInsertID();
+                    $tradeworkerID = self::fetchAvailableTradeworker($workType,$locationID,$numRequestPerType,$requestID);
+
+                    if(gettype($tradeworkerID) == "boolean"){
+                        //TODO:Tell the difference between unavailable users in an area and no users in the area with selected work type so that user can leave the request active for when a tradeworker becomes available the returned values will then be negative integer for errors and if it passes it will be a positive integer
+                        //Technically this should not occur anymore on failure negative integer value is sent
+                        $result = $tradeworkerID;
+                    }
+                    else if(gettype($tradeworkerID) == "integer") {
+//                    Tradeworker could not be requested an error occured in the method fetchAvailableTradeworker
+                        $result = $tradeworkerID;
+                    }
+                    else if(gettype($tradeworkerID) == "array"){
+                        if(count($tradeworkerID) > 0){
+                            for($r = 0;$r < count($tradeworkerID);$r++){
+                                $command = "INSERT INTO `QUOTE` (`RequestID`,`RequestedUser`) VALUES (?,?)";
+                                if ($dbhandler->runCommand($command, $requestID, $tradeworkerID[$r])) {
+                                    //The insert was successful send notification to tradeworker
+                                    if (self::addNotification($tradeworkerID[$r], "Added job request: check under manage jobs - job requests tab")) {
+                                        //TODO:Add one to the activeRequests as well as one to the overall requests to the TRADEWORKER table for the given tradeworker id,
+                                        $dbhandler->runCommand("SELECT `ActiveWorkRequests`,`OverallWorkRequests` FROM `TRADE_WORKER` WHERE `UserID` = ?",$tradeworkerID[$r]);
+                                        $amount = $dbhandler->getResults();
+                                        $command = "UPDATE `TRADE_WORKER` SET `ActiveWorkRequests` = ? , `OverallWorkRequests` = ? WHERE `UserID` = ?";
+                                        if ($dbhandler->runCommand($command,intval($amount[0]['ActiveWorkRequests'] + 1),intval($amount[0]['OverallWorkRequests'] + 1),$tradeworkerID[$r])) {
+                                            $result = $amount;
+                                            //This should be counting array of the result of the dbHandler
+                                        } else {
+                                            $result = "Failed to increment tradeworker notifications";
+                                        }
+                                    } else {
+                                        $result = "Could not add notification";
+                                    }
+                                } else {
+                                    //The quote request could not be inserted for some reason error check
+                                    $result = "Could not add quote" . $date;
+                                }
+                            }
+                        }
+
                     }
                     else{
-                        $result = "Could not add notification";
+                        //The following should never occur the return type should be of Integer or boolean or array only
+
+                        $result = false;
                     }
                 }
                 else{
-                    //The quote request could not be inserted for some reason error check
-                    $result = "Could not add quote".$date;
+                    //Failed to add request to database
                 }
-//                    $result = "Hello";
             }
-            else{
-                //The following should never occur the return type should be of Integer or boolean only
-                $result = false;
-            }
-        }
-        else{
-            $result = false;
+
+
+
         }
 
         return $result;
@@ -733,11 +799,11 @@ class SebenzaServer {
 
     public static function fetchHomeuserJobRequests($userID){
         $dbhandler = self::fetchDatabaseHandler();
-        $command = "SELECT `RequestID`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate`,`Accepted` FROM `QUOTE_REQUEST` WHERE `UserID` = ?";
+        $command = "SELECT `RequestID`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate` FROM `QUOTE_REQUEST` WHERE `UserID` = ?";
         $dbhandler->runCommand($command,$userID);
         $result = $dbhandler->getResults();
         $worktypes = self::returnWorkTypes();
-
+        //TODO: refactor with Quote table NB!!!! - just return a count of the number of request in quote sent out per quote_request
         //TODO:Retrieve according to address get the
         //If results contains information then the fetching of areas and locations should be able to occur, because the address column is directly related to AREAS_PER_LOCATION which is also related to LOCATIONS
         if(count($result) > 0 && count($worktypes) > 0) {
@@ -991,33 +1057,31 @@ if (!empty($_POST)) {
 //                $response = json_encode("This is a test");
                 break;
             case 'homeuser-rTradeworker':
-                $condition = 0;
+                $condition = true;
 
                 if(isset($_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker'])){
                     for($j =0;$j<$_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker'];$j++){
-                        $condition += 1;
                         if(!isset($_POST['homeuser-rTradeworker-work-type-'.$j]) || !isset($_POST['nTradeworkers-homeuser-rTradeworker-'.$j]) || !isset($_POST['job-description-homeuser-rTradeworker-'.$j])){
-                            $condition -= 50;
+                            $condition = false;
                         }
                     }
 
                 }
                 else{
-                    $condition = -10;
+                    $condition = false;
                 }
 
-                if($condition > 0){
-                    if(isset($_POST['commencement-homeuser-rTradeworker']) && isset($_POST['homeuser-rTradeworker-street_number']) && isset($_POST['homeuser-rTradeworker-route']) && isset($_POST['homeuser-rTradeworker-sublocality_level_1']) && isset($_POST['homeuser-rTradeworker-locality']) && isset($_POST['homeuser-rTradeworker-administrative_area_level_1']) && isset($_POST['homeuser-rTradeworker-postal_code']) && isset($_POST['homeuser-rTradeworker-country'])){
-                        $condition += 100;
-                        $condition = json_encode(SebenzaServer::homeUserRequestTradeworker([$_POST['commencement-homeuser-rTradeworker'],$_POST['homeuser-rTradeworker-street_number'],$_POST['homeuser-rTradeworker-route'],$_POST['homeuser-rTradeworker-sublocality_level_1'],$_POST['homeuser-rTradeworker-locality'],$_POST['homeuser-rTradeworker-administrative_area_level_1'],$_POST['homeuser-rTradeworker-postal_code'],$_POST['homeuser-rTradeworker-country']]));
+                if($condition){
+                    if(isset($_POST['commencement-homeuser-rTradeworker']) && isset($_POST['homeuser-rTradeworker-street_number']) && isset($_POST['homeuser-rTradeworker-route']) && isset($_POST['homeuser-rTradeworker-sublocality_level_1']) && isset($_POST['homeuser-rTradeworker-locality']) && isset($_POST['homeuser-rTradeworker-administrative_area_level_1']) && isset($_POST['homeuser-rTradeworker-postal_code']) && isset($_POST['homeuser-rTradeworker-country']) && isset($_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker'])){
+                        $condition = SebenzaServer::homeUserRequestTradeworker([$_POST['commencement-homeuser-rTradeworker'],$_POST['homeuser-rTradeworker-street_number'],$_POST['homeuser-rTradeworker-route'],$_POST['homeuser-rTradeworker-sublocality_level_1'],$_POST['homeuser-rTradeworker-locality'],$_POST['homeuser-rTradeworker-administrative_area_level_1'],$_POST['homeuser-rTradeworker-postal_code'],$_POST['homeuser-rTradeworker-country'],$_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker']]);
 //                        $condition = true;
                     }
                     else{
-                        $condition -=1000;
+                        $condition = false;
                     }
                 }
 
-                $response = $condition;
+                $response = json_encode($condition);
                 break;
             default:
                 //If the action was not one of the handled cases, respond appropriately

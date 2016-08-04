@@ -64,6 +64,11 @@ CREATE TABLE `TRADE_WORKER` (
 	`UserID` integer not null unique,
   `DateWorked` DATE not null,
   `Availability` boolean not null,
+  `ActiveWorkRequests` integer not null DEFAULT 0,
+  `OverallWorkRequests` integer not null DEFAULT 0,
+  `WorkRequestsMissed` integer not null DEFAULT 0,
+  `WorkRequestsAccepted` integer not null DEFAULT 0,
+  `WorkRequestsRejected` integer not null DEFAULT 0,
 	PRIMARY KEY (`tradeworkerID`),
 	FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );
@@ -102,6 +107,11 @@ CREATE TABLE `CONTRACTOR` (
   `VatRegistered` BOOLEAN NOT NULL,
   `Availability` boolean not null,
   `DateWorked` DATE not null,
+  `ActiveWorkRequests` integer not null DEFAULT 0,
+  `OverallWorkRequests` integer not null DEFAULT 0,
+  `WorkRequestsMissed` integer not null DEFAULT 0,
+  `WorkRequestsAccepted` integer not null DEFAULT 0,
+  `WorkRequestsRejected` integer not null DEFAULT 0,
   PRIMARY KEY (`contractorID`),
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );
@@ -148,18 +158,27 @@ DROP TABLE IF EXISTS `QUOTE_REQUEST`;
 CREATE TABLE `QUOTE_REQUEST` (
   `RequestID` integer not null auto_increment,
   `UserID` INTEGER not null,
-  `RequestedUser` INTEGER,
+  `NumberOfWorkersRequested` INTEGER,
   `workTypeID` integer not null,
   `JobDescription` varchar(150) not null,
   `Address` INTEGER not null,
   `DateInitialised` TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
   `JobCommencementDate` date not null,
-  `Accepted` boolean not null DEFAULT FALSE,
   PRIMARY KEY (`RequestID`),
-  FOREIGN KEY (`RequestedUser`) REFERENCES REGISTERED_USER(`UserID`),
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`),
   FOREIGN KEY (`workTypeID`) REFERENCES SPECIALIZATIONS(`workTypeID`),
   FOREIGN KEY (`Address`) REFERENCES AREA_PER_LOCATION(`AreaID`)
+);
+
+DROP TABLE IF EXISTS `QUOTE`;
+CREATE TABLE `QUOTE` (
+  `QuoteID` integer not null auto_increment,
+  `RequestID` INTEGER not null,
+  `RequestedUser` INTEGER,
+  `Status` INTEGER(1) not null DEFAULT 0,
+  PRIMARY KEY (`QuoteID`),
+  FOREIGN KEY (`RequestID`) REFERENCES QUOTE_REQUEST(`RequestID`),
+  FOREIGN KEY (`RequestedUser`) REFERENCES REGISTERED_USER(`UserID`)
 );
 
 DROP TABLE IF EXISTS `BOOKMARKED`;
