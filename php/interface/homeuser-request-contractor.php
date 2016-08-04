@@ -3,14 +3,18 @@
         <h1>Request Contractor</h1>
 
         <div class="row">
+            <div class="column medium-11 large-11">
             <h4>Date Available to meet with tradeworker:</h4>
-        </div>
-        <div class="row">
-            <h5>Please give at least 5 days for request to be accepted</h5>
+                </div>
         </div>
         <div class="row">
             <div class="column medium-11 large-11">
-                <label>Commencement Date</label><input type="date" name="commencement-homeuser-rContractor" id="commencement-homeuser-rContractor" class="REQ_VAL">
+            <h5>*Please give at least 5 days for request to be accepted</h5>
+                </div>
+        </div>
+        <div class="row">
+            <div class="column medium-11 large-11">
+                <label>Commencement Date:</label><input type="date" name="commencement-homeuser-rContractor" id="commencement-homeuser-rContractor" class="REQ_VAL">
                 <div class="additional-info top-padding" id="commencement-homeuser-rContractor-info" data-toggler data-animate="fade-in fade-out">
                     <p class="help-text no-margins">Please fill in a date you would like to start the job by</p>
                 </div>
@@ -18,12 +22,14 @@
         </div>
         <!-- TODO:Javascript generated fields adding more skill types to form, will be limited to having filled in a fields before being able to add a new type, think along arrays to do this also add a hidden input field keeping track of how many types of workers are being requested-->
         <div class="row">
+            <div class="column medium-11 large-11">
             <h4>Job Type(s):</h4>
+                </div>
         </div>
         <div class="row">
             <div class="column medium-11 large-11">
                 <!--Can use the onChange event to set up what-ever is necessary according to the type selected-->
-                <label>Select Work Type</label> <select id="homeuser-rContractor-work-type-0" name="homeuser-rContractor-work-type-0" form="register-homeuser-rContractor-form" class="REQ_VAL" onclick="genericFillSkillsSelectTag('homeuser-rContractor-work-type-0')">
+                <label>Select Work Type:</label> <select id="homeuser-rContractor-work-type-0" name="homeuser-rContractor-work-type-0" form="register-homeuser-rContractor-form" class="REQ_VAL" onclick="genericFillSkillsSelectTag('homeuser-rContractor-work-type-0')">
                     <script>
 
                     </script>
@@ -35,7 +41,7 @@
         </div>
         <div class="row">
             <div class="column medium-11 large-11">
-                <label>Job Description</label><textarea  name="job-description-homeuser-rContractor-0" id="job-description-homeuser-rContractor-0" placeholder="I would like to have a 4 X 4 square meter area tiled"
+                <label>Job Description:</label><textarea  name="job-description-homeuser-rContractor-0" id="job-description-homeuser-rContractor-0" placeholder="I would like to have a 4 X 4 square meter area tiled"
                                                          class="REQ_VAL"></textarea>
                 <div class="additional-info top-padding" id="job-description-homeuser-rContractor-0-info" data-toggler data-animate="fade-in fade-out">
                     <p class="help-text no-margins">Please enter in a short description of what you would like done for the job type selected</p>
@@ -44,7 +50,7 @@
         </div>
         <div class="row">
             <div class="column medium-11 large-11">
-                <label>Number of tradeworkers to request</label><input type="number" name="nTradeworkers-homeuser-rContractor-0" id="nTradeworkers-homeuser-rContractor-0" placeholder="3" class="REQ_VAL">
+                <label>Number of tradeworkers you require:</label><input type="number" name="nTradeworkers-homeuser-rContractor-0" id="nTradeworkers-homeuser-rContractor-0" placeholder="3" class="REQ_VAL">
                 <div class="additional-info top-padding" id="nTradeworkers-homeuser-rContractor-0-info" data-toggler data-animate="fade-in fade-out">
                     <p class="help-text no-margins">Please fill in amount of tradeworkers that you would like of the speciality specified. E.g. 3</p>
                 </div>
@@ -65,10 +71,14 @@
 
         <!--The following deals with the location that is used by the homeuser for where the job will be done-->
         <div class="row">
+            <div class="column medium-11 large-11">
             <h4>Job Location:</h4>
+                </div>
         </div>
         <div class="row">
-            <h5>Enter into the box that follows and select option that is displayed by clicking on it</h5>
+            <div class="column medium-11 large-11">
+            <h5>*Enter into the box that follows and select option that is displayed by clicking on it</h5>
+                </div>
         </div>
         <div class="row">
             <div class="column large-11 medium 11">
