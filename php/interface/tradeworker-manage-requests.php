@@ -1,13 +1,13 @@
 <div class="full-height full-width" xmlns="http://www.w3.org/1999/html">
     <script>
-        sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+        sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
     </script>
     <h1>Manage Job Request</h1>
     <!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->
     <div class="row">
         <div class="column large-11">
             <label>Search:</label>
-            <input type="text" name="homeuser-manageRTradeworker-search-0" id="homeuser-manageRTradeworker-search-0"/>
+            <input type="text" name="tradeworker-manageRequest-search-0" id="tradeworker-manageRequest-search-0"/>
         </div>
         <div class="column large-1">
 
@@ -16,7 +16,7 @@
     <div class="row">
         <div class="column large-11">
             <label>Sort By:</label>
-            <select id="homeuser-manageRTradeworker-sortBy-0" name="homeuser-manageRTradeworker-sortBy-0">
+            <select id="tradeworker-manageRequest-sortBy-0" name="tradeworker-manageRequest-sortBy-0">
                 <option value="WorkType">Work Type</option>
                 <option value="initialDate">Date Request is sent</option>
                 <option value="commencementDate">Commencement Date</option>
@@ -30,7 +30,7 @@
     </div>
     <div class="row">
         <div class="column large-11">
-            <div class=" full-width" id="homeuser-manageRTradeworker-areainformation" style="overflow-y: scroll; height: 400px">
+            <div class=" full-width" id="tradeworker-manageRequest-areainformation" style="overflow-y: scroll; height: 400px">
 
             </div>
         </div>
