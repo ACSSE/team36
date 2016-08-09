@@ -483,13 +483,17 @@ function handleTradeworkerFetchJobRequests(response){
                 status = "Job accepted";
             }
             else if(status == 2){
-                status = "rejected";
+                status = "You rejected this request";
+            }
+            else if(status == 3){
+                status = "Waiting for homeuser to initiate job";
             }
             var workType = tradeworkerJobRequestArray[j]['WorkType'];
             var workTypeID = tradeworkerJobRequestArray[j]['WorkTypeID'];
             var areaName = tradeworkerJobRequestArray[j]['AreaName'];
             var province = tradeworkerJobRequestArray[j]['Province'];
             var locationName = tradeworkerJobRequestArray[j]['locationName'];
+
             html += '<tr> <td class="label">Job Details:</td> <td colspan="2"> <input type="text" name="tradeworker-requests-WorkType-' + j +'" id="tradeworker-requests-WorkType-' + j +'" value="' + workType + '" readonly> </td> <td class="label" colspan="2">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="tradeworker-requests-commenceDate-' + j +'" id="tradeworker-requests-commenceDate-' + j +'" value="' + commencementDate + '" readonly></td> </tr> <tr> <td colspan="6"> <input type="text" name="tradeworker-requests-jobDescription-' + j +'" id="tradeworker-requests-jobDescription-' + j +'" value="' + description + '" readonly> </td> </tr> <tr> <td class="label">Address</td> <td colspan="2"> <input type="text" name="tradeworker-requests-sublocality_level_1-' + j +'" id="tradeworker-requests-sublocality_level_1-' + j +'" value="' + areaName + '" readonly> </td> <td colspan="2"> <input type="text" name="tradeworker-requests-locality-' + j +'" id="tradeworker-requests-locality-' + j +'" value="' + locationName + '" readonly> </td> <td colspan="1"> <input type="text" name="tradeworker-requests-country-' + j +'" id="tradeworker-requests-country-' + j +'" value="' + province + '" readonly> </td> </tr> <tr> <td class="label">Status</td> <td colspan="4"> <input type="text" name="tradeworker-requests-status-' + j +'" id="tradeworker-requests-status-' + j +'" value="' + status + '" readonly></td> <td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests" id="tradeworker-requests-quoteID-' + j +'" value="' + quoteID + '" readonly></div></td> </tr> <tr style="height: 0.5em;background-color: #0a0a0a"> <td colspan="6"></td> </tr>'
         }
         html += '</table>';
@@ -719,6 +723,159 @@ function handleHomeuserRequestsAcceptedNotificationArrayFill(response){
         console.log("There are no notifications to display: " + homeuserRequestsToAcceptArray);
     }
 }
+function editHomeuserJobRequestEntry(){
+    var input = $("form input[name=job-requests]:radio");
+    console.log("test" + input.length);
+    if(input.length > 0)
+        for(var i = 0 ; i < input.length ; i++){
+            //console.log("should be printing :" + input[i].checked);
+            if(input[i].checked){
+                //console.log('The following request was selected: ' + i);
+                //console.log(input[i]);
+                document.getElementById("homeuser-selected-request-id").value = input[i].value;
+                homeuserManageRequestModal(input[i].value);
+                //sendAJAXRequest('tradeworker-accept-request',handleTradeworkerAcceptRequest,'tradeworker-selected-request');
+            }
+        }
+    //console.log(input);
+}
+
+function homeuserManageRequestModal(tableIndex){
+    var street = homeuserJobRequestArray[tableIndex]["Road"];
+    var streetNumber = homeuserJobRequestArray[tableIndex]["StreetNumber"];
+    var subLocality = homeuserJobRequestArray[tableIndex]["AreaName"];
+    var locality = homeuserJobRequestArray[tableIndex]["locationName"];
+    var province = homeuserJobRequestArray[tableIndex]["Province"];
+    var tableIndex = tableIndex;
+    var jobDescription = homeuserJobRequestArray[tableIndex]["JobDescription"];
+    var dateInitialised = homeuserJobRequestArray[tableIndex]["DateInitialised"];
+    var commencementDate = homeuserJobRequestArray[tableIndex]["JobCommencementDate"];
+    //var status = homeuserJobRequestArray[tableIndex]["Accepted"];
+    var jobType = homeuserJobRequestArray[tableIndex]["WorkType"];
+    var numWorkers = homeuserJobRequestArray[tableIndex]["NumberOfWorkersRequested"];
+    var numWorkersAccepted = homeuserJobRequestArray[tableIndex]["NumberOfWorkersAccepted"];
+    var html = '<h3>Request information</h3><table>';
+    html += '<tr> ' +
+            '<td class="label">Address</td> ' +
+            '<td><input type="text" name="homeuser-manageRTradeworker-street_number-' + tableIndex + '" id="homeuser-manageRTradeworker-street_number-' + tableIndex + '" value="' + streetNumber + '"  readonly> </td>' +
+            '<td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-route-' + tableIndex + '" id="homeuser-manageRTradeworker-route-' + tableIndex + '" value="' + street + '"  readonly> </td>' +
+            '<td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-sublocality_level_1-' + tableIndex + '" id="homeuser-manageRTradeworker-sublocality_level_1-' + tableIndex + '" value="' + subLocality + '"  readonly> </td>' +
+        '</tr> ' +
+        '<tr> ' +
+            '<td></td> ' +
+            '<td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + tableIndex + '" id="homeuser-manageRTradeworker-locality-' + tableIndex + '" value="' + locality + '"  readonly> </td> ' +
+            '<td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-country-' + tableIndex + '" id="homeuser-manageRTradeworker-country-' + tableIndex + '" value="' + province + '"  readonly> </td> ' +
+        '</tr> ' +
+        '<tr> ' +
+            '<td class="label">Date initialised:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-dateInitialised-' + tableIndex + '" id="homeuser-manageRTradeworker-initialisedDate-' + tableIndex + '" value="' + dateInitialised + '"  readonly> </td> ' +
+            '<td class="label" colspan="1">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + tableIndex + '" id="homeuser-manageRTradeworker-commenceDate-' + tableIndex + '" value="' + commencementDate + '"  readonly> </td> ' +
+        '</tr> ' +
+        '<tr> ' +
+            '<td class="label">Job Description:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-WorkType-' + tableIndex + '" id="homeuser-manageRTradeworker-WorkType-' + tableIndex + '" value="' + jobType + '"  readonly> </td> ' +
+            '<td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-locality-' + tableIndex + '" id="homeuser-manageRTradeworker-jobDescription-' + tableIndex + '" value="' + jobDescription + '"  readonly> </td> ' +
+        '</tr> ' +
+        '<tr> ' +
+            '<td class="label">Workers Requested</td> <td colspan="1"> <input type="text" name="homeuser-manageRTradeworker-requestedWorkers-' + tableIndex + '" id="homeuser-manageRTradeworker-requestedWorkers-' + tableIndex + '" value="' + numWorkers + '"  readonly> </td>' +
+            '<td class="label">Workers Accepted</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-acceptedWorkers-' + tableIndex + '" id="homeuser-manageRTradeworker-acceptedWorkers-' + tableIndex + '" value="' + numWorkersAccepted + '"  readonly> </td>' +
+        '</tr> </table>' +
+        '<div class="row">' +
+        '<h3>Editable information</h3>' +
+        '<div class="column large-11 medium 11">' +
+        '<label>Required Commencement Date:</label><input type="date" name="homeuser-manageRTradeworker-commenceDate-edit-' + tableIndex + '" id="homeuser-manageRTradeworker-commenceDate-edit-' + tableIndex + '" class="REQ_VAL" value="' + commencementDate + '">' +
+        '<div class="additional-info top-padding" id="homeuser-manageRTradeworker-commenceDate-edit-' + tableIndex + '-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please select a date from the drop down</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="column large-11 medium 11">' +
+        '<label>Job Description:</label><input type="text" name="homeuser-manageRTradeworker-jobDescription-edit-' + tableIndex + '" id="homeuser-manageRTradeworker-jobDescription-edit-' + tableIndex + '" value="' + jobDescription + '" class="REQ_VAL">' +
+        '<div class="additional-info top-padding" id="homeuser-manageRTradeworker-jobDescription-edit-' + tableIndex + '-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please select a date from the drop down</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>';
+        //html += "The following should be true:" + homeuserJobRequestArray[0].hasOwnProperty("ContactNumber-0");
+        html += '<h3>Tradeworker information</h3><h5>Select Tradeworker to remove, or initiate job with</h5>';
+        var onceOff = true;
+        var acceptedUser = false;
+
+    for(var k = 0; k < numWorkers;k++){
+        if(homeuserJobRequestArray[tableIndex].hasOwnProperty("ContactNumber-" + k) && homeuserJobRequestArray[tableIndex].hasOwnProperty("HomeuserResponse-" + k) && homeuserJobRequestArray[tableIndex].hasOwnProperty("Name-" + k) && homeuserJobRequestArray[tableIndex].hasOwnProperty("Surname-" + k) && homeuserJobRequestArray[tableIndex].hasOwnProperty("Status-" + k)){
+            acceptedUser = true;
+            if(onceOff){
+                html +=  '<table><thead>' +
+                    '<tr>' +
+                    '<th>Name</th>' +
+                    '<th>Surname</th>' +
+                    '<th>Contact Details</th>' +
+                    '<th>Tradeworker Status</th>' +
+                    '<th>Status</th>' +
+                    '<th>Selected</th>' +
+                    '</tr></thead>';
+            }
+            var name = homeuserJobRequestArray[tableIndex]['Name-' + k];
+            var surname = homeuserJobRequestArray[tableIndex]['Surname-' + k];
+            var contactNumber = homeuserJobRequestArray[tableIndex]['ContactNumber-' + k];
+            var tradeworkerStatus = homeuserJobRequestArray[tableIndex]['Status-' + k];
+            var selected = homeuserJobRequestArray[tableIndex]['RequestedUser-'+k];
+            if(tradeworkerStatus == 1){
+                tradeworkerStatus = "Tradeworker accepted";
+            }
+            else if(tradeworkerStatus == 3){
+                tradeworkerStatus = "Tradeworker confirmed";
+            }
+            var homeuserStatus = homeuserJobRequestArray[tableIndex]['HomeuserResponse-' + k];
+            if(homeuserStatus == 1){
+                homeuserStatus = "You accepted";
+            }
+            html += '<tbody>' +
+                '<tr style="height: 3em">' +
+                '<td>' + name + '</td>' +
+                '<td>' + surname + '</td>' +
+                '<td>' + contactNumber + '</td>' +
+                '<td>' + tradeworkerStatus + '</td>' +
+                '<td>' + homeuserStatus + '</td>' +
+                '<td><div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="user-selected" id="requested-user-id" value="' + selected + '"></div></td>' +
+                '</tr>' +
+                '</tbody>';
+
+            if(onceOff) {
+                html += '</table>';
+                html += '<div class="row">' +
+                    '<div class="large-3 large-offset-3 medium-offset-3 medium-3 columns">' +
+                    '<button type="top-bar-button button" class="button warning" style="margin-top: 0.2em" onclick="editHomeuserJobRequestEntryInitiateJobWorker()">' +
+                    'Initiate Job' +
+                    '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+                    '</button>' +
+                    '</div>' +
+                    '<div class="large-3 large-offset-3 medium-offset-3 medium-3 columns">' +
+                    '<button type="top-bar-button button" class="button alert" style="margin-top: 0.2em" onclick="editHomeuserJobRequestEntryRemoveWorker()">' +
+                    'Remove' +
+                    '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>' +
+                    '</button>' +
+                    '</div>' +
+                    '</div>';
+                onceOff = false;
+            }
+        }
+    }
+
+    if(!acceptedUser){
+        html += '<h5>No tradeworkers have accepted the request yet</h5>';
+    }
+
+    $('#homeuser-manageRequest-modal').foundation('toggle');
+    document.getElementById("homeuser-manageRequest-modal-additionalInfo").innerHTML = html;
+}
+
+function editHomeuserJobRequestEntryRemoveWorker(){
+    console.log("Should be removing the tradeworker from the job request");
+}
+
+function editHomeuserJobRequestEntryInitiateJobWorker(){
+    console.log("Should be initiating job with the tradeworker selected:");
+}
 
 var homeuserJobRequestArray;
 function handleHomeuserFetchJobRequests(response){
@@ -738,23 +895,27 @@ function handleHomeuserFetchJobRequests(response){
         var dateInitialised;
         var commencementDate;
         var status;
+        var numWorkers;
+        var numWorkersAccepted;
         html += "<table>";
         console.log("FIlling job requests table " + homeuserJobRequestArray.length);
         for(var j = 0;j < homeuserJobRequestArray.length; j++){
             console.log("FIlling job requests table");
-         street = homeuserJobRequestArray[j]["Road"];
-         streetNumber = homeuserJobRequestArray[j]["StreetNumber"];
-         subLocality = homeuserJobRequestArray[j]["AreaName"];
-         locality = homeuserJobRequestArray[j]["City"];
-         province = homeuserJobRequestArray[j]["Province"];
-         tableIndex = homeuserJobRequestArray[j]["RequestID"];
-         jobDescription = homeuserJobRequestArray[j]["JobDescription"];
-         dateInitialised = homeuserJobRequestArray[j]["DateInitialised"];
-         commencementDate = homeuserJobRequestArray[j]["JobCommencementDate"];
-         status = homeuserJobRequestArray[j]["Accepted"];
-         jobType = homeuserJobRequestArray[j]["WorkType"];
+            street = homeuserJobRequestArray[j]["Road"];
+            streetNumber = homeuserJobRequestArray[j]["StreetNumber"];
+            subLocality = homeuserJobRequestArray[j]["AreaName"];
+            locality = homeuserJobRequestArray[j]["locationName"];
+            province = homeuserJobRequestArray[j]["Province"];
+            tableIndex = j;
+            jobDescription = homeuserJobRequestArray[j]["JobDescription"];
+            dateInitialised = homeuserJobRequestArray[j]["DateInitialised"];
+            commencementDate = homeuserJobRequestArray[j]["JobCommencementDate"];
+            status = homeuserJobRequestArray[j]["Accepted"];
+            jobType = homeuserJobRequestArray[j]["WorkType"];
+            numWorkers = homeuserJobRequestArray[j]["NumberOfWorkersRequested"];
+            numWorkersAccepted = homeuserJobRequestArray[j]["NumberOfWorkersAccepted"];
 
-            html += '<tr> <td class="label">Address</td> <td><input type="text" name="homeuser-manageRTradeworker-street_number-' + j + '" id="homeuser-manageRTradeworker-street_number-' + j + '" value="' + street + '"  readonly> </td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-route-' + j + '" id="homeuser-manageRTradeworker-route-' + j + '" value="' + streetNumber + '"  readonly> </td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-sublocality_level_1-' + j + '" id="homeuser-manageRTradeworker-sublocality_level_1-' + j + '" value="' + subLocality + '"  readonly> </td> </tr> <tr> <td></td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-locality-' + j + '" value="' + locality + '"  readonly> </td> <td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-country-' + j + '" id="homeuser-manageRTradeworker-country-' + j + '" value="' + province + '"  readonly> </td> </tr> <tr> <td class="label">Date initialised:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-initialisedDate-' + j + '" value="' + dateInitialised + '"  readonly> </td> <td class="label" colspan="1">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-commenceDate-' + j + '" value="' + commencementDate + '"  readonly> </td> </tr> <tr> <td class="label">Job Description:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-WorkType-' + j + '" id="homeuser-manageRTradeworker-WorkType-' + j + '" value="' + jobType + '"  readonly> </td> <td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-jobDescription-' + j + '" value="' + jobDescription + '"  readonly> </td> </tr> <tr> <td class="label">Status</td> <td colspan="4"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-locality-' + j + '" value="' + status + '"  readonly> </td> <td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests" id="homeuser-manageRTradeworker-requestID-' + j + '" value="' + tableIndex + '" readonly></div> </td> </tr> <tr style="height: 0.5em;background-color: #0a0a0a"> <td colspan="6"></td> </tr>';
+            html += '<tr> <td class="label">Address</td> <td><input type="text" name="homeuser-manageRTradeworker-street_number-' + j + '" id="homeuser-manageRTradeworker-street_number-' + j + '" value="' + streetNumber + '"  readonly> </td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-route-' + j + '" id="homeuser-manageRTradeworker-route-' + j + '" value="' + street + '"  readonly> </td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-sublocality_level_1-' + j + '" id="homeuser-manageRTradeworker-sublocality_level_1-' + j + '" value="' + subLocality + '"  readonly> </td> </tr> <tr> <td></td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-locality-' + j + '" value="' + locality + '"  readonly> </td> <td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-country-' + j + '" id="homeuser-manageRTradeworker-country-' + j + '" value="' + province + '"  readonly> </td> </tr> <tr> <td class="label">Date initialised:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-initialisedDate-' + j + '" value="' + dateInitialised + '"  readonly> </td> <td class="label" colspan="1">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-commenceDate-' + j + '" value="' + commencementDate + '"  readonly> </td> </tr> <tr> <td class="label">Job Description:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-WorkType-' + j + '" id="homeuser-manageRTradeworker-WorkType-' + j + '" value="' + jobType + '"  readonly> </td> <td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-jobDescription-' + j + '" value="' + jobDescription + '"  readonly> </td> </tr> <tr> <td class="label">Workers Requested</td> <td colspan="1"> <input type="text" name="homeuser-manageRTradeworker-requestedWorkers-' + j + '" id="homeuser-manageRTradeworker-requestedWorkers-' + j + '" value="' + numWorkers + '"  readonly> </td><td class="label">Workers Accepted</td> <td colspan="1"> <input type="text" name="homeuser-manageRTradeworker-acceptedWorkers-' + j + '" id="homeuser-manageRTradeworker-acceptedWorkers-' + j + '" value="' + numWorkersAccepted + '"  readonly> </td> <td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests" id="homeuser-manageRTradeworker-requestID-' + j + '" value="' + tableIndex + '" readonly></div> </td> </tr> <tr style="height: 0.5em;background-color: #0a0a0a"> <td colspan="6"></td> </tr>';
 
         }
         html += "</table>";

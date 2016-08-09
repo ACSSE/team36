@@ -158,10 +158,11 @@
         </div>
 
         <div class="row">
-            <div class="large-12 medium-12 columns">
-                <button type="submit" class="secondary button radius" id="register-button"
+            <div class="large-2 medium-2 large-offset-9 medium-offset-9 columns">
+                <button type="submit" class="warning button radius" id="register-button"
                         onclick="sendAJAXRequest('homeuser-rTradeworker',handlerTradeworkerResponse,'homeuser-rTradeworker-form');">
-                    Register
+                    Request Tradeworker(s)
+                    <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
                 </button>
                 <p>
                     <button data-open="exampleModal3" id="register-modal-button" hidden>Click me for a modal</button>
