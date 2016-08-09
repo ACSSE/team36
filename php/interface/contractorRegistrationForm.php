@@ -5,7 +5,7 @@
  * Date: 2016/06/30
  * Time: 3:21 PM
  */ ?>
-<!--TODO:Add identity number to registration-->
+<!--TODO:Add identity number to registration, currently the switch is not properly registered in php refer to tradeworker-main-page for working example-->
 <form id="register-contractor-form" name="register-contractor-form">
     <h1>Registration form: Contractor</h1>
     <h4>User Details:</h4>
@@ -98,10 +98,10 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>Are you currently available to be requested by users to do the specified work you have selected:</label>
+            <label>Are you currently available to be requested by users to do the specified work you have selected:</label>            
             <div class="switch large">
-                <input class="switch-input" id="availability-contractor" type="checkbox" name="ignore-availability-contractor" checked>
-                <label class="switch-paddle" for="availability-contractor">
+                <input class="switch-input" id="availability-contractor-registerpage" type="checkbox" name="ignore-availability-contractor-registerpage" checked>
+                <label class="switch-paddle" for="availability-contractor-registerpage">
                     <span class="show-for-sr">Availability</span>
                     <span class="switch-active" aria-hidden="true">Yes</span>
                     <span class="switch-inactive" aria-hidden="true">no</span>

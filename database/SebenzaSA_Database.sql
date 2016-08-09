@@ -13,7 +13,7 @@ CREATE TABLE `REGISTERED_USER` (
   `PersonalID` VARCHAR(15) not null UNIQUE,
 	`TypeOfUser` tinyint not null,
   `Password` varchar(255) not null,
-  `UserRecommendationRating` integer not null,
+  `UserRecommendationRating` integer not null DEFAULT 0,
   `Confirmation` TINYINT(1) NOT NULL DEFAULT 0,
   `ConfirmationDate` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
 	PRIMARY KEY (`UserID`)
@@ -22,7 +22,7 @@ CREATE TABLE `REGISTERED_USER` (
 DROP TABLE IF EXISTS `SPECIALIZATIONS`;
 CREATE TABLE `SPECIALIZATIONS` (
 	`workTypeID` integer not null auto_increment,
-  `WorkType` varchar(15) not null unique,
+  `WorkType` varchar(50) not null unique,
   `Description` varchar(150) not null,
 	PRIMARY KEY (`workTypeID`)
 );
@@ -159,6 +159,7 @@ CREATE TABLE `QUOTE_REQUEST` (
   `RequestID` integer not null auto_increment,
   `UserID` INTEGER not null,
   `NumberOfWorkersRequested` INTEGER,
+  `NumberOfWorkersAccepted` INTEGER DEFAULT 0,
   `workTypeID` integer not null,
   `JobDescription` varchar(150) not null,
   `Address` INTEGER not null,
@@ -176,6 +177,7 @@ CREATE TABLE `QUOTE` (
   `RequestID` INTEGER not null,
   `RequestedUser` INTEGER,
   `Status` INTEGER(1) not null DEFAULT 0,
+  `HomeuserResponse` INTEGER(1) not null DEFAULT 0,
   PRIMARY KEY (`QuoteID`),
   FOREIGN KEY (`RequestID`) REFERENCES QUOTE_REQUEST(`RequestID`),
   FOREIGN KEY (`RequestedUser`) REFERENCES REGISTERED_USER(`UserID`)

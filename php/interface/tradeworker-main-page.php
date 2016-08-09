@@ -27,12 +27,29 @@
                 </ul>
             </li>
         </ul>
+        <form id="tradeworker-quickbar-settings" name="tradeworker-quickbar-settings">
         <div class="row">
-            <div class="column medium-11 large-11">
-                <label>Availability:</label>
+            <div class="column medium-8 large-8 large-offset-4 medium-offset-4">
+                <label style="color: #ffae00">Availability:</label>
                 <div class="switch large">
-                    <input class="switch-input" id="availability-tradeworker-mainpage" type="checkbox" name="ignore-availability-tradeworker-mainpage" checked>
-                    <label class="switch-paddle">
+                    <?php
+                        $dbhandler = SebenzaServer::fetchDatabaseHandler();
+                        $command = "SELECT `Availability` FROM `TRADE_WORKER` WHERE `UserID` = ?";
+                        $session = SebenzaServer::fetchSessionHandler();
+                        $id = $session->getSessionVariable("UserID");
+
+                        $dbhandler->runCommand($command,$id);
+                        $result = $dbhandler->getResults();
+                        if(count($result) > 0){
+                            if($result[0]['Availability'] == true){
+                                echo '<input class="switch-input" id="availability-tradeworker-mainpage-switch" type="checkbox" name="ignore-availability-tradeworker-mainpage-switch" onclick="sendAJAXRequest(\'set-availability\',handleSetTradeworkerAvailability,\'tradeworker-quickbar-settings\')" checked>';
+                            }
+                            else{
+                                echo '<input class="switch-input" id="availability-tradeworker-mainpage-switch" type="checkbox" name="ignore-availability-tradeworker-mainpage-switch" onclick="sendAJAXRequest(\'set-availability\',handleSetTradeworkerAvailability,\'tradeworker-quickbar-settings\')">';
+                            }
+                        }
+                    ?>
+                    <label class="switch-paddle" for="availability-tradeworker-mainpage-switch">
                         <span class="show-for-sr">Availability</span>
                         <span class="switch-active" aria-hidden="true">Yes</span>
                         <span class="switch-inactive" aria-hidden="true">no</span>
@@ -40,7 +57,7 @@
                 </div>
             </div>
         </div>
-
+        </form>
     </div>
     <div class="small-9 columns full-height">
         <div class="full-height" style="max-height: 100%">
@@ -51,32 +68,32 @@
             </div>
             <div class="tabs-panel full-height user-panels" id="panel2v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-request-contractor.php";
+                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-request-contractor.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel3v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-requests.php";
+                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel4v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-requests.php";
+                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel5v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-requests.php";
+                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel6v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-requests.php";
+                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel7v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-requests.php";
+                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
         </div>
@@ -89,4 +106,20 @@
     <div id="jobDescript">
     </div>
 </div>
+<script>
+    tradeworkerRequestsNotifier();
+</script>
+<div class="reveal" id="tradeworker-homepage-notification-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+    <div id="tradeworker-homepage-notification-modal-additionalInfo">
 
+    </div>
+</div>
+
+<div class="reveal" id="tradeworker-homepage-notification-modal-response" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+    <div id="tradeworker-homepage-notification-modal-response-additionalInfo">
+
+    </div>
+    <button class="close-button" data-close aria-label="Close reveal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>

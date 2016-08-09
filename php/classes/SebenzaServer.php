@@ -862,7 +862,7 @@ class SebenzaServer {
                                         $amount = $dbhandler->getResults();
                                         $command = "UPDATE `TRADE_WORKER` SET `ActiveWorkRequests` = ? , `OverallWorkRequests` = ? WHERE `UserID` = ?";
                                         if ($dbhandler->runCommand($command,intval($amount[0]['ActiveWorkRequests'] + 1),intval($amount[0]['OverallWorkRequests'] + 1),$tradeworkerID[$r])) {
-                                            $result = $amount;
+                                            $result = true;
                                             //This should be counting array of the result of the dbHandler
                                         } else {
                                             $result = "Failed to increment tradeworker notifications";
@@ -912,7 +912,7 @@ class SebenzaServer {
 
     public static function fetchLocationDetails($locationID){
         $dbhandler = self::fetchDatabaseHandler();
-        $command = "SELECT `locationName`,`Province` FROM `LOCATIONS` WHERE `locationID` = ?";
+        $command = "SELECT `locationName`,`Province`,`City` FROM `LOCATIONS` WHERE `locationID` = ?";
         $dbhandler->runCommand($command,$locationID);
         $results = $dbhandler->getResults();
 
@@ -926,7 +926,7 @@ class SebenzaServer {
 
     public static function fetchTradeworkerJobRequests($userID){
         $dbhandler = self::fetchDatabaseHandler();
-        $command = "SELECT `QuoteID`,`RequestID`,`Status` FROM `QUOTE` WHERE `RequestedUser` = ?";
+        $command = "SELECT `QuoteID`,`RequestID`,`Status`,`HomeuserResponse` FROM `QUOTE` WHERE `RequestedUser` = ?";
         $dbhandler->runCommand($command,$userID);
         $result = $dbhandler->getResults();
         $returnValue = [];
@@ -944,12 +944,15 @@ class SebenzaServer {
                 $locationInfo = $dbhandler->getResults();
                 $returnValue[$r]["QuoteID"] = $result[$r]['QuoteID'];
                 $returnValue[$r]["Status"] = $result[$r]['Status'];
+                $returnValue[$r]["HomeuserResponse"] = $result[$r]['Status'];
                 $returnValue[$r]["JobDescription"] = $fullRequest[0]['JobDescription'];
                 $returnValue[$r]["JobCommencementDate"] = $fullRequest[0]['JobCommencementDate'];
                 $returnValue[$r]["AreaName"] = $areaInfo[0]['AreaName'];
                 $returnValue[$r]["locationName"] = $locationInfo[0]['locationName'];
                 $returnValue[$r]["Province"] = $locationInfo[0]['Province'];
+                $returnValue[$r]["City"] = $locationInfo[0]['City'];
                 $returnValue[$r]["WorkType"] = $workType[0]['WorkType'];
+                $returnValue[$r]["WorkTypeID"] = $fullRequest[0]['workTypeID'];
 //                array_push($returnValue,$result[$r]['QuoteID'],$result[$r]['Status'],$fullRequest[0]['AreaName'],$fullRequest[0]['JobDescription'],$fullRequest[0]['JobCommencementDate'],$areaInfo[0]['AreaName'],$locationInfo[0]['locationName'],$locationInfo[0]['Province'],$workType[0]['WorkType']);
 
             }
@@ -963,7 +966,7 @@ class SebenzaServer {
 
     public static function fetchHomeuserJobRequests($userID){
         $dbhandler = self::fetchDatabaseHandler();
-        $command = "SELECT `RequestID`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate` FROM `QUOTE_REQUEST` WHERE `UserID` = ?";
+        $command = "SELECT `RequestID`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate`,`NumberOfWorkersRequested`,`NumberOfWorkersAccepted` FROM `QUOTE_REQUEST` WHERE `UserID` = ?";
         $dbhandler->runCommand($command,$userID);
         $result = $dbhandler->getResults();
         $worktypes = self::returnWorkTypes();
@@ -973,19 +976,29 @@ class SebenzaServer {
         if(count($result) > 0 && count($worktypes) > 0) {
 
             for ($i = 0; $i < count($result); $i++) {
-                $found = false;
                 $areas = self::fetchAreasPerLocationDetails($result[$i]['Address']);
                 $locations = self::fetchLocationDetails($areas[0]['locationID']);
-                for($j = 0; $j < count($worktypes) && !$found;$j++){
-                    if($result[$i]['workTypeID'] == $worktypes[$j]['workTypeID']){
-                        $found = true;
-                        array_push($result[$i],$worktypes[$j]['WorkType'],$areas[0]['StreetNumber'],$areas[0]['Road'],$areas[0]['AreaName'],$locations[0]['locationName'],$locations[0]['Province']);
-                    }
-                }
+                $workType = self::returnWorkTypes($result[$i]['workTypeID']);
+
+                    $returnValue[$i]['RequestID'] = $result[$i]['RequestID'];
+                    $returnValue[$i]['workTypeID'] = $result[$i]['workTypeID'];
+                    $returnValue[$i]['NumberOfWorkersRequested'] = $result[$i]['NumberOfWorkersRequested'];
+                    $returnValue[$i]['NumberOfWorkersAccepted'] = $result[$i]['NumberOfWorkersAccepted'];
+                    $returnValue[$i]['WorkType'] = $workType[0]['WorkType'];
+                    $returnValue[$i]['JobDescription'] = $result[$i]['JobDescription'];
+                    $returnValue[$i]['Address'] = $result[$i]['Address'];
+                    $returnValue[$i]['DateInitialised'] = $result[$i]['DateInitialised'];
+                    $returnValue[$i]['JobCommencementDate'] = $result[$i]['JobCommencementDate'];
+                    $returnValue[$i]['StreetNumber'] = $areas[0]['StreetNumber'];
+                    $returnValue[$i]['Road'] = $areas[0]['Road'];
+                    $returnValue[$i]['AreaName'] = $areas[0]['AreaName'];
+                    $returnValue[$i]['locationName'] = $locations[0]['locationName'];
+                    $returnValue[$i]['Province'] = $locations[0]['Province'];
+
 
 
             }
-            return $result;
+            return $returnValue;
         }
         else
             return "It failed";
@@ -1000,6 +1013,120 @@ class SebenzaServer {
             return -1;
 
     }
+
+    public static function rejectRequest($requestID){
+        $userType = self::fetchUserType();
+        $dbhandler = self::fetchDatabaseHandler();
+        $sessionHandler = self::fetchSessionHandler();
+        $userID = $sessionHandler->getSessionVariable("UserID");
+        if($userType != null){
+            switch($userType){
+                case 0:
+                    $command = "UPDATE `QUOTE` SET `Status` = ? WHERE `QuoteID` = ? AND `RequestedUser` = ?";
+                    //Status = 2 means the request has been rejected
+                    if($dbhandler->runCommand($command,2,$requestID,$userID)){
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                    break;
+                case 1:
+                    return 'Dealing with contractor accept request';
+                    break;
+                case 2:
+                    $command = "UPDATE `QUOTE` SET `HomeuserResponse` = ? WHERE `QuoteID` = ?";
+                    //Status = 2 means the request has been rejected
+                    if($dbhandler->runCommand($command,2,$requestID)){
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                    break;
+                case 3:
+                    return 'Should be dealing with admin';
+                    break;
+                default:
+                    return 'unrecognized usertype';
+                    break;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
+    //$quoteID is the value of the QuoteID found under the QUOTE table, this will go about incrementing the accepted number
+    //of users by one
+    public static function incrementNumberOfWorkersAccepted($quoteID): boolean{
+        $returnValue = false;
+        if($quoteID != null){
+            $dbhandler = self::fetchDatabaseHandler();
+            $command = "SELECT `RequestID` FROM `QUOTE` WHERE `QuoteID` = ?";
+            $dbhandler->runCommand($command,$quoteID);
+            $id = $dbhandler->getResults();
+            if(count($id) > 0){
+                $command = "SELECT `NumberOfWorkersRequested` FROM `QUOTE_REQUEST` WHERE `RequestID` = ?";
+                $dbhandler->runCommand($command,$id[0]['RequestID']);
+                $amount = $dbhandler->getResults();
+                if(count($amount) > 0){
+                    $command = "UPDATE `QUOTE_REQUEST` SET `NumberOfWorkersRequested` = ? WHERE `RequestID` = ?";
+                    $returnValue = $dbhandler->runCommand($command,intval($amount[0]['NumberOfWorkersRequested']) + 1,$id[0]['RequestID']);
+                }
+            }
+
+
+        }
+        return $returnValue;
+    }
+
+    public static function acceptRequest($requestID){
+        $userType = self::fetchUserType();
+        $dbhandler = self::fetchDatabaseHandler();
+        $sessionHandler = self::fetchSessionHandler();
+        $userID = $sessionHandler->getSessionVariable("UserID");
+        if($userType != null){
+            switch($userType){
+                case 0:
+                    $command = "UPDATE `QUOTE` SET `Status` = ? WHERE `QuoteID` = ? AND `RequestedUser` = ?";
+                    //Status = 1 means the request has been accepted
+                    if($dbhandler->runCommand($command,1,$requestID,$userID)){
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                    break;
+                case 1:
+                    return 'Dealing with contractor accept request';
+                    break;
+                case 2:
+                    //Dealing with homeuser accept request
+                    $command = "UPDATE `QUOTE` SET `HomeuserResponse` = ? WHERE `QuoteID` = ?";
+                    //Status = 1 means the request has been accepted
+                    if($dbhandler->runCommand($command,1,$requestID)){
+                        //Consider incrementing number of workers accepted here or do it perhaps after a job has been initiated between yourself and the tradeworker
+//                        self::incrementNumberOfWorkersAccepted($requestID);
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                    break;
+                case 3:
+                    return 'Should be dealing with admin';
+                    break;
+                default:
+                    return 'unrecognized usertype';
+                    break;
+            }
+        }
+        else{
+            return false;
+        }
+    }
+
 
     public static function isUnique($value,$condition,$type){
         switch($type){
@@ -1033,6 +1160,172 @@ class SebenzaServer {
                 return false;
                 break;
         }
+
+    }
+
+    public static function tradeworkerFetchRequests(){
+        $userID = self::fetchUserID();
+        $dbhandler = self::fetchDatabaseHandler();
+        $returnValue = false;
+        $command = "SELECT `QuoteID`,`RequestID` FROM `QUOTE` WHERE `RequestedUser` = ? AND `HomeuserResponse` = ? AND `Status` = ?";
+        $dbhandler->runCommand($command,$userID,1,1);
+        $result = $dbhandler->getResults();
+        if(count($result) > 0){
+            //There will be notifications to send to the tradeworker where the user has confirmed his acceptance of the
+            //request - gather relevant information to send to be displayed as a modal notification
+            for($j = 0; $j < count($result); $j++){
+                $command = "SELECT `UserID`,`workTypeID`,`JobDescription`,`Address`,`JobCommencementDate` FROM `QUOTE_REQUEST` WHERE `RequestID` = ?";
+                $dbhandler->runCommand($command,$result[$j]['RequestID']);
+                $requestResults = $dbhandler->getResults();
+                $workType = self::returnWorkTypes($requestResults[0]['workTypeID']);
+                $command = "SELECT `StreetNumber`,`Road`,`AreaName`,`locationID` FROM `AREA_PER_LOCATION` WHERE `AreaID` = ?";
+                $dbhandler->runCommand($command,$requestResults[0]['Address']);
+                $areaResults = $dbhandler->getResults();
+                $command = "SELECT `locationName`,`City`,`Province` FROM `LOCATIONS` WHERE `locationID` = ?";
+                $dbhandler->runCommand($command,$areaResults[0]['locationID']);
+                $locationResults = $dbhandler->getResults();
+                $command = "SELECT `Name`,`Surname`,`ContactNumber` FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                $dbhandler->runCommand($command,$requestResults[0]['UserID']);
+                $userResults = $dbhandler->getResults();
+                //By rights all the values gathered above should exist if a quote existed in the first place
+                if(count($requestResults) > 0 && count($workType) > 0 && count($areaResults) > 0 && count($locationResults) > 0 && count($userResults) > 0) {
+                    $returnValue[$j]['QuoteID'] = $result[$j]['QuoteID'];
+                    $returnValue[$j]['JobDescription'] = $requestResults[0]['JobDescription'];
+                    $returnValue[$j]['JobCommencementDate'] = $requestResults[0]['JobCommencementDate'];
+                    $returnValue[$j]['workType'] = $workType[0]['WorkType'];
+                    $returnValue[$j]['StreetNumber'] = $areaResults[0]['StreetNumber'];
+                    $returnValue[$j]['Road'] = $areaResults[0]['Road'];
+                    $returnValue[$j]['AreaName'] = $areaResults[0]['AreaName'];
+                    $returnValue[$j]['locationName'] = $locationResults[0]['locationName'];
+                    $returnValue[$j]['City'] = $locationResults[0]['City'];
+                    $returnValue[$j]['Province'] = $locationResults[0]['Province'];
+                    $returnValue[$j]['Name'] = $userResults[0]['Name'];
+                    $returnValue[$j]['Surname'] = $userResults[0]['Surname'];
+                    $returnValue[$j]['ContactNumber'] = $userResults[0]['ContactNumber'];
+                }
+                else{
+                    //one of the requests did not complete successfully print out count to display which one if count is 0 request failed
+                    $returnValue = false;
+                }
+            }
+
+        }
+        else{
+            //This will occur when there are no notifications to be dealt with by the user immeadiately
+            $returnValue = "There were no results to return where the homeuser has confirmed a request that was accepted by the homeuser";
+        }
+        return $returnValue;
+    }
+
+    public static function homeuserFetchRequests(){
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "SELECT `RequestID`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate`,`NumberOfWorkersRequested`,`NumberOfWorkersAccepted` FROM `QUOTE_REQUEST` WHERE `UserID` = ?";
+        $sessionHandler = self::fetchSessionHandler();
+        $userID = $sessionHandler->getSessionVariable("UserID");
+        $dbhandler->runCommand($command,$userID);
+
+        $results = $dbhandler->getResults();
+        $returnValue = false;
+        $continue = false;
+        $counter = 0;
+        if(count($results) > 0){
+            $test = count($results);
+            for($j = 0;$j < count($results); $j++){
+                $command = "SELECT `StreetNumber`,`Road`,`AreaName`,`locationID` FROM `AREA_PER_LOCATION` WHERE `AreaID` = ?";
+                $dbhandler->runCommand($command,$results[$j]['Address']);
+                $areaResults = $dbhandler->getResults();
+                $command = "SELECT `locationName`,`City` FROM `LOCATIONS` WHERE `locationID` = ?";
+                $dbhandler->runCommand($command,$areaResults[0]['locationID']);
+                $locationResults = $dbhandler->getResults();
+                $workType = self::returnWorkTypes($results[$j]['workTypeID']);
+                $command = "SELECT `QuoteID`,`RequestedUser`,`Status` FROM `QUOTE` WHERE `RequestID` = ? AND `Status` = ?";
+                $test = $dbhandler->runCommand($command,$results[$j]['RequestID'],1);
+                $quotes = $dbhandler->getResults();
+
+                if(count($quotes) > 0){
+                    $continue = true;
+                    for($i = 0; $i < count($quotes); $i++) {
+                        $command = "SELECT `Name`,`Surname`,`ContactNumber` FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                        $dbhandler->runCommand($command, $quotes[$i]['RequestedUser']);
+                        $requestedUserDetails = $dbhandler->getResults();
+                        if(count($requestedUserDetails) > 0){
+                            $returnValue[$counter]['DateInitialised'] = $results[$j]['DateInitialised'];
+                            $returnValue[$counter]['JobCommencementDate'] = $results[$j]['JobCommencementDate'];
+                            $returnValue[$counter]['JobDescription'] = $results[$j]['JobDescription'];
+                            $returnValue[$counter]['WorkType'] = $workType[0]['WorkType'];
+                            $returnValue[$counter]['QuoteID'] = $quotes[$i]['QuoteID'];
+                            $returnValue[$counter]['Name'] = $requestedUserDetails[0]['Name'];
+                            $returnValue[$counter]['Surname'] = $requestedUserDetails[0]['Surname'];
+                            $returnValue[$counter]['ContactNumber'] = $requestedUserDetails[0]['ContactNumber'];
+                            $returnValue[$counter]['StreetNumber'] = $areaResults[0]['StreetNumber'];
+                            $returnValue[$counter]['Road'] = $areaResults[0]['Road'];
+                            $returnValue[$counter]['AreaName'] = $areaResults[0]['AreaName'];
+                            $returnValue[$counter]['locationName'] = $locationResults[0]['locationName'];
+                            $returnValue[$counter]['City'] = $locationResults[0]['City'];
+                            $counter++;
+                        }
+                        else{
+                            //This should not ever occur
+                        }
+
+                    }
+                }
+                else{
+                    //There where no quotes that were accepted for request i
+                }
+            }
+            //else handled by $continue, if $continue = false would mean that not one QuoteID with the required status was found for any of the requests
+
+        }
+        else{
+            $returnValue = false;
+        }
+
+        if(!$continue){
+            //There were no quotes that were accepted by any users for any of the requests
+            $returnValue = false;
+        }
+
+        return $returnValue;
+    }
+
+    public static function setUserAvailability($switchTo){
+        $sessionHandler = self::fetchSessionHandler();
+        $userID = $sessionHandler->getSessionVariable("UserID");
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "UPDATE `TRADE_WORKER` SET `Availability` = ? WHERE `UserID` = ?";
+        if($switchTo == "true"){
+            $dbHandler->runCommand($command,1,$userID);
+            return true;
+        }
+        else if ($switchTo == "false"){
+            $dbHandler->runCommand($command,0,$userID);
+            return false;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public static function setTradeworkerRequestConfirmation($quoteID){
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "UPDATE `QUOTE` SET `Status` = ? WHERE `QuoteID` = ?";
+        if($dbhandler->runCommand($command,3,$quoteID)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    public static function fetchUserID(){
+        $sessionHandler = self::fetchSessionHandler();
+        $userID = $sessionHandler->getSessionVariable("UserID");
+        $returnValue = null;
+        if($userID != null){
+            $returnValue = $userID;
+        }
+        return $returnValue;
 
     }
 }
@@ -1072,6 +1365,20 @@ if (!empty($_POST)) {
             case 'logout':
                 $response = json_encode(true);
                 SebenzaServer::logout();
+                break;
+            case 'set-availability':
+                $pass = SebenzaServer::serverSecurityCheck();
+                if($pass) {
+                    if (isset($_POST['availability-tradeworker-mainpage-switch'])) {
+                        $response = json_encode(SebenzaServer::setUserAvailability($_POST['availability-tradeworker-mainpage-switch']));
+                    }
+                    else{
+                        $response = json_encode(false);
+                    }
+                }
+                else{
+                    $response = json_encode(false);
+                }
                 break;
             case 'register-contractor':
                 //Ensure all skill are set
@@ -1216,6 +1523,47 @@ if (!empty($_POST)) {
                     $response = json_encode(false);
                 }
                 break;
+            case 'tradeworker-accept-request':
+                $continue = SebenzaServer::serverSecurityCheck();
+
+                if($continue){
+                    if(isset($_POST['ignore-tradeworker-selected-request-id'])) {
+                        $response = json_encode(SebenzaServer::acceptRequest($_POST['ignore-tradeworker-selected-request-id']));
+                    }
+                }
+                else{
+                    $response = json_encode(false);
+                }
+
+                break;
+            case 'tradeworker-requests-accepted-notifications':
+                $continue = SebenzaServer::serverSecurityCheck();
+                if($continue){
+                    $response = json_encode(SebenzaServer::tradeworkerFetchRequests());
+                }
+                else{
+                    $response = json_encode(false);
+                }
+                break;
+            case 'tradeworker-accept-confirmation':
+                $continue = SebenzaServer::serverSecurityCheck();
+                if(isset($_POST['ignore-tradeworker-request-notification-quoteID'])){
+                    $response = json_encode(SebenzaServer::setTradeworkerRequestConfirmation($_POST['ignore-tradeworker-request-notification-quoteID']));
+                }
+                else{
+                    $response = json_encode(false);
+                }
+                break;
+            case 'homeuser-requests-accepted-notifications':
+                $continue = SebenzaServer::serverSecurityCheck();
+                if($continue){
+                    $response = json_encode(SebenzaServer::homeuserFetchRequests());
+                }
+                else{
+                    $response = json_encode(false);
+                }
+
+                break;
             case 'fetch_work_types':
                 $response = json_encode(SebenzaServer::returnWorkTypes());
 //                $response = json_encode("This is a test");
@@ -1246,6 +1594,22 @@ if (!empty($_POST)) {
                 }
 
                 $response = json_encode($condition);
+                break;
+            case 'homeuser-accept-request':
+                if(isset($_POST['ignore-homeuser-request-notification-quoteID'])){
+                    $response = json_encode(SebenzaServer::acceptRequest($_POST['ignore-homeuser-request-notification-quoteID']));
+                }
+                else{
+                    $response = json_encode(false);
+                }
+                break;
+            case 'homeuser-deny-request':
+                if(isset($_POST['ignore-homeuser-request-notification-quoteID'])){
+                    $response = json_encode(SebenzaServer::rejectRequest($_POST['ignore-homeuser-request-notification-quoteID']));
+                }
+                else{
+                    $response = json_encode(false);
+                }
                 break;
             default:
                 //If the action was not one of the handled cases, respond appropriately

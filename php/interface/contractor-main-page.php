@@ -20,7 +20,7 @@
             </li>
             <li><a href="#">Team Management</a>
                 <ul class="menu vertical nested">
-                    <li><a onclick="toggleUserPageArea('panel5v')">Request Tradeworker</a></li>
+                    <li><a onclick="toggleUserPageArea('panel5v')">Request contractor</a></li>
                     <li><a onclick="toggleUserPageArea('panel5v')">Teams</a></li>
                 </ul>
             </li>
@@ -42,12 +42,13 @@
                 <a onclick="toggleUserPageArea('panel7v')">Create New Job</a>
             </li>
         </ul>
+
         <div class="row">
-            <div class="column medium-11 large-11">
+            <div class="column medium-8 large-8 large-offset-4 medium-offset-4">
                 <label>Availability:</label>
                 <div class="switch large">
                     <input class="switch-input" id="availability-contractor-mainpage" type="checkbox" name="ignore-availability-contractor-mainpage" checked>
-                    <label class="switch-paddle">
+                    <label class="switch-paddle" for="availability-contractor-mainpage">
                         <span class="show-for-sr">Availability</span>
                         <span class="switch-active" aria-hidden="true">Yes</span>
                         <span class="switch-inactive" aria-hidden="true">no</span>
@@ -55,13 +56,15 @@
                 </div>
             </div>
         </div>
+        
+        </div>
 
     </div>
     <div class="small-9 columns full-height">
         <div class="full-height" style="max-height: 100%">
             <div class="tabs-panel full-height user-panels" id="panel1v" style="display: block;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
+//                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/contractor-manage-requests.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel2v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">

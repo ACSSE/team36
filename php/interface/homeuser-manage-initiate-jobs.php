@@ -27,7 +27,7 @@
     </div>
     <div class="row">
         <div class="column large-11">
-            <div class=" full-width" id="homeuser-manageRTradeworker-areainformation" style="overflow-y: auto; height: 400px">
+            <div class=" full-width" id="homeuser-manageRTradeworker-areainformation" style="overflow-y: scroll; height: 400px">
 
             </div>
         </div>

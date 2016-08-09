@@ -2585,8 +2585,10 @@ select {
   white-space: nowrap;
   cursor: default;
   border-radius: 0;
-  background: #2199e8;
-  color: #fefefe; }
+  /*background: #2199e8;*/
+  /*color: #fefefe; }*/
+    background: #ffae00;
+    color: black; }
   .label.secondary {
     background: #777;
     color: #fefefe; }
@@ -3037,8 +3039,8 @@ body.is-reveal-open {
   display: none;
   z-index: 1006;
   padding: 1rem;
-  border: 1px solid #cacaca;
-  background-color: #fefefe;
+  border: 1px solid black;
+  background-color: rgba(247, 196, 85, 0.85);
   border-radius: 0;
   position: relative;
   top: 100px;
@@ -3121,7 +3123,8 @@ body.is-reveal-open {
   position: absolute; }
 
 .switch-paddle {
-  background: #cacaca;
+  /*background: #cacaca;*/
+    background: black;
   cursor: pointer;
   display: block;
   position: relative;
@@ -3129,12 +3132,13 @@ body.is-reveal-open {
   height: 2rem;
   transition: all 0.25s ease-out;
   border-radius: 0;
-  color: inherit;
+  /*color: inherit;*/
+    color: #cc8b00;
   font-weight: inherit; }
   input + .switch-paddle {
     margin: 0; }
   .switch-paddle::after {
-    background: #fefefe;
+    background: #cc8b00;
     content: '';
     display: block;
     position: absolute;
@@ -3147,9 +3151,11 @@ body.is-reveal-open {
             transform: translate3d(0, 0, 0);
     border-radius: 0; }
   input:checked ~ .switch-paddle {
-    background: #2199e8; }
+    background: #cc8b00;
+    color: black}
     input:checked ~ .switch-paddle::after {
-      left: 2.25rem; }
+      left: 2.25rem;
+    background: black;}
   [data-whatinput='mouse'] input:focus ~ .switch-paddle {
     outline: 0; }
 
@@ -3214,8 +3220,8 @@ table {
   table thead,
   table tbody,
   table tfoot {
-    border: 1px solid #f1f1f1;
-    background-color: #fefefe; }
+    border: 1px solid black;
+    background-color: rgb(247, 196, 85); }
   table caption {
     font-weight: bold;
     padding: 0.5rem 0.625rem 0.625rem; }
@@ -3234,7 +3240,7 @@ table {
       font-weight: bold;
       text-align: left; }
   table tbody tr:nth-child(even) {
-    background-color: #f1f1f1; }
+    background-color: rgba(20, 20, 20, 0.5); }
   table tbody th,
   table tbody td {
     padding: 0.5rem 0.625rem 0.625rem; }

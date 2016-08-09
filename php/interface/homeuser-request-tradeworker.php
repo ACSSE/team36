@@ -93,7 +93,7 @@
 <!-- TODO: customize tables to be themed according to the site using sass - watch: http://foundation.zurb.com/learn/install-foundation-6-sass-on-windows.html-->
                 <table id="homeuser-rTradeworker-address">
                     <tr>
-                        <td class="label"><label>Street address</label></td>
+                        <td class="label">Street address</td>
                         <td>
                             <input type="text" name="homeuser-rTradeworker-street_number" id="homeuser-rTradeworker-street_number" placeholder="50" class="REQ_VAL" readonly>
                         </td>
