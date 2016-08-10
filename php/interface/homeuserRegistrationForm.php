@@ -158,7 +158,7 @@
     <div class="row">
         <div class="large-12 medium-12 columns">
             <button type="submit" class="secondary button radius" id="register-button"
-                    onclick="sendAJAXRequest('register-homeuser',handleRegisterResponse,'register-homeuser-form');">
+                    onclick="sendAJAXRequest('register-homeuser',handleHomeUserRegisterResponse,'register-homeuser-form');">
                 Register
             </button>
             <p>
