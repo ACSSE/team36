@@ -12,37 +12,55 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
        SebenzaServer::redirect("/userPage.php");
     }
 ?>
-
     <div class="content-view">
-        <div class="row collapse background-image">
-            <div class="large-3 columns full-height">
-                <ul class="tabs vertical full-height" style="overflow: hidden" id="example-vert-tabs" data-tabs>
-                    <li class="tabs-title is-active"><a href="#panel1v">Register as Tradeworker</a></li>
-                    <li class="tabs-title"><a href="#panel2v">Register as Homeuser</a></li>
-                    <li class="tabs-title"><a href="#panel3v">Register as Contractor</a></li>
+        <div class="row collapse background-image" xmlns="http://www.w3.org/1999/html">
+            <div class="small-3 columns full-height" style="background-color: rgba(20, 20, 20, 0.9)">
+                <ul class="vertical menu" data-accordion-menu>
+                    <li>
+                        <a onclick="toggleUserPageArea('registrationPanel1v')">Register Tradeworker</a>
+                    </li>
+                    <li><a onclick="toggleUserPageArea('registrationPanel2v')">Register Contractor</a>
+                    </li>
+                    <li><a onclick="toggleUserPageArea('registrationPanel2v')">Register Homeuser</a>
+                    </li>
                 </ul>
+
             </div>
-            <div class="large-9 columns full-height">
-                <div class="tabs-content vertical full-height" data-tabs-content="example-vert-tabs">
-                    <div class="tabs-panel full-height is-active large-12" style="padding: 1em;overflow-y: auto; overflow-x: hidden" id="panel1v">
+            <div class="small-9 columns full-height">
+                <div class="full-height" style="max-height: 100%">
+                    <div class="tabs-panel full-height user-panels" id="registrationPanel1v" style="display: block;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                         <?php
                         include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworkerRegistrationForm.php";
                         ?>
                     </div>
-                    <div class="tabs-panel full-height" style="padding: 1em;overflow-y: auto; overflow-x: hidden" id="panel2v">
+                    <div class="tabs-panel full-height user-panels" id="registrationPanel2v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                         <?php
-                        include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuserRegistrationForm.php";
+                        include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/contractorRegistrationForm.php";
                         ?>
                     </div>
-                    <div class="tabs-panel full-height" style="padding: 1em;overflow-y: auto; overflow-x: hidden" id="panel3v">
+                    <div class="tabs-panel full-height user-panels" id="registrationPanel3v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                         <?php
-                            include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/contractorRegistrationForm.php";
+                        include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuserRegistrationForm.php";
                         ?>
                     </div>
                 </div>
             </div>
         </div>
 
+        <div class="reveal" id="registration-notification-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+            <div id="registration-notification-modal-additionalInfo">
+
+            </div>
+        </div>
+
+        <div class="reveal" id="registration-notification-modal-response" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+            <div id="registration-notification-modal-response-additionalInfo">
+
+            </div>
+            <button class="close-button" data-close aria-label="Close reveal" type="button">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
     </div>
 <?php
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/bottom-bar.php";
