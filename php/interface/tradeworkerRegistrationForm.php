@@ -177,7 +177,7 @@
     <div class="row">
         <div class="column large-11 medium 11">
             <div id="locationField">
-                <input name="ignore" id="autocomplete" placeholder="Enter your address"
+                <input name="tradeworker-ignore-autocomplete" id="tradeworker-autocomplete" placeholder="Enter your address"
                        onFocus="geolocate()" onclick="initAutocomplete()" type="text" autocomplete="off"/>
             </div>
         </div>
@@ -223,7 +223,7 @@
     <div class="row">
         <div class="large-12 medium-12 columns">
             <button type="submit" class="secondary button radius" id="register-button"
-                    onclick="sendAJAXRequest('register-tradeWorker',handleRegisterResponse,'register-tradeWorker-form');">
+                    onclick="sendAJAXRequest('register-tradeWorker',handleTradeworkerRegisterResponse ,'register-tradeWorker-form');">
                 Register
             </button>
             <p>

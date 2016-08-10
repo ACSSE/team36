@@ -7,6 +7,7 @@
  */?>
 <form id="register-homeuser-form">
     <h1>Registration form: Homeuser</h1>
+    <h4>User Details:</h4>
     <div class="row">
         <div class="column medium-11 large-11">
             <label>First Name(s):</label><input type="text" name="name-homeuser" id="name-homeuser" placeholder="Storme" class="REQ_VAL">
@@ -121,7 +122,7 @@
     <div class="row">
         <div class="column large-11 medium 11">
             <div id="locationField">
-                <input name="ignore" id="autocomplete" placeholder="Enter your address"
+                <input name="homeuser-ignore-autocomplete" id="homeuser-autocomplete" placeholder="Enter your address"
                        onFocus="geolocate()" onclick="initAutocomplete()" type="text" autocomplete="off"/>
             </div>
         </div>
@@ -129,7 +130,7 @@
 
     <div class="row">
         <div class="column large-11 medium 11">
-            <label>Area Name</label><input type="text" name="areaname-homeuser-0" id="areaname-homeuser-0" placeholder="Soweto" class="REQ_VAL" >
+            <label>Area Name</label><input type="text" name="areaname-homeuser-0" id="areaname-homeuser-0" placeholder="Soweto" class="REQ_VAL" readonly>
             <div class="additional-info top-padding" id="areaname-homeuser-0-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">An area found within the city E.g. Soweto</p>
             </div>
@@ -137,7 +138,7 @@
     </div>
     <div class="row">
         <div class="column large-11 medium 11">
-            <label>City Name</label><input type="text" name="cityname-homeuser-0" id="cityname-homeuser-0" placeholder="Johannesburg" class="REQ_VAL" >
+            <label>City Name</label><input type="text" name="cityname-homeuser-0" id="cityname-homeuser-0" placeholder="Johannesburg" class="REQ_VAL" readonly>
             <div class="additional-info top-padding" id="cityname-homeuser-0-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p>
             </div>
@@ -145,7 +146,7 @@
     </div>
     <div class="row">
         <div class="column large-11 medium 11">
-            <label>Province Name</label><input type="text" name="provincename-homeuser-0" id="provincename-homeuser-0" placeholder="Gauteng" class="REQ_VAL" >
+            <label>Province Name</label><input type="text" name="provincename-homeuser-0" id="provincename-homeuser-0" placeholder="Gauteng" class="REQ_VAL" readonly>
             <div class="additional-info top-padding" id="provincename-homeuser-0-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">A province within South Africa E.g. Gauteng</p>
             </div>
@@ -158,7 +159,7 @@
     <div class="row">
         <div class="large-12 medium-12 columns">
             <button type="submit" class="secondary button radius" id="register-button"
-                    onclick="sendAJAXRequest('register-homeuser',handleRegisterResponse,'register-homeuser-form');">
+                    onclick="sendAJAXRequest('register-homeuser',handleHomeUserRegisterResponse,'register-homeuser-form');">
                 Register
             </button>
             <p>

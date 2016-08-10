@@ -1,11 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Brandon Faul
- * Date: 2016/04/01
- * Time: 7:18 PM
- */?>
-
 <div class="row collapse background-image" xmlns="http://www.w3.org/1999/html">
     <div class="small-3 columns full-height" style="background-color: rgba(20, 20, 20, 0.9)">
         <ul class="vertical menu" data-accordion-menu>
@@ -20,7 +12,7 @@
             </li>
             <li><a href="#">Team Management</a>
                 <ul class="menu vertical nested">
-                    <li><a onclick="toggleUserPageArea('panel5v')">Request contractor</a></li>
+                    <li><a onclick="toggleUserPageArea('panel5v')">Request Trade Worker</a></li>
                     <li><a onclick="toggleUserPageArea('panel5v')">Teams</a></li>
                 </ul>
             </li>
@@ -59,7 +51,7 @@
         
         </div>
 
-    </div>
+
     <div class="small-9 columns full-height">
         <div class="full-height" style="max-height: 100%">
             <div class="tabs-panel full-height user-panels" id="panel1v" style="display: block;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
@@ -84,7 +76,7 @@
             </div>
             <div class="tabs-panel full-height user-panels" id="panel5v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-requests.php";
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/contractor-request-tradeworker.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel6v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
