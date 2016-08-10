@@ -18,8 +18,8 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/top-bar.php";
 
                         <div class="primary callout">
                             <p>
-                                We are all about making the process of finding jobs, creating job opportunity for those who are currenty unemployed or seekinng
-                                work. Our work is dedicated to Trade Workers, Home Users and Contractors. All of which can use our system and interact with any other user
+                                We are all about making the process of finding jobs and creating job opportunities for those who are currenty unemployed or seekinng
+                                work, a whole lot simpler! Our work is dedicated to Trade Workers, Home Users and Contractors. All of which can use our system and interact with any other user
                                 to get work or to get work done. We strive to provide a fair environment in which Trade Workers, Contractors and Homeusers can interact with one
                                 another to set up contracts, to complete these contracts and be reviewed by the users who create the contracts.
                             </p>
