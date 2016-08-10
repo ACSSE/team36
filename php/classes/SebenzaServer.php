@@ -585,7 +585,7 @@ class SebenzaServer {
     public static function mailClient($to,$key):bool{
         require $_SERVER['DOCUMENT_ROOT'] ."/php/externalClasses/PHPMailer-master/PHPMailer-master/PHPMailerAutoload.php";
         $mail = new PHPMailer;
-
+        //Remember to input your details here
         //$mail->SMTPDebug = 3;                               // Enable verbose debug output
         $link = "http://localhost:31335/index.php?email=".$to."&key=".$key;
         $title = "Sebenza South Africa";
@@ -924,10 +924,38 @@ class SebenzaServer {
         }
     }
 
+    public static function fetchUserDetails($userID){
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `REGISTERED_USER` WHERE `UserID` = ?";
+        $dbhandler->runCommand($command,$userID);
+        $results = $dbhandler->getResults();
+
+        if(count($results)> 0){
+            return $results;
+        }
+        else{
+            return null;
+        }
+    }
+
+    public static function fetchQuotes($requestID){
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "SELECT `QuoteID`,`RequestedUser`,`Status`,`HomeuserResponse` FROM `QUOTE` WHERE `RequestID` = ? AND `Status` != ? AND `Status` != ?";
+        $dbhandler->runCommand($command,$requestID,2,0);
+        $results = $dbhandler->getResults();
+
+        if(count($results)> 0){
+            return $results;
+        }
+        else{
+            return null;
+        }
+    }
+
     public static function fetchTradeworkerJobRequests($userID){
         $dbhandler = self::fetchDatabaseHandler();
-        $command = "SELECT `QuoteID`,`RequestID`,`Status`,`HomeuserResponse` FROM `QUOTE` WHERE `RequestedUser` = ?";
-        $dbhandler->runCommand($command,$userID);
+        $command = "SELECT `QuoteID`,`RequestID`,`Status`,`HomeuserResponse` FROM `QUOTE` WHERE `RequestedUser` = ? AND `Status` != ?";
+        $dbhandler->runCommand($command,$userID,2);
         $result = $dbhandler->getResults();
         $returnValue = [];
         if(count($result)){
@@ -939,12 +967,12 @@ class SebenzaServer {
                 $dbhandler->runCommand($command,$fullRequest[0]['Address']);
                 $areaInfo = $dbhandler->getResults();
                 $workType = self::returnWorkTypes($fullRequest[0]['workTypeID']);
-                $command = "SELECT `locationName`,`Province` FROM `LOCATIONS` WHERE `locationID` = ?";
+                $command = "SELECT `locationName`,`Province`,`City` FROM `LOCATIONS` WHERE `locationID` = ?";
                 $dbhandler->runCommand($command,$areaInfo[0]['locationID']);
                 $locationInfo = $dbhandler->getResults();
                 $returnValue[$r]["QuoteID"] = $result[$r]['QuoteID'];
                 $returnValue[$r]["Status"] = $result[$r]['Status'];
-                $returnValue[$r]["HomeuserResponse"] = $result[$r]['Status'];
+                $returnValue[$r]["HomeuserResponse"] = $result[$r]['HomeuserResponse'];
                 $returnValue[$r]["JobDescription"] = $fullRequest[0]['JobDescription'];
                 $returnValue[$r]["JobCommencementDate"] = $fullRequest[0]['JobCommencementDate'];
                 $returnValue[$r]["AreaName"] = $areaInfo[0]['AreaName'];
@@ -979,7 +1007,19 @@ class SebenzaServer {
                 $areas = self::fetchAreasPerLocationDetails($result[$i]['Address']);
                 $locations = self::fetchLocationDetails($areas[0]['locationID']);
                 $workType = self::returnWorkTypes($result[$i]['workTypeID']);
-
+                $quotes = self::fetchQuotes($result[$i]['RequestID']);
+                if(count($quotes) > 0){
+                    for($r =0; $r < count($quotes); $r++){
+                        $returnValue[$i]['QuoteID-'.$r] = $quotes[$r]['QuoteID'];
+                        $returnValue[$i]['RequestedUser-'.$r] = $quotes[$r]['RequestedUser'];
+                        $userInformation = self::fetchUserDetails($quotes[$r]['RequestedUser']);
+                        $returnValue[$i]['Name-'.$r] = $userInformation[0]['Name'];
+                        $returnValue[$i]['Surname-'.$r] = $userInformation[0]['Surname'];
+                        $returnValue[$i]['ContactNumber-'.$r] = $userInformation[0]['ContactNumber'];
+                        $returnValue[$i]['Status-'.$r] = $quotes[$r]['Status'];
+                        $returnValue[$i]['HomeuserResponse-'.$r] = $quotes[$r]['HomeuserResponse'];
+                    }
+                }
                     $returnValue[$i]['RequestID'] = $result[$i]['RequestID'];
                     $returnValue[$i]['workTypeID'] = $result[$i]['workTypeID'];
                     $returnValue[$i]['NumberOfWorkersRequested'] = $result[$i]['NumberOfWorkersRequested'];

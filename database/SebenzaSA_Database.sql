@@ -149,7 +149,7 @@ CREATE TABLE `JOB_PER_USER` (
   `JobProceedDate` date not null,
   `AgreedPrice` double not null,
   `EstimatedCompletionDate` date not null,
-  `Status` boolean not null,
+  `Status` integer(1) not null DEFAULT 0,
   PRIMARY KEY (`JobID`),
   FOREIGN KEY (`QuoteNumber`) REFERENCES QUOTE_PER_USER(`QuoteNumber`)
 );
@@ -165,6 +165,7 @@ CREATE TABLE `QUOTE_REQUEST` (
   `Address` INTEGER not null,
   `DateInitialised` TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
   `JobCommencementDate` date not null,
+  `Status` INTEGER(1) not null DEFAULT 0,
   PRIMARY KEY (`RequestID`),
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`),
   FOREIGN KEY (`workTypeID`) REFERENCES SPECIALIZATIONS(`workTypeID`),
