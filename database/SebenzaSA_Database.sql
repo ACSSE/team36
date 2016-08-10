@@ -142,18 +142,6 @@ CREATE TABLE `QUOTE_PER_USER` (
   FOREIGN KEY (`QuoteProducer`) REFERENCES REGISTERED_USER(`Username`)
 );
 
-DROP TABLE IF EXISTS `JOB_PER_USER`;
-CREATE TABLE `JOB_PER_USER` (
-  `JobID` integer not null auto_increment,
-  `QuoteNumber` integer not null unique,
-  `JobProceedDate` date not null,
-  `AgreedPrice` double not null,
-  `EstimatedCompletionDate` date not null,
-  `Status` integer(1) not null DEFAULT 0,
-  PRIMARY KEY (`JobID`),
-  FOREIGN KEY (`QuoteNumber`) REFERENCES QUOTE_PER_USER(`QuoteNumber`)
-);
-
 DROP TABLE IF EXISTS `QUOTE_REQUEST`;
 CREATE TABLE `QUOTE_REQUEST` (
   `RequestID` integer not null auto_increment,
@@ -182,6 +170,18 @@ CREATE TABLE `QUOTE` (
   PRIMARY KEY (`QuoteID`),
   FOREIGN KEY (`RequestID`) REFERENCES QUOTE_REQUEST(`RequestID`),
   FOREIGN KEY (`RequestedUser`) REFERENCES REGISTERED_USER(`UserID`)
+);
+
+DROP TABLE IF EXISTS `JOB_PER_USER`;
+CREATE TABLE `JOB_PER_USER` (
+  `JobID` integer not null auto_increment,
+  `QuoteID` integer not null unique,
+  `JobProceedDate` date not null,
+  `AgreedPrice` double not null,
+  `EstimatedCompletionDate` date not null,
+  `Status` integer(1) not null DEFAULT 0,
+  PRIMARY KEY (`JobID`),
+  FOREIGN KEY (`QuoteID`) REFERENCES QUOTE(`QuoteID`)
 );
 
 DROP TABLE IF EXISTS `BOOKMARKED`;

@@ -992,6 +992,22 @@ class SebenzaServer {
         return $returnValue;
     }
 
+    public static function fetchHomeuserInitiatedJobs($quoteID){
+
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `JOB_PER_USER` WHERE `QuoteID` = ?";
+        $dbhandler->runCommand($command,$quoteID);
+        $result = $dbhandler->getResults();
+        if(count($result) > 0){
+            $returnValue = $result;
+        }
+        else{
+            $returnValue = null;
+        }
+
+        return $returnValue;
+    }
+
     public static function fetchHomeuserJobRequests($userID){
         $dbhandler = self::fetchDatabaseHandler();
         $command = "SELECT `RequestID`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate`,`NumberOfWorkersRequested`,`NumberOfWorkersAccepted` FROM `QUOTE_REQUEST` WHERE `UserID` = ?";
@@ -1010,6 +1026,14 @@ class SebenzaServer {
                 $quotes = self::fetchQuotes($result[$i]['RequestID']);
                 if(count($quotes) > 0){
                     for($r =0; $r < count($quotes); $r++){
+                        $jobsInitiated = self::fetchHomeuserInitiatedJobs($quotes[$r]['QuoteID']);
+                        if($jobsInitiated != null){
+                            $returnValue[$i]['JobID-'.$r] = $jobsInitiated[0]['JobID'];
+                            $returnValue[$i]['JobProceedDate-'.$r] = $jobsInitiated[0]['JobProceedDate'];
+                            $returnValue[$i]['AgreedPrice-'.$r] = $jobsInitiated[0]['AgreedPrice'];
+                            $returnValue[$i]['EstimatedCompletionDate-'.$r] = $jobsInitiated[0]['EstimatedCompletionDate'];
+                            $returnValue[$i]['JobStatus-'.$r] = $jobsInitiated[0]['Status'];
+                        }
                         $returnValue[$i]['QuoteID-'.$r] = $quotes[$r]['QuoteID'];
                         $returnValue[$i]['RequestedUser-'.$r] = $quotes[$r]['RequestedUser'];
                         $userInformation = self::fetchUserDetails($quotes[$r]['RequestedUser']);
@@ -1059,7 +1083,7 @@ class SebenzaServer {
         $dbhandler = self::fetchDatabaseHandler();
         $sessionHandler = self::fetchSessionHandler();
         $userID = $sessionHandler->getSessionVariable("UserID");
-        if($userType != null){
+        if($userType != -1){
             switch($userType){
                 case 0:
                     $command = "UPDATE `QUOTE` SET `Status` = ? WHERE `QuoteID` = ? AND `RequestedUser` = ?";
@@ -1126,7 +1150,7 @@ class SebenzaServer {
         $dbhandler = self::fetchDatabaseHandler();
         $sessionHandler = self::fetchSessionHandler();
         $userID = $sessionHandler->getSessionVariable("UserID");
-        if($userType != null){
+        if($userType != -1){
             switch($userType){
                 case 0:
                     $command = "UPDATE `QUOTE` SET `Status` = ? WHERE `QuoteID` = ? AND `RequestedUser` = ?";
@@ -1163,7 +1187,7 @@ class SebenzaServer {
             }
         }
         else{
-            return false;
+            return "This should have worked ".$userType;
         }
     }
 
@@ -1278,8 +1302,8 @@ class SebenzaServer {
                 $dbhandler->runCommand($command,$areaResults[0]['locationID']);
                 $locationResults = $dbhandler->getResults();
                 $workType = self::returnWorkTypes($results[$j]['workTypeID']);
-                $command = "SELECT `QuoteID`,`RequestedUser`,`Status` FROM `QUOTE` WHERE `RequestID` = ? AND `Status` = ?";
-                $test = $dbhandler->runCommand($command,$results[$j]['RequestID'],1);
+                $command = "SELECT `QuoteID`,`RequestedUser`,`Status` FROM `QUOTE` WHERE `RequestID` = ? AND `Status` = ? AND `HomeuserResponse` = ?";
+                $test = $dbhandler->runCommand($command,$results[$j]['RequestID'],1,0);
                 $quotes = $dbhandler->getResults();
 
                 if(count($quotes) > 0){
@@ -1326,6 +1350,27 @@ class SebenzaServer {
             $returnValue = false;
         }
 
+        return $returnValue;
+    }
+
+    public static function homeuserInitiateJob($commencementDate,$numDays,$expectedPayment,$quoteID){
+        $dbhandler = self::fetchDatabaseHandler();
+        $estimimatedDate = date('Y-m-d',strtotime($commencementDate .' + '.$numDays.' days'));
+        $returnValue = false;
+
+        $command = "INSERT INTO `JOB_PER_USER` (`JobProceedDate`,`EstimatedCompletionDate`,`AgreedPrice`,`QuoteID`) VALUES (?,?,?,?)";
+
+        if($dbhandler->runCommand($command,$commencementDate,$estimimatedDate,$expectedPayment,$quoteID)){
+            $command = "UPDATE `QUOTE` SET `HomeuserResponse` = ? WHERE `QuoteID` = ?";
+            if($dbhandler->runCommand($command,3,$quoteID)){
+                $returnValue = true;
+            }
+            else
+                $returnValue = false;
+        }
+        else{
+            $returnValue = false;
+        }
         return $returnValue;
     }
 
@@ -1538,6 +1583,7 @@ if (!empty($_POST)) {
                     $result = SebenzaServer::fetchUserType();
                     //Due to information being sent back being different for all the users switch case to check the type of user before calling the function
                     $response = json_encode($result);
+                    if($result != -1)
                     switch ($result){
                         case "1":
                             //Contractor
@@ -1562,6 +1608,22 @@ if (!empty($_POST)) {
                 else{
                     $response = json_encode(false);
                 }
+                break;
+            case 'homeuser-initiateJob-request':
+                $continue = SebenzaServer::serverSecurityCheck();
+                if($continue){
+                   if(isset($_POST['homeuser-initiateJob-commenceDate']) && isset($_POST['homeuser-initiateJob-numberDays']) && isset($_POST['homeuser-initiateJob-expectedPayment']) && isset($_POST['ignore-homeuser-initiateJob-quoteID'])){
+                       $response = json_encode(SebenzaServer::homeuserInitiateJob($_POST['homeuser-initiateJob-commenceDate'],$_POST['homeuser-initiateJob-numberDays'],$_POST['homeuser-initiateJob-expectedPayment'],$_POST['ignore-homeuser-initiateJob-quoteID']));
+                   }
+                    else{
+                        $response = json_encode(false);
+                    }
+
+                }
+                else{
+                    $response = json_encode(false);
+                }
+
                 break;
             case 'tradeworker-accept-request':
                 $continue = SebenzaServer::serverSecurityCheck();

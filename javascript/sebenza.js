@@ -778,7 +778,12 @@ function homeuserManageRequestModal(tableIndex){
             '<td class="label">Workers Requested</td> <td colspan="1"> <input type="text" name="homeuser-manageRTradeworker-requestedWorkers-' + tableIndex + '" id="homeuser-manageRTradeworker-requestedWorkers-' + tableIndex + '" value="' + numWorkers + '"  readonly> </td>' +
             '<td class="label">Workers Accepted</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-acceptedWorkers-' + tableIndex + '" id="homeuser-manageRTradeworker-acceptedWorkers-' + tableIndex + '" value="' + numWorkersAccepted + '"  readonly> </td>' +
         '</tr> </table>' +
+        '<form id="homeuser-manage-specificRequest-editableInformation-form" name="homeuser-manage-specificRequest-editableInformation-form">' +
         '<div class="row">' +
+            //TODO: make elements toggleable so that additional information can be displayed upon submission of form
+            //new Foundation.Toggler($("#homeuser-initiateJob-commenceDate-info"),'data-animate="fade-in fade-out"');
+        //new Foundation.Toggler($("#homeuser-initiateJob-numberDays-info"),'data-animate="fade-in fade-out"');
+        //    Remember to do this after it has been done to the html page else it will not work
         '<h3>Editable information</h3>' +
         '<div class="column large-11 medium 11">' +
         '<label>Required Commencement Date:</label><input type="date" name="homeuser-manageRTradeworker-commenceDate-edit-' + tableIndex + '" id="homeuser-manageRTradeworker-commenceDate-edit-' + tableIndex + '" class="REQ_VAL" value="' + commencementDate + '">' +
@@ -791,10 +796,11 @@ function homeuserManageRequestModal(tableIndex){
         '<div class="column large-11 medium 11">' +
         '<label>Job Description:</label><input type="text" name="homeuser-manageRTradeworker-jobDescription-edit-' + tableIndex + '" id="homeuser-manageRTradeworker-jobDescription-edit-' + tableIndex + '" value="' + jobDescription + '" class="REQ_VAL">' +
         '<div class="additional-info top-padding" id="homeuser-manageRTradeworker-jobDescription-edit-' + tableIndex + '-info" data-toggler data-animate="fade-in fade-out">' +
-        '<p class="help-text no-margins">Please select a date from the drop down</p>' +
+        '<p class="help-text no-margins">Please fill in a short description of the job</p>' +
         '</div>' +
         '</div>' +
-        '</div>';
+        '</div>' +
+        '</form>';
         //html += "The following should be true:" + homeuserJobRequestArray[0].hasOwnProperty("ContactNumber-0");
         html += '<h3>Tradeworker information</h3><h5>Select Tradeworker to remove, or initiate job with</h5>';
         var onceOff = true;
@@ -803,8 +809,8 @@ function homeuserManageRequestModal(tableIndex){
     for(var k = 0; k < numWorkers;k++){
         if(homeuserJobRequestArray[tableIndex].hasOwnProperty("ContactNumber-" + k) && homeuserJobRequestArray[tableIndex].hasOwnProperty("HomeuserResponse-" + k) && homeuserJobRequestArray[tableIndex].hasOwnProperty("Name-" + k) && homeuserJobRequestArray[tableIndex].hasOwnProperty("Surname-" + k) && homeuserJobRequestArray[tableIndex].hasOwnProperty("Status-" + k)){
             acceptedUser = true;
-            if(onceOff){
-                html +=  '<table><thead>' +
+            if(k == 0){
+                html +=  '<form id="homeuser-initiateJob-selection" name="homeuser-initiateJob-selection" ><table><thead>' +
                     '<tr>' +
                     '<th>Name</th>' +
                     '<th>Surname</th>' +
@@ -812,13 +818,13 @@ function homeuserManageRequestModal(tableIndex){
                     '<th>Tradeworker Status</th>' +
                     '<th>Status</th>' +
                     '<th>Selected</th>' +
-                    '</tr></thead>';
+                    '</tr></thead><tbody>';
             }
             var name = homeuserJobRequestArray[tableIndex]['Name-' + k];
             var surname = homeuserJobRequestArray[tableIndex]['Surname-' + k];
             var contactNumber = homeuserJobRequestArray[tableIndex]['ContactNumber-' + k];
             var tradeworkerStatus = homeuserJobRequestArray[tableIndex]['Status-' + k];
-            var selected = homeuserJobRequestArray[tableIndex]['RequestedUser-'+k];
+            var selected = homeuserJobRequestArray[tableIndex]['QuoteID-' + k];
             if(tradeworkerStatus == 1){
                 tradeworkerStatus = "Tradeworker accepted";
             }
@@ -829,19 +835,22 @@ function homeuserManageRequestModal(tableIndex){
             if(homeuserStatus == 1){
                 homeuserStatus = "You accepted";
             }
-            html += '<tbody>' +
+            html += '' +
                 '<tr style="height: 3em">' +
                 '<td>' + name + '</td>' +
                 '<td>' + surname + '</td>' +
                 '<td>' + contactNumber + '</td>' +
                 '<td>' + tradeworkerStatus + '</td>' +
                 '<td>' + homeuserStatus + '</td>' +
-                '<td><div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="user-selected" id="requested-user-id" value="' + selected + '"></div></td>' +
+                '<td><div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="user-initiateJob-selected" id="requested-user-id" value="' + selected + '"></div></td>' +
                 '</tr>' +
-                '</tbody>';
+                '';
 
-            if(onceOff) {
-                html += '</table>';
+            if(k == numWorkers - 1) {
+                html += '</tbody></table></form>' +
+                    '<form id="homeuser-manage-specificRequest-ID-form" name="homeuser-manage-specificRequest-ID-form">' +
+                    '<input type="hidden" id="homeuser-manage-specificRequest-ID" name="homeuser-manage-specificRequest-ID" value="-50">' +
+                    '</form>';
                 html += '<div class="row">' +
                     '<div class="large-3 large-offset-3 medium-offset-3 medium-3 columns">' +
                     '<button type="top-bar-button button" class="button warning" style="margin-top: 0.2em" onclick="editHomeuserJobRequestEntryInitiateJobWorker()">' +
@@ -856,7 +865,6 @@ function homeuserManageRequestModal(tableIndex){
                     '</button>' +
                     '</div>' +
                     '</div>';
-                onceOff = false;
             }
         }
     }
@@ -875,6 +883,74 @@ function editHomeuserJobRequestEntryRemoveWorker(){
 
 function editHomeuserJobRequestEntryInitiateJobWorker(){
     console.log("Should be initiating job with the tradeworker selected:");
+    var input = $("form input[name=user-initiateJob-selected]:radio");
+    console.log("test" + input.length);
+    if(input.length > 0)
+        for(var i = 0 ; i < input.length ; i++){
+            //console.log("should be printing :" + input[i].checked);
+            if(input[i].checked){
+                //console.log('The following request was selected: ' + i);
+                //console.log(input[i]);
+                document.getElementById("homeuser-manage-specificRequest-ID").value = input[i].value;
+                var value = input[i].value;
+
+                homeuserInitiateJob(value);
+                //homeuserManageRequestModal(input[i].value);
+                //sendAJAXRequest('tradeworker-accept-request',handleTradeworkerAcceptRequest,'tradeworker-selected-request');
+            }
+        }
+}
+
+function homeuserInitiateJob(quoteID){
+    //console.log("The following is requestID :" + requestID + " the requested user id is: " + requestedUserID);
+    var html = "<h3>Initiate job extra details:</h3><h5>Please ensure the following details have been discussed with the requested user before filling in:</h5>";
+    html += '<form id="homeuser-initiateJob-form" name="homeuser-initiateJob-form">' +
+        '<div class="row">' +
+        '<div class="column large-11 medium 11">' +
+        '<label>Date to start job:</label><input type="date" name="homeuser-initiateJob-commenceDate" id="homeuser-initiateJob-commenceDate" class="REQ_VAL">' +
+        '<div class="additional-info top-padding" id="homeuser-initiateJob-commenceDate-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please select a date from the drop down</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="column large-11 medium 11">' +
+        '<label>Estimated days before completion:</label><input type="number" step="1" name="homeuser-initiateJob-numberDays" id="homeuser-initiateJob-numberDays" class="REQ_VAL">' +
+        '<div class="additional-info top-padding" id="homeuser-initiateJob-numberDays-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please enter a positive number 7</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="column large-11 medium 11">' +
+        '<label>Agreed upon price:</label><input type="number" step="0.01" min="0" name="homeuser-initiateJob-expectedPayment" id="homeuser-initiateJob-expectedPayment" class="REQ_VAL">' +
+        '<div class="additional-info top-padding" id="homeuser-initiateJob-expectedPayment-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please enter a valid positive number 450.00</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<input type="hidden" value="' + quoteID + '" id="homeuser-initiateJob-quoteID" name="ignore-homeuser-initiateJob-quoteID">' +
+        '</form>';
+
+    html += '<div class="row">' +
+        '<div class="large-3 large-offset-8 medium-offset-8 medium-3 columns">' +
+        '<button type="top-bar-button button" class="button warning" style="margin-top: 0.2em" onclick="sendAJAXRequest(\'homeuser-initiateJob-request\',handleHomeuserInitiateJobResponse,\'homeuser-initiateJob-form\')">' +
+        'Initiate Job' +
+        '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+        '</button>' +
+        '</div>' +
+        '</div>';
+    //TODO: make elements toggleable so that additional information can be displayed
+    $('#homeuser-manageRequest-modal-response').foundation('toggle');
+    document.getElementById("homeuser-manageRequest-modal-response-additionalInfo").innerHTML = html;
+    new Foundation.Toggler($("#homeuser-initiateJob-commenceDate-info"),'data-animate="fade-in fade-out"');
+    new Foundation.Toggler($("#homeuser-initiateJob-numberDays-info"),'data-animate="fade-in fade-out"');
+    new Foundation.Toggler($("#homeuser-initiateJob-expectedPayment-info"),'data-animate="fade-in fade-out"');
+}
+
+function handleHomeuserInitiateJobResponse(response){
+    var result = JSON.parse(response);
+    console.log(result);
 }
 
 var homeuserJobRequestArray;
@@ -882,44 +958,11 @@ function handleHomeuserFetchJobRequests(response){
     homeuserJobRequestArray = JSON.parse(response);
     //console.log("It got here:" + response);
     if(typeof homeuserJobRequestArray == 'object'){
+        //One needs to display all relevant information that one can off of a single request
         console.log(homeuserJobRequestArray);
-        var html = "";
-        var street;
-        var streetNumber;
-        var subLocality;
-        var locality;
-        var province;
-        var tableIndex;
-        var jobDescription;
-        var jobType;
-        var dateInitialised;
-        var commencementDate;
-        var status;
-        var numWorkers;
-        var numWorkersAccepted;
-        html += "<table>";
-        console.log("FIlling job requests table " + homeuserJobRequestArray.length);
-        for(var j = 0;j < homeuserJobRequestArray.length; j++){
-            console.log("FIlling job requests table");
-            street = homeuserJobRequestArray[j]["Road"];
-            streetNumber = homeuserJobRequestArray[j]["StreetNumber"];
-            subLocality = homeuserJobRequestArray[j]["AreaName"];
-            locality = homeuserJobRequestArray[j]["locationName"];
-            province = homeuserJobRequestArray[j]["Province"];
-            tableIndex = j;
-            jobDescription = homeuserJobRequestArray[j]["JobDescription"];
-            dateInitialised = homeuserJobRequestArray[j]["DateInitialised"];
-            commencementDate = homeuserJobRequestArray[j]["JobCommencementDate"];
-            status = homeuserJobRequestArray[j]["Accepted"];
-            jobType = homeuserJobRequestArray[j]["WorkType"];
-            numWorkers = homeuserJobRequestArray[j]["NumberOfWorkersRequested"];
-            numWorkersAccepted = homeuserJobRequestArray[j]["NumberOfWorkersAccepted"];
-
-            html += '<tr> <td class="label">Address</td> <td><input type="text" name="homeuser-manageRTradeworker-street_number-' + j + '" id="homeuser-manageRTradeworker-street_number-' + j + '" value="' + streetNumber + '"  readonly> </td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-route-' + j + '" id="homeuser-manageRTradeworker-route-' + j + '" value="' + street + '"  readonly> </td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-sublocality_level_1-' + j + '" id="homeuser-manageRTradeworker-sublocality_level_1-' + j + '" value="' + subLocality + '"  readonly> </td> </tr> <tr> <td></td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-locality-' + j + '" value="' + locality + '"  readonly> </td> <td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-country-' + j + '" id="homeuser-manageRTradeworker-country-' + j + '" value="' + province + '"  readonly> </td> </tr> <tr> <td class="label">Date initialised:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-initialisedDate-' + j + '" value="' + dateInitialised + '"  readonly> </td> <td class="label" colspan="1">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-commenceDate-' + j + '" value="' + commencementDate + '"  readonly> </td> </tr> <tr> <td class="label">Job Description:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-WorkType-' + j + '" id="homeuser-manageRTradeworker-WorkType-' + j + '" value="' + jobType + '"  readonly> </td> <td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-jobDescription-' + j + '" value="' + jobDescription + '"  readonly> </td> </tr> <tr> <td class="label">Workers Requested</td> <td colspan="1"> <input type="text" name="homeuser-manageRTradeworker-requestedWorkers-' + j + '" id="homeuser-manageRTradeworker-requestedWorkers-' + j + '" value="' + numWorkers + '"  readonly> </td><td class="label">Workers Accepted</td> <td colspan="1"> <input type="text" name="homeuser-manageRTradeworker-acceptedWorkers-' + j + '" id="homeuser-manageRTradeworker-acceptedWorkers-' + j + '" value="' + numWorkersAccepted + '"  readonly> </td> <td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests" id="homeuser-manageRTradeworker-requestID-' + j + '" value="' + tableIndex + '" readonly></div> </td> </tr> <tr style="height: 0.5em;background-color: #0a0a0a"> <td colspan="6"></td> </tr>';
-
-        }
-        html += "</table>";
-        document.getElementById("homeuser-manageRTradeworker-areainformation").innerHTML = html;
+        homeuserDisplayJobsToInitiate();
+        homeuserDisplayRequests();
+        homeuserDisplayOngoingJobs();
 
     }
     else if(typeof homeuserJobRequestArray == 'boolean'){
@@ -932,6 +975,170 @@ function handleHomeuserFetchJobRequests(response){
     else{
         console.log("Response not recognized" + typeof homeuserJobRequestArray + " value: " + homeuserJobRequestArray);
     }
+}
+
+function homeuserDisplayOngoingJobs(){
+    var result = false;
+    if(homeuserJobRequestArray.length > 0){
+        var html = '';
+
+        for(var j = 0;j < homeuserJobRequestArray.length;j++) {
+            for (var i = 0; i < homeuserJobRequestArray[0]['NumberOfWorkersRequested']; i++) {
+                if(homeuserJobRequestArray[j].hasOwnProperty('QuoteID-' + i) && homeuserJobRequestArray[j].hasOwnProperty('JobID-' + i)){
+                    result = true;
+                    if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 0){
+                        var jobProceedDate = homeuserJobRequestArray[j]['JobProceedDate-' + i];
+                        var agreedPrice = homeuserJobRequestArray[j]['AgreedPrice-' + i];
+                        var estimatedCompletionDate = homeuserJobRequestArray[j]['EstimatedCompletionDate-' + i];
+                        var status = homeuserJobRequestArray[j]['JobStatus-' + i];
+                        var workType = homeuserJobRequestArray[j]['WorkType'];
+                        var tableIndex = j;
+                        //This will be a button that toggles the request information so that the user can see details
+                        //var requestDetails;
+                        if(j == 0){
+                            html +=  '<table><thead>' +
+                                '<tr>' +
+                                '<th>Job Start Date</th>' +
+                                '<th>Agreed Price</th>' +
+                                '<th>Estimated Complete Date</th>' +
+                                '<th>Work Type</th>' +
+                                '<th>Status</th>' +
+                                '<th>Selected</th>' +
+                                '</tr></thead><tbody>';
+                        }
+
+                        html += '' +
+                            '<tr style="height: 3em">' +
+                            '<td>' + jobProceedDate + '</td>' +
+                            '<td>' + agreedPrice + '</td>' +
+                            '<td>' + estimatedCompletionDate + '</td>' +
+                            '<td>' + workType + '</td>' +
+                            '<td>' + status + '</td>' +
+                            '<td><div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="job-initiate-selected" id="requested-user-id" value="' + tableIndex + '"></div></td>' +
+                            '</tr>' +
+                            '';
+
+                        if(j == homeuserJobRequestArray.length - 1){
+                            html +='</tbody></table>';
+
+                        }
+                    }
+                }
+            }
+        }
+        document.getElementById('homeuser-ongoingJobs-areainformation').innerHTML = html;
+    }
+    if(!result){
+
+        document.getElementById('homeuser-ongoingJobs-areainformation').innerHTML = "<h3>There are no ongoing jobs to display</h3>";
+    }
+}
+
+function homeuserDisplayRequests(){
+    var html = "";
+    var street;
+    var streetNumber;
+    var subLocality;
+    var locality;
+    var province;
+    var tableIndex;
+    var jobDescription;
+    var jobType;
+    var dateInitialised;
+    var commencementDate;
+    var status;
+    var numWorkers;
+    var numWorkersAccepted;
+    html += "<table>";
+    console.log("FIlling job requests table " + homeuserJobRequestArray.length);
+    for(var j = 0;j < homeuserJobRequestArray.length; j++){
+        console.log("FIlling job requests table");
+        street = homeuserJobRequestArray[j]["Road"];
+        streetNumber = homeuserJobRequestArray[j]["StreetNumber"];
+        subLocality = homeuserJobRequestArray[j]["AreaName"];
+        locality = homeuserJobRequestArray[j]["locationName"];
+        province = homeuserJobRequestArray[j]["Province"];
+        tableIndex = j;
+        jobDescription = homeuserJobRequestArray[j]["JobDescription"];
+        dateInitialised = homeuserJobRequestArray[j]["DateInitialised"];
+        commencementDate = homeuserJobRequestArray[j]["JobCommencementDate"];
+        status = homeuserJobRequestArray[j]["Accepted"];
+        jobType = homeuserJobRequestArray[j]["WorkType"];
+        numWorkers = homeuserJobRequestArray[j]["NumberOfWorkersRequested"];
+        numWorkersAccepted = homeuserJobRequestArray[j]["NumberOfWorkersAccepted"];
+
+        html += '<tr> <td class="label">Address</td> <td><input type="text" name="homeuser-manageRTradeworker-street_number-' + j + '" id="homeuser-manageRTradeworker-street_number-' + j + '" value="' + streetNumber + '"  readonly> </td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-route-' + j + '" id="homeuser-manageRTradeworker-route-' + j + '" value="' + street + '"  readonly> </td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-sublocality_level_1-' + j + '" id="homeuser-manageRTradeworker-sublocality_level_1-' + j + '" value="' + subLocality + '"  readonly> </td> </tr> <tr> <td></td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-locality-' + j + '" value="' + locality + '"  readonly> </td> <td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-country-' + j + '" id="homeuser-manageRTradeworker-country-' + j + '" value="' + province + '"  readonly> </td> </tr> <tr> <td class="label">Date initialised:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-initialisedDate-' + j + '" value="' + dateInitialised + '"  readonly> </td> <td class="label" colspan="1">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-commenceDate-' + j + '" value="' + commencementDate + '"  readonly> </td> </tr> <tr> <td class="label">Job Description:</td> <td colspan="2"> <input type="text" name="homeuser-manageRTradeworker-WorkType-' + j + '" id="homeuser-manageRTradeworker-WorkType-' + j + '" value="' + jobType + '"  readonly> </td> <td colspan="3"> <input type="text" name="homeuser-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-jobDescription-' + j + '" value="' + jobDescription + '"  readonly> </td> </tr> <tr> <td class="label">Workers Requested</td> <td colspan="1"> <input type="text" name="homeuser-manageRTradeworker-requestedWorkers-' + j + '" id="homeuser-manageRTradeworker-requestedWorkers-' + j + '" value="' + numWorkers + '"  readonly> </td><td class="label">Workers Accepted</td> <td colspan="1"> <input type="text" name="homeuser-manageRTradeworker-acceptedWorkers-' + j + '" id="homeuser-manageRTradeworker-acceptedWorkers-' + j + '" value="' + numWorkersAccepted + '"  readonly> </td> <td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests" id="homeuser-manageRTradeworker-requestID-' + j + '" value="' + tableIndex + '" readonly></div> </td> </tr> <tr style="height: 0.5em;background-color: #0a0a0a"> <td colspan="6"></td> </tr>';
+
+    }
+    html += "</table>";
+    document.getElementById("homeuser-manageRTradeworker-areainformation").innerHTML = html;
+}
+
+function homeuserDisplayJobsToInitiate(){
+    if(homeuserJobRequestArray.length > 0){
+        var html = '';
+        for(var j = 0;j < homeuserJobRequestArray.length;j++) {
+            for (var i = 0; i < homeuserJobRequestArray[0]['NumberOfWorkersRequested']; i++) {
+                if(homeuserJobRequestArray[j].hasOwnProperty('QuoteID-' + i)){
+                    if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 1){
+                        var name = homeuserJobRequestArray[j]['Name-' + i];
+                        var surname = homeuserJobRequestArray[j]['Surname-' + i];
+                        var contactNumber = homeuserJobRequestArray[j]['ContactNumber-' + i];
+                        var workType = homeuserJobRequestArray[j]['WorkType'];
+                        var quoteDate = homeuserJobRequestArray[j]['JobCommencementDate'];
+                        var tableIndex = j;
+                        //This will be a button that toggles the request information so that the user can see details
+                        //var requestDetails;
+                        if(j == 0){
+                            html +=  '<table><thead>' +
+                                '<tr>' +
+                                '<th>Name</th>' +
+                                '<th>Surname</th>' +
+                                '<th>Contact Details</th>' +
+                                '<th>Work Type</th>' +
+                                '<th>Quote Date</th>' +
+                                '<th>Selected</th>' +
+                                '</tr></thead><tbody>';
+                        }
+
+                        html += '' +
+                            '<tr style="height: 3em">' +
+                            '<td>' + name + '</td>' +
+                            '<td>' + surname + '</td>' +
+                            '<td>' + contactNumber + '</td>' +
+                            '<td>' + workType + '</td>' +
+                            '<td>' + quoteDate + '</td>' +
+                            '<td><div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="job-initiate-selected" id="requested-user-id" value="' + tableIndex + '"></div></td>' +
+                            '</tr>' +
+                            '';
+
+                        if(j == homeuserJobRequestArray.length - 1){
+                            html +='</tbody></table>';
+
+                        }
+                    }
+                }
+            }
+        }
+        document.getElementById('homeuser-manageJobInitiate-areainformation').innerHTML = html;
+    }
+}
+
+function displayHomeuserJobInitiateEntry(){
+    var input = $("form input[name=job-initiate-selected]:radio");
+    console.log("test" + input.length);
+    if(input.length > 0)
+        for(var i = 0 ; i < input.length ; i++){
+            //console.log("should be printing :" + input[i].checked);
+            if(input[i].checked){
+                //console.log('The following request was selected: ' + i);
+                //console.log(input[i]);
+                document.getElementById("homeuser-selected-initiate-job-id").value = input[i].value;
+                homeuserManageRequestModal(input[i].value);
+                //sendAJAXRequest('tradeworker-accept-request',handleTradeworkerAcceptRequest,'tradeworker-selected-request');
+            }
+        }
+    //console.log(input);
 }
 
 
