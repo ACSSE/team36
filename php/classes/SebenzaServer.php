@@ -162,8 +162,8 @@ class SebenzaServer {
         $locationID = array($numLocations);
         $locationsToRemove = array($numLocations);
         $locationsToRemoveAmount = 0;
-        $condition = self::mailClient($email,$keyToSend,$input);
-//        $condition = true;
+//        $condition = self::mailClient($email,$keyToSend,$input);
+        $condition = true;
         //$test = "";
         $returnValue = true;
        if($condition)

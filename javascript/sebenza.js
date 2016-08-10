@@ -139,6 +139,22 @@ function handleLoginResponse(response) {
     }
 }
 
+function handleTradeworkerRegisterResponse(response){
+    console.log("Handling register response: " + response);
+    var success = JSON.parse(response) ;
+    console.log("Registering: response " + success);
+    if(typeof success == 'boolean') {
+        if (success) {
+            document.getElementById("register-modal-button".click());
+        } else {
+            console.log("Registration failed")
+        }
+    }else
+    {
+        console.log("Return type is not a boolean it is: " + typeof success);
+    }
+}
+
 function handleHomeUserRegisterResponse(response){
     console.log("Handling register response: " + response);
     var success = JSON.parse(response) ;
