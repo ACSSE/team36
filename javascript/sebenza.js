@@ -1552,10 +1552,37 @@ function toggleUserPageArea(toToggle){
     }
 }
 
+function handleTradeworkerFetchProfileDetails(response)
+{
+    var result = JSON.parse(response);
+    console.log("The following is handleTradeworkerFetchProfileDetails :" + response);
+    if(result.length > 0)
+    {
+        document.getElementById("name-tradeworker-edit").value = result[0]["Name"] ;
+        document.getElementById("surname-tradeworker-edit").value = result[0]["Surname"] ;
+        document.getElementById("username-tradeworker-edit").value = result[0]["Username"] ;
+        document.getElementById("email-tradeworker-edit").value = result[0]["Email"] ;
+        document.getElementById("cellnumber-tradeworker-edit").value = result[0]["ContactNumber"] ;
+    }else
+    {
+        console.log("Cannot fill in user details")
+    }
+}
+
 function handleHomeuserFetchProfileDetails(response){
     var result = JSON.parse(response);
     console.log("The following is handleHomeuserFetchProfileDetails :" + response);
-    console.log("Bla balala la basl dbasl d" + result[0]['UserID']);
+    if(result>0)
+    {
+        document.getElementById("name-homeuser-info").value = result[3]["Name"] ;
+        document.getElementById("email-homeuser-info").value = result[4]["Surname"] ;
+        document.getElementById("username-homeuser-info").value = result[2]["username"] ;
+        document.getElementById("cellnumber-homeuser-info").value = result[5]["name"] ;
+        document.getElementById("homenumber-homeuser-info").value = result[3]["name"] ;
+    }else
+    {
+        console.log("Cannot fill in user details")
+    }
 }
 
 //Used in contractor registration to add more skills up to three maximum

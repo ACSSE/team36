@@ -11,8 +11,7 @@
 <div class="row collapse background-image" xmlns="http://www.w3.org/1999/html">
     <div class="small-3 columns full-height" style="background-color: rgba(20, 20, 20, 0.9)">
         <ul class="vertical menu" data-accordion-menu>
-            <li>
-                <a href="#">Job Requests</a>
+            <li><a href="#">Job Requests</a>
                 <ul class="menu vertical nested">
                     <li><a onclick="toggleUserPageArea('panel1v')">Request Tradeworker</a></li>
 
@@ -24,8 +23,14 @@
                 <ul class="menu vertical nested">
                     <li><a onclick="toggleUserPageArea('panel4v')">Jobs To initiate</a></li>
                     <li><a onclick="toggleUserPageArea('panel5v')">Ongoing Jobs</a></li>
-
                     <li><a onclick="toggleUserPageArea('panel5v')">Finished Jobs</a></li>
+
+                </ul>
+            </li>
+            <li><a href="#">Profile Management</a>
+                <ul class="menu vertical nested">
+                    <li><a onclick="toggleUserPageArea('panel6v')">General Details</a></li>
+                    <li><a onclick="toggleUserPageArea('panel7v')">Locations</a></li>
 
                 </ul>
             </li>
@@ -58,6 +63,27 @@
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-ongoing-jobs.php";
                 ?>
+            </div>
+            <div class="tabs-panel full-height user-panels" id="panel6v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+                <?php
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-EditInfo.php";
+                ?>
+            </div>
+            <div class="tabs-panel full-height user-panels" id="panel7v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+                <div class="full-height full-width">
+                    <h1>Location:</h1>
+                    <div class="row">
+                        <div class="column medium-11 large-11">
+                            <label>Area:</label><input type="text" name="areaname-homeuser-edit" id="areaname-homeuser-edit">
+                        </div>
+                        <div class="column medium-11 large-11">
+                            <label>City:</label><input type="text" name="cityname-homeuser-edit" id="cityname-homeuser-edit">
+                        </div>
+                        <div class="column medium-11 large-11">
+                            <label>Province:</label><input type="text" name="provincename-homeuser-edit" id="provincename-homeuser-edit">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
