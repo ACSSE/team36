@@ -7,6 +7,7 @@
 $(document).ready(function () {
     //Prevents form submission from activating a page refresh
     $('form').submit(function () {return false;});
+    sendAJAXRequest('fetch-worker-locations',handleFetchWorkerLocations);
 });
 
 var NOTIFICATION_DISPLAY_TIMEOUT = 5000;  //How long a notification shows
@@ -137,6 +138,11 @@ function handleLoginResponse(response) {
             $('#invalid-credentials-message').foundation('toggle');
         }
     }
+}
+
+function switchToPage(page){
+    console.log("Switching pages");
+    window.location = page;
 }
 
 function handleTradeworkerRegisterResponse(response){
@@ -1596,6 +1602,24 @@ function toggleSwitch(id,validationID){
         $("#additional-contractor-skill-2").foundation('toggle');
 }
 
+function handleFetchWorkerLocations(response){
+    initMap();
+    var result = JSON.parse(response);
+    console.log(result);
+    if(typeof result == 'object'){
+
+        for(var i = 0; i < result.length;i++){
+            geocodeAddress(geocoder, map, result[i]['locality'] + " " + result[i]['province'],"<h3>" + result[i]['locality'] + "</h3><p>The number of workers available in location: " + result[i]['numWorkers'] + "</p>");
+        }
+
+    }
+    else{
+        console.log("No areas were returned")
+    }
+
+
+}
+
 //Google related Javascript - https://developers.google.com/maps/documentation/javascript/examples/places-autocomplete-addressform
 var placeSearch, autocomplete, fillInAddressID;
 var componentForm = {
@@ -1727,6 +1751,39 @@ function geolocate() {
             autocomplete.setBounds(circle.getBounds());
         });
     }
+}
+var map;
+var geocoder;
+function initMap() {
+    map = new google.maps.Map(document.getElementById('googleMap'), {
+        zoom: 8,
+        center: {lat: -34.397, lng: 150.644}
+    });
+    geocoder = new google.maps.Geocoder();
+
+}
+
+function geocodeAddress(geocoder, resultsMap,address,html) {
+    geocoder.geocode({'address': address}, function(results, status) {
+        if (status === 'OK') {
+            console.log("Should be placing marker");
+            resultsMap.setCenter(results[0].geometry.location);
+            var infowindow = new google.maps.InfoWindow({
+                content: html
+            });
+
+            var marker = new google.maps.Marker({
+                map: resultsMap,
+                position: results[0].geometry.location,
+                title: address
+            });
+            marker.addListener('click', function() {
+                infowindow.open(map, marker);
+            });
+        } else {
+            alert('Geocode was not successful for the following reason: ' + status);
+        }
+    });
 }
 //End Google related Javascript
 

@@ -1256,6 +1256,29 @@ class SebenzaServer {
         return $returnValue;
     }
 
+    public static function fetchWorkingLocationDetails(){
+        //TODO: This will get more complicated and return things like the number of jobs completed in an area etc...
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "SELECT `locationID`,`locationName`,`Province` FROM `LOCATIONS`";
+        $dbhandler->runCommand($command);
+        $result = $dbhandler->getResults();
+        $returnValue = null;
+        if(count($result) > 0){
+            $command = "SELECT * FROM `LOCATIONS_PER_USER` WHERE `locationID` = ?";
+            for($i = 0; $i < count($result); $i++){
+                $dbhandler->runCommand($command,$result[$i]['locationID']);
+                $locationsPerUser = $dbhandler->getResults();
+                $returnValue[$i]['locality'] = $result[$i]['locationName'];
+                $returnValue[$i]['province'] = $result[$i]['Province'];
+                $returnValue[$i]['numWorkers'] = count($locationsPerUser);
+            }
+
+            return $returnValue;
+        }
+        else
+            return $returnValue;
+    }
+
     public static function acceptRequest($requestID){
         $userType = self::fetchUserType();
         $dbhandler = self::fetchDatabaseHandler();
@@ -1719,6 +1742,9 @@ if (!empty($_POST)) {
                 else{
                     $response = json_encode(false);
                 }
+                break;
+            case 'fetch-worker-locations':
+                $response = json_encode(SebenzaServer::fetchWorkingLocationDetails());
                 break;
             case 'homeuser-initiateJob-request':
                 $continue = SebenzaServer::serverSecurityCheck();
