@@ -5,10 +5,10 @@
             <label>First Name(S):</label><input type="text" name="name-homeuser-edit" id="name-homeuser-edit">
         </div>
         <div class="column medium-11 large-11">
-            <label>Surname:</label><input type="text" name="surname-homeuser-edit" id="name-homeuser-edit">
+            <label>Surname:</label><input type="text" name="surname-homeuser-edit" id="surname-homeuser-edit">
         </div>
         <div class="column medium-11 large-11">
-            <label>Username:</label><input type="text" name="username-homeuser-edit" id="name-homeuser-edit">
+            <label>Username:</label><input type="text" name="username-homeuser-edit" id="username-homeuser-edit">
         </div>
         <div class="column medium-11 large-11">
             <label>Email Address:</label><input type="email" name="email-homeuser-edit" id="name-homeuser-edit">

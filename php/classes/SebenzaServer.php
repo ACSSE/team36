@@ -1415,6 +1415,42 @@ class SebenzaServer {
         return $returnValue;
     }
 
+    public static function fetchProfileUserDetails($userID){
+        $returnValue = false;
+        $userType = self::fetchUserType();
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `REGISTERED_USER` WHERE `UserID` = ?";
+        $dbhandler->runCommand($command,$userID);
+        $userDetails = $dbhandler->getResults();
+        //still some details that need to be added but hope you get the idea
+        if(count($userDetails) > 0){
+            $returnValue[0]['Username'] = $userDetails[0]['Username'];
+            $returnValue[0]['Email'] = $userDetails[0]['Email'];
+            $returnValue[0]['Name'] = $userDetails[0]['Name'];
+            $returnValue[0]['Surname'] = $userDetails[0]['Surname'];
+            $returnValue[0]['ContactNumber'] = $userDetails[0]['ContactNumber'];
+            switch($userType){
+                case 0:
+                    //dealing with tradeworker tables related specifically to tradeworker
+                    break;
+                case 1:
+                    //dealing with contractor tables related specifically to contractor
+                    break;
+                case 2:
+                    //dealing with homeuser tables related specifically to homeuser
+                    $command = "SELECT `Subscribed` FROM `HOMEUSER` WHERE `UserID` = ?";
+                    $dbhandler->runCommand($command,$userID);
+                    $homeuserDetails = $dbhandler->getResults();
+                    $returnValue[0]['Subscribed'] = $homeuserDetails[0]['Subscribed'];
+                    break;
+                default:
+                    $returnValue = false;
+                    break;
+            }
+        }
+        return $returnValue;
+    }
+
     public static function homeuserFetchRequests(){
         $dbhandler = self::fetchDatabaseHandler();
         $command = "SELECT `RequestID`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate`,`NumberOfWorkersRequested`,`NumberOfWorkersAccepted` FROM `QUOTE_REQUEST` WHERE `UserID` = ?";
@@ -1879,19 +1915,14 @@ if (!empty($_POST)) {
                 }
                 break;
             case 'fetch-homeuser-profile-details':
-                $dbhandler = SebenzaServer::fetchDatabaseHandler();
+                $continue = SebenzaServer::serverSecurityCheck();
                 $sessionHandler = SebenzaServer::fetchSessionHandler();
-                $userId = $sessionHandler->getSessionVariable("UserID");
-                $command = "SELECT `UserID` FROM `REGISTERED_USER` WHERE `UserID` = ?";
-                $dbhandler->runCommand($command,$userId);
-                $result = $dbhandler->getResults();
-                if(count($result) > 0){
-                    $returnValue[0]['UserID'] = $result[0]['UserID'];
-                    $response = json_encode($returnValue);
+                $userID = $sessionHandler->getSessionVariable("UserID");
+                if($continue){
+                    $response = json_encode(SebenzaServer::fetchProfileUserDetails($userID));
                 }
-                else{
+                else
                     $response = json_encode(false);
-                }
 
                 break;
             default:

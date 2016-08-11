@@ -261,6 +261,9 @@ VALUES	(10,'20160801',FALSE),
         (12,'20160702',TRUE),
         (13,'20160801',TRUE);
 
+INSERT INTO `HOMEUSER` (`UserID`,`Subscribed`)
+VALUES (9,0);
+
 INSERT 	 INTO `LOCATIONS_PER_USER` (`UserID`, `locationID`)
 VALUES	(10,1),
         (10,3),

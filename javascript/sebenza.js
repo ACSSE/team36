@@ -1644,13 +1644,12 @@ function handleTradeworkerFetchProfileDetails(response)
 function handleHomeuserFetchProfileDetails(response){
     var result = JSON.parse(response);
     console.log("The following is handleHomeuserFetchProfileDetails :" + response);
-    if(result>0)
+    genericPrintObject(result);
+    if(result.length > 0)
     {
-        document.getElementById("name-homeuser-info").value = result[3]["Name"] ;
-        document.getElementById("email-homeuser-info").value = result[4]["Surname"] ;
-        document.getElementById("username-homeuser-info").value = result[2]["username"] ;
-        document.getElementById("cellnumber-homeuser-info").value = result[5]["name"] ;
-        document.getElementById("homenumber-homeuser-info").value = result[3]["name"] ;
+        console.log("accessing the array :" + result[0]['Username'] + " " + result[0]['Email'] + " " + result[0]['Name'] + " " + result[0]['Subscribed']);
+        document.getElementById("name-homeuser-edit").value = result[0]["Name"] ;
+        document.getElementById("surname-homeuser-edit").value = result[0]["Surname"] ;
     }else
     {
         console.log("Cannot fill in user details")
