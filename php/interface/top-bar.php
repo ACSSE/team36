@@ -34,7 +34,7 @@
                         <li>
                             <?php
                             if(!SebenzaServer::fetchSessionHandler()->exists('UserType')){
-                                echo '<button type="button" class="top-bar-button button" data-toggle="login-medium-large">
+                                echo '<button type="button" class="top-bar-button button" data-toggle="login-medium-large" >
                                             Log In
                                             <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
                                         </button>';
@@ -123,7 +123,7 @@
         </div>
         <div class="row top-padding">
             <div class="columns">
-                <button type="button" class="success button full-width login-button" id="area-button">
+                <button type="button" class="success button full-width login-button" id="area-button" onclick="switchToPage('areainformation-page.php')">
                     Search
                 </button>
             </div>
