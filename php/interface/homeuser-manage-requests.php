@@ -46,7 +46,7 @@
             </button>
         </div>
         <div class="large-4 medium-4 columns">
-            <button type="button" class="button alert" style="margin-top: 0.5em">
+            <button type="button" class="button alert" style="margin-top: 0.5em" onclick="removeHomeuserJobRequestEntry()">
                 Delete
                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>
             </button>

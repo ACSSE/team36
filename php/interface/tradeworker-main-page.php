@@ -13,7 +13,8 @@
                 <a href="#">Manage Jobs</a>
                 <ul class="menu vertical nested">
                     <li><a onclick="toggleUserPageArea('panel1v')">Job Requests</a></li>
-                    <li><a onclick="toggleUserPageArea('panel2v')">Initiated Jobs</a></li>
+                    <li><a onclick="toggleUserPageArea('panel2v')">Cancelled Requests</a></li>
+                    <li><a onclick="toggleUserPageArea('panel3v')">Initiated Jobs</a></li>
                     <li><a onclick="toggleUserPageArea('panel3v')">Completed Jobs</a></li>
                     <li><a onclick="toggleUserPageArea('panel4v')">Unfinished Jobs</a></li>
                 </ul>
@@ -60,38 +61,38 @@
         </form>
     </div>
     <div class="small-9 columns full-height">
-        <div class="full-height" style="max-height: 100%">
-            <div class="tabs-panel full-height user-panels" id="panel1v" style="display: block;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+        <div class="full-height" style="overflow-y: auto">
+            <div class="tabs-panel full-height user-panels" id="panel1v" style="display: block;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel2v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel2v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
                 //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-request-contractor.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel3v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel3v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+                <?php
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-ongoing-jobs.php";
+                ?>
+            </div>
+            <div class="tabs-panel full-height user-panels" id="panel4v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
                 //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel4v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel5v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
                 //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel5v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel6v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
                 //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel6v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
-                <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
-                ?>
-            </div>
-            <div class="tabs-panel full-height user-panels" id="panel7v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel7v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
                 //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>

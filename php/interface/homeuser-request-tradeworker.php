@@ -171,3 +171,18 @@
         </div>
     </form>
 </div>
+
+<div class="reveal" id="homeuser-rTradeworker-notification-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+    <div id="homeuser-rTradeworker-notification-modal-additionalInfo">
+
+    </div>
+</div>
+
+<div class="reveal" id="homeuser-rTradeworker-notification-modal-response" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+    <div id="homeuser-rTradeworker-notification-modal-response-additionalInfo">
+
+    </div>
+    <button class="close-button" data-close aria-label="Close reveal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
