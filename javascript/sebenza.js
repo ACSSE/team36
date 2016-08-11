@@ -1628,8 +1628,11 @@ function handleTradeworkerFetchProfileDetails(response)
 {
     var result = JSON.parse(response);
     console.log("The following is handleTradeworkerFetchProfileDetails :" + response);
+    //genericPrintObject(result);
+    console.log(result) ;
     if(result.length > 0)
     {
+        console.log("accessing the array :" + result[0]['Username'] + " " + result[0]['Email'] + " " + result[0]['Name'] + " " + result[0]['Subscribed']);
         document.getElementById("name-tradeworker-edit").value = result[0]["Name"] ;
         document.getElementById("surname-tradeworker-edit").value = result[0]["Surname"] ;
         document.getElementById("username-tradeworker-edit").value = result[0]["Username"] ;
@@ -1644,12 +1647,16 @@ function handleTradeworkerFetchProfileDetails(response)
 function handleHomeuserFetchProfileDetails(response){
     var result = JSON.parse(response);
     console.log("The following is handleHomeuserFetchProfileDetails :" + response);
-    genericPrintObject(result);
+    //genericPrintObject(result);
+    console.log(result) ;
     if(result.length > 0)
     {
         console.log("accessing the array :" + result[0]['Username'] + " " + result[0]['Email'] + " " + result[0]['Name'] + " " + result[0]['Subscribed']);
         document.getElementById("name-homeuser-edit").value = result[0]["Name"] ;
         document.getElementById("surname-homeuser-edit").value = result[0]["Surname"] ;
+        document.getElementById("username-homeuser-edit").value = result[0]["Username"] ;
+        document.getElementById("email-homeuser-edit").value = result[0]["Email"] ;
+        document.getElementById("cellnumber-homeuser-edit").value = result[0]["ContactNumber"] ;
     }else
     {
         console.log("Cannot fill in user details")
