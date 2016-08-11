@@ -1546,6 +1546,12 @@ function toggleUserPageArea(toToggle){
     }
 }
 
+function handleHomeuserFetchProfileDetails(response){
+    var result = JSON.parse(response);
+    console.log("The following is handleHomeuserFetchProfileDetails :" + response);
+    console.log("Bla balala la basl dbasl d" + result[0]['UserID']);
+}
+
 //Used in contractor registration to add more skills up to three maximum
 function toggleSwitch(id,validationID){
     //console.log("Switching " + document.getElementById(id).innerHTML.trim());

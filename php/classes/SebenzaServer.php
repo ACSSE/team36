@@ -1852,6 +1852,22 @@ if (!empty($_POST)) {
                     $response = json_encode(false);
                 }
                 break;
+            case 'fetch-homeuser-profile-details':
+                $dbhandler = SebenzaServer::fetchDatabaseHandler();
+                $sessionHandler = SebenzaServer::fetchSessionHandler();
+                $userId = $sessionHandler->getSessionVariable("UserID");
+                $command = "SELECT `UserID` FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                $dbhandler->runCommand($command,$userId);
+                $result = $dbhandler->getResults();
+                if(count($result) > 0){
+                    $returnValue[0]['UserID'] = $result[0]['UserID'];
+                    $response = json_encode($returnValue);
+                }
+                else{
+                    $response = json_encode(false);
+                }
+
+                break;
             default:
                 //If the action was not one of the handled cases, respond appropriately
                 $response = json_encode("Request not recognised.");
