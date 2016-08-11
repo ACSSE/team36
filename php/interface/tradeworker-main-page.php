@@ -83,22 +83,13 @@
             </div>
             <div class="tabs-panel full-height user-panels" id="panel5v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-EditInfo.php";
+                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel6v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
-                <h1>Location:</h1>
-                <div class="row">
-                    <div class="column medium-11 large-11">
-                        <label>Area:</label><input type="text" name="areaname-homeuser-edit" id="areaname-homeuser-edit">
-                    </div>
-                    <div class="column medium-11 large-11">
-                        <label>City:</label><input type="text" name="cityname-homeuser-edit" id="cityname-homeuser-edit">
-                    </div>
-                    <div class="column medium-11 large-11">
-                        <label>Province:</label><input type="text" name="provincename-homeuser-edit" id="provincename-homeuser-edit">
-                    </div>
-                </div>
+                <?php
+                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
+                ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel7v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
@@ -132,7 +123,3 @@
         <span aria-hidden="true">&times;</span>
     </button>
 </div>
-
-<script>
-    sendAJAXRequest('fetch-tradeworker-profile-details', handleTradeworkerFetchProfileDetails);
-</script>

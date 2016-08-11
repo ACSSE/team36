@@ -14,7 +14,6 @@
             <li><a href="#">Job Requests</a>
                 <ul class="menu vertical nested">
                     <li><a onclick="toggleUserPageArea('panel1v')">Request Tradeworker</a></li>
-
                     <li><a onclick="toggleUserPageArea('panel2v')">Request Contractor</a></li>
                     <li><a onclick="toggleUserPageArea('panel3v')">Manage Job Requests</a></li>
                 </ul>
@@ -24,7 +23,6 @@
                     <li><a onclick="toggleUserPageArea('panel4v')">Jobs To initiate</a></li>
                     <li><a onclick="toggleUserPageArea('panel5v')">Ongoing Jobs</a></li>
                     <li><a onclick="toggleUserPageArea('panel5v')">Finished Jobs</a></li>
-
                 </ul>
             </li>
             <li><a href="#">Profile Management</a>
@@ -59,7 +57,7 @@
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-initiate-jobs.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height test" id="panel5v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel5v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-ongoing-jobs.php";
                 ?>

@@ -1878,26 +1878,19 @@ if (!empty($_POST)) {
                     $response = json_encode(false);
                 }
                 break;
-            case 'fetch-tradeworker-profile-details':
-
-                $response = json_encode(SebenzaServer::fetchUserDetails(SebenzaServer::fetchSessionHandler()->getSessionVariable("UserID")));
-
-
-                break;
             case 'fetch-homeuser-profile-details':
-
-                $result = SebenzaServer::fetchUserDetails(SebenzaServer::fetchSessionHandler()->getSessionVariable("UserID"))
-                if(count($result) > 0 ){
-                    //$response = json_encode(true);
-                    $response[0]['name'] = $result[3]['Name'] ;
-                    $response[1]['Surname'] = $result[4]['Surname'] ;
-                    $response[2]['Username'] = $result[2]['Username'] ;
-                    $response[3]['Email'] = $result[3]['Email'] ;
-                    $response[4]['ContactNumber'] = $result[5]['ContactNumber'] ;
-
-                     json_encode($response) ;
-                }else{
-                    json_encode(false);
+                $dbhandler = SebenzaServer::fetchDatabaseHandler();
+                $sessionHandler = SebenzaServer::fetchSessionHandler();
+                $userId = $sessionHandler->getSessionVariable("UserID");
+                $command = "SELECT `UserID` FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                $dbhandler->runCommand($command,$userId);
+                $result = $dbhandler->getResults();
+                if(count($result) > 0){
+                    $returnValue[0]['UserID'] = $result[0]['UserID'];
+                    $response = json_encode($returnValue);
+                }
+                else{
+                    $response = json_encode(false);
                 }
 
                 break;

@@ -7,7 +7,12 @@
 $(document).ready(function () {
     //Prevents form submission from activating a page refresh
     $('form').submit(function () {return false;});
-    sendAJAXRequest('fetch-worker-locations',handleFetchWorkerLocations);
+    var sPath = window.location.pathname;
+    var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
+    if(sPage == "areainformation-page.php"){
+        sendAJAXRequest('fetch-worker-locations',handleFetchWorkerLocations);
+    }
+
 });
 
 var NOTIFICATION_DISPLAY_TIMEOUT = 5000;  //How long a notification shows
@@ -505,6 +510,7 @@ function handleTradeworkerFetchJobRequests(response){
     tradeworkerJobRequestArray = JSON.parse(response);
     //console.log("It got here:" + response);
     var value;
+    console.log(tradeworkerJobRequestArray);
     if(typeof tradeworkerJobRequestArray == 'object'){
         //prints out the object use it to see what values need to be added to the html
         //genericPrintObject(tradeworkerJobRequestArray);
@@ -619,6 +625,18 @@ function handletradeworkerAcceptConfirmationResponse(response){
             //Failed to accept request on server
         }
     }
+}
+
+function tradeworkerTerminateJobInitiate(){
+    console.log("Should be terminating");
+}
+
+function tradeworkerExtendJobInitiate(){
+    console.log("Should be extending");
+}
+
+function tradeworkerCompleteJobInitiate(){
+    console.log("Should be completing");
 }
 
 function tradeworkerRequestsNotifier(){
@@ -769,6 +787,11 @@ function handleHomeuserRequestsAcceptedNotificationArrayFill(response){
         console.log("There are no notifications to display: " + homeuserRequestsToAcceptArray);
     }
 }
+
+function removeHomeuserJobRequestEntry(){
+    console.log("Should be removing the job request entry selected: ");
+}
+
 function editHomeuserJobRequestEntry(){
     var input = $("form input[name=job-requests]:radio");
     console.log("test" + input.length);
@@ -881,6 +904,9 @@ function homeuserManageRequestModal(tableIndex){
             if(homeuserStatus == 1){
                 homeuserStatus = "You accepted";
             }
+            else if(homeuserStatus == 3){
+                homeuserStatus = "Job Initiated";
+            }
             html += '' +
                 '<tr style="height: 3em">' +
                 '<td>' + name + '</td>' +
@@ -925,6 +951,18 @@ function homeuserManageRequestModal(tableIndex){
 
 function editHomeuserJobRequestEntryRemoveWorker(){
     console.log("Should be removing the tradeworker from the job request");
+}
+
+function homeuserTerminateJobInitiate(){
+    console.log("Should be terminating");
+}
+
+function homeuserExtendJobInitiate(){
+    console.log("Should be extending");
+}
+
+function homeuserCompleteJobInitiate(){
+    console.log("Should be completing");
 }
 
 function editHomeuserJobRequestEntryInitiateJobWorker(){
@@ -1097,9 +1135,11 @@ function homeuserDisplayRequests(){
     var status;
     var numWorkers;
     var numWorkersAccepted;
+    var success = false;
     html += "<table>";
     console.log("FIlling job requests table " + homeuserJobRequestArray.length);
     for(var j = 0;j < homeuserJobRequestArray.length; j++){
+        success = true;
         console.log("FIlling job requests table");
         street = homeuserJobRequestArray[j]["Road"];
         streetNumber = homeuserJobRequestArray[j]["StreetNumber"];
@@ -1119,16 +1159,24 @@ function homeuserDisplayRequests(){
 
     }
     html += "</table>";
-    document.getElementById("homeuser-manageRTradeworker-areainformation").innerHTML = html;
+
+    if(!success){
+        document.getElementById('homeuser-manageRTradeworker-areainformation').innerHTML = "<h3>There are currently no job requests to display</h3>";
+    }
+    else
+        document.getElementById("homeuser-manageRTradeworker-areainformation").innerHTML = html;
 }
 
 function homeuserDisplayJobsToInitiate(){
+    var success = false;
     if(homeuserJobRequestArray.length > 0){
         var html = '';
+
         for(var j = 0;j < homeuserJobRequestArray.length;j++) {
             for (var i = 0; i < homeuserJobRequestArray[0]['NumberOfWorkersRequested']; i++) {
                 if(homeuserJobRequestArray[j].hasOwnProperty('QuoteID-' + i)){
                     if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 1){
+                        success = true;
                         var name = homeuserJobRequestArray[j]['Name-' + i];
                         var surname = homeuserJobRequestArray[j]['Surname-' + i];
                         var contactNumber = homeuserJobRequestArray[j]['ContactNumber-' + i];
@@ -1170,6 +1218,18 @@ function homeuserDisplayJobsToInitiate(){
         }
         document.getElementById('homeuser-manageJobInitiate-areainformation').innerHTML = html;
     }
+
+    if(!success){
+        document.getElementById('homeuser-manageJobInitiate-areainformation').innerHTML = "<h3>There are currently no jobs to initiate</h3>";
+    }
+}
+
+function removeWorkerFromJobRequest() {
+    console.log("Should be removing selected tradeworker from request");
+}
+
+function initiateJobForSelectedWOrker(){
+    console.log("Should be initiating job for selected tradeworker");
 }
 
 function displayHomeuserJobInitiateEntry(){
@@ -1271,17 +1331,29 @@ function handlerTradeworkerResponse(response){
         if (workTypeArray) {
             console.log("The work request was successful: " + response + workTypeArray);
             //TODO:Display success to user
+            var html = "<h3>Tradeworker Request successful</h3>";
+            $('#homeuser-rTradeworker-notification-modal-response').foundation('toggle');
+            document.getElementById("homeuser-rTradeworker-notification-modal-response-additionalInfo").innerHTML = html;
         }
         else {
             console.log("The work request was unsuccessful: " + response);
+            var html = "<h3>Tradeworker Request unsuccessful</h3>";
+            $('#homeuser-rTradeworker-notification-modal-response').foundation('toggle');
+            document.getElementById("homeuser-rTradeworker-notification-modal-response-additionalInfo").innerHTML = html;
         }
     }
     else if(typeof workTypeArray == 'number'){
         //TODO:Error reporting
         console.log(workTypeArray + " " + response + typeof workTypeArray);
+        var html = "<h3>Tradeworker Request unsuccessful</h3>";
+        $('#homeuser-rTradeworker-notification-modal-response').foundation('toggle');
+        document.getElementById("homeuser-rTradeworker-notification-modal-response-additionalInfo").innerHTML = html;
     }
     else{
         console.log("The variable is of type: " + typeof workTypeArray + " value: " + workTypeArray);
+        var html = "<h3>Tradeworker Request unsuccessful</h3>";
+        $('#homeuser-rTradeworker-notification-modal-response').foundation('toggle');
+        document.getElementById("homeuser-rTradeworker-notification-modal-response-additionalInfo").innerHTML = html;
     }
 }
 

@@ -28,7 +28,7 @@
     </div>
     <div class="row">
         <div class="column large-11">
-            <div class=" full-width" id="homeuser-manageJobInitiate-areainformation" style="overflow-y: scroll; height: 400px">
+            <div class=" full-width" id="homeuser-manageJobInitiate-areainformation" style="overflow-y: auto; height: 400px">
 
             </div>
         </div>
@@ -40,7 +40,7 @@
 
     <div class="row">
         <div class="large-4 medium-4 columns">
-            <button type="button" class="button success" style="margin-top: 0.5em">
+            <button type="button" class="button success" style="margin-top: 0.5em" onclick="initiateJobForSelectedWOrker()">
                 Initiate Job
                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
             </button>
@@ -52,7 +52,7 @@
             </button>
         </div>
         <div class="large-4 medium-4 columns">
-            <button type="button" class="button alert" style="margin-top: 0.5em">
+            <button type="button" class="button alert" style="margin-top: 0.5em" onclick="removeWorkerFromJobRequest()">
                 Remove
                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>
             </button>
