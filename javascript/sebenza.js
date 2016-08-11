@@ -1035,6 +1035,20 @@ function homeuserInitiateJob(quoteID){
 function handleHomeuserInitiateJobResponse(response){
     var result = JSON.parse(response);
     console.log(result);
+    if(typeof result == 'boolean'){
+        var html;
+        if(result){
+            html = "<h3>The job has been initiated</h3>";
+        }
+        else{
+            html = "<h3>The job wasn't initiated</h3>";
+        }
+        $('#homeuser-manageRequest-modal-response').foundation('toggle');
+        document.getElementById("homeuser-manageRequest-modal-response-additionalInfo").innerHTML = html;
+    }
+    else{
+        console.log("Result was not of type boolean " + result);
+    }
 }
 
 var homeuserJobRequestArray;
@@ -1171,8 +1185,19 @@ function homeuserDisplayJobsToInitiate(){
     var success = false;
     if(homeuserJobRequestArray.length > 0){
         var html = '';
-
         for(var j = 0;j < homeuserJobRequestArray.length;j++) {
+            if(j == 0){
+                html +=  '<table><thead>' +
+                    '<tr>' +
+                    '<th>Name</th>' +
+                    '<th>Surname</th>' +
+                    '<th>Contact Details</th>' +
+                    '<th>Work Type</th>' +
+                    '<th>Quote Date</th>' +
+                    '<th>Selected</th>' +
+                    '</tr></thead><tbody>';
+            }
+
             for (var i = 0; i < homeuserJobRequestArray[0]['NumberOfWorkersRequested']; i++) {
                 if(homeuserJobRequestArray[j].hasOwnProperty('QuoteID-' + i)){
                     if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 1){
@@ -1185,17 +1210,6 @@ function homeuserDisplayJobsToInitiate(){
                         var tableIndex = j;
                         //This will be a button that toggles the request information so that the user can see details
                         //var requestDetails;
-                        if(j == 0){
-                            html +=  '<table><thead>' +
-                                '<tr>' +
-                                '<th>Name</th>' +
-                                '<th>Surname</th>' +
-                                '<th>Contact Details</th>' +
-                                '<th>Work Type</th>' +
-                                '<th>Quote Date</th>' +
-                                '<th>Selected</th>' +
-                                '</tr></thead><tbody>';
-                        }
 
                         html += '' +
                             '<tr style="height: 3em">' +
@@ -1208,17 +1222,18 @@ function homeuserDisplayJobsToInitiate(){
                             '</tr>' +
                             '';
 
-                        if(j == homeuserJobRequestArray.length - 1){
-                            html +='</tbody></table>';
 
-                        }
                     }
                 }
             }
+
+        }
+        if(j == homeuserJobRequestArray.length){
+            html +='</tbody></table>';
+
         }
         document.getElementById('homeuser-manageJobInitiate-areainformation').innerHTML = html;
     }
-
     if(!success){
         document.getElementById('homeuser-manageJobInitiate-areainformation').innerHTML = "<h3>There are currently no jobs to initiate</h3>";
     }
