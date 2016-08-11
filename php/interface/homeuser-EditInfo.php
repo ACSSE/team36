@@ -11,13 +11,13 @@
             <label>Username:</label><input type="text" name="username-homeuser-edit" id="username-homeuser-edit">
         </div>
         <div class="column medium-11 large-11">
-            <label>Email Address:</label><input type="email" name="email-homeuser-edit" id="name-homeuser-edit">
+            <label>Email Address:</label><input type="email" name="email-homeuser-edit" id="email-homeuser-edit">
         </div>
         <div class="column medium-11 large-11">
             <label>Cell Number</label><input type="text" name="cellnumber-homeuser-edit" id="cellnumber-homeuser-edit">
         </div>
         <div class="column medium-11 large-11">
-            <label>Home Contact number: </label><input type="text" name="homenumber-homeuser-edit" id="cellnumber-homeuser-edit">
+            <label>Home Contact number: </label><input type="text" name="homenumber-homeuser-edit" id="homenumber-homeuser-edit">
         </div>
     </div>
 

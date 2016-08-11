@@ -1441,7 +1441,8 @@ class SebenzaServer {
                     $command = "SELECT `Subscribed` FROM `HOMEUSER` WHERE `UserID` = ?";
                     $dbhandler->runCommand($command,$userID);
                     $homeuserDetails = $dbhandler->getResults();
-                    $returnValue[0]['Subscribed'] = $homeuserDetails[0]['Subscribed'];
+                    //breaks the json object with this line of code
+                  //  $returnValue[0]['Subscribed'] = $homeuserDetails[0]['Subscribed'];
                     break;
                 default:
                     $returnValue = false;
@@ -1916,15 +1917,24 @@ if (!empty($_POST)) {
                 break;
             case 'fetch-homeuser-profile-details':
                 $continue = SebenzaServer::serverSecurityCheck();
-                $sessionHandler = SebenzaServer::fetchSessionHandler();
-                $userID = $sessionHandler->getSessionVariable("UserID");
-                if($continue){
-                    $response = json_encode(SebenzaServer::fetchProfileUserDetails($userID));
+                if($continue)
+                {
+                    $response = json_encode(SebenzaServer::fetchProfileUserDetails(SebenzaServer::fetchSessionHandler()->getSessionVariable("UserID")));
+                }else{
+                    $response = false ;
                 }
-                else
-                    $response = json_encode(false);
+                break;
+            case 'fetch-tradeworker-profile-details' :
+                $continue = SebenzaServer::serverSecurityCheck();
+                if($continue)
+                {
+                    $response = json_encode(SebenzaServer::fetchProfileUserDetails(SebenzaServer::fetchSessionHandler()->getSessionVariable("UserID")));
+                }else{
+                $response = false ;
+                }
 
                 break;
+
             default:
                 //If the action was not one of the handled cases, respond appropriately
                 $response = json_encode("Request not recognised.");
