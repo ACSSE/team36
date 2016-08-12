@@ -505,6 +505,99 @@ function tradeworkerAcceptJobRequest(){
     //console.log(input);
 }
 
+function tradeworkerDisplayRequest(){
+    if(tradeworkerJobRequestArray.length > 0) {
+        var html = "<table>";
+        for (var j = 0; j < tradeworkerJobRequestArray.length; j++) {
+            var commencementDate = tradeworkerJobRequestArray[j]['JobCommencementDate'];
+            var description = tradeworkerJobRequestArray[j]['JobDescription'];
+            var quoteID = tradeworkerJobRequestArray[j]['QuoteID'];
+            var status = tradeworkerJobRequestArray[j]['Status'];
+            if (status == 0) {
+                status = "Pending acceptance";
+            }
+            else if (status == 1) {
+                status = "Job accepted";
+            }
+            else if (status == 2) {
+                status = "You rejected this request";
+            }
+            else if (status == 3) {
+                status = "Waiting for homeuser to initiate job";
+            }
+            var workType = tradeworkerJobRequestArray[j]['WorkType'];
+            var workTypeID = tradeworkerJobRequestArray[j]['WorkTypeID'];
+            var areaName = tradeworkerJobRequestArray[j]['AreaName'];
+            var province = tradeworkerJobRequestArray[j]['Province'];
+            var locationName = tradeworkerJobRequestArray[j]['locationName'];
+
+            html += '<tr> <td class="label">Job Details:</td> <td colspan="2"> <input type="text" name="tradeworker-requests-WorkType-' + j + '" id="tradeworker-requests-WorkType-' + j + '" value="' + workType + '" readonly> </td> <td class="label" colspan="2">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="tradeworker-requests-commenceDate-' + j + '" id="tradeworker-requests-commenceDate-' + j + '" value="' + commencementDate + '" readonly></td> </tr> <tr> <td colspan="6"> <input type="text" name="tradeworker-requests-jobDescription-' + j + '" id="tradeworker-requests-jobDescription-' + j + '" value="' + description + '" readonly> </td> </tr> <tr> <td class="label">Address</td> <td colspan="2"> <input type="text" name="tradeworker-requests-sublocality_level_1-' + j + '" id="tradeworker-requests-sublocality_level_1-' + j + '" value="' + areaName + '" readonly> </td> <td colspan="2"> <input type="text" name="tradeworker-requests-locality-' + j + '" id="tradeworker-requests-locality-' + j + '" value="' + locationName + '" readonly> </td> <td colspan="1"> <input type="text" name="tradeworker-requests-country-' + j + '" id="tradeworker-requests-country-' + j + '" value="' + province + '" readonly> </td> </tr> <tr> <td class="label">Status</td> <td colspan="4"> <input type="text" name="tradeworker-requests-status-' + j + '" id="tradeworker-requests-status-' + j + '" value="' + status + '" readonly></td> <td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests" id="tradeworker-requests-quoteID-' + j + '" value="' + quoteID + '" readonly></div></td> </tr> <tr style="height: 0.5em;background-color: #0a0a0a"> <td colspan="6"></td> </tr>'
+        }
+        html += '</table>';
+        document.getElementById("tradeworker-manageRequest-areainformation").innerHTML = html;
+    }
+    else{
+        var html = "<h3>There are no requests to display</h3>";
+        document.getElementById("tradeworker-manageRequest-areainformation").innerHTML = html;
+    }
+}
+
+function tradeworkerDisplayOngoingJobs(){
+    var result = false;
+    if(tradeworkerJobRequestArray.length > 0){
+        var html = '';
+
+        for(var j = 0;j < tradeworkerJobRequestArray.length;j++) {
+                if(tradeworkerJobRequestArray[j].hasOwnProperty('QuoteID') && tradeworkerJobRequestArray[j].hasOwnProperty('JobID')){
+                    result = true;
+                    if(tradeworkerJobRequestArray[j]['Status'] == 3 && tradeworkerJobRequestArray[j]['HomeuserResponse'] == 3 && tradeworkerJobRequestArray[j]['JobStatus'] == 0){
+                        var jobProceedDate = tradeworkerJobRequestArray[j]['JobProceedDate'];
+                        var agreedPrice = tradeworkerJobRequestArray[j]['AgreedPrice'];
+                        var estimatedCompletionDate = tradeworkerJobRequestArray[j]['EstimatedCompletionDate'];
+                        var status = tradeworkerJobRequestArray[j]['JobStatus'];
+                        var workType = tradeworkerJobRequestArray[j]['WorkType'];
+                        var tableIndex = j;
+                        //This will be a button that toggles the request information so that the user can see details
+                        //var requestDetails;
+                        if(j == 0){
+                            html +=  '<table><thead>' +
+                                '<tr>' +
+                                '<th>Job Start Date</th>' +
+                                '<th>Agreed Price</th>' +
+                                '<th>Estimated Complete Date</th>' +
+                                '<th>Work Type</th>' +
+                                '<th>Status</th>' +
+                                '<th>Selected</th>' +
+                                '</tr></thead><tbody>';
+                        }
+
+                        html += '' +
+                            '<tr style="height: 3em">' +
+                            '<td>' + jobProceedDate + '</td>' +
+                            '<td>' + agreedPrice + '</td>' +
+                            '<td>' + estimatedCompletionDate + '</td>' +
+                            '<td>' + workType + '</td>' +
+                            '<td>' + status + '</td>' +
+                            '<td><div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="job-initiate-selected" id="requested-user-id" value="' + tableIndex + '"></div></td>' +
+                            '</tr>' +
+                            '';
+
+                        if(j == tradeworkerJobRequestArray.length - 1){
+                            html +='</tbody></table>';
+
+                        }
+                    }
+                }
+
+        }
+        document.getElementById('tradeworker-ongoingJobs-areainformation').innerHTML = html;
+    }
+    if(!result){
+
+        document.getElementById('tradeworker-ongoingJobs-areainformation').innerHTML = "<h3>There are no ongoing jobs to display</h3>";
+    }
+}
+
 var tradeworkerJobRequestArray;
 function handleTradeworkerFetchJobRequests(response){
     tradeworkerJobRequestArray = JSON.parse(response);
@@ -514,34 +607,8 @@ function handleTradeworkerFetchJobRequests(response){
     if(typeof tradeworkerJobRequestArray == 'object'){
         //prints out the object use it to see what values need to be added to the html
         //genericPrintObject(tradeworkerJobRequestArray);
-        var html = "<table>";
-        for(var j = 0 ; j < tradeworkerJobRequestArray.length ; j++){
-            var commencementDate = tradeworkerJobRequestArray[j]['JobCommencementDate'];
-            var description = tradeworkerJobRequestArray[j]['JobDescription'];
-            var quoteID = tradeworkerJobRequestArray[j]['QuoteID'];
-            var status = tradeworkerJobRequestArray[j]['Status'];
-            if(status == 0){
-                status = "Pending acceptance";
-            }
-            else if(status == 1){
-                status = "Job accepted";
-            }
-            else if(status == 2){
-                status = "You rejected this request";
-            }
-            else if(status == 3){
-                status = "Waiting for homeuser to initiate job";
-            }
-            var workType = tradeworkerJobRequestArray[j]['WorkType'];
-            var workTypeID = tradeworkerJobRequestArray[j]['WorkTypeID'];
-            var areaName = tradeworkerJobRequestArray[j]['AreaName'];
-            var province = tradeworkerJobRequestArray[j]['Province'];
-            var locationName = tradeworkerJobRequestArray[j]['locationName'];
-
-            html += '<tr> <td class="label">Job Details:</td> <td colspan="2"> <input type="text" name="tradeworker-requests-WorkType-' + j +'" id="tradeworker-requests-WorkType-' + j +'" value="' + workType + '" readonly> </td> <td class="label" colspan="2">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="tradeworker-requests-commenceDate-' + j +'" id="tradeworker-requests-commenceDate-' + j +'" value="' + commencementDate + '" readonly></td> </tr> <tr> <td colspan="6"> <input type="text" name="tradeworker-requests-jobDescription-' + j +'" id="tradeworker-requests-jobDescription-' + j +'" value="' + description + '" readonly> </td> </tr> <tr> <td class="label">Address</td> <td colspan="2"> <input type="text" name="tradeworker-requests-sublocality_level_1-' + j +'" id="tradeworker-requests-sublocality_level_1-' + j +'" value="' + areaName + '" readonly> </td> <td colspan="2"> <input type="text" name="tradeworker-requests-locality-' + j +'" id="tradeworker-requests-locality-' + j +'" value="' + locationName + '" readonly> </td> <td colspan="1"> <input type="text" name="tradeworker-requests-country-' + j +'" id="tradeworker-requests-country-' + j +'" value="' + province + '" readonly> </td> </tr> <tr> <td class="label">Status</td> <td colspan="4"> <input type="text" name="tradeworker-requests-status-' + j +'" id="tradeworker-requests-status-' + j +'" value="' + status + '" readonly></td> <td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests" id="tradeworker-requests-quoteID-' + j +'" value="' + quoteID + '" readonly></div></td> </tr> <tr style="height: 0.5em;background-color: #0a0a0a"> <td colspan="6"></td> </tr>'
-        }
-        html += '</table>';
-        document.getElementById("tradeworker-manageRequest-areainformation").innerHTML = html;
+        tradeworkerDisplayRequest();
+        tradeworkerDisplayOngoingJobs();
         //console.log("The following is a test: " + tradeworkerJobRequestArray[0]['JobDescription']);
     }
     else if(typeof tradeworkerJobRequestArray == 'boolean'){
@@ -961,8 +1028,142 @@ function homeuserExtendJobInitiate(){
     console.log("Should be extending");
 }
 
+function toggleHomeuserJobComment(){
+    //console.log("The following is the display value:" + document.getElementById('homeuser-initiateJobCompletion-jobComment-information').style.display);
+
+    $('#homeuser-initiateJobCompletion-jobComment-information').foundation('toggle');
+if(document.getElementById('homeuser-initiateJobCompletion-jobComment-information').style.display == "none"){
+        //document.getElementById('homeuser-initiateJobCompletion-jobComment').className = "";
+        document.getElementById('homeuser-initiateJobCompletion-jobComment').name = "ignore-homeuser-initiateJobCompletion-jobComment";
+    }
+    else if(document.getElementById('homeuser-initiateJobCompletion-jobComment-information').style.display == "block" || document.getElementById('homeuser-initiateJobCompletion-jobComment-information').style.display == ""){
+        //document.getElementById('homeuser-initiateJobCompletion-jobComment').name = document.getElementById('homeuser-initiateJobCompletion-jobComment').name.substr(7);
+        //console.log("The following is the substring of the name " + document.getElementById('homeuser-initiateJobCompletion-jobComment').name.substr(7))
+        //document.getElementById('homeuser-initiateJobCompletion-jobComment').className = "REQ_VAL";
+        document.getElementById('homeuser-initiateJobCompletion-jobComment').name = "homeuser-initiateJobCompletion-jobComment";
+    }
+
+}
+
+function toggleHomeuserUserComment(){
+    $('#homeuser-initiateJobCompletion-userComment-information').foundation('toggle');
+    if(document.getElementById('homeuser-initiateJobCompletion-userComment-information').style.display == "none"){
+        //document.getElementById('homeuser-initiateJobCompletion-userComment').className = "";
+        document.getElementById('homeuser-initiateJobCompletion-userComment').name = 'ignore-homeuser-initiateJobCompletion-userComment';
+    }
+    else if(document.getElementById('homeuser-initiateJobCompletion-userComment-information').style.display == "block" || document.getElementById('homeuser-initiateJobCompletion-userComment-information').style.display == "" ){
+        //document.getElementById('homeuser-initiateJobCompletion-userComment').className = "REQ_VAL";
+        document.getElementById('homeuser-initiateJobCompletion-userComment').name = 'homeuser-initiateJobCompletion-userComment';
+    }
+}
+
 function homeuserCompleteJobInitiate(){
     console.log("Should be completing");
+    var html = '<h3>Initiating completion process</h3>' +
+        '<form id="homeuser-initiateJobCompletion-form" name="homeuser-initiateJobCompletion-form">' +
+        '<div class="row">' +
+        '<div class="column medium-11 large-11">' +
+        '<label>Was the job completed to your satisfaction:</label>' +
+        '<div class="switch large">' +
+        '<input class="switch-input" id="homeuser-initiateJobCompletion-jobSatisfaction-switch" type="checkbox" name="ignore-homeuser-initiateJobCompletion-jobSatisfaction-switch" onclick="toggleHomeuserJobComment()" checked>' +
+        '<label class="switch-paddle" for="homeuser-initiateJobCompletion-jobSatisfaction-switch">' +
+        '<span class="show-for-sr">Availability</span>' +
+        '<span class="switch-active" aria-hidden="true">Yes</span>' +
+        '<span class="switch-inactive" aria-hidden="true">no</span>' +
+        '</label>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="column large-11 medium 11">' +
+        '<div id="homeuser-initiateJobCompletion-jobComment-information" data-toggler data-animate="fade-in fade-out" style="display:none">' +
+        '<label>Please enter reason job was not satisfactory:</label><input type="text" name="ignore-homeuser-initiateJobCompletion-jobComment" id="homeuser-initiateJobCompletion-jobComment" placeholder="Sloppy job" class="REQ_VAL">' +
+        '<div class="additional-info top-padding" id="homeuser-initiateJobCompletion-jobComment-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please enter a reason why the job was not to your satisfaction</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="column medium-11 large-11">' +
+        '<label>Would you recommend this tradeworker to other users:</label>' +
+        '<div class="switch large">' +
+        '<input class="switch-input" id="homeuser-initiateJobCompletion-userRecommendation-switch" type="checkbox" name="ignore-homeuser-initiateJobCompletion-userRecommendation-switch" onclick="toggleHomeuserUserComment()" checked>' +
+        '<label class="switch-paddle" for="homeuser-initiateJobCompletion-userRecommendation-switch">' +
+        '<span class="show-for-sr">Availability</span>' +
+        '<span class="switch-active" aria-hidden="true">Yes</span>' +
+        '<span class="switch-inactive" aria-hidden="true">no</span>' +
+        '</label>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="column large-11 medium 11">' +
+        '<div id="homeuser-initiateJobCompletion-userComment-information" data-toggler data-animate="fade-in fade-out" style="display:none">' +
+        '<label>Please enter reason user work was not satisfactory:</label><input type="text" placeholder="Continuously late" name="ignore-homeuser-initiateJobCompletion-userComment" id="homeuser-initiateJobCompletion-userComment" class="REQ_VAL">' +
+        '<div class="additional-info top-padding" id="homeuser-initiateJobCompletion-userComment-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please enter a reason why the user did not work up to your standard</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        //'<div class="row">' +
+        //'<div class="column large-11 medium 11">' +
+        //'<label>Date to start job:</label><input type="date" name="homeuser-initiateJob-commenceDate" id="homeuser-initiateJob-commenceDate" class="REQ_VAL">' +
+        //'<div class="additional-info top-padding" id="homeuser-initiateJob-commenceDate-info" data-toggler data-animate="fade-in fade-out">' +
+        //'<p class="help-text no-margins">Please select a date from the drop down</p>' +
+        //'</div>' +
+        //'</div>' +
+        //'</div>' +
+        //'<div class="row">' +
+        //'<div class="column large-11 medium 11">' +
+        //'<label>Estimated days before completion:</label><input type="number" step="1" name="homeuser-initiateJob-numberDays" id="homeuser-initiateJob-numberDays" class="REQ_VAL">' +
+        //'<div class="additional-info top-padding" id="homeuser-initiateJob-numberDays-info" data-toggler data-animate="fade-in fade-out">' +
+        //'<p class="help-text no-margins">Please enter a positive number 7</p>' +
+        //'</div>' +
+        //'</div>' +
+        //'</div>' +
+        //'<div class="row">' +
+        //'<div class="column large-11 medium 11">' +
+        //'<label>Agreed upon price:</label><input type="number" step="0.01" min="0" name="homeuser-initiateJob-expectedPayment" id="homeuser-initiateJob-expectedPayment" class="REQ_VAL">' +
+        //'<div class="additional-info top-padding" id="homeuser-initiateJob-expectedPayment-info" data-toggler data-animate="fade-in fade-out">' +
+        //'<p class="help-text no-margins">Please enter a valid positive number 450.00</p>' +
+        //'</div>' +
+        //'</div>' +
+        //'</div>' +
+        //'<input type="hidden" value="' + quoteID + '" id="homeuser-initiateJobCompletion-quoteID" name="ignore-homeuser-initiateJob-quoteID">' +
+        '</form>';
+    html += '<div class="row">' +
+        '<div class="large-3 large-offset-8 medium-offset-8 medium-3 columns">' +
+        '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="sendAJAXRequest(\'homeuser-initiateJobCompletion-request\',handleHomeuserInitiateJobCompletionResponse,\'homeuser-initiateJobCompletion-form\')">' +
+        'Complete Job' +
+        '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+        '</button>' +
+        '</div>' +
+        '</div>';
+
+    $('#homeuser-ongoingJobs-modal').foundation('toggle');
+    document.getElementById("homeuser-ongoingJobs-modal-additionalInfo").innerHTML = html;
+    new Foundation.Toggler($("#homeuser-initiateJobCompletion-jobComment-information"),'data-animate="fade-in fade-out"');
+    new Foundation.Toggler($("#homeuser-initiateJobCompletion-userComment-information"),'data-animate="fade-in fade-out"');
+    new Foundation.Toggler($("#homeuser-initiateJobCompletion-jobComment-info"),'data-animate="fade-in fade-out"');
+    new Foundation.Toggler($("#homeuser-initiateJobCompletion-userComment-info"),'data-animate="fade-in fade-out"');
+}
+
+function handleHomeuserInitiateJobCompletionResponse(response){
+    console.log("Should be completing the job process after the user recommendation and job recommendation has been done");
+    var result = JSON.parse(response);
+    console.log(result);
+    if(typeof result == 'boolean'){
+        if(result){
+            console.log("Should be displaying that job has been marked as complete");
+        }
+        else{
+            console.log("Should be displaying that something went wrong while job has been marked as complete");
+        }
+    }
+    else
+        console.log("The following is the type: " + typeof result + " the following is the value" + result);
 }
 
 function editHomeuserJobRequestEntryInitiateJobWorker(){
@@ -1258,7 +1459,7 @@ function displayHomeuserJobInitiateEntry(){
                 //console.log(input[i]);
                 document.getElementById("homeuser-selected-initiate-job-id").value = input[i].value;
                 homeuserManageRequestModal(input[i].value);
-                //sendAJAXRequest('tradeworker-accept-request',handleTradeworkerAcceptRequest,'tradeworker-selected-request');
+                sendAJAXRequest('tradeworker-accept-request',handleTradeworkerAcceptRequest,'tradeworker-selected-request');
             }
         }
     //console.log(input);

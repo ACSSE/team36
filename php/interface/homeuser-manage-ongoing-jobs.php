@@ -60,8 +60,8 @@
     </div>
 </div>
 
-<div class="small reveal" id="homeuser-manageRequest-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
-    <div id="homeuser-manageRequest-modal-additionalInfo">
+<div class="small reveal" id="homeuser-ongoingJobs-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+    <div id="homeuser-ongoingJobs-modal-additionalInfo">
 
     </div>
     <button class="close-button" data-close aria-label="Close reveal" type="button">
@@ -69,8 +69,8 @@
     </button>
 </div>
 
-<div class="reveal" id="homeuser-manageRequest-modal-response" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
-    <div id="homeuser-manageRequest-modal-response-additionalInfo">
+<div class="reveal" id="homeuser-ongoingJobs-modal-response" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+    <div id="homeuser-ongoingJobs-modal-response-additionalInfo">
 
     </div>
     <button class="close-button" data-close aria-label="Close reveal" type="button">

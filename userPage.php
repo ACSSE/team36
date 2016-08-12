@@ -10,7 +10,7 @@ $PAGE_TITLE = "MainPage";
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/open-html.php";
 include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 ?>
-<div class="content-view">
+<div class="content-view" style="overflow: hidden">
     <!--Notification pull starts here-->
     <?php
     if(isset($USER_CONFIRMATION)){

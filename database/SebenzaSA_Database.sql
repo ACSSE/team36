@@ -180,6 +180,8 @@ CREATE TABLE `JOB_PER_USER` (
   `AgreedPrice` double not null,
   `EstimatedCompletionDate` date not null,
   `Status` integer(1) not null DEFAULT 0,
+  `HomeuserRequest` integer(1) not null DEFAULT 0,
+  `TradeworkerRequest` integer(1) not null DEFAULT 0,
   PRIMARY KEY (`JobID`),
   FOREIGN KEY (`QuoteID`) REFERENCES QUOTE(`QuoteID`)
 );

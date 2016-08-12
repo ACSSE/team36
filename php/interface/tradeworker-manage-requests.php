@@ -1,6 +1,6 @@
 <div class="full-height full-width" xmlns="http://www.w3.org/1999/html">
     <script>
-        sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
+
     </script>
     <h1>Manage Job Request</h1>
     <!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->

@@ -68,7 +68,7 @@
             </div>
             <div class="tabs-panel full-height user-panels" id="panel2v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-request-contractor.php";
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-ongoing-jobs.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel3v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
@@ -124,5 +124,6 @@
     </button>
 </div>
 <script>
+    sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
     sendAJAXRequest('fetch-tradeworker-profile-details',handleTradeworkerFetchProfileDetails);
 </script>

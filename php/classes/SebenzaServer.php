@@ -1065,8 +1065,8 @@ class SebenzaServer {
 
     public static function fetchTradeworkerJobRequests($userID){
         $dbhandler = self::fetchDatabaseHandler();
-        $command = "SELECT `QuoteID`,`RequestID`,`Status`,`HomeuserResponse` FROM `QUOTE` WHERE `RequestedUser` = ? AND `Status` != ?";
-        $dbhandler->runCommand($command,$userID,2);
+        $command = "SELECT `QuoteID`,`RequestID`,`Status`,`HomeuserResponse` FROM `QUOTE` WHERE `RequestedUser` = ?";
+        $dbhandler->runCommand($command,$userID);
         $result = $dbhandler->getResults();
         $returnValue = [];
         if(count($result)){
@@ -1074,9 +1074,24 @@ class SebenzaServer {
                 $command = "SELECT `workTypeID`,`JobDescription`,`Address`,`JobCommencementDate` FROM `QUOTE_REQUEST` WHERE `RequestID` = ?";
                 $dbhandler->runCommand($command,$result[$r]['RequestID']);
                 $fullRequest = $dbhandler->getResults();
-                $command = "SELECT `AreaName`,`locationID` FROM `AREA_PER_LOCATION` WHERE `AreaID` = ?";
+                if($result[$r]['HomeuserResponse'] == 1 || $result[$r]['HomeuserResponse'] == 3){
+                    $command = "SELECT `StreetNumber`,`Road`,`AreaName`,`locationID` FROM `AREA_PER_LOCATION` WHERE `AreaID` = ?";
+                }
+                else{
+                    $command = "SELECT `AreaName`,`locationID` FROM `AREA_PER_LOCATION` WHERE `AreaID` = ?";
+                }
                 $dbhandler->runCommand($command,$fullRequest[0]['Address']);
                 $areaInfo = $dbhandler->getResults();
+                if($result[$r]['HomeuserResponse'] == 3){
+                    $command = "SELECT `HomeuserRequest`,`TradeworkerRequest`,`JobID`,`JobProceedDate`,`AgreedPrice`,`EstimatedCompletionDate`,`Status` FROM `JOB_PER_USER` WHERE `QuoteID` = ?";
+                    $dbhandler->runCommand($command,$result[$r]['QuoteID']);
+                    $jobResults = $dbhandler->getResults();
+                    $returnValue[$r]["JobProceedDate"] = $jobResults[0]['JobProceedDate'];
+                    $returnValue[$r]["AgreedPrice"] = $jobResults[0]['AgreedPrice'];
+                    $returnValue[$r]["EstimatedCompletionDate"] = $jobResults[0]['EstimatedCompletionDate'];
+                    $returnValue[$r]["JobStatus"] = $jobResults[0]['Status'];
+                    $returnValue[$r]["JobID"] = $jobResults[0]['JobID'];
+                }
                 $workType = self::returnWorkTypes($fullRequest[0]['workTypeID']);
                 $command = "SELECT `locationName`,`Province`,`City` FROM `LOCATIONS` WHERE `locationID` = ?";
                 $dbhandler->runCommand($command,$areaInfo[0]['locationID']);
@@ -1090,6 +1105,10 @@ class SebenzaServer {
                 $returnValue[$r]["locationName"] = $locationInfo[0]['locationName'];
                 $returnValue[$r]["Province"] = $locationInfo[0]['Province'];
                 $returnValue[$r]["City"] = $locationInfo[0]['City'];
+                if($result[$r]['HomeuserResponse'] == 3 ||$result[$r]['HomeuserResponse'] == 1){
+                    $returnValue[$r]["StreetNumber"] = $areaInfo[0]['StreetNumber'];
+                    $returnValue[$r]["Road"] = $areaInfo[0]['Road'];
+                }
                 $returnValue[$r]["WorkType"] = $workType[0]['WorkType'];
                 $returnValue[$r]["WorkTypeID"] = $fullRequest[0]['workTypeID'];
 //                array_push($returnValue,$result[$r]['QuoteID'],$result[$r]['Status'],$fullRequest[0]['AreaName'],$fullRequest[0]['JobDescription'],$fullRequest[0]['JobCommencementDate'],$areaInfo[0]['AreaName'],$locationInfo[0]['locationName'],$locationInfo[0]['Province'],$workType[0]['WorkType']);
@@ -1144,6 +1163,8 @@ class SebenzaServer {
                             $returnValue[$i]['AgreedPrice-'.$r] = $jobsInitiated[0]['AgreedPrice'];
                             $returnValue[$i]['EstimatedCompletionDate-'.$r] = $jobsInitiated[0]['EstimatedCompletionDate'];
                             $returnValue[$i]['JobStatus-'.$r] = $jobsInitiated[0]['Status'];
+                            $returnValue[$i]['HomeuserRequest-'.$r] = $jobsInitiated[0]['HomeuserRequest'];
+                            $returnValue[$i]['TradeworkerRequest-'.$r] = $jobsInitiated[0]['TradeworkerRequest'];
                         }
                         $returnValue[$i]['QuoteID-'.$r] = $quotes[$r]['QuoteID'];
                         $returnValue[$i]['RequestedUser-'.$r] = $quotes[$r]['RequestedUser'];
@@ -1534,6 +1555,10 @@ class SebenzaServer {
         if($dbhandler->runCommand($command,$commencementDate,$estimimatedDate,$expectedPayment,$quoteID)){
             $command = "UPDATE `QUOTE` SET `HomeuserResponse` = ? WHERE `QuoteID` = ?";
             if($dbhandler->runCommand($command,3,$quoteID)){
+                $command = "SELECT `RequestedUser` FROM `QUOTE` WHERE `QuoteID` = ?";
+                $dbhandler->runCommand($command,$quoteID);
+                $result = $dbhandler->getResults();
+                self::addNotification($result[0]['UserID'],"Job has been intiated");
                 $returnValue = true;
             }
             else
@@ -1635,6 +1660,9 @@ if (!empty($_POST)) {
                 else{
                     $response = json_encode(false);
                 }
+                break;
+            case 'homeuser-initiateJobCompletion-request':
+                $response = json_encode(true);
                 break;
             case 'register-contractor':
                 //Ensure all skill are set

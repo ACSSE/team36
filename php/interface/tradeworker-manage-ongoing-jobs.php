@@ -41,13 +41,13 @@
     <div class="row">
         <div class="large-4 medium-4 columns">
             <button type="button" class="button success" style="margin-top: 0.5em" onclick="tradeworkerCompleteJobInitiate()">
-                Complete
-                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
+                Request Completion
+                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
             </button>
         </div>
         <div class="large-4 medium-4 columns">
             <button type="button" class="button warning" style="margin-top: 0.5em" onclick="tradeworkerExtendJobInitiate()">
-                Extend
+                Request Extension
                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
             </button>
         </div>
@@ -60,8 +60,8 @@
     </div>
 </div>
 
-<div class="small reveal" id="tradeworker-manageRequest-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
-    <div id="tradeworker-manageRequest-modal-additionalInfo">
+<div class="small reveal" id="tradeworker-ongoingJobs-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+    <div id="tradeworker-ongoingJobs-modal-additionalInfo">
 
     </div>
     <button class="close-button" data-close aria-label="Close reveal" type="button">
@@ -69,8 +69,8 @@
     </button>
 </div>
 
-<div class="reveal" id="tradeworker-manageRequest-modal-response" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
-    <div id="tradeworker-manageRequest-modal-response-additionalInfo">
+<div class="reveal" id="tradeworker-ongoingJobs-modal-response" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+    <div id="tradeworker-ongoingJobs-modal-response-additionalInfo">
 
     </div>
     <button class="close-button" data-close aria-label="Close reveal" type="button">

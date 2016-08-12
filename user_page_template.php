@@ -10,7 +10,7 @@ include $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
 
 
 ?>
-    <div class="content-view">
+    <div class="content-view" style="overflow: hidden">
 
             <div class="row collapse background-image">
 
