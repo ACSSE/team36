@@ -37,6 +37,19 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
+            <label>ID number:</label><input type="text" name="identity-homeuser" id="identity-homeuser" placeholder="IworkAtHomeStorme"
+                                           class="REQ_VAL">
+            <div class="additional-info top-padding" id="identity-homeuser-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">Identity number must be filled in and be numeric characters 13 long. E.g.
+                    9508879521365</p>
+            </div>
+            <div class="additional-info top-padding" id="unique-identity-homeuser-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">The following username is already in use</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column medium-11 large-11">
             <label>Password:</label><input type="password" name="password-homeuser" id="password-homeuser" placeholder="Password"
                                           class="REQ_VAL">
             <div class="additional-info top-padding" id="password-homeuser-info" data-toggler data-animate="fade-in fade-out">
@@ -97,10 +110,10 @@
     </div>
     <div class="row">
         <div class="column medium-11 large-11">
-            <label>Are you currently available to be requested by users to do the specified work you have selected:</label>
+            <label>Would you like to include yourself under subscription for R100 a year, free for the 1st 6 months:</label>
             <div class="switch large">
-                <input class="switch-input" id="availability-homeuser" type="checkbox" name="ignore-availability-homeuser" checked>
-                <label class="switch-paddle" for="availability-homeuser">
+                <input class="switch-input" id="subscription-homeuser-switch" type="checkbox" name="ignore-subscription-homeuser-switch" checked>
+                <label class="switch-paddle" for="subscription-homeuser-switch">
                     <span class="show-for-sr">Availability</span>
                     <span class="switch-active" aria-hidden="true">Yes</span>
                     <span class="switch-inactive" aria-hidden="true">no</span>
@@ -122,39 +135,52 @@
     <div class="row">
         <div class="column large-11 medium 11">
             <div id="locationField">
-                <input name="homeuser-ignore-autocomplete" id="homeuser-autocomplete" placeholder="Enter your address"
-                       onFocus="geolocate()" onclick="initAutocomplete()" type="text" autocomplete="off"/>
+                <input name="ignore-homeuser-register-autocomplete" id="homeuser-register-autocomplete" placeholder="Enter your address"
+                       onclick="genericInitAutocomplete('homeuser-register-autocomplete')" type="text" autocomplete="off"/>
             </div>
         </div>
     </div>
 
     <div class="row">
         <div class="column large-11 medium 11">
-            <label>Area Name</label><input type="text" name="areaname-homeuser-0" id="areaname-homeuser-0" placeholder="Soweto" class="REQ_VAL" readonly>
-            <div class="additional-info top-padding" id="areaname-homeuser-0-info" data-toggler data-animate="fade-in fade-out">
-                <p class="help-text no-margins">An area found within the city E.g. Soweto</p>
+            <label>House Number</label><input type="text" name="homeuser-register-street_number" id="homeuser-register-street_number" placeholder="35" class="REQ_VAL" readonly>
+            <div class="additional-info top-padding" id="homeuser-register-street_number-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">An street found within a subarea E.g. 45</p>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="column large-11 medium 11">
-            <label>City Name</label><input type="text" name="cityname-homeuser-0" id="cityname-homeuser-0" placeholder="Johannesburg" class="REQ_VAL" readonly>
-            <div class="additional-info top-padding" id="cityname-homeuser-0-info" data-toggler data-animate="fade-in fade-out">
-                <p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p>
+            <label>Street Information</label><input type="text" name="homeuser-register-route" id="homeuser-register-route" placeholder="5th Street" class="REQ_VAL" readonly>
+            <div class="additional-info top-padding" id="homeuser-register-route-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">An street found within a subarea E.g. 2nd Street</p>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="column large-11 medium 11">
-            <label>Province Name</label><input type="text" name="provincename-homeuser-0" id="provincename-homeuser-0" placeholder="Gauteng" class="REQ_VAL" readonly>
-            <div class="additional-info top-padding" id="provincename-homeuser-0-info" data-toggler data-animate="fade-in fade-out">
+            <label>Sub-Area name</label><input type="text" name="homeuser-register-sublocality_level_1" id="homeuser-register-sublocality_level_1" placeholder="Bedfordview" class="REQ_VAL" readonly>
+            <div class="additional-info top-padding" id="homeuser-register-sublocality_level_1-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">An sub-area found within the area E.g. bedfordview</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column large-11 medium 11">
+            <label>Area Name</label><input type="text" name="homeuser-register-locality" id="homeuser-register-locality" placeholder="Germiston" class="REQ_VAL" readonly>
+            <div class="additional-info top-padding" id="homeuser-register-locality-info" data-toggler data-animate="fade-in fade-out">
+                <p class="help-text no-margins">An area found within the city E.g. Germiston</p>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="column large-11 medium 11">
+            <label>Province Name</label><input type="text" name="homeuser-register-administrative_area_level_1" id="homeuser-register-administrative_area_level_1" placeholder="Gauteng" class="REQ_VAL" readonly>
+            <div class="additional-info top-padding" id="homeuser-register-administrative_area_level_1-info" data-toggler data-animate="fade-in fade-out">
                 <p class="help-text no-margins">A province within South Africa E.g. Gauteng</p>
             </div>
         </div>
-
-
     </div>
-
 
     <div class="row">
         <div class="large-12 medium-12 columns">
@@ -167,14 +193,10 @@
             </p>
         </div>
     </div>
-    <input type="hidden" value="1" id="locationsAdded-homeuser" name="ignore-locationsAdded-homeuser">
-    <input type="hidden" value="1" id="skillsAdded-homeuser" name="ignore-sillsAdded-homeuser">
+    <div class="reveal" id="homeuser-register-modal" data-reveal>
+        <div id="homeuser-register-modal-information">
 
-    <div class="reveal" id="exampleModal3" data-reveal>
-        <h1>You are now Registered!</h1>
-        <p class="lead">Please access your email address</p>
-        <p>Click on the link provided within email to complete registration and gain access to the site!</p>
-        <p>This will only be available for a month</p>
+        </div>
         <button class="close-button" data-close aria-label="Close modal" type="button">
             <span aria-hidden="true">&times;</span>
         </button>

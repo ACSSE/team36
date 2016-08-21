@@ -36,6 +36,19 @@ CREATE TABLE `CONFIRMATIONS` (
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );
 
+DROP TABLE IF EXISTS `HOMEUSER_LOCATIONS`;
+CREATE TABLE `HOMEUSER_LOCATIONS` (
+  `locationID` integer not null auto_increment,
+  `UserID` INTEGER not null,
+  `StreetNumber` varchar(40) not null,
+  `Route` varchar(150)not null,
+  `Sublocality` varchar(150)not null,
+  `Locality` varchar(150) not null,
+  `AdministrativeArea` varchar(150) not null,
+  PRIMARY KEY (`locationID`),
+  FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
+);
+
 DROP TABLE IF EXISTS `LOCATIONS`;
 CREATE TABLE `LOCATIONS` (
 	`locationID` integer not null auto_increment,

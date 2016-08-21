@@ -254,13 +254,97 @@ function handleHomeUserRegisterResponse(response){
     console.log("Handling register response: " + response);
     var success = JSON.parse(response) ;
     console.log("Registering: response " + success);
-    if(typeof success == 'boolean') {
-        if (success) {
-            document.getElementById("register-modal-button".click());
-        } else {
-            console.log("Registration failed")
+    if(typeof success == 'number'){
+        var html = '';
+        if(success == 1){
+            html = '<h1>You are now Registered!</h1>' +
+                '<p class="lead">Please access your email address</p>' +
+                '<p>Click on the link provided within email to complete registration and gain access to the site!</p>' +
+                '<p>This will only be available for a month</p>';
+            document.getElementById('homeuser-register-modal-information').innerHTML = html;
+            $('#homeuser-register-modal').foundation('toggle');
         }
-    }else
+        else{
+            html = '<h1>REGISTRATION FAILED</h1>';
+            var focus = false;
+            if(success %2 == 0){
+                var displayProperty = document.getElementById('unique-email-homeuser-info').style.display.toLowerCase();
+                if (displayProperty == '' || displayProperty == 'none') {
+                    $('#unique-email-homeuser-info').foundation('toggle');
+                    if(!focus){
+                        $('#email-homeuser').focus();
+                        focus = true;
+                    }
+                }
+                success /= 2;
+            }
+            else{
+                var displayProperty = document.getElementById('unique-email-homeuser-info').style.display.toLowerCase();
+                if (displayProperty == 'block') {
+                    $('#unique-email-homeuser-info').foundation('toggle');
+                }
+            }
+            if(success %3 == 0){
+                var displayProperty = document.getElementById('unique-username-homeuser-info').style.display.toLowerCase();
+                if (displayProperty == '' || displayProperty == 'none') {
+                    $('#unique-username-homeuser-info').foundation('toggle');
+                    if(!focus){
+                        $('#username-homeuser').focus();
+                        focus = true;
+                    }
+                }
+                success /= 3;
+            }
+            else{
+                var displayProperty = document.getElementById('unique-username-homeuser-info').style.display.toLowerCase();
+                if (displayProperty == 'block') {
+                    $('#unique-username-homeuser-info').foundation('toggle');
+                }
+            }
+            if(success %5 == 0){
+                var displayProperty = document.getElementById('unique-identity-homeuser-info').style.display.toLowerCase();
+                if (displayProperty == '' || displayProperty == 'none') {
+                    $('#unique-identity-homeuser-info').foundation('toggle');
+                    if(!focus){
+                        $('#identity-homeuser').focus();
+                        focus = true;
+                    }
+                }
+                success /= 5;
+            }
+            else{
+                var displayProperty = document.getElementById('unique-identity-homeuser-info').style.display.toLowerCase();
+                if (displayProperty == 'block') {
+                    $('#unique-identity-homeuser-info').foundation('toggle');
+                }
+            }
+            if(success %101 == 0 && success > 100){
+                var displayProperty = document.getElementById('unreachable-email-homeuser-info').style.display.toLowerCase();
+                if (displayProperty == '' || displayProperty == 'none') {
+                    $('#unreachable-email-homeuser-info').foundation('toggle');
+                    if(!focus){
+                        $('#email-homeuser').focus();
+                        focus = true;
+                    }
+                }
+                success /= 101;
+            }
+            else{
+                var displayProperty = document.getElementById('unreachable-email-homeuser-info').style.display.toLowerCase();
+                if (displayProperty == 'block') {
+                    $('#unreachable-email-homeuser-info').foundation('toggle');
+                }
+            }
+            if(success %7 == 0){
+                html += '<p class="lead">Please contact admin for further assistance provide error code in email</p>' +
+                    '<p>error-code: ' + success + '</p>';
+
+                document.getElementById('homeuser-register-modal-information').innerHTML = html;
+                $('#homeuser-register-modal').foundation('toggle');
+            }
+        }
+    }
+    else
     {
         console.log("Return type is not a boolean it is: " + typeof success);
     }
