@@ -148,8 +148,11 @@ class SebenzaServer {
         $email = $input[1];
         $username = $input[0];
         $keyToSend = self::hashPassword($email + $username + time());
-
-//        $condition = self::mailClient($email,$keyToSend,$input);
+        //TODO: Uncomment to allow emails to be sent
+        $link = "http://localhost:31335/index.php?email=".$email."&key=".$keyToSend;
+        $title = "Sebenza South Africa";
+        $emailConMessage = '<b>Thank you for registering with SebenzaSA!</b><br/> please click on the following link for confirmation<a href="'.$link.'">'.$title.'</a><br/>If it was not you that registered for the SebenzaSA site, you can ignore this email';
+//        $condition = self::mailClient($email,$keyToSend,$input,$emailConMessage);
         $condition = true;
         //$test = "";
         $returnValue = true;
@@ -623,13 +626,12 @@ class SebenzaServer {
 
     }
 
-    public static function mailClient($to,$key):bool{
+    public static function mailClient($to,$key,$message):bool{
         require $_SERVER['DOCUMENT_ROOT'] ."/php/externalClasses/PHPMailer-master/PHPMailer-master/PHPMailerAutoload.php";
         $mail = new PHPMailer;
         //Remember to input your details here
         //$mail->SMTPDebug = 3;                               // Enable verbose debug output
-        $link = "http://localhost:31335/index.php?email=".$to."&key=".$key;
-        $title = "Sebenza South Africa";
+
         $mail->isSMTP();                                      // Set mailer to use SMTP
         $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
@@ -643,7 +645,7 @@ class SebenzaServer {
         $mail->addReplyTo('215040496@student.uj.ac.za', 'Information');
 
         $mail->Subject = 'SebenzaSA Confirmation';
-        $mail->Body    = '<b>Thank you for registering with SebenzaSA!</b><br/> please click on the following link for confirmation<a href="'.$link.'">'.$title.'</a><br/>If it was not you that registered for the SebenzaSA site, you can ignore this email';
+        $mail->Body    = $message;
         return $mail->send();
     }
     //The following function is used to confirm a user who has clicked on the link within an email he received

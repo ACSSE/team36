@@ -607,8 +607,8 @@ function validateForm(formID) {
 
 /*Discuss the following functions with the group*/
 function redirectToHome(){
-    if (window.location.href != "http://localhost:31335/") {
-    window.location = '/';
+    if (window.location.href != "http://localhost:31335/areainformation-page.php") {
+    window.location = '/areainformation-page.php';
     }
     else
     window.location = '/userPage.php';

@@ -37,8 +37,7 @@ include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/top-bar.php";
                                 Sebenza offers a competitive edge for Trade Workers by compiling a running list of Jobs that have been completed by individual Trade Workers.  A job list can be generated at any time - it records the experience and recommendations received by employers, making it an excellent addition to a CV.
                                 <h6>Home Users</h6>
                                 From the odd household job, like painting the roof, to the contract of 3 months, Sebenza provides a way to contact the much need human capital to the job done! Home Users have the option of individual Trade Workers or Contractors depending on their preference.
-                                <h6>Contractors</h6>
-                                Contractors are able to source employees easily - they are all listed in the same place!  In addition, Contractors are able to build their business reput
+
                             </div>
                         </div>
                 </div>
