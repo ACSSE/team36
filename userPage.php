@@ -14,7 +14,7 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
     <!--Notification pull starts here-->
     <?php
     if(isset($USER_CONFIRMATION)){
-        if($USER_CONFIRMATION){
+        if($USER_CONFIRMATION == 1){
             if(isset($USER_TYPE)) {
                 switch ($USER_TYPE) {
                     case 0:
@@ -36,6 +36,7 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
             }
         } else{
             SebenzaServer::logout();
+            SebenzaServer::redirect("/");
         }
     } else {
         SebenzaServer::redirect("/");

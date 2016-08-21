@@ -19,8 +19,6 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
                     <li>
                         <a onclick="toggleUserPageArea('registrationPanel1v')">Register Tradeworker</a>
                     </li>
-                    <li><a onclick="toggleUserPageArea('registrationPanel2v')">Register Contractor</a>
-                    </li>
                     <li><a onclick="toggleUserPageArea('registrationPanel2v')">Register Homeuser</a>
                     </li>
                 </ul>
@@ -34,11 +32,6 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
                         ?>
                     </div>
                     <div class="tabs-panel full-height user-panels" id="registrationPanel2v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
-                        <?php
-                        include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/contractorRegistrationForm.php";
-                        ?>
-                    </div>
-                    <div class="tabs-panel full-height user-panels" id="registrationPanel3v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                         <?php
                         include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuserRegistrationForm.php";
                         ?>

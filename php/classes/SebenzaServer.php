@@ -138,7 +138,8 @@ class SebenzaServer {
     }
     /*The following function will register the user according to his type, confirmation of email will be required from all
     users, to ensure that the email account exists.*/
-    public static function register(array $input, $type){
+    public static function register(array $input, $type)
+    {
         $locationsToRemove = 0;
         $locationsPerUserToRemove = 0;
         $skillsPerUserToRemove = 0;
@@ -147,29 +148,29 @@ class SebenzaServer {
         $email = $input[1];
         $username = $input[0];
         $keyToSend = self::hashPassword($email + $username + time());
-        $numLocations = $input[6];
-        $numSkills = $input[9];
-        $busDescription = $input[10];
-        $busTimeFrom = $input[11];
-        $busTimeTo = $input[12];
-        $contractorAvailability = $input[13];
-        if($contractorAvailability == "on"){
-            $contractorAvailability = 1;
-        }
-        else if($contractorAvailability == "off"){
-            $contractorAvailability = 0;
-        }
-        $locationID = array($numLocations);
-        $locationsToRemove = array($numLocations);
-        $locationsToRemoveAmount = 0;
-//        $condition = self::mailClient($email,$keyToSend,$input);
-        $condition = true;
+
+        $condition = self::mailClient($email,$keyToSend,$input);
+//        $condition = true;
         //$test = "";
         $returnValue = true;
-       if($condition)
-            switch ($type){
+        if ($condition) {
+            switch ($type) {
                 case 'contractor':
                     //$test .= "Working with contractor";
+                    $numLocations = $input[6];
+                    $numSkills = $input[9];
+                    $busDescription = $input[10];
+                    $busTimeFrom = $input[11];
+                    $busTimeTo = $input[12];
+                    $contractorAvailability = $input[13];
+                    if ($contractorAvailability == "on") {
+                        $contractorAvailability = 1;
+                    } else if ($contractorAvailability == "off") {
+                        $contractorAvailability = 0;
+                    }
+                    $locationID = array($numLocations);
+                    $locationsToRemove = array($numLocations);
+                    $locationsToRemoveAmount = 0;
                     $command = "SELECT `locationID`,`locationName` FROM `LOCATIONS` WHERE `locationName` = ?";
                     $command1 = "INSERT INTO `LOCATIONS` (`locationName`, `Coordinates`, `Region`, `Province`, `City`) VALUES (?,?,?,?,?)";
                     $dbHandler = self::fetchDatabaseHandler();
@@ -178,26 +179,25 @@ class SebenzaServer {
                     $region = "A";
                     $coordinates = "0:0";
 
-                    for($k = 0; (($k < $numLocations) && $condition);$k++){
+                    for ($k = 0; (($k < $numLocations) && $condition); $k++) {
                         //$test .= $k." ";
-                        if($dbHandler->runCommand($command,$_POST["areaname-contractor-".$k])) {
+                        if ($dbHandler->runCommand($command, $_POST["areaname-contractor-" . $k])) {
                             //$test .= " Running through areas: ";
 //                            //Should always return true, even if a matching area is not found, then that area will be added.
                             $result = $dbHandler->getResults();
 
                             if (count($result) == 0) {
 //                                //If the area does not exist in the database add it and gain a handle on the id
-                                $area = $_POST["areaname-contractor-".$k];
-                                $province = $_POST["provincename-contractor-".$k];
-                                $city = $_POST["cityname-contractor-".$k];
+                                $area = $_POST["areaname-contractor-" . $k];
+                                $province = $_POST["provincename-contractor-" . $k];
+                                $city = $_POST["cityname-contractor-" . $k];
                                 //TODO: coordinates can be requested through google maps api - extra - may make marking a google map for information a lot easier later
-                                if($dbHandler->runCommand($command1, $area, $coordinates, $region, $province, $city)){
+                                if ($dbHandler->runCommand($command1, $area, $coordinates, $region, $province, $city)) {
                                     //$test .= "Area added: ".$area." ".$province." ".$city."\n";
                                     $locationID[$k] = $dbHandler->getInsertID();
 //                                    $locationsToRemove = $k + 1;
                                     $locationsToRemove[++$locationsToRemoveAmount] = $dbHandler->getInsertID();
-                                }
-                                else{
+                                } else {
                                     //$test .= "no locations added from k =".$k;
                                     //$k = $numLocations + 5;
                                     $condition = false;
@@ -209,8 +209,7 @@ class SebenzaServer {
 //                                //If the area exists in the database gain a handle on the areaID - there should only be one returned result as the area names should be unique
                                 $locationID[$k] = $result[0]['locationID'];
                             }
-                        }
-                        else{
+                        } else {
                             //dbhandler has failed to run for some reason remove all locations added to LOCATIONS if any
                             //$test .= "Couldnt run dbhandler to locate areas";
 //                            $locationsToRemove = $k - 1;
@@ -220,7 +219,7 @@ class SebenzaServer {
                         }
                     }
                     //Due to LOCATIONS having multiple inserts which run in a for loop $condition exists, can be done when the for loop reaches the last position.
-                    if($condition){
+                    if ($condition) {
                         $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`) VALUES (?,?,?,?,?,?,?)";
                         $contactNumber = $input[2];
                         $password = self::hashPassword($input[3]);
@@ -231,196 +230,184 @@ class SebenzaServer {
                             //once users are inserted into the REGISTERED_USER table appropriate data will be inserted into the CONFIRMATIONS table
                             $id = $dbHandler->getInsertID();
                             $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
-                            if( $dbHandler->runCommand($command, $id, $keyToSend)){
+                            if ($dbHandler->runCommand($command, $id, $keyToSend)) {
                                 //once users are inserted into the CONFIRMATIONS table appropriate data will be inserted into the CONTRACTOR table
                                 $busName = $input[7];
                                 $busAddress = $input[8];
                                 //The following is to check whether the contractor is VAT registered or not
-                                if($_POST['ignore-exampleSwitch'] == "on") {
+                                if ($_POST['ignore-exampleSwitch'] == "on") {
                                     //This will insert into the database taking into account the business is - VAT registered
                                     //$test .= "\nInserting details for VAT registered entity";
                                     $command = "INSERT INTO `CONTRACTOR` (`UserID`, `BusinessRegistrationNum`, `BusinessVatNum`, `BusinessAddress`, `BusinessName`, `VatRegistered`, `BusinessDescription`,`BusinessHoursFrom`,`BusinessHoursTo`,`Availability`) VALUES (?,?,?,?,?,?,?,?,?,?)";
-                                    if($dbHandler->runCommand($command,$id,$_POST['reg-contractor'],$_POST['vat-contractor'],$busAddress,$busName,1,$busDescription,$busTimeFrom,$busTimeTo,$contractorAvailability)){
+                                    if ($dbHandler->runCommand($command, $id, $_POST['reg-contractor'], $_POST['vat-contractor'], $busAddress, $busName, 1, $busDescription, $busTimeFrom, $busTimeTo, $contractorAvailability)) {
                                         //$test .= "\nThe following entries have been inserted into CONTRACTOR: ".$id." ".$_POST['reg-contractor']." ".$_POST['vat-contractor']." ".$busAddress." ".$busName;
 //                                        $condition2 = true;
                                         $command = "INSERT INTO `SPECIALIZATIONS_PER_USER` (`UserID`, `workTypeID`) VALUES (?,?)";
-                                        for($j = 0; (($j < $numSkills) && $condition);$j++){
-                                            if($dbHandler->runCommand($command,$id,$_POST['contractor-work-type-'.$j])){
+                                        for ($j = 0; (($j < $numSkills) && $condition); $j++) {
+                                            if ($dbHandler->runCommand($command, $id, $_POST['contractor-work-type-' . $j])) {
 
-                                            }
-                                            else{
+                                            } else {
                                                 $condition = false;
                                             }
                                         }
-                                        if($condition){
+                                        if ($condition) {
                                             $command = "INSERT INTO `LOCATIONS_PER_USER` (`UserID`, `locationID`) VALUES (?,?)";
-                                            for($k = 0;$k<$numLocations && $condition;$k++){
-                                                $returnValue = $dbHandler->runCommand($command,$id,$locationID[$k]);
-                                                if($returnValue){
+                                            for ($k = 0; $k < $numLocations && $condition; $k++) {
+                                                $returnValue = $dbHandler->runCommand($command, $id, $locationID[$k]);
+                                                if ($returnValue) {
 
-                                                }
-                                                else{
+                                                } else {
                                                     $condition = false;
 
                                                 }
                                             }
-                                            if(!$condition){
+                                            if (!$condition) {
                                                 $command = "DELETE FROM `LOCATIONS_PER_USER` WHERE `UserID` = ?";
-                                                $dbHandler->runCommand($command,$id);
+                                                $dbHandler->runCommand($command, $id);
                                                 $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                                                for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                                for ($k = 0; $k < $locationsToRemoveAmount; $k++) {
                                                     //Technically one should test if this fails too
-                                                    $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                                    $dbHandler->runCommand($command, $locationsToRemove[$k]);
                                                 }
                                                 $command = "DELETE FROM `CONTRACTOR` WHERE `UserID` = ?";
-                                                $dbHandler->runCommand($command,$id);
+                                                $dbHandler->runCommand($command, $id);
                                                 $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
-                                                $dbHandler->runCommand($command,$id);
+                                                $dbHandler->runCommand($command, $id);
                                                 $command = "DELETE FROM `SPECIALIZATIONS_PER_USER` WHERE `UserID` = ?";
-                                                $dbHandler->runCommand($command,$id);
+                                                $dbHandler->runCommand($command, $id);
                                                 $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
-                                                $dbHandler->runCommand($command,$id);
+                                                $dbHandler->runCommand($command, $id);
                                                 $returnValue = false;
                                             }
-                                        }
-                                        else{
+                                        } else {
                                             $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                                            for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                            for ($k = 0; $k < $locationsToRemoveAmount; $k++) {
                                                 //Technically one should test if this fails too
-                                                $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                                $dbHandler->runCommand($command, $locationsToRemove[$k]);
                                             }
                                             $command = "DELETE FROM `CONTRACTOR` WHERE `UserID` = ?";
-                                            $dbHandler->runCommand($command,$id);
+                                            $dbHandler->runCommand($command, $id);
                                             $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
-                                            $dbHandler->runCommand($command,$id);
+                                            $dbHandler->runCommand($command, $id);
                                             $command = "DELETE FROM `SPECIALIZATIONS_PER_USER` WHERE `UserID` = ?";
-                                            $dbHandler->runCommand($command,$id);
+                                            $dbHandler->runCommand($command, $id);
                                             $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
-                                            $dbHandler->runCommand($command,$id);
+                                            $dbHandler->runCommand($command, $id);
                                             $returnValue = false;
                                         }
 
-                                        }
-                                    else{
+                                    } else {
                                         $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                                        for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                        for ($k = 0; $k < $locationsToRemoveAmount; $k++) {
                                             //Technically one should test if this fails too
-                                            $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                            $dbHandler->runCommand($command, $locationsToRemove[$k]);
                                         }
 
                                         $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
-                                        $dbHandler->runCommand($command,$id);
+                                        $dbHandler->runCommand($command, $id);
                                         $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
-                                        $dbHandler->runCommand($command,$id);
+                                        $dbHandler->runCommand($command, $id);
                                         $returnValue = false;
                                     }
-                                }
-                                else{
+                                } else {
                                     //This will insert into the database taking into account the business is not - VAT registered
                                     //$test .= "\nInserting details for a non VAT registered entity";
                                     $command = "INSERT INTO `CONTRACTOR` (`UserID`, `BusinessAddress`, `BusinessName`,`VatRegistered`, `BusinessDescription`,`BusinessHoursFrom`,`BusinessHoursTo`,`Availability`) VALUES (?,?,?,?,?,?,?,?)";
-                                    if($dbHandler->runCommand($command,$id,$busAddress,$busName,0,$busDescription,$busTimeFrom,$busTimeTo,$contractorAvailability)){
+                                    if ($dbHandler->runCommand($command, $id, $busAddress, $busName, 0, $busDescription, $busTimeFrom, $busTimeTo, $contractorAvailability)) {
                                         //$test .= "\nThe following entries have been inserted into CONTRACTOR: ".$id." ".$busAddress." ".$busName;
                                         $command = "INSERT INTO `SPECIALIZATIONS_PER_USER` (`UserID`, `workTypeID`) VALUES (?,?)";
-                                        for($j = 0; ($j < $numSkills) && $condition;$j++){
-                                            if($dbHandler->runCommand($command,$id,$_POST['contractor-work-type-'.$j])){
+                                        for ($j = 0; ($j < $numSkills) && $condition; $j++) {
+                                            if ($dbHandler->runCommand($command, $id, $_POST['contractor-work-type-' . $j])) {
                                                 //$test .= "\nThe following entries have been inserted into SPECIALIZATIONS_PER_USER: ".$id." ".$_POST['contractor-work-type-'.$j];
-                                            }
-                                            else{
+                                            } else {
                                                 //$test .= "\nFailed to insert specialization";
                                                 $condition = false;
                                             }
                                         }
-                                        if($condition){
+                                        if ($condition) {
                                             //$test .= "All specializations per user have been added successfully";
                                             $command = "INSERT INTO `LOCATIONS_PER_USER` (`UserID`, `locationID`) VALUES (?,?)";
-                                            for($k = 0;$k<$numLocations && $condition;$k++){
+                                            for ($k = 0; $k < $numLocations && $condition; $k++) {
                                                 //$test .= "\nInserting in locations:";
-                                                $returnValue = $dbHandler->runCommand($command,$id,$locationID[$k]);
-                                                if($returnValue){
+                                                $returnValue = $dbHandler->runCommand($command, $id, $locationID[$k]);
+                                                if ($returnValue) {
                                                     //$test .= "The following locations have been added to the user: ".;
-                                                }
-                                                else{
+                                                } else {
                                                     $condition = false;
                                                 }
                                             }
-                                            if(!$condition){
+                                            if (!$condition) {
                                                 $command = "DELETE FROM `LOCATIONS_PER_USER` WHERE `UserID` = ?";
-                                                $dbHandler->runCommand($command,$id);
+                                                $dbHandler->runCommand($command, $id);
                                                 $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                                                for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                                for ($k = 0; $k < $locationsToRemoveAmount; $k++) {
                                                     //Technically one should test if this fails too
-                                                    $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                                    $dbHandler->runCommand($command, $locationsToRemove[$k]);
                                                 }
                                                 $command = "DELETE FROM `CONTRACTOR` WHERE `UserID` = ?";
-                                                $dbHandler->runCommand($command,$id);
+                                                $dbHandler->runCommand($command, $id);
                                                 $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
-                                                $dbHandler->runCommand($command,$id);
+                                                $dbHandler->runCommand($command, $id);
                                                 $command = "DELETE FROM `SPECIALIZATIONS_PER_USER` WHERE `UserID` = ?";
-                                                $dbHandler->runCommand($command,$id);
+                                                $dbHandler->runCommand($command, $id);
                                                 $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
-                                                $dbHandler->runCommand($command,$id);
+                                                $dbHandler->runCommand($command, $id);
                                                 $returnValue = false;
                                             }
-                                        }
-                                        else{
+                                        } else {
                                             $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                                            for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                            for ($k = 0; $k < $locationsToRemoveAmount; $k++) {
                                                 //Technically one should test if this fails too
-                                                $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                                $dbHandler->runCommand($command, $locationsToRemove[$k]);
                                             }
                                             $command = "DELETE FROM `CONTRACTOR` WHERE `UserID` = ?";
-                                            $dbHandler->runCommand($command,$id);
+                                            $dbHandler->runCommand($command, $id);
                                             $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
-                                            $dbHandler->runCommand($command,$id);
+                                            $dbHandler->runCommand($command, $id);
                                             $command = "DELETE FROM `SPECIALIZATIONS_PER_USER` WHERE `UserID` = ?";
-                                            $dbHandler->runCommand($command,$id);
+                                            $dbHandler->runCommand($command, $id);
                                             $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
-                                            $dbHandler->runCommand($command,$id);
+                                            $dbHandler->runCommand($command, $id);
                                             $returnValue = false;
                                         }
 
-                                    }
-                                    else{
+                                    } else {
                                         $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                                        for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                        for ($k = 0; $k < $locationsToRemoveAmount; $k++) {
                                             //Technically one should test if this fails too
-                                            $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                            $dbHandler->runCommand($command, $locationsToRemove[$k]);
                                         }
                                         $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
-                                        $dbHandler->runCommand($command,$id);
+                                        $dbHandler->runCommand($command, $id);
                                         $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
-                                        $dbHandler->runCommand($command,$id);
+                                        $dbHandler->runCommand($command, $id);
                                         $returnValue = false;
                                     }
                                 }
-                            }
-                            else{
+                            } else {
                                 $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                                for($k=0;$k<$locationsToRemoveAmount;$k++){
+                                for ($k = 0; $k < $locationsToRemoveAmount; $k++) {
                                     //Technically one should test if this fails too
-                                    $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                    $dbHandler->runCommand($command, $locationsToRemove[$k]);
                                 }
                                 $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
-                                $dbHandler->runCommand($command,$id);
+                                $dbHandler->runCommand($command, $id);
                                 $returnValue = false;
                             }
                             //TODO: A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
-                        }
-                        else{
+                        } else {
                             $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                            for($k=0;$k<$locationsToRemoveAmount;$k++){
+                            for ($k = 0; $k < $locationsToRemoveAmount; $k++) {
                                 //Technically one should test if this fails too
-                                $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                                $dbHandler->runCommand($command, $locationsToRemove[$k]);
                             }
                             $returnValue = false;
                         }
-                    }
-                    else{
+                    } else {
                         $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                        for($k=0;$k<$locationsToRemoveAmount;$k++){
-                        //Technically one should test if this fails too
-                            $dbHandler->runCommand($command,$locationsToRemove[$k]);
+                        for ($k = 0; $k < $locationsToRemoveAmount; $k++) {
+                            //Technically one should test if this fails too
+                            $dbHandler->runCommand($command, $locationsToRemove[$k]);
                         }
                         $returnValue = false;
                     }
@@ -430,148 +417,221 @@ class SebenzaServer {
                     $condition = true;
                     $region = "A";
                     $coordinates = "0:0";
-                    $command = "SELECT `LocationID`, `LocationName` FROM `LOCATIONS` WHERE `locationName` = ? " ;
+                    $command = "SELECT `LocationID`, `LocationName` FROM `LOCATIONS` WHERE `locationName` = ? ";
                     $command1 = "INSERT INTO `LOCATIONS` (`locationName`, `Coordinates`, `Region`, `Province`, `City`) VALUES (?,?,?,?,?)";
                     $dbHandler = self::fetchDatabaseHandler();
 
                     // The following code will add a users location to the database, home users only have a single location therefore there is no necessity for a loop
                     // if the location does not exist in our databsae it will then be added
-                     if($condition) {
-                         if ($dbHandler->runCommand($command, $_POST["areaname-homeuser-"])) {
-                             //$test .= " Running through areas: ";
-                             //Should always return true, even if a matching area is not found, then that area will be added.
-                             $result = $dbHandler->getResults();
+                    if ($condition) {
+                        if ($dbHandler->runCommand($command, $_POST["areaname-homeuser-"])) {
+                            //$test .= " Running through areas: ";
+                            //Should always return true, even if a matching area is not found, then that area will be added.
+                            $result = $dbHandler->getResults();
 
-                             if (count($result) == 0) {
-                                 //If the area does not exist in the database it will add it and gain a handle on the id
-                                 $area = $_POST["areaname-homeuser-"];
-                                 $province = $_POST["provincename-homeuser-"];
-                                 $city = $_POST["cityname-homeuser-"];
+                            if (count($result) == 0) {
+                                //If the area does not exist in the database it will add it and gain a handle on the id
+                                $area = $_POST["areaname-homeuser-"];
+                                $province = $_POST["provincename-homeuser-"];
+                                $city = $_POST["cityname-homeuser-"];
 
-                                 if ($dbHandler->runCommand($command1, $area, $coordinates, $region, $province, $city)) {
-                                     //$test .= "Area added: ".$area." ".$province." ".$city."\n";
-                                     $locationID[0] = $dbHandler->getInsertID();
-                                     //$locationsToRemove = $k + 1;
-                                     $locationsToRemove[++$locationsToRemoveAmount] = $dbHandler->getInsertID();
-                                 } else {
-                                     //$test .= "no locations added from k =".$k;
-                                     //$k = $numLocations + 5;
-                                     $condition = false;
-                                     $returnValue = false;
-                                     //dbhandler has failed to run for some reason remove all locations added to LOCATIONS
-                                 }
-                             } else {
-                                 //$test .= " Areas to run through: ".count($result)."The values contained withing the result: id - ".$result[0]['locationID']." Name - ".$result[0]['locationName'];
-                                 //If the area exists in the database gain a handle on the areaID - there should only be one returned result as the area names should be unique
-                                 $locationID[0] = $result[0]['locationID'];
-                             }
-                         } else {
-                             //dbhandler has failed to run for some reason remove all locations added to LOCATIONS if any
-                             //$test .= "Couldnt run dbhandler to locate areas";
-                             ////$locationsToRemove = $k - 1;
-                             //$k = $numLocations + 5;
-                             $condition = false;
-                             $returnValue = false;
-                         }
+                                if ($dbHandler->runCommand($command1, $area, $coordinates, $region, $province, $city)) {
+                                    //$test .= "Area added: ".$area." ".$province." ".$city."\n";
+                                    $locationID[0] = $dbHandler->getInsertID();
+                                    //$locationsToRemove = $k + 1;
+                                    $locationsToRemove[++$locationsToRemoveAmount] = $dbHandler->getInsertID();
+                                } else {
+                                    //$test .= "no locations added from k =".$k;
+                                    //$k = $numLocations + 5;
+                                    $condition = false;
+                                    $returnValue = false;
+                                    //dbhandler has failed to run for some reason remove all locations added to LOCATIONS
+                                }
+                            } else {
+                                //$test .= " Areas to run through: ".count($result)."The values contained withing the result: id - ".$result[0]['locationID']." Name - ".$result[0]['locationName'];
+                                //If the area exists in the database gain a handle on the areaID - there should only be one returned result as the area names should be unique
+                                $locationID[0] = $result[0]['locationID'];
+                            }
+                        } else {
+                            //dbhandler has failed to run for some reason remove all locations added to LOCATIONS if any
+                            //$test .= "Couldnt run dbhandler to locate areas";
+                            ////$locationsToRemove = $k - 1;
+                            //$k = $numLocations + 5;
+                            $condition = false;
+                            $returnValue = false;
+                        }
 
-                         if ($condition) {
-                             $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`) VALUES (?,?,?,?,?,?,?)";
-                             $contactNumber = $input[2];
-                             $password = self::hashPassword($input[3]);
-                             $name = $input[5];
-                             $surname = $input[4];
+                        if ($condition) {
+                            $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`) VALUES (?,?,?,?,?,?,?)";
+                            $contactNumber = $input[2];
+                            $password = self::hashPassword($input[3]);
+                            $name = $input[5];
+                            $surname = $input[4];
 
-                             if ($dbHandler->runCommand($command, $username, $email, $contactNumber, 2, $password, $surname, $name)) {
-                                 $id = $dbHandler->getInsertID();
-                                 $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
-                                 if ($dbHandler->runCommand($command, $id, $keyToSend)) {
-                                     $command = "INSERT INTO `HOMEUSER`(`UserID`, `Subscribed`) VALUES (`UserID`, `false`)";
-                                     $dbHandler->runCommand($command);
-                                     if ($condition) {
-                                         $command = "INSERT INTO `LOCATIONS_PER_USER`(`UserID`, `locationID`) VALUES (?,?)";
-                                         //$test .= "\nInserting in locations:";
-                                         $returnValue = $dbHandler->runCommand($command, $id, $locationID[0]);
-                                         if ($returnValue) {
-                                             //$test .= "The following locations have been added to the user: ".;
-                                         } else {
-                                             $condition = false;
-                                         }
+                            if ($dbHandler->runCommand($command, $username, $email, $contactNumber, 2, $password, $surname, $name)) {
+                                $id = $dbHandler->getInsertID();
+                                $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
+                                if ($dbHandler->runCommand($command, $id, $keyToSend)) {
+                                    $command = "INSERT INTO `HOMEUSER`(`UserID`, `Subscribed`) VALUES (`UserID`, `false`)";
+                                    $dbHandler->runCommand($command);
+                                    if ($condition) {
+                                        $command = "INSERT INTO `LOCATIONS_PER_USER`(`UserID`, `locationID`) VALUES (?,?)";
+                                        //$test .= "\nInserting in locations:";
+                                        $returnValue = $dbHandler->runCommand($command, $id, $locationID[0]);
+                                        if ($returnValue) {
+                                            //$test .= "The following locations have been added to the user: ".;
+                                        } else {
+                                            $condition = false;
+                                        }
 
-                                         // The code below will remove from all inserted elements of the users details from the database
-                                         if (!$condition) {
-                                             $command = "DELETE FROM `LOCATIONS_PER_USER` WHERE `UserID` = ?";
-                                             //$test .= "\n Removing from locations:";
-                                             $returnValue = $dbHandler->runCommand($command, $id, $locationID[0]);
-                                             $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                                             //Technically one should test if this fails too
-                                             $dbHandler->runCommand($command, $locationsToRemove[0]);
+                                        // The code below will remove from all inserted elements of the users details from the database
+                                        if (!$condition) {
+                                            $command = "DELETE FROM `LOCATIONS_PER_USER` WHERE `UserID` = ?";
+                                            //$test .= "\n Removing from locations:";
+                                            $returnValue = $dbHandler->runCommand($command, $id, $locationID[0]);
+                                            $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                                            //Technically one should test if this fails too
+                                            $dbHandler->runCommand($command, $locationsToRemove[0]);
 
-                                             $command = "DELETE FROM `HOMEUSER` WHERE `UserID` = ?";
-                                             $dbHandler->runCommand($command, $id);
-                                             $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
-                                             $dbHandler->runCommand($command, $id);
-                                             $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
-                                             $dbHandler->runCommand($command, $id);
-                                             $returnValue = false;
-                                         }
-                                     } else {
-                                         $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                                         //Technically one should test if this fails too
-                                         $dbHandler->runCommand($command, $locationsToRemove[0]);
-                                         $command = "DELETE FROM `CONTRACTOR` WHERE `UserID` = ?";
-                                         $dbHandler->runCommand($command, $id);
-                                         $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
-                                         $dbHandler->runCommand($command, $id);
-                                         $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
-                                         $dbHandler->runCommand($command, $id);
-                                         $returnValue = false;
+                                            $command = "DELETE FROM `HOMEUSER` WHERE `UserID` = ?";
+                                            $dbHandler->runCommand($command, $id);
+                                            $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
+                                            $dbHandler->runCommand($command, $id);
+                                            $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                                            $dbHandler->runCommand($command, $id);
+                                            $returnValue = false;
+                                        }
+                                    } else {
+                                        $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                                        //Technically one should test if this fails too
+                                        $dbHandler->runCommand($command, $locationsToRemove[0]);
+                                        $command = "DELETE FROM `CONTRACTOR` WHERE `UserID` = ?";
+                                        $dbHandler->runCommand($command, $id);
+                                        $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
+                                        $dbHandler->runCommand($command, $id);
+                                        $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                                        $dbHandler->runCommand($command, $id);
+                                        $returnValue = false;
 
-                                     }
-                                 } else {
-                                     $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                                     //Technically one should test if this fails too
-                                     $dbHandler->runCommand($command, $locationsToRemove[0]);
-                                     $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
-                                     $dbHandler->runCommand($command, $id);
-                                     $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
-                                     $dbHandler->runCommand($command, $id);
-                                     $returnValue = false;
-                                 }
-                             } else {
-                                 $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                                 //Technically one should test if this fails too
-                                 $dbHandler->runCommand($command, $locationsToRemove[0]);
-                                 $returnValue = false;
-                             }
-                         } else {
-                             $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                             //Technically one should test if this fails too
-                             $dbHandler->runCommand($command, $locationsToRemove[0]);
-                             $returnValue = false;
-                         }
-                     } else{
-                         $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
-                         //Technically one should test if this fails too
-                         $dbHandler->runCommand($command,$locationsToRemove[0]);
-                         $returnValue = false;
-                     }
+                                    }
+                                } else {
+                                    $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                                    //Technically one should test if this fails too
+                                    $dbHandler->runCommand($command, $locationsToRemove[0]);
+                                    $command = "DELETE FROM `CONFIRMATIONS` WHERE `UserID` = ?";
+                                    $dbHandler->runCommand($command, $id);
+                                    $command = "DELETE FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                                    $dbHandler->runCommand($command, $id);
+                                    $returnValue = false;
+                                }
+                            } else {
+                                $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                                //Technically one should test if this fails too
+                                $dbHandler->runCommand($command, $locationsToRemove[0]);
+                                $returnValue = false;
+                            }
+                        } else {
+                            $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                            //Technically one should test if this fails too
+                            $dbHandler->runCommand($command, $locationsToRemove[0]);
+                            $returnValue = false;
+                        }
+                    } else {
+                        $command = "DELETE FROM `LOCATIONS` WHERE `locationID` = ?";
+                        //Technically one should test if this fails too
+                        $dbHandler->runCommand($command, $locationsToRemove[0]);
+                        $returnValue = false;
+                    }
 
-                        //A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
+                    //A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
 
                     return $returnValue;
                     break;
                 case 'tradeworker':
-                    $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name`) VALUES (?,?,?,?,?,?,?)";
-                    $contactNumber = $input[2];
-                    $password = self::hashPassword($input[3]);
-                    $name = $input[5];
+                    $name = $input[2];
+                    $idNumber = $input[3];
                     $surname = $input[4];
+                    $password = self::hashPassword($input[5]);
+                    $cellNumber = $input[6];
+                    $homeNumber = $input[7];
+                    $availability = $input[8];
+                    $numLocations = $input[9];
+                    $numSkills = $input[10];
+                    $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name` , `PersonalID`) VALUES (?,?,?,?,?,?,?,?)";
+                    $skillsAdded = true;
                     $dbHandler = self::fetchDatabaseHandler();
-                    if($dbHandler->runCommand($command,$username,$email,$contactNumber,0,$password,$surname,$name)){
+                    if ($dbHandler->runCommand($command, $username, $email, $cellNumber, 0, $password, $surname, $name, $idNumber)) {
                         $id = $dbHandler->getInsertID();
                         $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
-                        $returnValue = $dbHandler->runCommand($command,$id,$keyToSend);
+                        if($dbHandler->runCommand($command, $id, $keyToSend)){
+                            $command = "INSERT INTO `TRADE_WORKER` (`UserID`,`Availability`) VALUES (?,?)";
+                            if($dbHandler->runCommand($command, $id, $availability)){
+                                $command = "INSERT INTO `SPECIALIZATIONS_PER_USER` (`UserID`,`workTypeID`) VALUES (?,?)";
+                                for($r = 0; $r < $numSkills;$r++){
+                                    if(!$dbHandler->runCommand($command,$id,$_POST["tradeWorker-work-type-".$r]))
+                                        $skillsAdded &= false;
+                                }
+                            }
+                            else{
+                                //remove entries from registered user and confirmations and report failure
+                            }
+
+                        }
+                        else{
+                            //remove entries from registered user and report failure
+                        }
                         //A timer could run to check the date since the email was sent so that if confirmation doesn't occur within a month or two the entry in the database can be removed for username recycling purposes and so that the database doesn't get full with unnecessary entries
+                    }
+                    else{
+                        //report failure
+                    }
+                    $locationsAdded = true;
+                    if($skillsAdded){
+                        //Add all the locations
+                        $locationsArray = array();
+                        $command = "SELECT `locationID` FROM `LOCATIONS` WHERE `locationName` = ?";
+                        for($t = 0; $t < $numLocations; $t++){
+                            $dbHandler->runCommand($command,$_POST["areaname-tradeWorker-".$t]);
+                            $result = $dbHandler->getResults();
+                            if(count($result) > 0){
+                                array_push($locationsArray,$result[0]['locationID']);
+                            }
+                            else{
+                                $command = "INSERT INTO `LOCATIONS` (`locationName`,`City`,`Province`) VALUES (?,?,?)";
+                                if($dbHandler->runCommand($command,$_POST["areaname-tradeWorker-".$t],$_POST["provincename-tradeWorker-".$t],$_POST["cityname-tradeWorker-".$t])){
+                                    $locationID = $dbHandler->getInsertID();
+                                    array_push($locationsArray,$locationID);
+                                }
+                                else{
+                                    $locationsAdded &= false;
+                                }
+                            }
+                        }
+
+                        $locationsPerUser = true;
+                        if($locationsAdded){
+                            //add the locations per user according to the locationID
+                            $command = "INSERT INTO `LOCATIONS_PER_USER` (`UserID`,`locationID`) VALUES (?,?)";
+                            for($t = 0; $t < $numLocations; $t++){
+                                if(!$dbHandler->runCommand($command,$id,$locationsArray[$t])){
+                                    $locationsPerUser &= false;
+                                }
+                            }
+                        }
+                        else{
+                            //Remove which ever locations were added to locations and remove from SPECIALIZATIONS_PER_USER,REGISTERED_USERS,CONFIRMATIONS,TRADEWORKER report failure
+                        }
+
+                        if(!$locationsPerUser){
+                            //Remove which ever locations were added to locations per user and remove from SPECIALIZATIONS_PER_USER,REGISTERED_USERS,CONFIRMATIONS,TRADEWORKER,LOCATIONS report failure
+                        }
+                        else{
+                            //All entries were added to relevant tables correctly
+                            $returnValue = 1;
+                        }
+                    }
+                    else{
+                        //Remove the from SPECIALIZATIONS_PER_USER,REGISTERED_USERS,CONFIRMATIONS,TRADEWORKER report failure
                     }
                     return $returnValue;
                     break;
@@ -579,7 +639,13 @@ class SebenzaServer {
                     return $returnValue;
                     break;
             }
+        }
+        else{
+            $returnValue = 1;
+            $returnValue *= 101;
+        }
         return $returnValue;
+
     }
 
     public static function mailClient($to,$key):bool{
@@ -593,7 +659,7 @@ class SebenzaServer {
         $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
         $mail->Username = '215040496@student.uj.ac.za';                 // SMTP username
-        $mail->Password = '';                           // SMTP password
+        $mail->Password = '@Uj-436518';                           // SMTP password
         $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
         $mail->Port = 587;                                    // TCP port to connect to
         $mail->IsHTML(true);
@@ -602,7 +668,7 @@ class SebenzaServer {
         $mail->addReplyTo('215040496@student.uj.ac.za', 'Information');
 
         $mail->Subject = 'SebenzaSA Confirmation';
-        $mail->Body    = 'This is the HTML message body <b>in bold!</b><br/><a href="'.$link.'">'.$title.'</a>';
+        $mail->Body    = '<b>Thank you for registering with SebenzaSA!</b><br/> please click on the following link for confirmation<a href="'.$link.'">'.$title.'</a><br/>If it was not you that registered for the SebenzaSA site, you can ignore this email';
         return $mail->send();
     }
     //The following function is used to confirm a user who has clicked on the link within an email he received
@@ -1763,11 +1829,59 @@ if (!empty($_POST)) {
                     $response = json_encode(false);
                 }
                 break;
-            case 'register-tradeworker':
-                if(isset($_POST['username']) && isset($_POST['name']) && isset($_POST['surname']) && isset($_POST['password']) && isset($_POST['email']) && isset($_POST['cellnumber']) && isset($_POST['homeNumber'])){
-                    $response = json_encode(SebenzaServer::register([$_POST['username'],$_POST['email'],$_POST['cellnumber'],$_POST['password'],$_POST['surname'],$_POST['name']],'tradeworker'));
-                } else{
-                    $response = json_encode(false);
+            case 'register-tradeWorker':
+                $condition = true;
+                $uniqueIndicator = 1;
+                //Validating singular entries will not be more than one
+                if(!isset($_POST["name-tradeWorker"]) &&!isset($_POST["identity-tradeWorker"]) && !isset($_POST["surname-tradeWorker"]) && !isset($_POST["username-tradeWorker"]) && !isset($_POST["password-tradeWorker"]) && !isset($_POST["email-tradeWorker"]) && !isset($_POST["cellnumber-tradeWorker"]) && !isset($_POST["homeNumber-tradeWorker"]) && !isset($_POST["availability-tradeWorker-switch"]) && !isset($_POST["homeNumber-tradeWorker"])){
+                    $uniqueIndicator *= 7;
+                }
+                //Doing unique check for entries within REGISTERED_USER
+                if(!SebenzaServer::isUnique($_POST["email-tradeWorker"],"Email", "registered_users")){
+                    $uniqueIndicator *= 2;
+                }
+                if(!SebenzaServer::isUnique($_POST["username-tradeWorker"],"Username", "registered_users")){
+                    $uniqueIndicator *= 3;
+                }
+                if(!SebenzaServer::isUnique($_POST["identity-tradeWorker"],"PersonalID", "registered_users")){
+                    $uniqueIndicator *= 5;
+                }
+
+                //Doing validation on locations added, this can be as many as the user likes no limit
+                if(isset($_POST["ignore-locationsAdded-tradeWorker"])){
+                    for($j = 0 ; $j < $_POST["ignore-locationsAdded-tradeWorker"]; $j++){
+                        if(!isset($_POST["areaname-tradeWorker-".$j]) && !isset($_POST["cityname-tradeWorker-".$j]) && !isset($_POST["provincename-tradeWorker-".$j])){
+                            $uniqueIndicator *= 7;
+                        }
+                    }
+                }
+                else{
+                    $uniqueIndicator *= 7;
+                }
+
+                //Doing validation on skills added, maximum of three, minimum of one
+                if(isset($_POST["ignore-sillsAdded-tradeWorker"])){
+                    for($j = 0 ; $j < $_POST["ignore-sillsAdded-tradeWorker"]; $j++){
+                        if(!isset($_POST["tradeWorker-work-type-".$j])){
+                            $uniqueIndicator *= 7;
+                        }
+                    }
+                }
+                else{
+                    $uniqueIndicator *= 7;
+                }
+
+
+                if($uniqueIndicator == 1){
+                    $response = json_encode(SebenzaServer::register([$_POST["username-tradeWorker"],$_POST["email-tradeWorker"],$_POST["name-tradeWorker"],$_POST["identity-tradeWorker"],$_POST["surname-tradeWorker"],$_POST["password-tradeWorker"],$_POST["cellnumber-tradeWorker"],$_POST["homeNumber-tradeWorker"],$_POST["availability-tradeWorker-switch"],$_POST["ignore-locationsAdded-tradeWorker"],$_POST["ignore-sillsAdded-tradeWorker"]],'tradeworker'));
+                }
+                else{
+                    // $response mod(2) == 0 means email address was not unique
+                    // $response mod(3) == 0 means username was not unique
+                    // $response mod(5) == 0 means ID was not unique
+                    // $response mod(7) == 0 means one or more POST was not unique
+                    // $response mod(101) == 0 means the confirmation email could not be sent
+                    $response = json_encode($uniqueIndicator);
                 }
                 break;
             case 'register-homeuser':

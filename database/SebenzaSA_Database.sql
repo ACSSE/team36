@@ -40,8 +40,8 @@ DROP TABLE IF EXISTS `LOCATIONS`;
 CREATE TABLE `LOCATIONS` (
 	`locationID` integer not null auto_increment,
   `locationName` varchar(50) not null unique,
-  `Coordinates` varchar(50) not null,
-  `Region` varchar(50) not null,
+  `Coordinates` varchar(50),
+  `Region` varchar(50),
   `Province` varchar(50) not NULL,
   `City` varchar(50),
 	PRIMARY KEY (`locationID`)

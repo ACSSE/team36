@@ -294,7 +294,7 @@
 <!--            <label></label><button class="button success" data-toggle="additional-area-0" type="button" onclick="addContractorLocation()">-->
 <!--                +-->
 <!--            </button>-->
-            <a data-toggle="additional-area-0 additional-area-1 additional-area-2" name="toggle-area-0" id="toggle-area-0" onclick="addContractorLocations(0)">
+            <a data-toggle="additional-area-0 additional-area-1 additional-area-2" name="toggle-area-0" id="toggle-area-0" onclick="addTradeworkerLocations(0)">
                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
             </a>
         </div>

@@ -20,7 +20,7 @@ var NEXT_NOTIFICATION_DELAY = 1000;  //How long between notifications - has to b
 var NOTIFICATION_PULL_INTERVAL = 15000; //How often notifications are pulled from the server
 var notificationArray = []; //Stores the notifications fetched from the server
 var skillCounter = 0;
-var contractorLocation = 0;
+var tradeWorkerLocation = 0;
 var locationAmount = 0;
 var locationsElements = [];
 
@@ -154,13 +154,97 @@ function handleTradeworkerRegisterResponse(response){
     console.log("Handling register response: " + response);
     var success = JSON.parse(response) ;
     console.log("Registering: response " + success);
-    if(typeof success == 'boolean') {
-        if (success) {
-            document.getElementById("register-modal-button".click());
-        } else {
-            console.log("Registration failed")
+    if(typeof success == 'number'){
+        var html = '';
+        if(success == 1){
+             html = '<h1>You are now Registered!</h1>' +
+                    '<p class="lead">Please access your email address</p>' +
+                    '<p>Click on the link provided within email to complete registration and gain access to the site!</p>' +
+                    '<p>This will only be available for a month</p>';
+            document.getElementById('tradeWorker-register-modal-information').innerHTML = html;
+            $('#tradeWorker-register-modal').foundation('toggle');
         }
-    }else
+        else{
+            html = '<h1>REGISTRATION FAILED</h1>';
+            var focus = false;
+            if(success %2 == 0){
+                var displayProperty = document.getElementById('unique-email-tradeWorker-info').style.display.toLowerCase();
+                if (displayProperty == '' || displayProperty == 'none') {
+                    $('#unique-email-tradeWorker-info').foundation('toggle');
+                    if(!focus){
+                        $('#email-tradeWorker').focus();
+                        focus = true;
+                    }
+                }
+                success /= 2;
+            }
+            else{
+                var displayProperty = document.getElementById('unique-email-tradeWorker-info').style.display.toLowerCase();
+                if (displayProperty == 'block') {
+                    $('#unique-email-tradeWorker-info').foundation('toggle');
+                }
+            }
+            if(success %3 == 0){
+                var displayProperty = document.getElementById('unique-username-tradeWorker-info').style.display.toLowerCase();
+                if (displayProperty == '' || displayProperty == 'none') {
+                    $('#unique-username-tradeWorker-info').foundation('toggle');
+                    if(!focus){
+                        $('#username-tradeWorker').focus();
+                        focus = true;
+                    }
+                }
+                success /= 3;
+            }
+            else{
+                var displayProperty = document.getElementById('unique-username-tradeWorker-info').style.display.toLowerCase();
+                if (displayProperty == 'block') {
+                    $('#unique-username-tradeWorker-info').foundation('toggle');
+                }
+            }
+            if(success %5 == 0){
+                var displayProperty = document.getElementById('unique-identity-tradeWorker-info').style.display.toLowerCase();
+                if (displayProperty == '' || displayProperty == 'none') {
+                    $('#unique-identity-tradeWorker-info').foundation('toggle');
+                    if(!focus){
+                        $('#identity-tradeWorker').focus();
+                        focus = true;
+                    }
+                }
+                success /= 5;
+            }
+            else{
+                var displayProperty = document.getElementById('unique-identity-tradeWorker-info').style.display.toLowerCase();
+                if (displayProperty == 'block') {
+                    $('#unique-identity-tradeWorker-info').foundation('toggle');
+                }
+            }
+            if(success %101 == 0 && success > 100){
+                var displayProperty = document.getElementById('unreachable-email-tradeWorker-info').style.display.toLowerCase();
+                if (displayProperty == '' || displayProperty == 'none') {
+                    $('#unreachable-email-tradeWorker-info').foundation('toggle');
+                    if(!focus){
+                        $('#email-tradeWorker').focus();
+                        focus = true;
+                    }
+                }
+                success /= 101;
+            }
+            else{
+                var displayProperty = document.getElementById('unreachable-email-tradeWorker-info').style.display.toLowerCase();
+                if (displayProperty == 'block') {
+                    $('#unreachable-email-tradeWorker-info').foundation('toggle');
+                }
+            }
+            if(success %7 == 0){
+                html += '<p class="lead">Please contact admin for further assistance provide error code in email</p>' +
+                    '<p>error-code: ' + success + '</p>';
+
+                document.getElementById('tradeWorker-register-modal-information').innerHTML = html;
+                $('#tradeWorker-register-modal').foundation('toggle');
+            }
+        }
+    }
+    else
     {
         console.log("Return type is not a boolean it is: " + typeof success);
     }
@@ -309,7 +393,7 @@ function validateForm(formID) {
                 var selectTag;
                 for(var j = 0; j < selectTags.length; j++){
                     selectTag = selectTags[j];
-                    //console.log(selectTag.name + " " + selectTag.value);
+                    console.log(selectTag.name + " " + selectTag.value);
                     if (selectTag.name.substring(0,6) != "ignore") {
 
                         var selectToggleID = selectTag.name + '-info';
@@ -348,7 +432,7 @@ function validateForm(formID) {
                 for(var l = 0; l < textareaTags.length; l++){
                     textareaTag = textareaTags[l];
                     //console.log(" The follwoing is the text area:" + textareaTag);
-                    //console.log(textareaTag.name + " " + textareaTag.value);
+                    console.log(textareaTag.name + " " + textareaTag.value);
                     if (textareaTag.name.substring(0,6) != "ignore") {
                         var textareaToggleID = textareaTag.name + '-info';
                         var textareaFoundationID = '#' + textareaToggleID;
@@ -386,7 +470,7 @@ function validateForm(formID) {
                 var i;
                 for (i = 0; i < inputTags.length; i++) {
                     inputTag = inputTags[i];
-                    //console.log(inputTag.name + " " + inputTag.value);
+                    console.log(inputTag.name + " " + inputTag.value);
                     if (inputTag.name.substring(0,6) != "ignore") {
 
                         var inputToggleID = inputTag.name + '-info';
@@ -1536,8 +1620,9 @@ function genericFillSkillsSelectTag(workTypeSelectTagID){
         console.log("Worktype Retrievals Failed");
     }
 }
-
-function requestWorkTypes(){
+var registrationWorkTypeSelectID;
+function requestWorkTypes(selectTagID){
+    registrationWorkTypeSelectID = selectTagID.substr(0,selectTagID.length - 1);
     sendAJAXRequest('fetch_work_types', handleWorkRequestResponse);
 }
 
@@ -1694,7 +1779,7 @@ function handleWorkRequestResponse(response){
             }
 
             for(var j = 0;j<3;j++){
-                document.getElementById("contractor-work-type-" + j).innerHTML = htmlText;
+                document.getElementById(registrationWorkTypeSelectID + j).innerHTML = htmlText;
             }
         }
         else{
@@ -1709,15 +1794,15 @@ function handleWorkRequestResponse(response){
 var clocations = 0;
 //Used in contractor registration to add more locations no limit to amount of locations that a user can add, however they are required and need to be filled in.
 //I need to decide whether: if user clicks remove locations at a certain tab, if all the locations after are to be removed or only the one directly below the remove button pressed, currently the former is in place.
-function addContractorLocations(current){
+function addTradeworkerLocations(current){
 
     var location = [];
     var k = 0;
     for(var t = 0; t < locationAmount + 1;t++){
         //console.log("The following is location stored info at location["+ t +"]: " + "provincename-contractor-" + t + ": " + document.getElementById("provincename-contractor-" + t).value + "areaname-contractor-" + t + ": " + document.getElementById("areaname-contractor-" + t).value + "cityname-contractor-" + t + ": " + document.getElementById("cityname-contractor-" + t).value);
-        var province = document.getElementById("provincename-contractor-" + t).value;
-        var area = document.getElementById("areaname-contractor-" + t).value;
-        var city = document.getElementById("cityname-contractor-" + t).value;
+        var province = document.getElementById("provincename-tradeWorker-" + t).value;
+        var area = document.getElementById("areaname-tradeWorker-" + t).value;
+        var city = document.getElementById("cityname-tradeWorker-" + t).value;
         location[k++] = province;
         location[k++] = area;
         location[k++] = city;
@@ -1726,29 +1811,29 @@ function addContractorLocations(current){
         //console.log('he following is stored in the array: ' + location[k-3] + location[k-2]+ location[k-1]);
     }
 
-    if(document.getElementById("toggle-area-" + current).innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">' && current == contractorLocation){
+    if(document.getElementById("toggle-area-" + current).innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">' && current == tradeWorkerLocation){
         //The following statement adds a toggle-able area to the html page which is toggled later and not removed to 'save' time.
-        contractorLocation++;
+        tradeWorkerLocation++;
         newCurrent = current *= 3;
         var placeHolder = 1;
         clocations++;
-        var html = '<div class="row" data-animate="hinge-in-from-right spin-out" id="additional-area-' + newCurrent + '" style="display: none"><div class="column large-11 medium 11"><label>Area Name</label><input readonly type="text" name="areaname-contractor-' + contractorLocation + '" id="areaname-contractor-' + contractorLocation + '" placeholder="Edenvale" class="REQ_VAL"><div class="additional-info top-padding" id="areaname-contractor-' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">An area found within the city E.g. Edenvale</p></div></div></div><div class="row" data-toggle  data-animate="hinge-in-from-right spin-out" id="additional-area-' + parseFloat(newCurrent + 1) + '" style="display: none"><div class="column large-11 medium 11"><label>City Name</label><input readonly type="text" name="cityname-contractor-' + contractorLocation + '" id="cityname-contractor-' + contractorLocation + '" placeholder="Johannesburg" class="REQ_VAL"><div class="additional-info top-padding" id="cityname-contractor-' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p></div></div></div><div class="row" data-toggle  data-animate="hinge-in-from-right spin-out" id="additional-area-' + parseFloat(newCurrent + 2) + '" style="display: none"><div class="column large-11 medium 11"><label>Province Name</label><input readonly type="text" name="provincename-contractor-' + contractorLocation + '" id="provincename-contractor-' + contractorLocation + '" placeholder="Gauteng" class="REQ_VAL"><div class="additional-info top-padding" id="provincename-contractor-' + contractorLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A province within South Africa E.g. Gauteng</p></div></div><div class="column medium-1 large-1" style="margin-top: 24.44px">' + '<a data-toggle="additional-area-'+ parseFloat(contractorLocation * 3) +' additional-area-'+ parseFloat((contractorLocation * 3) + 1)  +' additional-area-'+ parseFloat((contractorLocation * 3) + 2) +'" name="toggle-area-'+ contractorLocation +'" id="toggle-area-'+ contractorLocation +'" onclick="addContractorLocations('+ contractorLocation +')"><img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/></a></div>';
+        var html = '<div class="row" data-animate="hinge-in-from-right spin-out" id="additional-area-' + newCurrent + '" style="display: none"><div class="column large-11 medium 11"><label>Area Name</label><input readonly type="text" name="areaname-tradeWorker-' + tradeWorkerLocation + '" id="areaname-tradeWorker-' + tradeWorkerLocation + '" placeholder="Edenvale" class="REQ_VAL"><div class="additional-info top-padding" id="areaname-tradeWorker-' + tradeWorkerLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">An area found within the city E.g. Edenvale</p></div></div></div><div class="row" data-toggle  data-animate="hinge-in-from-right spin-out" id="additional-area-' + parseFloat(newCurrent + 1) + '" style="display: none"><div class="column large-11 medium 11"><label>City Name</label><input readonly type="text" name="cityname-tradeWorker-' + tradeWorkerLocation + '" id="cityname-tradeWorker-' + tradeWorkerLocation + '" placeholder="Johannesburg" class="REQ_VAL"><div class="additional-info top-padding" id="cityname-tradeWorker-' + tradeWorkerLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A city found within a province. E.g. Johannesburg</p></div></div></div><div class="row" data-toggle  data-animate="hinge-in-from-right spin-out" id="additional-area-' + parseFloat(newCurrent + 2) + '" style="display: none"><div class="column large-11 medium 11"><label>Province Name</label><input readonly type="text" name="provincename-tradeWorker-' + tradeWorkerLocation + '" id="provincename-tradeWorker-' + tradeWorkerLocation + '" placeholder="Gauteng" class="REQ_VAL"><div class="additional-info top-padding" id="provincename-tradeWorker-' + tradeWorkerLocation + '-info" data-toggler data-animate="fade-in fade-out"><p class="help-text no-margins">A province within South Africa E.g. Gauteng</p></div></div><div class="column medium-1 large-1" style="margin-top: 24.44px">' + '<a data-toggle="additional-area-'+ parseFloat(tradeWorkerLocation * 3) +' additional-area-'+ parseFloat((tradeWorkerLocation * 3) + 1)  +' additional-area-'+ parseFloat((tradeWorkerLocation * 3) + 2) +'" name="toggle-area-'+ tradeWorkerLocation +'" id="toggle-area-'+ tradeWorkerLocation +'" onclick="addTradeworkerLocations('+ tradeWorkerLocation +')"><img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/></a></div>';
         document.getElementById("extraLocations").innerHTML += html;
-        //console.log("The following area should be toggled: " + "toggle-area-" + parseFloat(contractorLocation - 1))
-        document.getElementById("toggle-area-" + parseFloat(contractorLocation - 1)).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>';
+        //console.log("The following area should be toggled: " + "toggle-area-" + parseFloat(tradeWorkerLocation - 1))
+        document.getElementById("toggle-area-" + parseFloat(tradeWorkerLocation - 1)).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>';
         //Have tried to implement the following to-do but it doesn't seem to persist over the function calls.
         //TODO: Add a global variable that handles the areas so that the classes need not be created each time.
 
-        for(var i = 0 ; i <= parseFloat(((contractorLocation - 1) * 3) + 2) ; i++){
+        for(var i = 0 ; i <= parseFloat(((tradeWorkerLocation - 1) * 3) + 2) ; i++){
             var temp = "";
             if(i % 3 == 0){
-                temp = "provincename-contractor-" + placeHolder + "-info";
+                temp = "provincename-tradeWorker-" + placeHolder + "-info";
             }
             else if(i % 3 == 1){
-                temp = "cityname-contractor-" + placeHolder + "-info";
+                temp = "cityname-tradeWorker-" + placeHolder + "-info";
             }
             else {
-                temp = "areaname-contractor-" + placeHolder + "-info";
+                temp = "areaname-tradeWorker-" + placeHolder + "-info";
                 placeHolder++;
             }
 
@@ -1773,9 +1858,9 @@ function addContractorLocations(current){
             //The following if statement goes about toggling-on previously added elements
             var newCurrent = current * 3;
             clocations++;
-            document.getElementById("provincename-contractor-" + iconChange).setAttribute("name","provincename-contractor-" + iconChange);
-            document.getElementById("areaname-contractor-" + iconChange).setAttribute("name","areaname-contractor-" + iconChange);
-            document.getElementById("cityname-contractor-" + iconChange).setAttribute("name","cityname-contractor-" + iconChange);
+            document.getElementById("provincename-tradeWorker-" + iconChange).setAttribute("name","provincename-tradeWorker-" + iconChange);
+            document.getElementById("areaname-tradeWorker-" + iconChange).setAttribute("name","areaname-tradeWorker-" + iconChange);
+            document.getElementById("cityname-tradeWorker-" + iconChange).setAttribute("name","cityname-tradeWorker-" + iconChange);
             locationsElements[newCurrent].toggle();
             locationsElements[newCurrent + 1].toggle();
             locationsElements[newCurrent + 2].toggle();
@@ -1788,16 +1873,16 @@ function addContractorLocations(current){
 
             var newCurrent = current;
             var placeHolder = locationAmount;
-            if(newCurrent < contractorLocation){
+            if(newCurrent < tradeWorkerLocation){
                 for(var j = ((newCurrent) * 3);j < (((placeHolder) * 3)); j ++){
                     locationsElements[j].toggle();
                     if(j % 3 == 0){
-                        document.getElementById("provincename-contractor-" + iconChange).setAttribute("name","ignore-provincename-contractor-" + iconChange);
-                        document.getElementById("areaname-contractor-" + iconChange).setAttribute("name","ignore-areaname-contractor-" + iconChange);
-                        document.getElementById("cityname-contractor-" + iconChange).setAttribute("name","ignore-cityname-contractor-" + iconChange);
-                        document.getElementById("provincename-contractor-" + iconChange).value = "";
-                        document.getElementById("areaname-contractor-" + iconChange).value = "";
-                        document.getElementById("cityname-contractor-" + iconChange).value = "";
+                        document.getElementById("provincename-tradeWorker-" + iconChange).setAttribute("name","ignore-provincename-tradeWorker-" + iconChange);
+                        document.getElementById("areaname-tradeWorker-" + iconChange).setAttribute("name","ignore-areaname-tradeWorker-" + iconChange);
+                        document.getElementById("cityname-tradeWorker-" + iconChange).setAttribute("name","ignore-cityname-tradeWorker-" + iconChange);
+                        document.getElementById("provincename-tradeWorker-" + iconChange).value = "";
+                        document.getElementById("areaname-tradeWorker-" + iconChange).value = "";
+                        document.getElementById("cityname-tradeWorker-" + iconChange).value = "";
                         document.getElementById("toggle-area-" + iconChange).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>';
                         clocations--;
                         iconChange++;
@@ -1813,13 +1898,13 @@ function addContractorLocations(current){
         //console.log("Inserting back removed values");
 
         //console.log('he following is stored in the array: ' + location[k-3] + location[k-2]+ location[k-1]);
-        document.getElementById("provincename-contractor-" + c).value = location[k++];
-        document.getElementById("areaname-contractor-" + c).value = location[k++];
-        document.getElementById("cityname-contractor-" + c).value = location[k++];
+        document.getElementById("provincename-tradeWorker-" + c).value = location[k++];
+        document.getElementById("areaname-tradeWorker-" + c).value = location[k++];
+        document.getElementById("cityname-tradeWorker-" + c).value = location[k++];
 
     }
     console.log("The following is the location amount : " + locationAmount);
-    document.getElementById("locationsAdded-contractor").value = parseFloat(locationAmount + 1);
+    document.getElementById("locationsAdded-tradeWorker").value = parseFloat(locationAmount + 1);
 
 }
 
@@ -1882,7 +1967,7 @@ function handleHomeuserFetchProfileDetails(response){
 //Used in contractor registration to add more skills up to three maximum
 function toggleSwitch(id,validationID){
     //console.log("Switching " + document.getElementById(id).innerHTML.trim());
-    var skillsAvailable = document.getElementById("skillsAdded-contractor").value;
+    var skillsAvailable = document.getElementById("skillsAdded-tradeWorker").value;
         //console.log("This is the value of the other blah - " + document.getElementById('image-toggle-0').src);
     if(document.getElementById(id).innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">') {
         //The following if statement toggles on the three toggle-able elements
@@ -1894,33 +1979,33 @@ function toggleSwitch(id,validationID){
         if (document.getElementById("toggle-switch-1").innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo">' && id == "toggle-switch-0") {
             //The following if statement toggles off the two last toggle-able elements
             document.getElementById("toggle-switch-1").innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>';
-            document.getElementById('contractor-work-type-1').setAttribute("name","ignore-" + "contractor-work-type-1");
-            document.getElementById('contractor-work-type-2').setAttribute("name","ignore-" + "contractor-work-type-2");
-            $("#additional-contractor-skill-2").foundation('toggle');
+            document.getElementById('tradeWorker-work-type-1').setAttribute("name","ignore-" + "tradeWorker-work-type-1");
+            document.getElementById('tradeWorker-work-type-2').setAttribute("name","ignore-" + "tradeWorker-work-type-2");
+            $("#additional-tradeWorker-skill-2").foundation('toggle');
             skillsAvailable -= 2;
         }
         else if(document.getElementById("toggle-switch-1").innerHTML.trim() == '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo">' && id == "toggle-switch-0"){
             //The following if statement toggles off the 2nd last toggle-able elements
-            document.getElementById('contractor-work-type-1').setAttribute("name","ignore-" + "contractor-work-type-1");
+            document.getElementById('tradeWorker-work-type-1').setAttribute("name","ignore-" + "tradeWorker-work-type-1");
             skillsAvailable -= 1;
         }
         else if(id == "toggle-switch-1"){
             //The following if statement toggles off the last toggle-able elements
-            document.getElementById('contractor-work-type-2').setAttribute("name","ignore-" + "contractor-work-type-2");
+            document.getElementById('tradeWorker-work-type-2').setAttribute("name","ignore-" + "tradeWorker-work-type-2");
             skillsAvailable -= 1;
         }
 
         document.getElementById(id).innerHTML = '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>';
     }
-    document.getElementById("skillsAdded-contractor").value = skillsAvailable;
+    document.getElementById("skillsAdded-tradeWorker").value = skillsAvailable;
 
     //The following does the actual toggling
     if(id == "toggle-switch-0"){
-        $("#additional-contractor-skill-0").foundation('toggle');
-        $("#additional-contractor-skill-1").foundation('toggle');
+        $("#additional-tradeWorker-skill-0").foundation('toggle');
+        $("#additional-tradeWorker-skill-1").foundation('toggle');
     }
     else
-        $("#additional-contractor-skill-2").foundation('toggle');
+        $("#additional-tradeWorker-skill-2").foundation('toggle');
 }
 
 function handleFetchWorkerLocations(response){
@@ -2006,7 +2091,7 @@ function initAutocomplete() {
     // Create the autocomplete object, restricting the search to geographical
     // location types.
     autocomplete = new google.maps.places.Autocomplete(
-        /** @type {!HTMLInputElement} */(document.getElementById('autocomplete')),
+        /** @type {!HTMLInputElement} */(document.getElementById('tradeworker-autocomplete')),
         {types: ['geocode']});
 
     // When the user selects an address from the dropdown, populate the address
@@ -2035,15 +2120,15 @@ function fillInAddress() {
                 //document.getElementById(addressType).value = val;
                 console.log("The following is the address type: " + addressType);
                 if (addressType == 'locality') {
-                    document.getElementById("areaname-contractor-" + clocations).value = val;
+                    document.getElementById("areaname-tradeWorker-" + clocations).value = val;
                     console.log("it got here!" + val);
                 }
                 else if (addressType == 'administrative_area_level_1') {
-                    document.getElementById("cityname-contractor-" + clocations).value = val;
+                    document.getElementById("cityname-tradeWorker-" + clocations).value = val;
                     console.log("it got here!" + val);
                 }
                 else if (addressType == 'country') {
-                    document.getElementById("provincename-contractor-" + clocations).value = val;
+                    document.getElementById("provincename-tradeWorker-" + clocations).value = val;
                     console.log("it got here!" + val);
                 }
             }
