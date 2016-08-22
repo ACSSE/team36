@@ -2047,7 +2047,7 @@ if (!empty($_POST)) {
 
                 if($condition){
                     if(isset($_POST['commencement-homeuser-rTradeworker']) && isset($_POST['homeuser-rTradeworker-street_number']) && isset($_POST['homeuser-rTradeworker-route']) && isset($_POST['homeuser-rTradeworker-sublocality_level_1']) && isset($_POST['homeuser-rTradeworker-locality']) && isset($_POST['homeuser-rTradeworker-administrative_area_level_1']) && isset($_POST['homeuser-rTradeworker-postal_code']) && isset($_POST['homeuser-rTradeworker-country']) && isset($_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker'])){
-                        $condition = json_encode(SebenzaServer::homeUserRequestTradeworker([$_POST['commencement-homeuser-rTradeworker'],$_POST['homeuser-rTradeworker-street_number'],$_POST['homeuser-rTradeworker-route'],$_POST['homeuser-rTradeworker-sublocality_level_1'],$_POST['homeuser-rTradeworker-locality'],$_POST['homeuser-rTradeworker-administrative_area_level_1'],$_POST['homeuser-rTradeworker-postal_code'],$_POST['homeuser-rTradeworker-country'],$_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker']]));
+                        $condition = SebenzaServer::homeUserRequestTradeworker([$_POST['commencement-homeuser-rTradeworker'],$_POST['homeuser-rTradeworker-street_number'],$_POST['homeuser-rTradeworker-route'],$_POST['homeuser-rTradeworker-sublocality_level_1'],$_POST['homeuser-rTradeworker-locality'],$_POST['homeuser-rTradeworker-administrative_area_level_1'],$_POST['homeuser-rTradeworker-postal_code'],$_POST['homeuser-rTradeworker-country'],$_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker']]);
 //                        $condition = true;
                     }
                     else{
