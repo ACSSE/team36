@@ -494,8 +494,8 @@ class SebenzaServer {
                         $id = $dbHandler->getInsertID();
                         $command = "INSERT INTO `CONFIRMATIONS` (`UserID`, `Key`) VALUES (?,?)";
                         if($dbHandler->runCommand($command, $id, $keyToSend)){
-                            $command = "INSERT INTO `TRADE_WORKER` (`UserID`,`Availability`) VALUES (?,?)";
-                            if($dbHandler->runCommand($command, $id, $availability)){
+                            $command = "INSERT INTO `TRADE_WORKER` (`UserID`,`Availability`,`DateWorked`) VALUES (?,?,?)";
+                            if($dbHandler->runCommand($command, $id, $availability,date("Y-m-d"))){
                                 $skillsAdded = true;
                                 $command = "INSERT INTO `SPECIALIZATIONS_PER_USER` (`UserID`,`workTypeID`) VALUES (?,?)";
                                 for($r = 0; $r < $numSkills;$r++){
@@ -787,13 +787,18 @@ class SebenzaServer {
                 while($counter < $numRequests){
                     $leastIndex = 0;
                     $minDate = DateTime::createFromFormat("Y-m-d",$applicantsToSend[0]['DateWorked']);
-                    $activeWorkRequests = $dbhandler->runCommand("SELECT `ActiveWorkRequests` FROM `TRADE_WORKER` WHERE `UserID` = ?",$applicantsToSend[0]['UserID']);
-//                $returnValue = $applicantsToSend[0]['UserID'];
+                    $dbhandler->runCommand("SELECT `ActiveWorkRequests` FROM `TRADE_WORKER` WHERE `UserID` = ?",$applicantsToSend[0]['UserID']);
+                    $result = $dbhandler->getResults();
+                    $activeWorkRequests = $result[0]['ActiveWorkRequests'];
+//                $returnValue = "This is a test: ".$applicantsToSend[0]['UserID'];
                     for($m = 1;$m < count($applicantsToSend);$m++){
-//                    $returnValue .= " \n Should be compared with".$applicantsToSend[$m]['DateWorked'];
                         $date2 = DateTime::createFromFormat("Y-m-d",$applicantsToSend[$m]['DateWorked']);
-                        $activeWorkRequests2 = $dbhandler->runCommand("SELECT `ActiveWorkRequests` FROM `TRADE_WORKER` WHERE `UserID` = ?",$applicantsToSend[$m]['UserID']);
+                        $dbhandler->runCommand("SELECT `ActiveWorkRequests` FROM `TRADE_WORKER` WHERE `UserID` = ?",$applicantsToSend[$m]['UserID']);
+                        $result = $dbhandler->getResults();
+                        $activeWorkRequests2 = $result[0]['ActiveWorkRequests'];
+//                        $returnValue .= " \n Should be compared with".$applicantsToSend[$m]['UserID']."The following dates to be compared: ".$minDate->format("Y-m-d").":".$date2->format("Y-m-d")." And the following active requests :".$activeWorkRequests.":".$activeWorkRequests2;
                         if($date2 < $minDate && $activeWorkRequests2 < $activeWorkRequests){
+//                            $returnValue = "It got here";
                             $minDate = $date2;
                             $activeWorkRequests = $activeWorkRequests2;
                             $leastIndex = $m;
@@ -801,7 +806,7 @@ class SebenzaServer {
                     }
 
                     array_push($returnValue,$applicantsToSend[$leastIndex]['UserID']);
-                    array_slice($applicantsToSend,$leastIndex,1);
+                    $applicantsToSend = array_slice($applicantsToSend,$leastIndex,1);
                     $counter++;
                 }
             }
@@ -810,7 +815,7 @@ class SebenzaServer {
             //Currently no available tradeworkers in the area
             $returnValue *= -11;
         }
-
+//        $returnValue = $applicantsToSend;
         return $returnValue;
     }
 
@@ -919,12 +924,12 @@ class SebenzaServer {
                                 }
                             }
                         }
-
+//                        $result = $tradeworkerID;
                     }
                     else{
                         //The following should never occur the return type should be of Integer or boolean or array only
 
-                        $result = false;
+                        $result = $tradeworkerID;
                     }
                 }
                 else{
@@ -1598,10 +1603,18 @@ class SebenzaServer {
         if($dbhandler->runCommand($command,$commencementDate,$estimimatedDate,$expectedPayment,$quoteID)){
             $command = "UPDATE `QUOTE` SET `HomeuserResponse` = ? WHERE `QuoteID` = ?";
             if($dbhandler->runCommand($command,3,$quoteID)){
-                $command = "SELECT `RequestedUser` FROM `QUOTE` WHERE `QuoteID` = ?";
+                //TODO:Ensure no failure occurs during the initiation of a job for a requested tradeworker
+                $command = "SELECT `RequestedUser`,`RequestID` FROM `QUOTE` WHERE `QuoteID` = ?";
                 $dbhandler->runCommand($command,$quoteID);
                 $result = $dbhandler->getResults();
-                self::addNotification($result[0]['UserID'],"Job has been intiated");
+                self::addNotification($result[0]['RequestedUser'],"Job has been intiated");
+                $command = "UPDATE `TRADE_WORKER` SET `DateWorked` = ? WHERE `UserID` = ?";
+                $dbhandler->runCommand($command,date("Y-m-d"),$result[0]['RequestedUser']);
+                $command = "SELECT `NumberOfWorkersAccepted` FROM `QUOTE_REQUEST` WHERE `RequestID` = ?";
+                $dbhandler->runCommand($command,$result[0]['RequestID']);
+                $workersAccepted = $dbhandler->getResults();
+                $command = "UPDATE `QUOTE_REQUEST` SET `NumberOfWorkersAccepted` = ? WHERE `RequestID` = ?";
+                $dbhandler->runCommand($command,intval($workersAccepted[0]['NumberOfWorkersAccepted'] + 1),$result[0]['RequestID']);
                 $returnValue = true;
             }
             else
@@ -1689,6 +1702,12 @@ if (!empty($_POST)) {
             case 'logout':
                 $response = json_encode(true);
                 SebenzaServer::logout();
+                break;
+            case 'homeuser-remove-request':
+                $response = json_encode("Should be removing the request from the server");
+                break;
+            case 'homeuser-remove-tradeworker-from-request':
+                $response = json_encode("Should be removing the tradeworker from the request request from the server");
                 break;
             case 'set-availability':
                 $pass = SebenzaServer::serverSecurityCheck();
@@ -1925,6 +1944,9 @@ if (!empty($_POST)) {
                    if(isset($_POST['homeuser-initiateJob-commenceDate']) && isset($_POST['homeuser-initiateJob-numberDays']) && isset($_POST['homeuser-initiateJob-expectedPayment']) && isset($_POST['ignore-homeuser-initiateJob-quoteID'])){
                        $response = json_encode(SebenzaServer::homeuserInitiateJob($_POST['homeuser-initiateJob-commenceDate'],$_POST['homeuser-initiateJob-numberDays'],$_POST['homeuser-initiateJob-expectedPayment'],$_POST['ignore-homeuser-initiateJob-quoteID']));
                    }
+                   else if(isset($_POST['homeuser-initiateJob-shortcut-commenceDate']) && isset($_POST['homeuser-initiateJob-shortcut-numberDays']) && isset($_POST['homeuser-initiateJob-shortcut-expectedPayment']) && isset($_POST['ignore-homeuser-initiateJob-shortcut-quoteID'])){
+                       $response = json_encode(SebenzaServer::homeuserInitiateJob($_POST['homeuser-initiateJob-shortcut-commenceDate'],$_POST['homeuser-initiateJob-shortcut-numberDays'],$_POST['homeuser-initiateJob-shortcut-expectedPayment'],$_POST['ignore-homeuser-initiateJob-shortcut-quoteID']));
+                   }
                     else{
                         $response = json_encode(false);
                     }
@@ -2025,7 +2047,7 @@ if (!empty($_POST)) {
 
                 if($condition){
                     if(isset($_POST['commencement-homeuser-rTradeworker']) && isset($_POST['homeuser-rTradeworker-street_number']) && isset($_POST['homeuser-rTradeworker-route']) && isset($_POST['homeuser-rTradeworker-sublocality_level_1']) && isset($_POST['homeuser-rTradeworker-locality']) && isset($_POST['homeuser-rTradeworker-administrative_area_level_1']) && isset($_POST['homeuser-rTradeworker-postal_code']) && isset($_POST['homeuser-rTradeworker-country']) && isset($_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker'])){
-                        $condition = SebenzaServer::homeUserRequestTradeworker([$_POST['commencement-homeuser-rTradeworker'],$_POST['homeuser-rTradeworker-street_number'],$_POST['homeuser-rTradeworker-route'],$_POST['homeuser-rTradeworker-sublocality_level_1'],$_POST['homeuser-rTradeworker-locality'],$_POST['homeuser-rTradeworker-administrative_area_level_1'],$_POST['homeuser-rTradeworker-postal_code'],$_POST['homeuser-rTradeworker-country'],$_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker']]);
+                        $condition = json_encode(SebenzaServer::homeUserRequestTradeworker([$_POST['commencement-homeuser-rTradeworker'],$_POST['homeuser-rTradeworker-street_number'],$_POST['homeuser-rTradeworker-route'],$_POST['homeuser-rTradeworker-sublocality_level_1'],$_POST['homeuser-rTradeworker-locality'],$_POST['homeuser-rTradeworker-administrative_area_level_1'],$_POST['homeuser-rTradeworker-postal_code'],$_POST['homeuser-rTradeworker-country'],$_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker']]));
 //                        $condition = true;
                     }
                     else{
