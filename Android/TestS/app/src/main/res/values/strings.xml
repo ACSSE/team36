@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">TestS</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_register__home_user">Register</string>
+    <string name="title_activity_register__contractor">Register</string>
+    <string name="title_activity_register__trade_worker">Register</string>
+    <string name="title_activity_home__home_user">SebenzaSA</string>
+    <string name="title_activity_home__contractor">SebenzaSA</string>
+    <string name="title_activity_home__trade_worker">SebenzaSA</string>
+    <string name="title_activity_test">Menu Items</string>
+    <string name="title_activity_home_user">SebenzaSA</string>
+    <string name="title_activity_trade_worker">SebenzaSA</string>
+    <string name="title_activity_home_user__template">SebenzaSA</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>

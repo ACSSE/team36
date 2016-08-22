@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item android:title="Job management">
+        <item
+            android:id="@+id/nav_requestTradeworker"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Request TradeWorker" />
+        <item
+            android:id="@+id/nav_ManageJobs"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Manage Jobs" />
+        <item
+            android:id="@+id/nav_InitiateJob"
+            android:icon="@drawable/ic_menu_slideshow"
+            android:title="Initiate Jobs" />
+        <item
+            android:id="@+id/nav_OngoingJobs"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Ongoing Jobs" />
+        <item
+            android:id="@+id/nav_FinishedJobs"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Job History" />
+        </item>
+
+        <item android:title="Profile">
+
+        <item
+            android:id="@+id/nav_editDetails"
+            android:icon="@drawable/ic_menu_share"
+            android:title="Edit Details" />
+        <item
+            android:id="@+id/nav_editLocation"
+            android:icon="@drawable/ic_menu_send"
+            android:title="Edit Location" />
+        </item>
+    </group>
+
+
+
+</menu>
