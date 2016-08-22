@@ -1,0 +1,36 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:orientation="vertical"
+    tools:context="oasys.za.ac.uj.team36.tests.EditDetailsHomeUser">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:text="Name"
+    android:textSize="10pt"
+    android:textColor="#000000"/>
+
+    <EditText
+    android:id="@+id/etEname"
+    android:inputType="text"
+    android:textSize="9pt"
+    android:textColor="#000000"
+    android:layout_marginBottom="12dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/bEditDetailsHU"
+        android:layout_width="match_parent"
+        android:text="Update"
+        android:textColor="#000000"
+        android:background="#0080ff"
+        android:textSize="10pt"
+        android:layout_marginBottom="12dp"
+        android:layout_height="wrap_content" />
+</LinearLayout>
