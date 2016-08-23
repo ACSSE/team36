@@ -5,7 +5,7 @@
     <div class="row">
         <div class="column large-11">
             <label>Search:</label>
-            <input type="text" name="homeuser-manageRTradeworker-search-0" id="homeuser-manageRTradeworker-search-0"/>
+            <input type="text" name="ignore-homeuser-manageRTradeworker-search-0" id="homeuser-manageRTradeworker-search-0"/>
         </div>
         <div class="column large-1">
 
@@ -14,7 +14,7 @@
     <div class="row">
         <div class="column large-11">
             <label>Sort By:</label>
-            <select id="homeuser-manageRTradeworker-sortBy-0" name="homeuser-manageRTradeworker-sortBy-0">
+            <select id="homeuser-manageRTradeworker-sortBy-0" name="ignore-homeuser-manageRTradeworker-sortBy-0">
                 <option value="WorkType">Work Type</option>
                 <option value="initialDate">Date Request is sent</option>
                 <option value="commencementDate">Commencement Date</option>

@@ -59,3 +59,21 @@
         </div>
     </div>
 </div>
+
+<div class="small reveal" id="homeuser-initiateJob-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+    <div id="homeuser-initiateJob-modal-additionalInfo">
+
+    </div>
+    <button class="close-button" data-close aria-label="Close reveal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+<div class="reveal" id="homeuser-initiateJob-modal-response" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+    <div id="homeuser-initiateJob-modal-response-additionalInfo">
+
+    </div>
+    <button class="close-button" data-close aria-label="Close reveal" type="button">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
