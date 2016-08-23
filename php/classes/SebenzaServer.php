@@ -88,7 +88,7 @@ class SebenzaServer {
     }
 
     public static function createAndResetDatabase():bool {
-        $dbHandler = new DatabaseHandler("eu-cdbr-azure-west-d.cloudapp.net","bb5f5a5205e9c5","Sebenza","74c8233a");
+        $dbHandler = new DatabaseHandler("eu-cdbr-azure-west-d.cloudapp.net","bb5f5a5205e9c5","74c8233a","");
         $success = $dbHandler->executeSQLScriptFile("database/SebenzaSA_Database.sql");
         self::fetchSessionHandler()->setSessionVariable("dbHandler", $dbHandler);
         return $success;
