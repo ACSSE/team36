@@ -260,36 +260,36 @@ INSERT 	 INTO `SPECIALIZATIONS` (`WorkType`, `Description`)
 			('Tree-Feller', 'Person who removes trees');
 
 INSERT 	 INTO `SPECIALIZATIONS_PER_USER` (`UserID`, `workTypeID`)
-  VALUES	(10,1),
-          (10,3),
-          (10,6),
-          (11,2),
-          (11,4),
-          (12,5),
-          (13,8),
-          (13,7),
-        	(12,6);
+  VALUES	(101,1),
+          (101,3),
+          (101,6),
+          (111,2),
+          (111,4),
+          (121,5),
+          (131,8),
+          (131,7),
+        	(121,6);
 
 INSERT 	 INTO `TRADE_WORKER` (`UserID`, `DateWorked` , `Availability`)
-VALUES	(10,'20160801',FALSE),
-        (11,'20160801',TRUE),
-        (12,'20160702',TRUE),
-        (13,'20160801',TRUE);
+VALUES	(101,'20160801',FALSE),
+        (111,'20160801',TRUE),
+        (121,'20160702',TRUE),
+        (131,'20160801',TRUE);
 
 INSERT INTO `HOMEUSER` (`UserID`,`Subscribed`)
-VALUES (9,0);
+VALUES (91,0);
 
 INSERT 	 INTO `LOCATIONS_PER_USER` (`UserID`, `locationID`)
-VALUES	(10,1),
-        (10,3),
-        (10,6),
-        (11,2),
-        (11,4),
-        (12,5),
-        (13,6),
-        (13,7),
-        (12,6);
+VALUES	(101,1),
+        (101,3),
+        (101,6),
+        (111,2),
+        (111,4),
+        (121,5),
+        (131,6),
+        (131,7),
+        (121,6);
 
 INSERT INTO `NOTIFICATION` (`UserID`,`Message`)
-    VALUES (9,'Welcome!'),
-      (9, 'This is a second notification!');
+    VALUES (91,'Welcome!'),
+      (91, 'This is a second notification!');
