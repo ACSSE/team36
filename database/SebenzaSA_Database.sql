@@ -252,6 +252,7 @@ CREATE TABLE `NOTIFICATION` (
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );
 
+SELECT * FROM `REGISTERED_USER`;
 
 INSERT INTO `registered_user` (`UserID`, `Username`, `Email`, `Name`, `Surname`, `ContactNumber`, `PersonalID`, `TypeOfUser`, `Password`, `UserRecommendationRating`, `Confirmation`, `ConfirmationDate`) VALUES
   (1, 'firstUser', 'user1@email.co.za', 'surname1', 'name1', '0831231234', '910468784213648', 0, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 0, 1, '2016-08-28 15:21:55'),
