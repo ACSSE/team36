@@ -43,7 +43,7 @@ public class JsonParser {
                 case "POST" :
 
                     DefaultHttpClient client = new DefaultHttpClient() ;
-                    HttpPost post = new HttpPost();
+                    HttpPost post = new HttpPost(URL);
                     post.setEntity(new UrlEncodedFormEntity(params));
 
 

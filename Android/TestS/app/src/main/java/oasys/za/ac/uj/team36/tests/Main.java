@@ -37,6 +37,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
 import oasys.za.ac.uj.team36.Model.*;
 
@@ -85,10 +86,8 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
 
                 user = new RegisteredUser(uName, pass);
 
-                // authentication to happen here
-                //authenticate(user) ;
                 ServerHandler s = new ServerHandler(this) ;
-               String a = s.login(user);
+                String a = s.login(user);
 
                 if(a.length()<0){
 

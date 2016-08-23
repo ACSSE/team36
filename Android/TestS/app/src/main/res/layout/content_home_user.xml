@@ -6,15 +6,12 @@
     android:layout_height="match_parent"
     android:padding="10dp"
     android:orientation="vertical"
+    android:id="@+id/content_frame"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context=".HomeUser"
-    tools:showIn="@layout/app_bar_home_user"
-    android:id="@+id/content_frame">
+    tools:showIn="@layout/app_bar_home_user">
 
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:text="HELLOO"
-    android:textSize="15pt"/>
+
+
 
 </LinearLayout>

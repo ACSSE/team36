@@ -5,23 +5,23 @@
         <item android:title="Job management">
         <item
             android:id="@+id/nav_requestTradeworker"
-            android:icon="@drawable/ic_menu_camera"
+            android:icon="@drawable/ic_menu_send"
             android:title="Request TradeWorker" />
         <item
             android:id="@+id/nav_ManageJobs"
-            android:icon="@drawable/ic_menu_gallery"
+            android:icon="@drawable/ic_menu_share"
             android:title="Manage Jobs" />
         <item
             android:id="@+id/nav_InitiateJob"
-            android:icon="@drawable/ic_menu_slideshow"
+            android:icon="@drawable/ic_menu_share"
             android:title="Initiate Jobs" />
         <item
             android:id="@+id/nav_OngoingJobs"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_share"
             android:title="Ongoing Jobs" />
         <item
             android:id="@+id/nav_FinishedJobs"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_share"
             android:title="Job History" />
         </item>
 
@@ -29,11 +29,11 @@
 
         <item
             android:id="@+id/nav_editDetails"
-            android:icon="@drawable/ic_menu_share"
+            android:icon="@drawable/ic_menu_manage"
             android:title="Edit Details" />
         <item
             android:id="@+id/nav_editLocation"
-            android:icon="@drawable/ic_menu_send"
+            android:icon="@drawable/ic_menu_manage"
             android:title="Edit Location" />
         </item>
     </group>
