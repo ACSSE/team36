@@ -262,35 +262,35 @@ INSERT 	 INTO `SPECIALIZATIONS` (`WorkType`, `Description`)
 
 INSERT 	 INTO `SPECIALIZATIONS_PER_USER` (`UserID`, `workTypeID`)
   VALUES	(101,1),
-          (101,31),
-          (101,61),
-          (111,21),
-          (111,41),
-          (121,51),
-          (131,81),
+          (101,21),
+          (101,51),
+          (111,11),
+          (111,31),
+          (121,41),
           (131,71),
-        	(121,61);
+          (131,61),
+        	(121,51);
 
 INSERT 	 INTO `TRADE_WORKER` (`UserID`, `DateWorked` , `Availability`)
-VALUES	(101,'20160801',FALSE),
-        (111,'20160801',TRUE),
-        (121,'20160702',TRUE),
-        (131,'20160801',TRUE);
+VALUES	(91,'20160801',FALSE),
+        (101,'20160801',TRUE),
+        (111,'20160702',TRUE),
+        (121,'20160801',TRUE);
 
 INSERT INTO `HOMEUSER` (`UserID`,`Subscribed`)
 VALUES (91,0);
 
 INSERT 	 INTO `LOCATIONS_PER_USER` (`UserID`, `locationID`)
-VALUES	(101,1),
-        (101,31),
-        (101,61),
-        (111,21),
-        (111,41),
-        (121,51),
-        (131,61),
-        (131,71),
-        (121,61);
+VALUES	(91,11),
+        (91,31),
+        (91,61),
+        (101,21),
+        (101,41),
+        (111,51),
+        (121,61),
+        (121,71),
+        (111,61);
 
 INSERT INTO `NOTIFICATION` (`UserID`,`Message`)
-    VALUES (91,'Welcome!'),
-      (91, 'This is a second notification!');
+    VALUES (81,'Welcome!'),
+      (81, 'This is a second notification!');
