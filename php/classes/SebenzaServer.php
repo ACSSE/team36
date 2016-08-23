@@ -1188,7 +1188,7 @@ class SebenzaServer {
 
     public static function fetchHomeuserJobRequests($userID){
         $dbhandler = self::fetchDatabaseHandler();
-        $command = "SELECT `RequestID`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate`,`NumberOfWorkersRequested`,`NumberOfWorkersAccepted` FROM `QUOTE_REQUEST` WHERE `UserID` = ?";
+        $command = "SELECT `RequestID`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate`,`NumberOfWorkersRequested`,`NumberOfWorkersAccepted`,`Status` FROM `QUOTE_REQUEST` WHERE `UserID` = ?";
         $dbhandler->runCommand($command,$userID);
         $result = $dbhandler->getResults();
         $worktypes = self::returnWorkTypes();
@@ -1224,6 +1224,7 @@ class SebenzaServer {
                         $returnValue[$i]['HomeuserResponse-'.$r] = $quotes[$r]['HomeuserResponse'];
                     }
                 }
+                    $returnValue[$i]['RequestStatus'] = $result[$i]['Status'];
                     $returnValue[$i]['RequestID'] = $result[$i]['RequestID'];
                     $returnValue[$i]['workTypeID'] = $result[$i]['workTypeID'];
                     $returnValue[$i]['NumberOfWorkersRequested'] = $result[$i]['NumberOfWorkersRequested'];
@@ -1610,11 +1611,15 @@ class SebenzaServer {
                 self::addNotification($result[0]['RequestedUser'],"Job has been intiated");
                 $command = "UPDATE `TRADE_WORKER` SET `DateWorked` = ? WHERE `UserID` = ?";
                 $dbhandler->runCommand($command,date("Y-m-d"),$result[0]['RequestedUser']);
-                $command = "SELECT `NumberOfWorkersAccepted` FROM `QUOTE_REQUEST` WHERE `RequestID` = ?";
+                $command = "SELECT `NumberOfWorkersAccepted`,`NumberOfWorkersRequested` FROM `QUOTE_REQUEST` WHERE `RequestID` = ?";
                 $dbhandler->runCommand($command,$result[0]['RequestID']);
                 $workersAccepted = $dbhandler->getResults();
                 $command = "UPDATE `QUOTE_REQUEST` SET `NumberOfWorkersAccepted` = ? WHERE `RequestID` = ?";
                 $dbhandler->runCommand($command,intval($workersAccepted[0]['NumberOfWorkersAccepted'] + 1),$result[0]['RequestID']);
+                if($workersAccepted[0]['NumberOfWorkersAccepted'] == $workersAccepted[0]['NumberOfWorkersRequested']){
+                    $command = "UPDATE `QUOTE_REQUEST` SET `Status` = ? WHERE `RequestID` = ?";
+                    $dbhandler->runCommand($command,1,$result[0]['RequestID']);
+                }
                 $returnValue = true;
             }
             else
@@ -1665,6 +1670,32 @@ class SebenzaServer {
         return $returnValue;
 
     }
+
+    public static function homeuserStopRequest($requestID){
+        $returnValue = false;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "UPDATE `QUOTE_REQUEST` SET `Status` = ? WHERE `RequestID` = ?";
+        if($dbHandler->runCommand($command,2,$requestID)){
+            $command = "UPDATE `QUOTE` SET `HomeuserResponse` = ? WHERE `RequestID` = ?";
+            if($dbHandler->runCommand($command,2,$requestID)){
+                $returnValue = true;
+            }
+        }
+
+        return $returnValue;
+    }
+
+    public static function homeuserRemoveTradeworkerFromRequest($quoteID){
+        $returnValue = false;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "UPDATE `QUOTE` SET `HomeuserResponse` = ? WHERE `QuoteID` = ?";
+        if($dbHandler->runCommand($command,2,$quoteID)){
+            $returnValue = true;
+        }
+
+        return $returnValue;
+    }
+
 }
 //The following is currently used to receive the confirmation requests from the user
 if (!empty($_GET)){
@@ -1704,10 +1735,34 @@ if (!empty($_POST)) {
                 SebenzaServer::logout();
                 break;
             case 'homeuser-remove-request':
-                $response = json_encode("Should be removing the request from the server");
+                //$response = json_encode("Should be removing the request from the server");
+                $condition = SebenzaServer::serverSecurityCheck();
+
+                if($condition){
+                    if(isset($_POST['ignore-homeuser-selected-request-id']))
+                    $response = json_encode(SebenzaServer::homeuserStopRequest($_POST['ignore-homeuser-selected-request-id']));
+                }
+                else{
+                    return json_encode(false);
+                }
                 break;
             case 'homeuser-remove-tradeworker-from-request':
-                $response = json_encode("Should be removing the tradeworker from the request request from the server");
+                $condition = SebenzaServer::serverSecurityCheck();
+                if($condition){
+                    if(isset($_POST['ignore-homeuser-manage-specificRequest-ID'])){
+                        $response = json_encode(SebenzaServer::homeuserRemoveTradeworkerFromRequest($_POST['ignore-homeuser-manage-specificRequest-ID']));
+                    }
+                    else if(isset($_POST['ignore-homeuser-selected-initiate-job-id'])){
+                        $response = json_encode(SebenzaServer::homeuserRemoveTradeworkerFromRequest($_POST['ignore-homeuser-selected-initiate-job-id']));
+                    }
+                    else{
+                        $response = json_encode(false);
+                    }
+
+                }
+                else{
+                    $response = json_encode(false);
+                }
                 break;
             case 'set-availability':
                 $pass = SebenzaServer::serverSecurityCheck();
@@ -1724,7 +1779,10 @@ if (!empty($_POST)) {
                 }
                 break;
             case 'homeuser-initiateJobCompletion-request':
-                $response = json_encode(true);
+                $response = json_encode("Should be completing the job for tradeworker");
+                break;
+            case 'homeuser-initiateJobExtension-request':
+                $response = json_encode("Should be extending the job for the tradeworker selected server response");
                 break;
             case 'register-contractor':
                 //Ensure all skill are set
@@ -1903,6 +1961,9 @@ if (!empty($_POST)) {
                 } else{
                     $response = json_encode($uniqueIndicator *= 11);
                 }
+                break;
+            case 'homeuser-ongoingJob-remove-tradeworker':
+                $response = json_encode("Should be removing tradeworker from job");
                 break;
             case 'fetch-job-requests':
                 if(SebenzaServer::serverSecurityCheck()){

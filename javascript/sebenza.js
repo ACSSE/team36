@@ -842,10 +842,10 @@ function tradeworkerDisplayRequestAcceptedNotification(){
                     "<column class='large-4 medium-4 small-12'><label>SubArea: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-subarea\" id=\"tradeworker-request-notification-subarea\" value=" + locationName + " readonly></column> " +
                     "<column class='large-6 medium-6 small-12'><label>Area: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-area\" id=\"tradeworker-request-notification-area\" value=" + AreaName + " readonly></column>" +
                     "<column class='large-6 medium-6 small-12'><label>Province: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-province\" id=\"tradeworker-request-notification-province\" value=" + City + " readonly></column>" +
-                    "<h5>Tradeworker Details</h5> " +
-                    "<column class='large-4 medium-4 small-12'><label>Tradeworker name: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-name\" id=\"tradeworker-request-notification-name\" value=" + Name + " readonly></column>" +
-                    "<column class='large-4 medium-4 small-12'><label>Tradeworker surname: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-surname\" id=\"tradeworker-request-notification-surname\" value=" + Surname + " readonly></column>" +
-                    "<column class='large-4 medium-4 small-12'><label>Tradeworker contact details: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-contactNumber\" id=\"tradeworker-request-notification-contactNumber\" value=" + ContactNumber + " readonly></column> " +
+                    "<h5>Homeuser Details</h5> " +
+                    "<column class='large-4 medium-4 small-12'><label>Homeuser name: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-name\" id=\"tradeworker-request-notification-name\" value=" + Name + " readonly></column>" +
+                    "<column class='large-4 medium-4 small-12'><label>Homeuser surname: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-surname\" id=\"tradeworker-request-notification-surname\" value=" + Surname + " readonly></column>" +
+                    "<column class='large-4 medium-4 small-12'><label>Homeuser contact details: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-contactNumber\" id=\"tradeworker-request-notification-contactNumber\" value=" + ContactNumber + " readonly></column> " +
                     "<column class='large-4 medium-4 small-12'><button type=\"submit\" class=\"success button radius\" id=\"tradeworker-request-notification-button\" onclick=\"sendAJAXRequest('tradeworker-accept-confirmation',handletradeworkerAcceptConfirmationResponse,'tradeworker-notification-request-form');\"> Confirm </button></column> " +
                     "<column class='large-4 medium-4 small-12'><p>*note: Please look under jobs initiated tab for further details or to cancel job</p></column> " +
                     "</row>";
@@ -1049,9 +1049,8 @@ function removeHomeuserJobRequestEntry(){
         for(var i = 0 ; i < input.length ; i++){
             //console.log("should be printing :" + input[i].checked);
             if(input[i].checked){
-                //console.log('The following request was selected: ' + i);
-                //console.log(input[i]);
-                document.getElementById("homeuser-selected-request-id").value = input[i].value;
+                var spl = input[i].value.split("_");
+                document.getElementById("homeuser-selected-request-id").value = spl[1];
                 //homeuserManageRequestModal(input[i].value);
                 console.log("The following request is being deleted: " + input[i].value);
 
@@ -1083,8 +1082,9 @@ function editHomeuserJobRequestEntry(){
             if(input[i].checked){
                 //console.log('The following request was selected: ' + i);
                 //console.log(input[i]);
-                document.getElementById("homeuser-selected-request-id").value = input[i].value;
-                homeuserManageRequestModal(input[i].value);
+                var spl = input[i].value.split("_");
+                document.getElementById("homeuser-selected-request-id").value = spl[0];
+                homeuserManageRequestModal(spl[0]);
                 //sendAJAXRequest('tradeworker-accept-request',handleTradeworkerAcceptRequest,'tradeworker-selected-request');
             }
         }
@@ -1250,7 +1250,9 @@ function editHomeuserJobRequestEntryRemoveWorker(){
             if(input[i].checked){
                 //console.log('The following request was selected: ' + i);
                 //console.log(input[i]);
-                document.getElementById("homeuser-manage-specificRequest-ID").value = input[i].value;
+                var spl = input[i].value.split("_");
+                document.getElementById("homeuser-ongoingJobs-tradeworkerID-toRemove").value = spl[1];
+
                 //homeuserManageRequestModal(input[i].value);
                 //console.log("The following request is being deleted: " + input[i].value);
                 sendAJAXRequest('homeuser-remove-tradeworker-from-request',handleHomeuserRemoveTradeworkerFromRequestResponse,'homeuser-manage-specificRequest-ID-form');
@@ -1266,10 +1268,107 @@ function handleHomeuserRemoveTradeworkerFromRequestResponse(response){
 
 function homeuserTerminateJobInitiate(){
     console.log("Should be terminating");
+    var input = $("form input[name=ignore-requested-user-onGoingJobs-selected]:radio");
+    console.log("test" + input.length);
+    if(input.length > 0){
+        for(var i = 0 ; i < input.length ; i++) {
+            //console.log("should be printing :" + input[i].checked);
+            if (input[i].checked) {
+                var spl = input[i].value.split("_");
+                console.log("Terminating the following job id: " + spl[1]);
+                document.getElementById("homeuser-ongoingJobs-tradeworkerID-toRemove").value = spl[1];
+                sendAJAXRequest('homeuser-ongoingJob-remove-tradeworker',handleHomeuserTerminateJobRequestRespones,'homeuser-manage-ongoingJobs-tradeworker-remove-form')
+            }
+        }
+    }
+}
+
+function handleHomeuserTerminateJobRequestRespones(response){
+    var success = JSON.parse(response);
+    console.log("The following is the response: " + success + " the type of the response: " + typeof success);
 }
 
 function homeuserExtendJobInitiate(){
     console.log("Should be extending");
+    var input = $("form input[name=ignore-requested-user-onGoingJobs-selected]:radio");
+    console.log("test" + input.length);
+    if(input.length > 0){
+        for(var i = 0 ; i < input.length ; i++) {
+            //console.log("should be printing :" + input[i].checked);
+            if (input[i].checked) {
+                var spl = input[i].value.split("_");
+                console.log("Entending the following job id: " + spl[1]);
+            }
+        }
+    }
+
+    var html = '<h3>Initiating Extension process</h3>' +
+        '<form id="homeuser-initiateJobExtension-form" name="homeuser-initiateJobExtension-form">' +
+        '<input type="hidden" id="homeuser-initiateJobExtension-jobID" name="ignore-homeuser-initiateJobExtension-jobID" value=' + spl[1] + '>' +
+        '<div class="row">' +
+        '<div class="column medium-11 large-11">' +
+        '<label>Would you like to request more workers:</label>' +
+        '<div class="switch large">' +
+        '<input class="switch-input" id="homeuser-initiateJobExtension-addTradeworker-switch" type="checkbox" name="ignore-homeuser-initiateJobExtension-addTradeworker-switch" onclick="toggleHomeuserJobAddTradeworker()">' +
+        '<label class="switch-paddle" for="homeuser-initiateJobExtension-addTradeworker-switch">' +
+        '<span class="show-for-sr">Add worker</span>' +
+        '<span class="switch-active" aria-hidden="true">Yes</span>' +
+        '<span class="switch-inactive" aria-hidden="true">no</span>' +
+        '</label>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="column large-11 medium 11">' +
+        '<div id="homeuser-initiateJobExtension-addTradeworker-information" data-toggler data-animate="fade-in fade-out" style="display:none">' +
+        '<label>Please enter how many workers you would like to add to the job:</label><input type="number" name="ignore-homeuser-initiateJobExtension-addTradeworker" id="homeuser-initiateJobExtension-addTradeworker" placeholder="1" step="1" min="1" class="REQ_VAL">' +
+        '<div class="additional-info top-padding" id="homeuser-initiateJobExtension-addTradeworker-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please enter a reason why the job was not to your satisfaction</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="column medium-11 large-11">' +
+        '<label>Please enter days to extend job by:</label><input type="number" step="1" min="1" name="homeuser-initiateJobExtension-daysExtend" id="homeuser-initiateJobExtension-daysExtend" placeholder="1" class="REQ_VAL">' +
+        '<div class="additional-info top-padding" id="homeuser-initiateJobExtension-daysExtend-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please select number of days to extend job by. E.g. 1</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</form>';
+    html += '<div class="row">' +
+        '<div class="large-3 large-offset-8 medium-offset-8 medium-3 columns">' +
+        '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="sendAJAXRequest(\'homeuser-initiateJobExtension-request\',handleHomeuserInitiateJobExtensionResponse,\'homeuser-initiateJobExtension-form\')">' +
+        'Extend Job' +
+        '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>' +
+        '</button>' +
+        '</div>' +
+        '</div>';
+
+    $('#homeuser-ongoingJobs-modal').foundation('toggle');
+    document.getElementById("homeuser-ongoingJobs-modal-additionalInfo").innerHTML = html;
+    var hideAddTradeworkerInfo = $("#homeuser-initiateJobExtension-addTradeworker-information");
+    new Foundation.Toggler(hideAddTradeworkerInfo,'data-animate="fade-in fade-out"');
+    new Foundation.Toggler($("#homeuser-initiateJobExtension-addTradeworker-info"),'data-animate="fade-in fade-out"');
+    new Foundation.Toggler($("#homeuser-initiateJobExtension-daysExtend-info"),'data-animate="fade-in fade-out"');
+    hideAddTradeworkerInfo.on("on.zf.toggler", function(e) {
+            document.getElementById('homeuser-initiateJobExtension-addTradeworker').name = "homeuser-initiateJobExtension-addTradeworker";
+        })
+        .on("off.zf.toggler", function(e) {
+            document.getElementById('homeuser-initiateJobExtension-addTradeworker').name = "ignore-homeuser-initiateJobExtension-addTradeworker";
+        });
+
+}
+
+function handleHomeuserInitiateJobExtensionResponse(response){
+    var success = JSON.parse(response);
+    console.log("Extending job: server response:" + success + " the response type: " + typeof success)
+}
+
+function toggleHomeuserJobAddTradeworker(){
+    //console.log("The following is the display value:" + document.getElementById('homeuser-initiateJobCompletion-jobComment-information').style.display);
+    $('#homeuser-initiateJobExtension-addTradeworker-information').foundation('toggle');
 }
 
 function toggleHomeuserJobComment(){
@@ -1291,27 +1390,32 @@ if(document.getElementById('homeuser-initiateJobCompletion-jobComment-informatio
 
 function toggleHomeuserUserComment(){
     $('#homeuser-initiateJobCompletion-userComment-information').foundation('toggle');
-    if(document.getElementById('homeuser-initiateJobCompletion-userComment-information').style.display == "none"){
-        //document.getElementById('homeuser-initiateJobCompletion-userComment').className = "";
-        document.getElementById('homeuser-initiateJobCompletion-userComment').name = 'ignore-homeuser-initiateJobCompletion-userComment';
-    }
-    else if(document.getElementById('homeuser-initiateJobCompletion-userComment-information').style.display == "block" || document.getElementById('homeuser-initiateJobCompletion-userComment-information').style.display == "" ){
-        //document.getElementById('homeuser-initiateJobCompletion-userComment').className = "REQ_VAL";
-        document.getElementById('homeuser-initiateJobCompletion-userComment').name = 'homeuser-initiateJobCompletion-userComment';
-    }
 }
 
 function homeuserCompleteJobInitiate(){
     console.log("Should be completing");
+    var input = $("form input[name=ignore-requested-user-onGoingJobs-selected]:radio");
+    console.log("test" + input.length);
+    if(input.length > 0){
+        for(var i = 0 ; i < input.length ; i++) {
+            //console.log("should be printing :" + input[i].checked);
+            if (input[i].checked) {
+                var spl = input[i].value.split("_");
+                console.log("Completing the following job id: " + spl[1]);
+            }
+        }
+    }
+
     var html = '<h3>Initiating completion process</h3>' +
         '<form id="homeuser-initiateJobCompletion-form" name="homeuser-initiateJobCompletion-form">' +
+        '<input type="hidden" id="homeuser-initiateJobCompletion-jobID" name="ignore-homeuser-initiateJobCompletion-jobID" value=' + spl[1] + '>' +
         '<div class="row">' +
         '<div class="column medium-11 large-11">' +
         '<label>Was the job completed to your satisfaction:</label>' +
         '<div class="switch large">' +
         '<input class="switch-input" id="homeuser-initiateJobCompletion-jobSatisfaction-switch" type="checkbox" name="ignore-homeuser-initiateJobCompletion-jobSatisfaction-switch" onclick="toggleHomeuserJobComment()" checked>' +
         '<label class="switch-paddle" for="homeuser-initiateJobCompletion-jobSatisfaction-switch">' +
-        '<span class="show-for-sr">Availability</span>' +
+        '<span class="show-for-sr">Satisfied</span>' +
         '<span class="switch-active" aria-hidden="true">Yes</span>' +
         '<span class="switch-inactive" aria-hidden="true">no</span>' +
         '</label>' +
@@ -1351,31 +1455,6 @@ function homeuserCompleteJobInitiate(){
         '</div>' +
         '</div>' +
         '</div>' +
-        //'<div class="row">' +
-        //'<div class="column large-11 medium 11">' +
-        //'<label>Date to start job:</label><input type="date" name="homeuser-initiateJob-commenceDate" id="homeuser-initiateJob-commenceDate" class="REQ_VAL">' +
-        //'<div class="additional-info top-padding" id="homeuser-initiateJob-commenceDate-info" data-toggler data-animate="fade-in fade-out">' +
-        //'<p class="help-text no-margins">Please select a date from the drop down</p>' +
-        //'</div>' +
-        //'</div>' +
-        //'</div>' +
-        //'<div class="row">' +
-        //'<div class="column large-11 medium 11">' +
-        //'<label>Estimated days before completion:</label><input type="number" step="1" name="homeuser-initiateJob-numberDays" id="homeuser-initiateJob-numberDays" class="REQ_VAL">' +
-        //'<div class="additional-info top-padding" id="homeuser-initiateJob-numberDays-info" data-toggler data-animate="fade-in fade-out">' +
-        //'<p class="help-text no-margins">Please enter a positive number 7</p>' +
-        //'</div>' +
-        //'</div>' +
-        //'</div>' +
-        //'<div class="row">' +
-        //'<div class="column large-11 medium 11">' +
-        //'<label>Agreed upon price:</label><input type="number" step="0.01" min="0" name="homeuser-initiateJob-expectedPayment" id="homeuser-initiateJob-expectedPayment" class="REQ_VAL">' +
-        //'<div class="additional-info top-padding" id="homeuser-initiateJob-expectedPayment-info" data-toggler data-animate="fade-in fade-out">' +
-        //'<p class="help-text no-margins">Please enter a valid positive number 450.00</p>' +
-        //'</div>' +
-        //'</div>' +
-        //'</div>' +
-        //'<input type="hidden" value="' + quoteID + '" id="homeuser-initiateJobCompletion-quoteID" name="ignore-homeuser-initiateJob-quoteID">' +
         '</form>';
     html += '<div class="row">' +
         '<div class="large-3 large-offset-8 medium-offset-8 medium-3 columns">' +
@@ -1388,8 +1467,23 @@ function homeuserCompleteJobInitiate(){
 
     $('#homeuser-ongoingJobs-modal').foundation('toggle');
     document.getElementById("homeuser-ongoingJobs-modal-additionalInfo").innerHTML = html;
-    new Foundation.Toggler($("#homeuser-initiateJobCompletion-jobComment-information"),'data-animate="fade-in fade-out"');
-    new Foundation.Toggler($("#homeuser-initiateJobCompletion-userComment-information"),'data-animate="fade-in fade-out"');
+    var jobComment = $("#homeuser-initiateJobCompletion-jobComment-information");
+    var userComment = $("#homeuser-initiateJobCompletion-userComment-information");
+    new Foundation.Toggler(jobComment,'data-animate="fade-in fade-out"');
+    new Foundation.Toggler(userComment,'data-animate="fade-in fade-out"');
+    jobComment.on("on.zf.toggler", function(e) {
+            document.getElementById('homeuser-initiateJobCompletion-jobComment').name = "homeuser-initiateJobCompletion-jobComment";
+        })
+        .on("off.zf.toggler", function(e) {
+            document.getElementById('homeuser-initiateJobCompletion-jobComment').name = "ignore-homeuser-initiateJobCompletion-jobComment";
+        });
+
+    userComment.on("on.zf.toggler", function(e) {
+            document.getElementById('homeuser-initiateJobCompletion-userComment').name = "homeuser-initiateJobCompletion-userComment";
+        })
+        .on("off.zf.toggler", function(e) {
+            document.getElementById('homeuser-initiateJobCompletion-userComment').name = "ignore-homeuser-initiateJobCompletion-userComment";
+        });
     new Foundation.Toggler($("#homeuser-initiateJobCompletion-jobComment-info"),'data-animate="fade-in fade-out"');
     new Foundation.Toggler($("#homeuser-initiateJobCompletion-userComment-info"),'data-animate="fade-in fade-out"');
 }
@@ -1555,8 +1649,8 @@ function handleHomeuserInitiateJobResponse(response){
         else{
             html = "<h3>The job wasn't initiated</h3>";
         }
-        $('#homeuser-manageRequest-modal-response').foundation('toggle');
-        document.getElementById("homeuser-manageRequest-modal-response-additionalInfo").innerHTML = html;
+        $('#homeuser-manageRequest-modal').foundation('toggle');
+        document.getElementById("homeuser-manageRequest-modal-additionalInfo").innerHTML = html;
     }
     else{
         console.log("Result was not of type boolean " + result);
@@ -1605,6 +1699,7 @@ function homeuserDisplayOngoingJobs(){
                         var agreedPrice = homeuserJobRequestArray[j]['AgreedPrice-' + i];
                         var estimatedCompletionDate = homeuserJobRequestArray[j]['EstimatedCompletionDate-' + i];
                         var status = homeuserJobRequestArray[j]['JobStatus-' + i];
+                        var jobID = homeuserJobRequestArray[j]['JobID-' + i];
                         var workType = homeuserJobRequestArray[j]['WorkType'];
                         var tableIndex = j;
                         //This will be a button that toggles the request information so that the user can see details
@@ -1629,7 +1724,7 @@ function homeuserDisplayOngoingJobs(){
                                 '<td>' + estimatedCompletionDate + '</td>' +
                                 '<td>' + workType + '</td>' +
                                 '<td>' + status + '</td>' +
-                                '<td><div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="job-initiate-selected" id="requested-user-id" value="' + tableIndex + '"></div></td>' +
+                                '<td><div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div></td>' +
                                 '</tr>';
 
 
@@ -1664,6 +1759,8 @@ function homeuserDisplayRequests(){
     var status;
     var numWorkers;
     var numWorkersAccepted;
+    var quoteRequest;
+    var requestStatus;
     var success = false;
     html += "<table>";
     console.log("FIlling job requests table " + homeuserJobRequestArray.length);
@@ -1675,6 +1772,17 @@ function homeuserDisplayRequests(){
         subLocality = homeuserJobRequestArray[j]["AreaName"];
         locality = homeuserJobRequestArray[j]["locationName"];
         province = homeuserJobRequestArray[j]["Province"];
+        quoteRequest = homeuserJobRequestArray[j]["RequestID"];
+        requestStatus = homeuserJobRequestArray[j]["RequestStatus"];
+        if(requestStatus == 0){
+            requestStatus = "Request pending";
+        }
+        else if(requestStatus == 1){
+            requestStatus = "Request Completed";
+        }
+        else if(requestStatus == 2){
+            requestStatus = "Request Canceled";
+        }
         tableIndex = j;
         jobDescription = homeuserJobRequestArray[j]["JobDescription"];
         dateInitialised = homeuserJobRequestArray[j]["DateInitialised"];
@@ -1697,9 +1805,11 @@ function homeuserDisplayRequests(){
             '<td class="label">Job Description:</td> ' +
             '<td colspan="2"> <input type="text" name="ignore-manageRTradeworker-WorkType-' + j + '" id="homeuser-manageRTradeworker-WorkType-' + j + '" value="' + jobType + '"  readonly> </td> ' +
             '<td colspan="3"> <input type="text" name="ignore-manageRTradeworker-locality-' + j + '" id="homeuser-manageRTradeworker-jobDescription-' + j + '" value="' + jobDescription + '"  readonly> ' +
-            '</td> </tr> <tr> <td class="label">Workers Requested</td> <td colspan="1"> <input type="text" name="ignore-manageRTradeworker-requestedWorkers-' + j + '" id="homeuser-manageRTradeworker-requestedWorkers-' + j + '" value="' + numWorkers + '"  readonly> </td>' +
+            '</td> </tr>' +
+            '<tr><td class="label">Request Status</td> <td colspan="4"> <input type="text" name="ignore-manageRTradeworker-requestStatus-' + j + '" id="homeuser-manageRTradeworker-requestStatus-' + j + '" value="' + requestStatus + '"  readonly> </td></tr>' +
+            '<tr> <td class="label">Workers Requested</td> <td colspan="1"> <input type="text" name="ignore-manageRTradeworker-requestedWorkers-' + j + '" id="homeuser-manageRTradeworker-requestedWorkers-' + j + '" value="' + numWorkers + '"  readonly> </td>' +
             '<td class="label">Workers Accepted</td> <td colspan="1"> <input type="text" name="ignore-manageRTradeworker-acceptedWorkers-' + j + '" id="homeuser-manageRTradeworker-acceptedWorkers-' + j + '" value="' + numWorkersAccepted + '"  readonly> </td>' +
-            '<td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="ignore-job-requests" id="homeuser-manageRTradeworker-requestID-' + j + '" value="' + tableIndex + '" readonly></div> </td> ' +
+            '<td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="ignore-job-requests" id="homeuser-manageRTradeworker-requestID-' + j + '" value="' + tableIndex + "_" + quoteRequest + '" readonly></div> </td> ' +
             '</tr> ' +
             '<tr style="height: 0.5em;background-color: #0a0a0a"> ' +
             '<td colspan="6"></td> ' +
@@ -1789,10 +1899,28 @@ function removeWorkerFromJobRequest() {
                 //homeuserManageRequestModal(input[i].value);
 
                 console.log("The following request is being deleted: " + input[i].value);
-                sendAJAXRequest('homeuser-remove-tradeworker-from-request',handleHomeuserRemoveTradeworkerFromRequestResponse,'homeuser-selected-initiate-job');
+                sendAJAXRequest('homeuser-remove-tradeworker-from-request',handleHomeuserRemoveTradeworkerFromRequestShortcutResponse,'homeuser-selected-initiate-job');
 
             }
         }
+}
+
+function handleHomeuserRemoveTradeworkerFromRequestShortcutResponse(response){
+    var success = JSON.parse(response);
+    console.log("Removing tradeworker from request");
+    if(typeof success == 'boolean'){
+        var html = '';
+        if(success){
+            html += "The tradeworker was removed from the request";
+            document.getElementById('homeuser-initiateJob-modal-additionalInfo').innerHTML = html;
+            $('#homeuser-initiateJob-modal').foundation('toggle');
+        }
+        else{
+            html += "The tradeworker could not be removed from the request";
+            document.getElementById('homeuser-initiateJob-modal-additionalInfo').innerHTML = html;
+            $('#homeuser-initiateJob-modal').foundation('toggle');
+        }
+    }
 }
 
 function initiateJobForSelectedWOrker(){

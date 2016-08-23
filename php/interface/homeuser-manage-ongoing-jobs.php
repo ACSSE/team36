@@ -59,6 +59,9 @@
         </div>
     </div>
 </div>
+<form id="homeuser-manage-ongoingJobs-tradeworker-remove-form" name="homeuser-manage-ongoingJobs-tradeworker-remove-form">
+    <input type="hidden" id="homeuser-ongoingJobs-tradeworkerID-toRemove" name="ignore-homeuser-ongoingJobs-tradeworkerID-toRemove" value="-50">
+</form>
 
 <div class="small reveal" id="homeuser-ongoingJobs-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
     <div id="homeuser-ongoingJobs-modal-additionalInfo">
