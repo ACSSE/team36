@@ -261,15 +261,15 @@ INSERT 	 INTO `SPECIALIZATIONS` (`WorkType`, `Description`)
 			('Tree-Feller', 'Person who removes trees');
 
 INSERT 	 INTO `SPECIALIZATIONS_PER_USER` (`UserID`, `workTypeID`)
-  VALUES	(101,1),
-          (101,21),
-          (101,51),
-          (111,11),
-          (111,31),
-          (121,41),
-          (131,71),
-          (131,61),
-        	(121,51);
+  VALUES	(91,11),
+          (91,21),
+          (91,51),
+          (101,11),
+          (101,31),
+          (111,41),
+          (121,71),
+          (121,61),
+        	(111,51);
 
 INSERT 	 INTO `TRADE_WORKER` (`UserID`, `DateWorked` , `Availability`)
 VALUES	(91,'20160801',FALSE),
