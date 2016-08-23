@@ -223,6 +223,7 @@ CREATE TABLE `NOTIFICATION` (
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );
 
+SELECT * FROM `REGISTERED_USER`;
 
 INSERT 	 INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name` , `Confirmation`, `PersonalID`)
 	VALUES	('firstUser', 'user1@email.co.za', '0831231234', 0, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name1', 'surname1',1,'910468784213648'),
@@ -260,36 +261,36 @@ INSERT 	 INTO `SPECIALIZATIONS` (`WorkType`, `Description`)
 			('Tree-Feller', 'Person who removes trees');
 
 INSERT 	 INTO `SPECIALIZATIONS_PER_USER` (`UserID`, `workTypeID`)
-  VALUES	(10,1),
-          (10,3),
-          (10,6),
-          (11,2),
-          (11,4),
-          (12,5),
-          (13,8),
-          (13,7),
-        	(12,6);
+  VALUES	(91,11),
+          (91,21),
+          (91,51),
+          (101,11),
+          (101,31),
+          (111,41),
+          (121,71),
+          (121,61),
+        	(111,51);
 
 INSERT 	 INTO `TRADE_WORKER` (`UserID`, `DateWorked` , `Availability`)
-VALUES	(10,'20160801',FALSE),
-        (11,'20160801',TRUE),
-        (12,'20160702',TRUE),
-        (13,'20160801',TRUE);
+VALUES	(91,'20160801',FALSE),
+        (101,'20160801',TRUE),
+        (111,'20160702',TRUE),
+        (121,'20160801',TRUE);
 
 INSERT INTO `HOMEUSER` (`UserID`,`Subscribed`)
-VALUES (9,0);
+VALUES (91,0);
 
 INSERT 	 INTO `LOCATIONS_PER_USER` (`UserID`, `locationID`)
-VALUES	(10,1),
-        (10,3),
-        (10,6),
-        (11,2),
-        (11,4),
-        (12,5),
-        (13,6),
-        (13,7),
-        (12,6);
+VALUES	(91,11),
+        (91,31),
+        (91,61),
+        (101,21),
+        (101,41),
+        (111,51),
+        (121,61),
+        (121,71),
+        (111,61);
 
 INSERT INTO `NOTIFICATION` (`UserID`,`Message`)
-    VALUES (9,'Welcome!'),
-      (9, 'This is a second notification!');
+    VALUES (81,'Welcome!'),
+      (81, 'This is a second notification!');
