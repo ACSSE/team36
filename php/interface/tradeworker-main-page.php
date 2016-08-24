@@ -10,10 +10,16 @@
     <div class="small-3 columns full-height" style="background-color: rgba(20, 20, 20, 0.9)">
         <ul class="vertical menu" data-accordion-menu>
             <li>
-                <a href="#">Manage Jobs</a>
+                <a href="#">Manage Requests</a>
                 <ul class="menu vertical nested">
                     <li><a onclick="toggleUserPageArea('panel1v')">Job Requests</a></li>
-                    <li><a onclick="toggleUserPageArea('panel2v')">Initiated Jobs</a></li>
+                    <li><a onclick="toggleUserPageArea('panel2v')">Cancelled Requests</a></li>
+                </ul>
+            </li>
+            <li>
+                <a href="#">Manage Jobs</a>
+                <ul class="menu vertical nested">
+                    <li><a onclick="toggleUserPageArea('panel3v')">Initiated Jobs</a></li>
                     <li><a onclick="toggleUserPageArea('panel3v')">Completed Jobs</a></li>
                     <li><a onclick="toggleUserPageArea('panel4v')">Unfinished Jobs</a></li>
                 </ul>
@@ -68,12 +74,12 @@
             </div>
             <div class="tabs-panel full-height user-panels" id="panel2v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-ongoing-jobs.php";
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests-cancelled.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel3v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-ongoing-jobs.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel4v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
@@ -83,15 +89,20 @@
             </div>
             <div class="tabs-panel full-height user-panels" id="panel5v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-EditInfo.php";
+                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel6v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-EditInfo.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel7v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+                <?php
+                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
+                ?>
+            </div>
+            <div class="tabs-panel full-height user-panels" id="panel8v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
                 //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
@@ -106,9 +117,6 @@
     <div id="jobDescript">
     </div>
 </div>
-<script>
-    tradeworkerRequestsNotifier();
-</script>
 <div class="reveal" id="tradeworker-homepage-notification-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
     <div id="tradeworker-homepage-notification-modal-additionalInfo">
 
@@ -124,6 +132,7 @@
     </button>
 </div>
 <script>
+    tradeworkerRequestsNotifier();
     sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
     sendAJAXRequest('fetch-tradeworker-profile-details',handleTradeworkerFetchProfileDetails);
 </script>

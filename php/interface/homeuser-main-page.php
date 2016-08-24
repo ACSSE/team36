@@ -15,7 +15,13 @@
                 <ul class="menu vertical nested">
                     <li><a onclick="toggleUserPageArea('panel1v')">Request Tradeworker</a></li>
                     <li><a onclick="toggleUserPageArea('panel2v')">Request Contractor</a></li>
-                    <li><a onclick="toggleUserPageArea('panel3v')">Manage Job Requests</a></li>
+                    <li><a onclick="toggleUserPageArea('panel3v')">Manage Job Requests</a>
+                        <ul class="menu vertical nested">
+                            <li><a onclick="toggleUserPageArea('panel3v')">Ongoing Requests</a></li>
+                            <li><a onclick="toggleUserPageArea('panel7v')">Completed Requests</a></li>
+                            <li><a onclick="toggleUserPageArea('panel8v')">Canceled Requests</a></li>
+                        </ul>
+                    </li>
                 </ul>
             </li>
             <li><a href="#">Job Management</a>
@@ -68,6 +74,16 @@
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel7v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+                <?php
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-requests-completed.php";
+                ?>
+            </div>
+            <div class="tabs-panel full-height user-panels" id="panel8v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+                <?php
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-requests-cancelled.php";
+                ?>
+            </div>
+            <div class="tabs-panel full-height user-panels" id="panel9v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <div class="full-height full-width">
                     <h1>Location:</h1>
                     <div class="row">
