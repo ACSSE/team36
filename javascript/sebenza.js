@@ -666,8 +666,16 @@ function tradeworkerAcceptJobRequest(){
      if(input[i].checked){
          //console.log('The following request was selected: ' + i);
          //console.log(input[i]);
-         document.getElementById("tradeworker-selected-request-id").value = input[i].value;
-         sendAJAXRequest('tradeworker-accept-request',handleTradeworkerAcceptRequest,'tradeworker-selected-request');
+         var spl = input[i].value.split("_");
+         document.getElementById("tradeworker-selected-request-id").value = spl[0];
+         if(tradeworkerJobRequestArray[spl[1]]['Status'] == 0){
+             sendAJAXRequest('tradeworker-accept-request',handleTradeworkerAcceptRequest,'tradeworker-selected-request');
+         }
+         else if(tradeworkerJobRequestArray[spl[1]]['Status'] == 1 || tradeworkerJobRequestArray[spl[1]]['Status'] == 3){
+             $('#tradeworker-requests-notification-modal').foundation('toggle');
+             document.getElementById("tradeworker-requests-notification-modal-additionalInfo").innerHTML = "<h3>The work request has already been accepted:</h3> <p>contact homeuser on " + tradeworkerJobRequestArray[spl[1]]['HomeuserContact'] + " if the job is not being intitialised and you have quoted him already for further details</p>";
+         }
+
      }
     }
     //console.log(input);
@@ -724,7 +732,44 @@ function tradeworkerDisplayRequest(){
                 var province = tradeworkerJobRequestArray[j]['Province'];
                 var locationName = tradeworkerJobRequestArray[j]['locationName'];
 
-                html += '<tr> <td class="label">Job Details:</td> <td colspan="2"> <input type="text" name="tradeworker-requests-WorkType-' + j + '" id="tradeworker-requests-WorkType-' + j + '" value="' + workType + '" readonly> </td> <td class="label" colspan="2">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="tradeworker-requests-commenceDate-' + j + '" id="tradeworker-requests-commenceDate-' + j + '" value="' + commencementDate + '" readonly></td> </tr> <tr> <td colspan="6"> <input type="text" name="tradeworker-requests-jobDescription-' + j + '" id="tradeworker-requests-jobDescription-' + j + '" value="' + description + '" readonly> </td> </tr> <tr> <td class="label">Address</td> <td colspan="2"> <input type="text" name="tradeworker-requests-sublocality_level_1-' + j + '" id="tradeworker-requests-sublocality_level_1-' + j + '" value="' + areaName + '" readonly> </td> <td colspan="2"> <input type="text" name="tradeworker-requests-locality-' + j + '" id="tradeworker-requests-locality-' + j + '" value="' + locationName + '" readonly> </td> <td colspan="1"> <input type="text" name="tradeworker-requests-country-' + j + '" id="tradeworker-requests-country-' + j + '" value="' + province + '" readonly> </td> </tr> <tr> <td class="label">Status</td> <td colspan="4"> <input type="text" name="tradeworker-requests-status-' + j + '" id="tradeworker-requests-status-' + j + '" value="' + status + '" readonly></td><td class="label">Homeuser Response</td> <td colspan="4"> <input type="text" name="tradeworker-requests-homeuserResponse-' + j + '" id="tradeworker-requests-homeuserResponse-' + j + '" value="' + homeuserResponse + '" readonly></td> <td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests" id="tradeworker-requests-quoteID-' + j + '" value="' + quoteID + '" readonly></div></td> </tr> <tr style="height: 0.5em;background-color: #0a0a0a"> <td colspan="6"></td> </tr>'
+                html += '<tr>' +
+                    ' <td class="label">Job Details:</td> ' +
+                    '<td colspan="2"> <input type="text" name="tradeworker-requests-WorkType-' + j + '" id="tradeworker-requests-WorkType-' + j + '" value="' + workType + '" readonly> </td> ' +
+                    '<td class="label" colspan="2">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="tradeworker-requests-commenceDate-' + j + '" id="tradeworker-requests-commenceDate-' + j + '" value="' + commencementDate + '" readonly></td>' +
+                    '</tr> ' +
+                    '<tr>' +
+                    '<td colspan="6"> <input type="text" name="tradeworker-requests-jobDescription-' + j + '" id="tradeworker-requests-jobDescription-' + j + '" value="' + description + '" readonly> </td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td class="label">Address</td> ' +
+                    '<td colspan="2"> <input type="text" name="tradeworker-requests-sublocality_level_1-' + j + '" id="tradeworker-requests-sublocality_level_1-' + j + '" value="' + areaName + '" readonly> </td> ' +
+                    '<td colspan="2"> <input type="text" name="tradeworker-requests-locality-' + j + '" id="tradeworker-requests-locality-' + j + '" value="' + locationName + '" readonly> </td> ' +
+                    '<td colspan="1"> <input type="text" name="tradeworker-requests-country-' + j + '" id="tradeworker-requests-country-' + j + '" value="' + province + '" readonly> </td> ' +
+                    '</tr> ' +
+                    '<tr> ' +
+                    '<td class="label">Status</td> ' +
+                    '<td colspan="5"> <input type="text" name="tradeworker-requests-status-' + j + '" id="tradeworker-requests-status-' + j + '" value="' + status + '" readonly></td>' +
+                    '</tr> ';
+                if(tradeworkerJobRequestArray[j]['HomeuserResponse'] == 1){
+                    html += '<tr>'+
+                        '<td class="label">Homeuser Details</td> ' +
+                        '<td colspan="3"> <input type="text" name="tradeworker-requests-homeuser-name-' + j + '" id="tradeworker-requests-homeuser-name-' + j + '" value="' + tradeworkerJobRequestArray[j]['HomeuserName'] + '" readonly> </td> ' +
+                        '<td colspan="2"> <input type="text" name="tradeworker-requests-homeuser-surname-' + j + '" id="tradeworker-requests-homeuser-surname-' + j + '" value="' + tradeworkerJobRequestArray[j]['HomeuserSurname'] + '" readonly> </td> ' +
+                        '</tr>' +
+                        '<tr>' +
+                        '<td class="label">Homeuser Contact Number</td> ' +
+                        '<td colspan="5"> <input type="text" name="tradeworker-requests-homeuser-contact-' + j + '" id="tradeworker-requests-homeuser-contact-' + j + '" value="' + tradeworkerJobRequestArray[j]['HomeuserContact'] + '" readonly> </td> ' +
+                        '</tr>';
+                }
+                html += '<tr> ' +
+                    '<td class="label">Homeuser Response</td> ' +
+                    '<td colspan="4"> <input type="text" name="tradeworker-requests-homeuserResponse-' + j + '" id="tradeworker-requests-homeuserResponse-' + j + '" value="' + homeuserResponse + '" readonly></td>' +
+                    '<td>' +
+                    ' <div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests" id="tradeworker-requests-quoteID-' + j + '" value="' + quoteID + "_" + j + '" readonly></div>' +
+                    '</td> ' +
+                    '</tr> ' +
+                    '<tr style="height: 0.5em;background-color: #0a0a0a"> ' +
+                    '<td colspan="6"></td> </tr>';
             }
 
         }
@@ -813,6 +858,8 @@ function handleTradeworkerFetchJobRequests(response){
         tradeworkerDisplayCancelledRequest();
 
         tradeworkerDisplayOngoingJobs();
+        //tradeworkerRequestsNotifier();
+        tradeworkerDisplayRequestAcceptedNotification();
         //console.log("The following is a test: " + tradeworkerJobRequestArray[0]['JobDescription']);
     }
     else if(typeof tradeworkerJobRequestArray == 'boolean'){
@@ -847,14 +894,14 @@ function tradeworkerDisplayCancelledRequest(){
                 var quoteID = tradeworkerJobRequestArray[j]['QuoteID'];
 
                 if(homeuserResponse == 2){
-                    homeuserResponse = "Request Rejected";
+                    homeuserResponse = "Rejected Request";
                 }
                 else{
                     homeuserResponse = "Request was rejected";
                 }
 
                 if (status == 2) {
-                    status = "Request Rejected";
+                    status = "Rejected Request";
                 }
                 else{
                     status = "Request was rejected";
@@ -868,7 +915,30 @@ function tradeworkerDisplayCancelledRequest(){
                 var province = tradeworkerJobRequestArray[j]['Province'];
                 var locationName = tradeworkerJobRequestArray[j]['locationName'];
 
-                html += '<tr> <td class="label">Job Details:</td> <td colspan="2"> <input type="text" name="tradeworker-requests-cancelled-WorkType-' + j + '" id="tradeworker-requests-cancelled-WorkType-' + j + '" value="' + workType + '" readonly> </td> <td class="label" colspan="2">Required Commencement Date:</td> <td colspan="2"> <input type="text" name="tradeworker-requests-cancelled-commenceDate-' + j + '" id="tradeworker-requests-cancelled-commenceDate-' + j + '" value="' + commencementDate + '" readonly></td> </tr> <tr> <td colspan="6"> <input type="text" name="tradeworker-requests-cancelled-jobDescription-' + j + '" id="tradeworker-requests-cancelled-jobDescription-' + j + '" value="' + description + '" readonly> </td> </tr> <tr> <td class="label">Address</td> <td colspan="2"> <input type="text" name="tradeworker-requests-cancelled-sublocality_level_1-' + j + '" id="tradeworker-requests-cancelled-sublocality_level_1-' + j + '" value="' + areaName + '" readonly> </td> <td colspan="2"> <input type="text" name="tradeworker-requests-cancelled-locality-' + j + '" id="tradeworker-requests-cancelled-locality-' + j + '" value="' + locationName + '" readonly> </td> <td colspan="1"> <input type="text" name="tradeworker-requests-cancelled-country-' + j + '" id="tradeworker-requests-cancelled-country-' + j + '" value="' + province + '" readonly> </td> </tr> <tr> <td class="label">Status</td> <td colspan="5"> <input type="text" name="tradeworker-requests-cancelled-status-' + j + '" id="tradeworker-requests-cancelled-status-' + j + '" value="' + status + '" readonly></td></tr><tr><td class="label">Homeuser Response</td> <td colspan="4"> <input type="text" name="tradeworker-requests-cancelled-homeuserResponse-' + j + '" id="tradeworker-requests-cancelled-homeuserResponse-' + j + '" value="' + homeuserResponse + '" readonly></td> <td> <div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests-cancelled" id="tradeworker-requests-cancelled-quoteID-' + j + '" value="' + quoteID + '" readonly></div></td> </tr> <tr style="height: 0.5em;background-color: #0a0a0a"> <td colspan="6"></td> </tr>'
+                html += '<tr> ' +
+                    '<td class="label">Job Details:</td> ' +
+                    '<td colspan="2"> <input type="text" name="tradeworker-requests-cancelled-WorkType-' + j + '" id="tradeworker-requests-cancelled-WorkType-' + j + '" value="' + workType + '" readonly> </td>' +
+                    '<td class="label" colspan="2">Required Commencement Date:</td> ' +
+                    '<td colspan="2"> <input type="text" name="tradeworker-requests-cancelled-commenceDate-' + j + '" id="tradeworker-requests-cancelled-commenceDate-' + j + '" value="' + commencementDate + '" readonly></td> ' +
+                    '</tr> ' +
+                    '<tr> ' +
+                    '<td colspan="6"> <input type="text" name="tradeworker-requests-cancelled-jobDescription-' + j + '" id="tradeworker-requests-cancelled-jobDescription-' + j + '" value="' + description + '" readonly> </td> ' +
+                    '</tr> ' +
+                    '<tr> ' +
+                    '<td class="label">Address</td> ' +
+                    '<td colspan="2"> <input type="text" name="tradeworker-requests-cancelled-sublocality_level_1-' + j + '" id="tradeworker-requests-cancelled-sublocality_level_1-' + j + '" value="' + areaName + '" readonly> </td> ' +
+                    '<td colspan="2"> <input type="text" name="tradeworker-requests-cancelled-locality-' + j + '" id="tradeworker-requests-cancelled-locality-' + j + '" value="' + locationName + '" readonly> </td> ' +
+                    '<td colspan="1"> <input type="text" name="tradeworker-requests-cancelled-country-' + j + '" id="tradeworker-requests-cancelled-country-' + j + '" value="' + province + '" readonly> </td> ' +
+                    '</tr> ' +
+                    '<tr> ' +
+                    '<td class="label">Status</td> ' +
+                    '<td colspan="5"> <input type="text" name="tradeworker-requests-cancelled-status-' + j + '" id="tradeworker-requests-cancelled-status-' + j + '" value="' + status + '" readonly></td>' +
+                    '</tr>' +
+                    '<tr>' +
+                    '<td class="label">Homeuser Response</td> ' +
+                    '<td colspan="5"> <input type="text" name="tradeworker-requests-cancelled-homeuserResponse-' + j + '" id="tradeworker-requests-cancelled-homeuserResponse-' + j + '" value="' + homeuserResponse + '" readonly></td> ' +
+                    '</tr>' +
+                    '<tr style="height: 0.5em;background-color: #0a0a0a"> <td colspan="6"></td> </tr>'
             }
 
         }
@@ -888,50 +958,55 @@ function tradeworkerDisplayCancelledRequest(){
     }
 }
 
-var tradeworkerRequestsToAcceptArray;
-var tradeworkerRequestCursor = 0;
-
 function tradeworkerDisplayRequestAcceptedNotification(){
-    if(tradeworkerRequestCursor < tradeworkerRequestsToAcceptArray.length) {
-        var AreaName = tradeworkerRequestsToAcceptArray[tradeworkerRequestCursor]['AreaName'];
-        var City = tradeworkerRequestsToAcceptArray[tradeworkerRequestCursor]['City'];
-        var ContactNumber = tradeworkerRequestsToAcceptArray[tradeworkerRequestCursor]['ContactNumber'];
-        var JobCommencementDate = tradeworkerRequestsToAcceptArray[tradeworkerRequestCursor]['JobCommencementDate'];
-        var JobDescription = tradeworkerRequestsToAcceptArray[tradeworkerRequestCursor]['JobDescription'];
-        var Name = tradeworkerRequestsToAcceptArray[tradeworkerRequestCursor]['Name'];
-        var QuoteID = tradeworkerRequestsToAcceptArray[tradeworkerRequestCursor]['QuoteID'];
-        var Road = tradeworkerRequestsToAcceptArray[tradeworkerRequestCursor]['Road'];
-        var StreetNumber = tradeworkerRequestsToAcceptArray[tradeworkerRequestCursor]['StreetNumber'];
-        var Surname = tradeworkerRequestsToAcceptArray[tradeworkerRequestCursor]['Surname'];
-        var WorkType = tradeworkerRequestsToAcceptArray[tradeworkerRequestCursor]['workType'];
-        var locationName = tradeworkerRequestsToAcceptArray[tradeworkerRequestCursor]['locationName'];
-        tradeworkerRequestCursor++;
-        var html = "<h1>Work Request Confirmation:</h1> " +
-            "<h3>Request Details</h3>" +
-                "<row>" +
-                    "<h5>Work Details</h5> " +
-                    "<form id='tradeworker-notification-request-form' name='tradeworker-notification-request-form'>" +
-                    "<column class='large-4 medium-4 small-12'><input type=\"hidden\" name=\"ignore-tradeworker-request-notification-quoteID\" id=\"tradeworker-request-notification-quoteID\" value=" + QuoteID + "></column>" +
-                    "</form>" +
-                    "<column class='large-4 medium-4 small-12'><label>Date tradeworker is to come: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-commencementDate\" id=\"tradeworker-request-notification-commencementDate\" value=" + JobCommencementDate + " readonly></column>" +
-                    "<column class='large-4 medium-4 small-12'><label>Job Type: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-jobType\" id=\"tradeworker-request-notification-jobType\" value=" + WorkType + " readonly></column> " +
-                    "<column class='large-12 medium-12 small-12'><label>Job Description: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-JobDescription\" id=\"tradeworker-request-notification-JobDescription\" value=" + JobDescription + " readonly></column> " +
-                    "<h5>Address Details</h5> " +
-                    "<column class='large-4 medium-4 small-12'><label>Number: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-number\" id=\"tradeworker-request-notification-number\" value=" + StreetNumber + " readonly></column>" +
-                    "<column class='large-4 medium-4 small-12'><label>Road: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-road\" id=\"tradeworker-request-notification-road\" value=" + Road + " readonly></column>" +
-                    "<column class='large-4 medium-4 small-12'><label>SubArea: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-subarea\" id=\"tradeworker-request-notification-subarea\" value=" + locationName + " readonly></column> " +
-                    "<column class='large-6 medium-6 small-12'><label>Area: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-area\" id=\"tradeworker-request-notification-area\" value=" + AreaName + " readonly></column>" +
-                    "<column class='large-6 medium-6 small-12'><label>Province: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-province\" id=\"tradeworker-request-notification-province\" value=" + City + " readonly></column>" +
-                    "<h5>Homeuser Details</h5> " +
-                    "<column class='large-4 medium-4 small-12'><label>Homeuser name: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-name\" id=\"tradeworker-request-notification-name\" value=" + Name + " readonly></column>" +
-                    "<column class='large-4 medium-4 small-12'><label>Homeuser surname: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-surname\" id=\"tradeworker-request-notification-surname\" value=" + Surname + " readonly></column>" +
-                    "<column class='large-4 medium-4 small-12'><label>Homeuser contact details: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-contactNumber\" id=\"tradeworker-request-notification-contactNumber\" value=" + ContactNumber + " readonly></column> " +
-                    "<column class='large-4 medium-4 small-12'><button type=\"submit\" class=\"success button radius\" id=\"tradeworker-request-notification-button\" onclick=\"sendAJAXRequest('tradeworker-accept-confirmation',handletradeworkerAcceptConfirmationResponse,'tradeworker-notification-request-form');\"> Confirm </button></column> " +
-                    "<column class='large-4 medium-4 small-12'><p>*note: Please look under jobs initiated tab for further details or to cancel job</p></column> " +
-                    "</row>";
+    if(tradeworkerJobRequestArray.length > 0) {
+        for(var t = 0;t < tradeworkerJobRequestArray.length;t++){
+            if(tradeworkerJobRequestArray[t].hasOwnProperty('HomeuserResponse')){
 
-        $('#tradeworker-homepage-notification-modal').foundation('toggle');
-        document.getElementById("tradeworker-homepage-notification-modal-additionalInfo").innerHTML = html;
+                if(tradeworkerJobRequestArray[t]['HomeuserResponse'] == 1 && tradeworkerJobRequestArray[t]['Status'] == 1){
+                    console.log("The following should be occuring yo yo yo");
+                    var AreaName = tradeworkerJobRequestArray[t]['AreaName'];
+                    var City = tradeworkerJobRequestArray[t]['City'];
+                    var ContactNumber = tradeworkerJobRequestArray[t]['HomeuserContact'];
+                    var JobCommencementDate = tradeworkerJobRequestArray[t]['JobCommencementDate'];
+                    var JobDescription = tradeworkerJobRequestArray[t]['JobDescription'];
+                    var Name = tradeworkerJobRequestArray[t]['HomeuserName'];
+                    var QuoteID = tradeworkerJobRequestArray[t]['QuoteID'];
+                    var Road = tradeworkerJobRequestArray[t]['Road'];
+                    var StreetNumber = tradeworkerJobRequestArray[t]['StreetNumber'];
+                    var Surname = tradeworkerJobRequestArray[t]['HomeuserSurname'];
+                    var WorkType = tradeworkerJobRequestArray[t]['workType'];
+                    var locationName = tradeworkerJobRequestArray[t]['locationName'];
+                    var html = "<h1>Work Request Confirmation:</h1> " +
+                        "<h3>Request Details</h3>" +
+                        "<row>" +
+                        "<h5>Work Details</h5> " +
+                        "<form id='tradeworker-notification-request-form' name='tradeworker-notification-request-form'>" +
+                        "<column class='large-4 medium-4 small-12'><input type=\"hidden\" name=\"ignore-tradeworker-request-notification-quoteID\" id=\"tradeworker-request-notification-quoteID\" value=" + QuoteID + "></column>" +
+                        "</form>" +
+                        "<column class='large-4 medium-4 small-12'><label>Date tradeworker is to come: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-commencementDate\" id=\"tradeworker-request-notification-commencementDate\" value=" + JobCommencementDate + " readonly></column>" +
+                        "<column class='large-4 medium-4 small-12'><label>Job Type: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-jobType\" id=\"tradeworker-request-notification-jobType\" value=" + WorkType + " readonly></column> " +
+                        "<column class='large-12 medium-12 small-12'><label>Job Description: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-JobDescription\" id=\"tradeworker-request-notification-JobDescription\" value=" + JobDescription + " readonly></column> " +
+                        "<h5>Address Details</h5> " +
+                        "<column class='large-4 medium-4 small-12'><label>Number: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-number\" id=\"tradeworker-request-notification-number\" value=" + StreetNumber + " readonly></column>" +
+                        "<column class='large-4 medium-4 small-12'><label>Road: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-road\" id=\"tradeworker-request-notification-road\" value=" + Road + " readonly></column>" +
+                        "<column class='large-4 medium-4 small-12'><label>SubArea: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-subarea\" id=\"tradeworker-request-notification-subarea\" value=" + locationName + " readonly></column> " +
+                        "<column class='large-6 medium-6 small-12'><label>Area: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-area\" id=\"tradeworker-request-notification-area\" value=" + AreaName + " readonly></column>" +
+                        "<column class='large-6 medium-6 small-12'><label>Province: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-province\" id=\"tradeworker-request-notification-province\" value=" + City + " readonly></column>" +
+                        "<h5>Homeuser Details</h5> " +
+                        "<column class='large-4 medium-4 small-12'><label>Homeuser name: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-name\" id=\"tradeworker-request-notification-name\" value=" + Name + " readonly></column>" +
+                        "<column class='large-4 medium-4 small-12'><label>Homeuser surname: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-surname\" id=\"tradeworker-request-notification-surname\" value=" + Surname + " readonly></column>" +
+                        "<column class='large-4 medium-4 small-12'><label>Homeuser contact details: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-contactNumber\" id=\"tradeworker-request-notification-contactNumber\" value=" + ContactNumber + " readonly></column> " +
+                        "<column class='large-4 medium-4 small-12'><button type=\"submit\" class=\"success button radius\" id=\"tradeworker-request-notification-button\" onclick=\"sendAJAXRequest('tradeworker-accept-confirmation',handletradeworkerAcceptConfirmationResponse,'tradeworker-notification-request-form');\"> Confirm </button></column> " +
+                        "<column class='large-4 medium-4 small-12'><p>*note: Please look under jobs initiated tab for further details or to cancel job</p></column> " +
+                        "</row>";
+
+                    $('#tradeworker-homepage-notification-modal').foundation('toggle');
+                    document.getElementById("tradeworker-homepage-notification-modal-additionalInfo").innerHTML = html;
+                }
+            }
+        }
+
     }
     else{
         console.log("No more notifications to display");
@@ -944,14 +1019,10 @@ function handletradeworkerAcceptConfirmationResponse(response){
     if(typeof result == 'boolean'){
         if(result){
             var html = "<h3>Request Acknowledged</h3>";
-            if(tradeworkerRequestCursor < tradeworkerRequestsToAcceptArray.length){
-                $('#tradeworker-homepage-notification-modal').foundation('toggle');
-                tradeworkerDisplayRequestAcceptedNotification();
-            }
-            else{
+
                 $('#tradeworker-homepage-notification-modal-response').foundation('toggle');
                 document.getElementById("tradeworker-homepage-notification-modal-response-additionalInfo").innerHTML = html;
-            }
+
 
         }
         else{
@@ -970,28 +1041,6 @@ function tradeworkerExtendJobInitiate(){
 
 function tradeworkerCompleteJobInitiate(){
     console.log("Should be completing");
-}
-
-function tradeworkerRequestsNotifier(){
-    //$('#tradeworker-homepage-notification-modal').foundation('toggle');
-    //document.getElementById("tradeworker-homepage-notification-modal-additionalInfo").innerHTML = "he;;;;;oooooo";
-    sendAJAXRequest('tradeworker-requests-accepted-notifications',handletradeworkerRequestsAcceptedNotificationArrayFill);
-
-}
-
-function handletradeworkerRequestsAcceptedNotificationArrayFill(response){
-    tradeworkerRequestsToAcceptArray = JSON.parse(response);
-    console.log("Notification is being added: " + response);
-    if(typeof tradeworkerRequestsToAcceptArray == 'object'){
-        genericPrintObject(tradeworkerRequestsToAcceptArray);
-
-        if(tradeworkerRequestsToAcceptArray.length > 0){
-            tradeworkerDisplayRequestAcceptedNotification();
-        }
-    }
-    else if(typeof tradeworkerRequestsToAcceptArray == 'boolean'){
-        console.log("There are no notifications to display: " + tradeworkerRequestsToAcceptArray);
-    }
 }
 
 //var homeuserRequestsToAcceptArray;
@@ -1262,12 +1311,18 @@ function homeuserManageRequestModal(tableIndex){
             if(tradeworkerStatus == 1){
                 tradeworkerStatus = "Tradeworker accepted";
             }
+            else if(tradeworkerStatus == 2){
+                tradeworkerStatus = "Tradeworker Cancelled";
+            }
             else if(tradeworkerStatus == 3){
                 tradeworkerStatus = "Tradeworker confirmed";
             }
             var homeuserStatus = homeuserJobRequestArray[tableIndex]['HomeuserResponse-' + k];
             if(homeuserStatus == 1){
                 homeuserStatus = "You accepted";
+            }
+            else if(homeuserStatus == 2){
+                homeuserStatus = "You rejected";
             }
             else if(homeuserStatus == 3){
                 homeuserStatus = "Job Initiated";
@@ -1942,6 +1997,7 @@ function homeuserDisplayOngoingJobs(){
                                 '<th>Estimated Complete Date</th>' +
                                 '<th>Work Type</th>' +
                                 '<th>Status</th>' +
+                                '<th>Job Details</th>' +
                                 '<th>Selected</th>' +
                                 '</tr></thead><tbody>';
                             start = false;
@@ -1954,6 +2010,12 @@ function homeuserDisplayOngoingJobs(){
                                 '<td>' + estimatedCompletionDate + '</td>' +
                                 '<td>' + workType + '</td>' +
                                 '<td>' + status + '</td>' +
+                            '<td>' +
+                            '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">' +
+                            'Details' +
+                            '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+                            '</button>' +
+                            '</td>' +
                                 '<td><div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div></td>' +
                                 '</tr>';
 
@@ -1972,6 +2034,71 @@ function homeuserDisplayOngoingJobs(){
 
         document.getElementById('homeuser-ongoingJobs-areainformation').innerHTML = "<h3>There are no ongoing jobs to display</h3>";
     }
+}
+
+function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
+    var street = homeuserJobRequestArray[tableIndex]["Road"];
+    var streetNumber = homeuserJobRequestArray[tableIndex]["StreetNumber"];
+    var subLocality = homeuserJobRequestArray[tableIndex]["AreaName"];
+    var locality = homeuserJobRequestArray[tableIndex]["locationName"];
+    var province = homeuserJobRequestArray[tableIndex]["Province"];
+    var jobDescription = homeuserJobRequestArray[tableIndex]["JobDescription"];
+    var dateInitialised = homeuserJobRequestArray[tableIndex]["DateInitialised"];
+    var commencementDate = homeuserJobRequestArray[tableIndex]["JobCommencementDate"];
+    var estimatedPrice = homeuserJobRequestArray[tableIndex]["AgreedPrice-" + jobID];
+    //var status = homeuserJobRequestArray[tableIndex]["Accepted"];
+    var jobType = homeuserJobRequestArray[tableIndex]["WorkType"];
+    var numWorkers = homeuserJobRequestArray[tableIndex]["NumberOfWorkersRequested"];
+    var numWorkersAccepted = homeuserJobRequestArray[tableIndex]["NumberOfWorkersAccepted"];
+    var html = '<h3>Request information</h3><table>';
+    html += '<tr> ' +
+        '<td class="label">Address</td> ' +
+        '<td><input type="text" name="homeuser-ongoingJobs-Details-street_number-' + tableIndex + '" id="homeuser-ongoingJobs-Details-street_number-' + tableIndex + '" value="' + streetNumber + '"  readonly> </td>' +
+        '<td colspan="2"> <input type="text" name="homeuser-ongoingJobs-Details-route-' + tableIndex + '" id="homeuser-ongoingJobs-Details-route-' + tableIndex + '" value="' + street + '"  readonly> </td>' +
+        '<td colspan="2"> <input type="text" name="homeuser-ongoingJobs-Details-sublocality_level_1-' + tableIndex + '" id="homeuser-ongoingJobs-Details-sublocality_level_1-' + tableIndex + '" value="' + subLocality + '"  readonly> </td>' +
+        '</tr> ' +
+        '<tr> ' +
+        '<td></td> ' +
+        '<td colspan="2"> <input type="text" name="homeuser-ongoingJobs-Details-locality-' + tableIndex + '" id="homeuser-ongoingJobs-Details-locality-' + tableIndex + '" value="' + locality + '"  readonly> </td> ' +
+        '<td colspan="3"> <input type="text" name="homeuser-ongoingJobs-Details-country-' + tableIndex + '" id="homeuser-ongoingJobs-Details-country-' + tableIndex + '" value="' + province + '"  readonly> </td> ' +
+        '</tr> ' +
+        '<tr> ' +
+        '<td class="label">Request Date initialised:</td> <td colspan="4"> <input type="text" name="homeuser-ongoingJobs-Details-dateInitialised-' + tableIndex + '" id="homeuser-ongoingJobs-Details-initialisedDate-' + tableIndex + '" value="' + dateInitialised + '"  readonly> </td> ' +
+        '</tr> ' +
+        '<tr> ' +
+        '<td class="label">Job Description:</td> <td colspan="2"> <input type="text" name="homeuser-ongoingJobs-Details-WorkType-' + tableIndex + '" id="homeuser-ongoingJobs-Details-WorkType-' + tableIndex + '" value="' + jobType + '"  readonly> </td> ' +
+        '<td colspan="3"> <input type="text" name="homeuser-ongoingJobs-Details-locality-' + tableIndex + '" id="homeuser-ongoingJobs-Details-jobDescription-' + tableIndex + '" value="' + jobDescription + '"  readonly> </td> ' +
+        '</tr> ' +
+        '<tr> ' +
+        '<td class="label">Workers Requested</td> <td colspan="1"> <input type="text" name="homeuser-ongoingJobs-Details-requestedWorkers-' + tableIndex + '" id="homeuser-ongoingJobs-Details-requestedWorkers-' + tableIndex + '" value="' + numWorkers + '"  readonly> </td>' +
+        '<td class="label">Workers Accepted</td> <td colspan="2"> <input type="text" name="homeuser-ongoingJobs-Details-acceptedWorkers-' + tableIndex + '" id="homeuser-ongoingJobs-Details-acceptedWorkers-' + tableIndex + '" value="' + numWorkersAccepted + '"  readonly> </td>' +
+        '</tr> </table>' +
+        '<form id="homeuser-manage-ongoingJobs-editableInformation-form" name="homeuser-manage-ongoingJobs-editableInformation-form">' +
+        '<div class="row">' +
+            //TODO: make elements toggleable so that additional information can be displayed upon submission of form
+            //new Foundation.Toggler($("#homeuser-initiateJob-commenceDate-info"),'data-animate="fade-in fade-out"');
+            //new Foundation.Toggler($("#homeuser-initiateJob-numberDays-info"),'data-animate="fade-in fade-out"');
+            //    Remember to do this after it has been done to the html page else it will not work
+        '<h3>Editable information</h3>' +
+            '<input type="hidden" value="' + jobID + '" id="homeuser-ongoingJobs-Details-jobID-' + tableIndex + '" name="ignore-homeuser-ongoingJobs-Details-jobID-' + tableIndex + '">' +
+        '<div class="column large-11 medium 11">' +
+        '<label>Agreed price:</label><input type="number" step="0.01" min="20" name="homeuser-ongoingJobs-Details-agreedPrice-edit-' + tableIndex + '" id="homeuser-ongoingJobs-Details-agreedPrice-edit-' + tableIndex + '" class="REQ_VAL" value="' + estimatedPrice + '">' +
+        '<div class="additional-info top-padding" id="homeuser-ongoingJobs-Details-agreedPrice-edit-' + tableIndex + '-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please select a date from the drop down</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="column large-offset-8 medium-offset-8 large-3 medium-3">' +
+        '<a type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="sendAJAXRequest(\'homeuser-update-agreed-price\',handleHomeuserUpdateAgreedPriceResponse,\'homeuser-manage-ongoingJobs-editableInformation-form\');">Edit<img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"></a>' +
+            '</div>' +
+        '</form>';
+    $('#homeuser-ongoingJobs-modal').foundation('toggle');
+    document.getElementById("homeuser-ongoingJobs-modal-additionalInfo").innerHTML = html;
+}
+
+function handleHomeuserUpdateAgreedPriceResponse(response){
+    var success = JSON.parse(response);
+    console.log("The following is value returned from server: " + success + " the following is the type thereof: " + typeof success);
 }
 
 function homeuserDisplayRequests(){

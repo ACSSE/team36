@@ -84,6 +84,11 @@
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel9v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+                <?php
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-cancelled-jobs.php";
+                ?>
+            </div>
+            <div class="tabs-panel full-height user-panels" id="panel9v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <div class="full-height full-width">
                     <h1>Location:</h1>
                     <div class="row">

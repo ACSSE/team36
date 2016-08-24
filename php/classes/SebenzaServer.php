@@ -806,7 +806,8 @@ class SebenzaServer {
                     }
 
                     array_push($returnValue,$applicantsToSend[$leastIndex]['UserID']);
-                    $applicantsToSend = array_slice($applicantsToSend,$leastIndex,1);
+                    unset($applicantsToSend[$leastIndex]);
+
                     $counter++;
                 }
             }
@@ -1123,6 +1124,15 @@ class SebenzaServer {
                 $dbhandler->runCommand($command,$result[$r]['RequestID']);
                 $fullRequest = $dbhandler->getResults();
                 if($result[$r]['HomeuserResponse'] == 1 || $result[$r]['HomeuserResponse'] == 3){
+                    $command = "SELECT `UserID` FROM `QUOTE_REQUEST` WHERE `RequestID` = ?";
+                    $dbhandler->runCommand($command,$result[$r]['RequestID']);
+                    $homeuserID = $dbhandler->getResults();
+                    $command = "SELECT `Name`,`Surname`,`ContactNumber` FROM `REGISTERED_USER` WHERE `UserID` = ?";
+                    $dbhandler->runCommand($command,$homeuserID[0]['UserID']);
+                    $homeuserDetails = $dbhandler->getResults();
+                    $returnValue[$r]["HomeuserName"] = $homeuserDetails[0]['Name'];
+                    $returnValue[$r]["HomeuserSurname"] = $homeuserDetails[0]['Surname'];
+                    $returnValue[$r]["HomeuserContact"] = $homeuserDetails[0]['ContactNumber'];
                     $command = "SELECT `StreetNumber`,`Road`,`AreaName`,`locationID` FROM `AREA_PER_LOCATION` WHERE `AreaID` = ?";
                 }
                 else{

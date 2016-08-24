@@ -132,7 +132,7 @@
     </button>
 </div>
 <script>
-    tradeworkerRequestsNotifier();
+    //tradeworkerRequestsNotifier();
     sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
     sendAJAXRequest('fetch-tradeworker-profile-details',handleTradeworkerFetchProfileDetails);
 </script>
