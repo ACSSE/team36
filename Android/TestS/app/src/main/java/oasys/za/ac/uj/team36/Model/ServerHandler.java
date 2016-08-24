@@ -1,8 +1,10 @@
 package oasys.za.ac.uj.team36.Model;
 
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Entity;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 
 import org.apache.http.HttpEntity;
@@ -23,9 +25,12 @@ import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -33,6 +38,8 @@ import java.security.BasicPermission;
 import java.util.ArrayList;
 import java.util.* ;
 import java.util.jar.Attributes;
+
+import oasys.za.ac.uj.team36.tests.Main;
 
 /**
  * Created by Nicholas Rader on 2016-07-27.
@@ -44,13 +51,134 @@ public class ServerHandler {
     public String response = "" ;
     ProgressDialog progressDialog ;
     public static final int TIMEOUT = 1000 * 15 ;
-    public static final String SERVER_ADDRESS = "http://10.0.0.6:31335/SebenzaServer.php" ;
+    public static final String SERVER_ADDRESS = "http://10.0.0.6:31335/php/classes/SebenzaServer.php" ;
+
+    public String data="" ;
+    public BufferedWriter wr ;
+    public URL url;
+    public String line ;
+    public HttpURLConnection con = null;
+    public OutputStream os = null ;
+    public BufferedReader reader ;
+    public StringBuilder sb ;
+    public Context c;
 
     public ServerHandler(Context context){
+        c= context ;
         progressDialog = new ProgressDialog(context) ;
         progressDialog.setCancelable(false);
         progressDialog.setTitle("Loading");
         progressDialog.setMessage("Please wait...");
+    }
+
+    public void setURL(String address){
+        response += "Connecting =" ;
+        try {
+            url = new URL(address);
+            response += "set" ;
+        }catch (Exception e){
+            e.printStackTrace();
+            response += e +"\n";
+        }
+        response += "out = \n";
+    }
+
+    public void openUrl(){
+        if(url!= null){
+            response += "NN + " ;
+            try {
+                con = (HttpURLConnection) url.openConnection() ;
+                response += "Connection open" ;
+                con.setReadTimeout(10000);
+                con.setConnectTimeout(15000);
+                con.setRequestMethod("POST");
+                con.setDoInput(true);
+                con.setDoOutput(true);
+            }catch(Exception e){
+                e.printStackTrace();
+                response += e ;
+            }
+
+        }else
+        {
+            response += "url is not set" ;
+        }
+    }
+    public void writeData(String data){
+        if(url != null & con != null){
+                response += "fine not null" ;
+            try{
+                response += "ABOUT TO SEND" ;
+                os = con.getOutputStream();
+                wr = new BufferedWriter(new OutputStreamWriter(os,"UTF-8"));
+                response += "Sending data connection open = \n" ;
+                wr.write(data);
+                response += "Sending data writen = \n" ;
+                wr.flush();
+                wr.close() ;
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }else{
+            response += "No connection for writing" ;
+        }
+    }
+    public StringBuilder readResponse(){
+        String line ;
+        StringBuilder build = null;
+       try{
+           reader = new BufferedReader(new InputStreamReader(con.getInputStream()));
+           response += "Recieving data = \n";
+           response += "content: " + con.getContent() ;
+           build = new StringBuilder();
+
+           // Read Server Response
+           while ((line = reader.readLine()) != null) {
+               response += "Still = \n";
+               build.append(line);
+               break;
+           }
+           response += "Recieved result = \n";
+           response += build.toString();
+           response += "Null coming through";
+           if (build.length() > 0) {
+               this.success = true;
+           } else {
+               this.success = false;
+           }
+       }catch (Exception e){
+           e.printStackTrace();
+       }
+
+        return build;
+
+    }
+    public int resposeCode(){
+        int i = 0;
+        if(con != null){
+           try{
+              i = con.getResponseCode();
+           }catch (Exception e){
+               e.printStackTrace();
+           }
+        }else
+        {
+            i= 0;
+            response += "Url is not set" ;
+        }
+        return i ;
+    }
+    public void closeStreams(){
+        if( con!= null & os != null){
+            try{
+                os.close();
+                con.disconnect();
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }else{
+            response += "streams have not been set" ;
+        }
     }
 
     public void storeUserInfo(RegisteredUser user, GetUserCallback callback) {
@@ -64,9 +192,10 @@ public class ServerHandler {
     }
 
     public String login(RegisteredUser user){
+       // progressDialog.show();
         response += "Starting = \n" ;
-        //new Connect().execute(user.getUsername(),user.getPassword()) ;
-        new testLogin().execute(user.getUsername(), user.getPassword()) ;
+      new Connect().execute(user.getUsername(),user.getPassword()) ;
+        //new testLogin().execute(user.getUsername(), user.getPassword()) ;
         response += "all done = \n" ;
         return response ;
     }
@@ -121,6 +250,24 @@ public class ServerHandler {
     private class Connect extends AsyncTask<String,String,String>{
 
 
+        public Connect(){}
+
+        public String setData(String u, String p) {
+            String s = "" ;
+            try{
+                s = URLEncoder.encode("action", "UTF-8")
+                        + "=" + URLEncoder.encode("login", "UTF-8");
+                s += "&" + URLEncoder.encode("username", "UTF-8")
+                        + "=" + URLEncoder.encode(u, "UTF-8");
+                s += "&" + URLEncoder.encode("password", "UTF-8")
+                        + "=" + URLEncoder.encode(p, "UTF-8");
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
+                return s;
+        }
+
         @Override
         protected String doInBackground(String... params) {
 
@@ -129,72 +276,24 @@ public class ServerHandler {
             // params.add(new BasicNameValuePair("Username", user.getUsername()));
             // params.add(new BasicNameValuePair("Password", user.getPassword()));
 
-            String username = (String)params[0];
-            String password = (String)params[1];
+            String username = (String) params[0];
+            String password = (String) params[1];
 
-            try {
-                String line = null;
-                response += "Connecting = \n" ;
-                URL url = new URL(SERVER_ADDRESS);
-                String data = URLEncoder.encode("username", "UTF-8")
-                        + "=" + URLEncoder.encode(username, "UTF-8");
-                data += "&" + URLEncoder.encode("password", "UTF-8")
-                        + "=" + URLEncoder.encode(password, "UTF-8");
-                data += "&" + URLEncoder.encode("action", "UTF-8")
-                        + "=" + URLEncoder.encode("login", "UTF-8");
-                URLConnection conn = url.openConnection();
-                conn.setDoOutput(true);
-				conn.setRequestMethod("POST") ;
-                    response += "Sending data = \n" ;
-                OutputStreamWriter wr = new OutputStreamWriter(conn.getOutputStream());
-                    response += "Sending data connection open = \n" ;
-                wr.write( data );
-                    response += "Sending data writen = \n" ;
-                wr.flush();
-				wr.close() ;
 
-                    response += "flushed data = \n" ;
-                BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-                    response += "Recieving data = \n" ;
-                StringBuilder sb = new StringBuilder();
+            response += "Strating. . . ";
 
-                // Read Server Response
-                while((line = reader.readLine()) != null)
-                {
-                    response += "Still = \n" ;
-                    sb.append(line);
-                    break;
-                }
-                response += "Recieved result = \n" ;
-                response = sb.toString() ;
-                response += "Null coming through" ;
-                if(line.equalsIgnoreCase("true")){
-                    success = true ;
-                }else{
-                    success = false;
-                }
-                response += "Finished = \n" ;
-            }catch (Exception ex){
-                ex.printStackTrace();
-                response += ex ;
-            }
+            setURL(SERVER_ADDRESS.toString());
+            setData(username, password);
+            openUrl();
+
+            writeData(setData(username, password));
+            int code = resposeCode();
+            sb = readResponse();
+            closeStreams();
+
             return response;
 
-            //JSONObject js = JP.httprequest(DB_URL,"POST",params) ;
-            /*try{
-                String success = js.toString() ;
-                if (success.equals("true"))
-                {
-                    this.success = true;
-                }else{
-
-                    this.success = false ;
-                }
-            }catch(Exception e){
-                e.printStackTrace();
-            }*/
         }
-
 
     }
 
@@ -276,7 +375,6 @@ public class ServerHandler {
                 HttpParams p = new BasicHttpParams();
                 HttpClient httpclient = new DefaultHttpClient(p);
                 HttpPost httppost = new HttpPost(SERVER_ADDRESS);
-                httppost.setHeader("Accept", "application/json");
 
                 response += "post set  \n";
 

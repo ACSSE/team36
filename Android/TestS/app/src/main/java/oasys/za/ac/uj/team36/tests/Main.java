@@ -56,6 +56,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
     UserLocalDatabase localDB ;
     RegisteredUser user ;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,7 +88,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                 user = new RegisteredUser(uName, pass);
 
                 ServerHandler s = new ServerHandler(this) ;
-                String a = s.login(user);
+                String a = s.login( user);
 
                 if(a.length()<0){
 
