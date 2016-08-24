@@ -2,7 +2,7 @@
     <script>
 
     </script>
-    <h1>Manage Job Request</h1>
+    <h1>Manage Cancelled Request</h1>
     <!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->
     <form id="tradeworker-manage-requests-cancelled" name="tradeworker-manage-requests-cancelled">
         <div class="row">

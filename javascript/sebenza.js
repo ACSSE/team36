@@ -797,6 +797,8 @@ function tradeworkerDisplayOngoingJobs(){
         for(var j = 0;j < tradeworkerJobRequestArray.length;j++) {
                 if(tradeworkerJobRequestArray[j].hasOwnProperty('QuoteID') && tradeworkerJobRequestArray[j].hasOwnProperty('JobID')){
                     result = true;
+                    var onceOff = false;
+
                     if(tradeworkerJobRequestArray[j]['Status'] == 3 && tradeworkerJobRequestArray[j]['HomeuserResponse'] == 3 && tradeworkerJobRequestArray[j]['JobStatus'] == 0){
                         var jobProceedDate = tradeworkerJobRequestArray[j]['JobProceedDate'];
                         var agreedPrice = tradeworkerJobRequestArray[j]['AgreedPrice'];
@@ -806,7 +808,7 @@ function tradeworkerDisplayOngoingJobs(){
                         var tableIndex = j;
                         //This will be a button that toggles the request information so that the user can see details
                         //var requestDetails;
-                        if(j == 0){
+                        if(!onceOff){
                             html +=  '<table><thead>' +
                                 '<tr>' +
                                 '<th>Job Start Date</th>' +
@@ -816,6 +818,7 @@ function tradeworkerDisplayOngoingJobs(){
                                 '<th>Status</th>' +
                                 '<th>Selected</th>' +
                                 '</tr></thead><tbody>';
+                            onceOff = true;
                         }
 
                         html += '' +
@@ -829,13 +832,13 @@ function tradeworkerDisplayOngoingJobs(){
                             '</tr>' +
                             '';
 
-                        if(j == tradeworkerJobRequestArray.length - 1){
-                            html +='</tbody></table>';
 
-                        }
                     }
                 }
 
+        }
+        if(onceOff){
+            html +='</tbody></table>';
         }
         document.getElementById('tradeworker-ongoingJobs-areainformation').innerHTML = html;
     }
@@ -1047,57 +1050,59 @@ function tradeworkerCompleteJobInitiate(){
 var homeuserRequestCursor = 0;
 
 function homeuserDisplayRequestAcceptedNotification(){
-    if(homeuserJobRequestArray.length > 0)
-    if(homeuserRequestCursor < homeuserJobRequestArray.length) {
-        while(homeuserRequestCursor < homeuserJobRequestArray.length) {
-            if (homeuserJobRequestArray[homeuserRequestCursor].hasOwnProperty("Status-0") && homeuserJobRequestArray[homeuserRequestCursor].hasOwnProperty("HomeuserResponse-0")) {
-                if (homeuserJobRequestArray[homeuserRequestCursor]['Status-0'] == 1 && homeuserJobRequestArray[homeuserRequestCursor]['HomeuserResponse-0'] == 0) {
-                    var AreaName = homeuserJobRequestArray[homeuserRequestCursor]['AreaName'];
-                    var City = homeuserJobRequestArray[homeuserRequestCursor]['Province'];
-                    var ContactNumber = homeuserJobRequestArray[homeuserRequestCursor]['ContactNumber-0'];
-                    var DateInitialised = homeuserJobRequestArray[homeuserRequestCursor]['DateInitialised'];
-                    var JobCommencementDate = homeuserJobRequestArray[homeuserRequestCursor]['JobCommencementDate'];
-                    var JobDescription = homeuserJobRequestArray[homeuserRequestCursor]['JobDescription'];
-                    var Name = homeuserJobRequestArray[homeuserRequestCursor]['Name-0'];
-                    var QuoteID = homeuserJobRequestArray[homeuserRequestCursor]['QuoteID-0'];
-                    var Road = homeuserJobRequestArray[homeuserRequestCursor]['Road'];
-                    var StreetNumber = homeuserJobRequestArray[homeuserRequestCursor]['StreetNumber'];
-                    var Surname = homeuserJobRequestArray[homeuserRequestCursor]['Surname-0'];
-                    var WorkType = homeuserJobRequestArray[homeuserRequestCursor]['WorkType'];
-                    var locationName = homeuserJobRequestArray[homeuserRequestCursor]['locationName'];
-                    var html = "<h1>Work Request Confirmation:</h1> " +
-                        "<h3>Request Details</h3>" +
-                        "<row>" +
-                        "<h5>Work Details</h5> " +
-                        "<form id='homeuser-notification-request-form' name='homeuser-notification-request-form'>" +
-                        "<column class='large-4 medium-4 small-12'><input type=\"hidden\" name=\"ignore-homeuser-request-notification-quoteID\" id=\"homeuser-request-notification-quoteID\" value=" + QuoteID + "></column>" +
-                        "</form>" +
-                        "<column class='large-4 medium-4 small-12'><label>Date Quote Created: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-DateInitialised\" id=\"homeuser-request-notification-DateInitialised\" value=" + DateInitialised + " readonly></column>" +
-                        "<column class='large-4 medium-4 small-12'><label>Date tradeworker is to come: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-commencementDate\" id=\"homeuser-request-notification-commencementDate\" value=" + JobCommencementDate + " readonly></column>" +
-                        "<column class='large-4 medium-4 small-12'><label>Job Type: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-jobType\" id=\"homeuser-request-notification-jobType\" value=" + WorkType + " readonly></column> " +
-                        "<column class='large-12 medium-12 small-12'><label>Job Description: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-JobDescription\" id=\"homeuser-request-notification-JobDescription\" value=" + JobDescription + " readonly></column> " +
-                        "<h5>Address Details</h5> " +
-                        "<column class='large-4 medium-4 small-12'><label>Number: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-number\" id=\"homeuser-request-notification-number\" value=" + StreetNumber + " readonly></column>" +
-                        "<column class='large-4 medium-4 small-12'><label>Road: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-road\" id=\"homeuser-request-notification-road\" value=" + Road + " readonly></column>" +
-                        "<column class='large-4 medium-4 small-12'><label>SubArea: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-subarea\" id=\"homeuser-request-notification-subarea\" value=" + locationName + " readonly></column> " +
-                        "<column class='large-6 medium-6 small-12'><label>Area: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-area\" id=\"homeuser-request-notification-area\" value=" + AreaName + " readonly></column>" +
-                        "<column class='large-6 medium-6 small-12'><label>Province: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-province\" id=\"homeuser-request-notification-province\" value=" + City + " readonly></column>" +
-                        "<h5>Tradeworker Details</h5> " +
-                        "<column class='large-4 medium-4 small-12'><label>Tradeworker name: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-name\" id=\"homeuser-request-notification-name\" value=" + Name + " readonly></column>" +
-                        "<column class='large-4 medium-4 small-12'><label>Tradeworker surname: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-surname\" id=\"homeuser-request-notification-surname\" value=" + Surname + " readonly></column>" +
-                        "<column class='large-4 medium-4 small-12'><label>Tradeworker contact details: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-contactNumber\" id=\"homeuser-request-notification-contactNumber\" value=" + ContactNumber + " readonly></column> " +
-                        "<column class='large-4 medium-4 small-12'><button type=\"submit\" class=\"success button radius\" id=\"register-button\" onclick=\"sendAJAXRequest('homeuser-accept-request',handleHomeuserAcceptRequestResponse,'homeuser-notification-request-form');\"> Confirm </button></column> " +
-                        "<column class='large-4 medium-4 small-12'><button type=\"submit\" class=\"alert button radius\" id=\"register-button\" onclick=\"sendAJAXRequest('homeuser-deny-request',handleHomeuserRejectRequestResponse,'homeuser-notification-request-form');\"> Deny </button></column> " +
-                        "<column class='large-4 medium-4 small-12'><p>*note: that by confirming this you will be sending the address details you selected and your contact details(provided) to the tradeworker</p></column> " +
-                        "</row>";
+    if(homeuserJobRequestArray.length > 0){
+        for(var x = 0;x < homeuserJobRequestArray.length;x++) {
+            console.log("displaying notifications");
+            for(var y = 0;y < homeuserJobRequestArray[x]['NumberOfWorkersRequested'];y++){
+                if (homeuserJobRequestArray[x].hasOwnProperty("Status-" + y) && homeuserJobRequestArray[x].hasOwnProperty("HomeuserResponse-" + y)) {
+                    if (homeuserJobRequestArray[x]['Status-' + y] == 1 && homeuserJobRequestArray[x]['HomeuserResponse-' + y] == 0) {
+                        var AreaName = homeuserJobRequestArray[x]['AreaName'];
+                        var City = homeuserJobRequestArray[x]['Province'];
+                        var ContactNumber = homeuserJobRequestArray[x]['ContactNumber-' + y];
+                        var DateInitialised = homeuserJobRequestArray[x]['DateInitialised'];
+                        var JobCommencementDate = homeuserJobRequestArray[x]['JobCommencementDate'];
+                        var JobDescription = homeuserJobRequestArray[x]['JobDescription'];
+                        var Name = homeuserJobRequestArray[x]['Name-' + y];
+                        var QuoteID = homeuserJobRequestArray[x]['QuoteID-' + y];
+                        var Road = homeuserJobRequestArray[x]['Road'];
+                        var StreetNumber = homeuserJobRequestArray[x]['StreetNumber'];
+                        var Surname = homeuserJobRequestArray[x]['Surname-' + y];
+                        var WorkType = homeuserJobRequestArray[x]['WorkType'];
+                        var locationName = homeuserJobRequestArray[x]['locationName'];
+                        var html = "<h1>Work Request Confirmation:</h1> " +
+                            "<h3>Request Details</h3>" +
+                            "<row>" +
+                            "<h5>Work Details</h5> " +
+                            "<form id='homeuser-notification-request-form' name='homeuser-notification-request-form'>" +
+                            "<column class='large-4 medium-4 small-12'><input type=\"hidden\" name=\"ignore-homeuser-request-notification-quoteID\" id=\"homeuser-request-notification-quoteID\" value=" + QuoteID + "></column>" +
+                            "</form>" +
+                            "<column class='large-4 medium-4 small-12'><label>Date Quote Created: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-DateInitialised\" id=\"homeuser-request-notification-DateInitialised\" value=" + DateInitialised + " readonly></column>" +
+                            "<column class='large-4 medium-4 small-12'><label>Date tradeworker is to come: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-commencementDate\" id=\"homeuser-request-notification-commencementDate\" value=" + JobCommencementDate + " readonly></column>" +
+                            "<column class='large-4 medium-4 small-12'><label>Job Type: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-jobType\" id=\"homeuser-request-notification-jobType\" value=" + WorkType + " readonly></column> " +
+                            "<column class='large-12 medium-12 small-12'><label>Job Description: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-JobDescription\" id=\"homeuser-request-notification-JobDescription\" value=" + JobDescription + " readonly></column> " +
+                            "<h5>Address Details</h5> " +
+                            "<column class='large-4 medium-4 small-12'><label>Number: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-number\" id=\"homeuser-request-notification-number\" value=" + StreetNumber + " readonly></column>" +
+                            "<column class='large-4 medium-4 small-12'><label>Road: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-road\" id=\"homeuser-request-notification-road\" value=" + Road + " readonly></column>" +
+                            "<column class='large-4 medium-4 small-12'><label>SubArea: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-subarea\" id=\"homeuser-request-notification-subarea\" value=" + locationName + " readonly></column> " +
+                            "<column class='large-6 medium-6 small-12'><label>Area: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-area\" id=\"homeuser-request-notification-area\" value=" + AreaName + " readonly></column>" +
+                            "<column class='large-6 medium-6 small-12'><label>Province: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-province\" id=\"homeuser-request-notification-province\" value=" + City + " readonly></column>" +
+                            "<h5>Tradeworker Details</h5> " +
+                            "<column class='large-4 medium-4 small-12'><label>Tradeworker name: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-name\" id=\"homeuser-request-notification-name\" value=" + Name + " readonly></column>" +
+                            "<column class='large-4 medium-4 small-12'><label>Tradeworker surname: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-surname\" id=\"homeuser-request-notification-surname\" value=" + Surname + " readonly></column>" +
+                            "<column class='large-4 medium-4 small-12'><label>Tradeworker contact details: </label><input type=\"text\" name=\"ignore-homeuser-request-notification-contactNumber\" id=\"homeuser-request-notification-contactNumber\" value=" + ContactNumber + " readonly></column> " +
+                            "<column class='large-4 medium-4 small-12'><button type=\"submit\" class=\"success button radius\" id=\"register-button\" onclick=\"sendAJAXRequest('homeuser-accept-request',handleHomeuserAcceptRequestResponse,'homeuser-notification-request-form');\"> Confirm </button></column> " +
+                            "<column class='large-4 medium-4 small-12'><button type=\"submit\" class=\"alert button radius\" id=\"register-button\" onclick=\"sendAJAXRequest('homeuser-deny-request',handleHomeuserRejectRequestResponse,'homeuser-notification-request-form');\"> Deny </button></column> " +
+                            "<column class='large-4 medium-4 small-12'><p>*note: that by confirming this you will be sending the address details you selected and your contact details(provided) to the tradeworker</p></column> " +
+                            "</row>";
 
-                    $('#homeuser-homepage-notification-modal').foundation('toggle');
-                    document.getElementById("homeuser-homepage-notification-modal-additionalInfo").innerHTML = html;
+                        $('#homeuser-homepage-notification-modal').foundation('toggle');
+                        document.getElementById("homeuser-homepage-notification-modal-additionalInfo").innerHTML = html;
+                    }
+
                 }
-
             }
-            homeuserRequestCursor++;
         }
+        console.log("Notifications done");
     }
     else{
         console.log("No more notifications to display");
@@ -1110,14 +1115,9 @@ function handleHomeuserRejectRequestResponse(response){
     if(typeof result == 'boolean'){
         if(result){
             var html = "<h3>Request(s) Rejected</h3>";
-            if(homeuserRequestCursor < homeuserJobRequestArray.length){
-                $('#homeuser-homepage-notification-modal').foundation('toggle');
-                homeuserDisplayRequestAcceptedNotification();
-            }
-            else{
                 $('#homeuser-homepage-notification-modal-response').foundation('toggle');
                 document.getElementById("homeuser-homepage-notification-modal-response-additionalInfo").innerHTML = html;
-            }
+
 
         }
         else{
@@ -1132,41 +1132,13 @@ function handleHomeuserAcceptRequestResponse(response){
     if(typeof result == 'boolean'){
         if(result){
             var html = "<h3>Request Accepted</h3>";
-            if(homeuserRequestCursor < homeuserJobRequestArray.length){
-                $('#homeuser-homepage-notification-modal').foundation('toggle');
-                homeuserDisplayRequestAcceptedNotification();
-            }
-            else{
                 $('#homeuser-homepage-notification-modal-response').foundation('toggle');
                 document.getElementById("homeuser-homepage-notification-modal-response-additionalInfo").innerHTML = html;
-            }
 
         }
         else{
             //Failed to accept request on server
         }
-    }
-}
-
-function homeuserRequestsNotifier(){
-    //$('#homeuser-homepage-notification-modal').foundation('toggle');
-    //document.getElementById("homeuser-homepage-notification-modal-additionalInfo").innerHTML = "he;;;;;oooooo";
-    sendAJAXRequest('homeuser-requests-accepted-notifications',handleHomeuserRequestsAcceptedNotificationArrayFill);
-
-}
-
-function handleHomeuserRequestsAcceptedNotificationArrayFill(response){
-    homeuserRequestsToAcceptArray = JSON.parse(response);
-    console.log("Notification is being added: " + response);
-    if(typeof homeuserRequestsToAcceptArray == 'object'){
-        genericPrintObject(homeuserRequestsToAcceptArray);
-
-        if(homeuserRequestsToAcceptArray.length > 0){
-            homeuserDisplayRequestAcceptedNotification();
-        }
-    }
-    else if(typeof homeuserRequestsToAcceptArray == 'boolean'){
-        console.log("There are no notifications to display: " + homeuserRequestsToAcceptArray);
     }
 }
 
@@ -1405,17 +1377,43 @@ function homeuserTerminateJobInitiate(){
     console.log("Should be terminating");
     var input = $("form input[name=ignore-requested-user-onGoingJobs-selected]:radio");
     console.log("test" + input.length);
+
     if(input.length > 0){
         for(var i = 0 ; i < input.length ; i++) {
             //console.log("should be printing :" + input[i].checked);
             if (input[i].checked) {
                 var spl = input[i].value.split("_");
                 console.log("Terminating the following job id: " + spl[1]);
-                document.getElementById("homeuser-ongoingJobs-tradeworkerID-toRemove").value = spl[1];
-                sendAJAXRequest('homeuser-ongoingJob-remove-tradeworker',handleHomeuserTerminateJobRequestRespones,'homeuser-manage-ongoingJobs-tradeworker-remove-form')
+
+                var html = '<h3>Terminating job</h3>' +
+                    '<form id="homeuser-terminate-job-form" name="homeuser-terminate-job-form">' +
+                    '<input type="hidden" id="homeuser-ongoingJobs-tradeworkerID-toRemove" name="ignore-homeuser-ongoingJobs-tradeworkerID-toRemove" value="' + spl[1] + '">' +
+                    '<div class="row">' +
+                    '<div class="column large-11 medium-11">' +
+                    '<label>Please enter reason for early termination</label><input type="text" name="homeuser-terminateJob-reason" id="homeuser-terminateJob-reason" class="REQ_VAL">' +
+                    '<div class="additional-info top-padding" id="homeuser-terminateJob-reason-info" data-toggler data-animate="fade-in fade-out" aria-expanded="false">' +
+                    '<p class="help-text no-margins">Please fill in the reason you terminated the job. e.g. Tradeworker never pitched</p>' +
+                    '</div>' +
+                    '</div>' +
+                    '</div>' +
+                    '</form>' +
+                '<div class="large-3 large-offset-8 medium-offset-8 medium-3 columns">' +
+                '<button type="top-bar-button button" class="button alert" style="margin-top: 0.2em" onclick="sendAJAXRequest(\'homeuser-ongoingJob-remove-tradeworker\',handleHomeuserTerminateJobRequestRespones,\'homeuser-terminate-job-form\')">' +
+                'Terminate Job' +
+                '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>' +
+                '</button>' +
+                '</div>';
+
+                $('#homeuser-ongoingJobs-modal').foundation('toggle');
+                document.getElementById("homeuser-ongoingJobs-modal-additionalInfo").innerHTML = html;
+                var terminateJobReasonInfo = $("#homeuser-terminateJob-reason-info");
+                new Foundation.Toggler(terminateJobReasonInfo,'data-animate="fade-in fade-out"');
+
             }
         }
     }
+
+
 }
 
 function handleHomeuserTerminateJobRequestRespones(response){

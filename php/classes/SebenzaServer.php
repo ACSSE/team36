@@ -775,7 +775,7 @@ class SebenzaServer {
             if(count($applicantsToSend) == 1){
                  array_push($returnValue,$applicantsToSend[0]['UserID']);
             }
-            else if(count($applicantsToSend) < $numRequests ){
+            else if(count($applicantsToSend) <= $numRequests ){
                 for($e = 0; $e < count($applicantsToSend);$e++){
                     array_push($returnValue,$applicantsToSend[$e]['UserID']);
                 }
