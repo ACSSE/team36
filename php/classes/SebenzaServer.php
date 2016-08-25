@@ -1141,7 +1141,7 @@ class SebenzaServer {
                 $dbhandler->runCommand($command,$fullRequest[0]['Address']);
                 $areaInfo = $dbhandler->getResults();
                 if($result[$r]['HomeuserResponse'] == 3){
-                    $command = "SELECT `HomeuserRequest`,`TradeworkerRequest`,`JobID`,`JobProceedDate`,`AgreedPrice`,`EstimatedCompletionDate`,`Status` FROM `JOB_PER_USER` WHERE `QuoteID` = ?";
+                    $command = "SELECT `Notifier`,`TradeworkerRequest`,`JobID`,`JobProceedDate`,`AgreedPrice`,`EstimatedCompletionDate`,`Status` FROM `JOB_PER_USER` WHERE `QuoteID` = ?";
                     $dbhandler->runCommand($command,$result[$r]['QuoteID']);
                     $jobResults = $dbhandler->getResults();
                     $returnValue[$r]["JobProceedDate"] = $jobResults[0]['JobProceedDate'];
@@ -1149,6 +1149,8 @@ class SebenzaServer {
                     $returnValue[$r]["EstimatedCompletionDate"] = $jobResults[0]['EstimatedCompletionDate'];
                     $returnValue[$r]["JobStatus"] = $jobResults[0]['Status'];
                     $returnValue[$r]["JobID"] = $jobResults[0]['JobID'];
+                    $returnValue[$r]["TradeworkerReq"] = $jobResults[0]['Notifier'];
+                    $returnValue[$r]["Notifier"] = $jobResults[0]['TradeworkerRequest'];
                 }
                 $workType = self::returnWorkTypes($fullRequest[0]['workTypeID']);
                 $command = "SELECT `locationName`,`Province`,`City` FROM `LOCATIONS` WHERE `locationID` = ?";
@@ -1221,8 +1223,20 @@ class SebenzaServer {
                             $returnValue[$i]['AgreedPrice-'.$r] = $jobsInitiated[0]['AgreedPrice'];
                             $returnValue[$i]['EstimatedCompletionDate-'.$r] = $jobsInitiated[0]['EstimatedCompletionDate'];
                             $returnValue[$i]['JobStatus-'.$r] = $jobsInitiated[0]['Status'];
-                            $returnValue[$i]['HomeuserRequest-'.$r] = $jobsInitiated[0]['HomeuserRequest'];
-                            $returnValue[$i]['TradeworkerRequest-'.$r] = $jobsInitiated[0]['TradeworkerRequest'];
+                            $returnValue[$r]["Notifier-".$r] = $jobsInitiated[0]['Notifier'];
+                            $returnValue[$r]["TradeworkerReq-".$r] = $jobsInitiated[0]['TradeworkerRequest'];
+                            if($jobsInitiated[0]['Status'] == 2){
+                                $command = "SELECT `UserTerminated`,`Reason`,`DateTerminated` FROM `REASON_FOR_JOB_TERMINATION` WHERE `JobID` = ?";
+                                $dbhandler->runCommand($command,$jobsInitiated[0]['JobID']);
+                                $terminatedJobResults = $dbhandler->getResults();
+                                if($terminatedJobResults[0]["UserTerminated"] == $userID)
+                                    $returnValue[$r]["UserTerminated-".$r] = "You terminated";
+                                else
+                                    $returnValue[$r]["UserTerminated-".$r] = "Tradeworker terminated";
+
+                                $returnValue[$r]["ReasonFor-".$r] = $terminatedJobResults[0]["Reason"];
+                                $returnValue[$r]["DateTerminated-".$r] = $terminatedJobResults[0]["DateTerminated"];
+                            }
                         }
                         $returnValue[$i]['QuoteID-'.$r] = $quotes[$r]['QuoteID'];
                         $returnValue[$i]['RequestedUser-'.$r] = $quotes[$r]['RequestedUser'];
@@ -1626,7 +1640,7 @@ class SebenzaServer {
                 $workersAccepted = $dbhandler->getResults();
                 $command = "UPDATE `QUOTE_REQUEST` SET `NumberOfWorkersAccepted` = ? WHERE `RequestID` = ?";
                 $dbhandler->runCommand($command,intval($workersAccepted[0]['NumberOfWorkersAccepted'] + 1),$result[0]['RequestID']);
-                if($workersAccepted[0]['NumberOfWorkersAccepted'] == $workersAccepted[0]['NumberOfWorkersRequested']){
+                if(intval($workersAccepted[0]['NumberOfWorkersAccepted'] + 1) == $workersAccepted[0]['NumberOfWorkersRequested']){
                     $command = "UPDATE `QUOTE_REQUEST` SET `Status` = ? WHERE `RequestID` = ?";
                     $dbhandler->runCommand($command,1,$result[0]['RequestID']);
                 }
@@ -1701,6 +1715,38 @@ class SebenzaServer {
         $command = "UPDATE `QUOTE` SET `HomeuserResponse` = ? WHERE `QuoteID` = ?";
         if($dbHandler->runCommand($command,2,$quoteID)){
             $returnValue = true;
+        }
+
+        return $returnValue;
+    }
+
+    public static function tradeworkerTerminateJob($jobID,$reason){
+        $returnValue = false;
+        $dbHandler = self::fetchDatabaseHandler();
+
+        $userID = self::fetchSessionHandler()->getSessionVariable("UserID");
+        $command = "UPDATE `JOB_PER_USER` SET `Status` = ?, `Notifier` = ?, `TradeworkerRequest` = ? WHERE `JobID` = ?";
+        if($dbHandler->runCommand($command,2,1,2,$jobID)){
+            $command = "INSERT INTO `REASON_FOR_JOB_TERMINATION` (`UserTerminated`,`JobID`,`Reason`) VALUES (?,?,?)";
+            if($dbHandler->runCommand($command,$userID,$jobID,$reason)){
+                $returnValue = true;
+            }
+        }
+
+        return $returnValue;
+    }
+
+    public static function homeuserTerminateJob($jobID,$reason){
+        $returnValue = false;
+        $dbHandler = self::fetchDatabaseHandler();
+
+        $userID = self::fetchSessionHandler()->getSessionVariable("UserID");
+        $command = "UPDATE `JOB_PER_USER` SET `Status` = ?, `Notifier` = ? WHERE `JobID` = ?";
+        if($dbHandler->runCommand($command,2,1,$jobID)){
+            $command = "INSERT INTO `REASON_FOR_JOB_TERMINATION` (`UserTerminated`,`JobID`,`Reason`) VALUES (?,?,?)";
+            if($dbHandler->runCommand($command,$userID,$jobID,$reason)){
+                $returnValue = true;
+            }
         }
 
         return $returnValue;
@@ -1973,7 +2019,21 @@ if (!empty($_POST)) {
                 }
                 break;
             case 'homeuser-ongoingJob-remove-tradeworker':
-                $response = json_encode("Should be removing tradeworker from job");
+                $condition = SebenzaServer::serverSecurityCheck();
+
+                if($condition){
+                    if(isset($_POST['ignore-homeuser-ongoingJobs-jobID-toRemove']) && isset($_POST['homeuser-terminateJob-reason'])){
+                        $response = json_encode(SebenzaServer::homeuserTerminateJob($_POST['ignore-homeuser-ongoingJobs-jobID-toRemove'],$_POST['homeuser-terminateJob-reason']));
+                    }
+                    else{
+                        $response = json_encode(false);
+                    }
+
+                }
+                else{
+                    $response = json_encode(false);
+                }
+
                 break;
             case 'fetch-job-requests':
                 if(SebenzaServer::serverSecurityCheck()){

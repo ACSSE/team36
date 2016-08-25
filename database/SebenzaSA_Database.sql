@@ -193,10 +193,22 @@ CREATE TABLE `JOB_PER_USER` (
   `AgreedPrice` double not null,
   `EstimatedCompletionDate` date not null,
   `Status` integer(1) not null DEFAULT 0,
-  `HomeuserRequest` integer(1) not null DEFAULT 0,
   `TradeworkerRequest` integer(1) not null DEFAULT 0,
+  `Notifier` integer(1) not null DEFAULT 0,
   PRIMARY KEY (`JobID`),
   FOREIGN KEY (`QuoteID`) REFERENCES QUOTE(`QuoteID`)
+);
+
+DROP TABLE IF EXISTS `REASON_FOR_JOB_TERMINATION`;
+CREATE TABLE `REASON_FOR_JOB_TERMINATION` (
+  `ReasonID` integer not null auto_increment,
+  `UserTerminated` integer not null,
+  `JobID` integer not null,
+  `Reason` VARCHAR(150) not null,
+  `DateTerminated` TIMESTAMP not null DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`reasonID`),
+  FOREIGN KEY (`UserTerminated`) REFERENCES REGISTERED_USER(`UserID`),
+  FOREIGN KEY (`JobID`) REFERENCES JOB_PER_USER(`JobID`)
 );
 
 DROP TABLE IF EXISTS `BOOKMARKED`;

@@ -29,6 +29,7 @@
                     <li><a onclick="toggleUserPageArea('panel4v')">Jobs To initiate</a></li>
                     <li><a onclick="toggleUserPageArea('panel5v')">Ongoing Jobs</a></li>
                     <li><a onclick="toggleUserPageArea('panel5v')">Finished Jobs</a></li>
+                    <li><a onclick="toggleUserPageArea('panel9v')">Cancelled Jobs</a></li>
                 </ul>
             </li>
             <li><a href="#">Profile Management</a>

@@ -646,12 +646,12 @@ function handleTradeworkerAcceptRequest(response){
         console.log("The work request was accepted: ");
         //tradeworker-requests-notification-modal-additionalInfo
         $('#tradeworker-requests-notification-modal').foundation('toggle');
-        document.getElementById("tradeworker-requests-notification-modal-additionalInfo").innerHTML = "<p>The work request has been accepted, notification to homeuser has been sent please await his response: </p>";
+        document.getElementById("tradeworker-requests-notification-modal-additionalInfo").innerHTML = "<h3>The work request has been accepted</h3> notification to homeuser has been sent please await his response:";
     }
     else{
         console.log("something went wrong");
         $('#tradeworker-requests-notification-modal').foundation('toggle');
-        document.getElementById("tradeworker-requests-notification-modal-additionalInfo").innerHTML = "<p>The request was not accepted something occured, please contact adiministration for assistance</p>";
+        document.getElementById("tradeworker-requests-notification-modal-additionalInfo").innerHTML = "<h3>The request was not accepted</h3> something occured, please contact adiministration for assistance if matter persists";
     }
 
 
@@ -978,7 +978,7 @@ function tradeworkerDisplayRequestAcceptedNotification(){
                     var Road = tradeworkerJobRequestArray[t]['Road'];
                     var StreetNumber = tradeworkerJobRequestArray[t]['StreetNumber'];
                     var Surname = tradeworkerJobRequestArray[t]['HomeuserSurname'];
-                    var WorkType = tradeworkerJobRequestArray[t]['workType'];
+                    var WorkType = tradeworkerJobRequestArray[t]['WorkType'];
                     var locationName = tradeworkerJobRequestArray[t]['locationName'];
                     var html = "<h1>Work Request Confirmation:</h1> " +
                         "<h3>Request Details</h3>" +
@@ -1001,7 +1001,7 @@ function tradeworkerDisplayRequestAcceptedNotification(){
                         "<column class='large-4 medium-4 small-12'><label>Homeuser surname: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-surname\" id=\"tradeworker-request-notification-surname\" value=" + Surname + " readonly></column>" +
                         "<column class='large-4 medium-4 small-12'><label>Homeuser contact details: </label><input type=\"text\" name=\"ignore-tradeworker-request-notification-contactNumber\" id=\"tradeworker-request-notification-contactNumber\" value=" + ContactNumber + " readonly></column> " +
                         "<column class='large-4 medium-4 small-12'><button type=\"submit\" class=\"success button radius\" id=\"tradeworker-request-notification-button\" onclick=\"sendAJAXRequest('tradeworker-accept-confirmation',handletradeworkerAcceptConfirmationResponse,'tradeworker-notification-request-form');\"> Confirm </button></column> " +
-                        "<column class='large-4 medium-4 small-12'><p>*note: Please look under jobs initiated tab for further details or to cancel job</p></column> " +
+                        "<column class='large-4 medium-4 small-12'><p>*note: Please go quote user on day specified and afterwards ask user to initiate job</p></column> " +
                         "</row>";
 
                     $('#tradeworker-homepage-notification-modal').foundation('toggle');
@@ -1167,9 +1167,14 @@ function handleHomeuserRemoveRequestResponse(response){
     if(typeof success == 'boolean'){
         if(success){
             //The request has been canceled and removed
+            var html = "<h3>The request has been cancelled</h3>Thank you for using SebenzaSA";
+            $('#tradeworker-requests-notification-modal').foundation('toggle');
+            document.getElementById("tradeworker-requests-notification-modal-additionalInfo").innerHTML = html;
         }
         else{
             //The request was not cancel
+            var html = "<h3>The request cancellation failed</h3>Please contact administration if problem persists";
+            $('#tradeworker-requests-notification-modal').foundation('toggle');
         }
     }
 }
@@ -1385,9 +1390,9 @@ function homeuserTerminateJobInitiate(){
                 var spl = input[i].value.split("_");
                 console.log("Terminating the following job id: " + spl[1]);
 
-                var html = '<h3>Terminating job</h3>' +
+                var html = '<h3>Terminating job</h3><p style="color: #ff1f19">*Note that this reason will be displayed to requested user</p>' +
                     '<form id="homeuser-terminate-job-form" name="homeuser-terminate-job-form">' +
-                    '<input type="hidden" id="homeuser-ongoingJobs-tradeworkerID-toRemove" name="ignore-homeuser-ongoingJobs-tradeworkerID-toRemove" value="' + spl[1] + '">' +
+                    '<input type="hidden" id="homeuser-ongoingJobs-jobID-toRemove" name="ignore-homeuser-ongoingJobs-jobID-toRemove" value="' + spl[1] + '">' +
                     '<div class="row">' +
                     '<div class="column large-11 medium-11">' +
                     '<label>Please enter reason for early termination</label><input type="text" name="homeuser-terminateJob-reason" id="homeuser-terminateJob-reason" class="REQ_VAL">' +
@@ -1418,7 +1423,20 @@ function homeuserTerminateJobInitiate(){
 
 function handleHomeuserTerminateJobRequestRespones(response){
     var success = JSON.parse(response);
+    var html = "";
     console.log("The following is the response: " + success + " the type of the response: " + typeof success);
+    if(typeof success == "boolean"){
+        if(success){
+            html = "<h3>Job has been terminated</h3>";
+            $('#homeuser-ongoingJobs-modal-response').foundation('toggle');
+            document.getElementById("homeuser-ongoingJobs-modal-response-additionalInfo").innerHTML = html;
+        }
+        else{
+            html = "<h3>Job could not be terminated</h3>Contact admin if problem persists";
+            $('#homeuser-ongoingJobs-modal-response').foundation('toggle');
+            document.getElementById("homeuser-ongoingJobs-modal-response-additionalInfo").innerHTML = html;
+        }
+    }
 }
 
 function homeuserExtendJobInitiate(){
@@ -1804,6 +1822,7 @@ function handleHomeuserFetchJobRequests(response){
         homeuserDisplayRequests();
         homeuserDisplayOngoingJobs();
         homeuserDisplayRequestAcceptedNotification();
+        homeuserDisplayCancelledJobs();
 
     }
     else if(typeof homeuserJobRequestArray == 'boolean'){
@@ -1815,6 +1834,74 @@ function handleHomeuserFetchJobRequests(response){
     }
     else{
         console.log("Response not recognized" + typeof homeuserJobRequestArray + " value: " + homeuserJobRequestArray);
+    }
+}
+
+function homeuserDisplayCancelledJobs(){
+    var result = false;
+    if(homeuserJobRequestArray.length > 0){
+        var html = '';
+        var start = true;
+        var finish = false;
+
+        for(var j = 0;j < homeuserJobRequestArray.length;j++) {
+            for (var i = 0; i < homeuserJobRequestArray[0]['NumberOfWorkersRequested']; i++) {
+                if(homeuserJobRequestArray[j].hasOwnProperty('QuoteID-' + i) && homeuserJobRequestArray[j].hasOwnProperty('JobID-' + i)){
+                    if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 2){
+                        result = true;
+                        var jobProceedDate = homeuserJobRequestArray[j]['JobProceedDate-' + i];
+                        var agreedPrice = homeuserJobRequestArray[j]['AgreedPrice-' + i];
+                        var estimatedCompletionDate = homeuserJobRequestArray[j]['EstimatedCompletionDate-' + i];
+                        var status = homeuserJobRequestArray[j]['JobStatus-' + i];
+                        var jobID = homeuserJobRequestArray[j]['JobID-' + i];
+                        var workType = homeuserJobRequestArray[j]['WorkType'];
+                        var tableIndex = j;
+                        //This will be a button that toggles the request information so that the user can see details
+                        //var requestDetails;
+                        if(start){
+                            html +=  '<table><thead>' +
+                                '<tr>' +
+                                '<th>Job Start Date</th>' +
+                                '<th>Agreed Price</th>' +
+                                '<th>Estimated Complete Date</th>' +
+                                '<th>Work Type</th>' +
+                                '<th>Status</th>' +
+                                '<th>Job Details</th>' +
+                                '<th>Selected</th>' +
+                                '</tr></thead><tbody>';
+                            start = false;
+                            finish = true;
+                        }
+
+                        html +='<tr style="height: 3em">' +
+                            '<td>' + jobProceedDate + '</td>' +
+                            '<td>' + agreedPrice + '</td>' +
+                            '<td>' + estimatedCompletionDate + '</td>' +
+                            '<td>' + workType + '</td>' +
+                            '<td>' + status + '</td>' +
+                            '<td>' +
+                            '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">' +
+                            'Details' +
+                            '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+                            '</button>' +
+                            '</td>' +
+                            '<td><div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div></td>' +
+                            '</tr>';
+
+
+                    }
+                }
+            }
+
+        }
+        if(finish){
+            html +='</tbody></table>';
+        }
+        document.getElementById('homeuser-cancelled-areainformation').innerHTML = html;
+    }
+    if(!result){
+
+        document.getElementById('homeuser-cancelled-areainformation').innerHTML = "<h3>There are no ongoing jobs to display</h3>";
     }
 }
 
@@ -1976,8 +2063,8 @@ function homeuserDisplayOngoingJobs(){
         for(var j = 0;j < homeuserJobRequestArray.length;j++) {
             for (var i = 0; i < homeuserJobRequestArray[0]['NumberOfWorkersRequested']; i++) {
                 if(homeuserJobRequestArray[j].hasOwnProperty('QuoteID-' + i) && homeuserJobRequestArray[j].hasOwnProperty('JobID-' + i)){
-                    result = true;
                     if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 0){
+                        result = true;
                         var jobProceedDate = homeuserJobRequestArray[j]['JobProceedDate-' + i];
                         var agreedPrice = homeuserJobRequestArray[j]['AgreedPrice-' + i];
                         var estimatedCompletionDate = homeuserJobRequestArray[j]['EstimatedCompletionDate-' + i];
@@ -2035,6 +2122,7 @@ function homeuserDisplayOngoingJobs(){
 }
 
 function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
+
     var street = homeuserJobRequestArray[tableIndex]["Road"];
     var streetNumber = homeuserJobRequestArray[tableIndex]["StreetNumber"];
     var subLocality = homeuserJobRequestArray[tableIndex]["AreaName"];
@@ -2164,6 +2252,7 @@ function homeuserDisplayRequests(){
                 '</tr>';
         }
     }
+    if(success)
     html += "</table>";
 
     if(!success){
