@@ -2080,16 +2080,17 @@ function handleAdminFetchJobRequests(response){
         adminGenericDisplayTable();
         adminDisplayBlockUser();
         adminDisplayCountryReport();
+        adminDisplayProvincialReport("Gauteng");
         adminDisplayProfileDetails();
     }
 }
 
 function adminDisplayProfileDetails(){
-    console.log("Should be doing profile details 3");
+    //console.log("Should be doing profile details 3");
 
-        console.log("Should be doing profile details 1");
+        //console.log("Should be doing profile details 1");
         if(adminRequestArray.hasOwnProperty('RegisteredUsers')){
-            console.log("Should be doing profile details");
+            //console.log("Should be doing profile details");
             var table = "RegisteredUsers";
             var search = "TypeOfUser=3";
             var profileDetails = adminGenericDisplayTableSetUp(table,search);
@@ -2099,50 +2100,68 @@ function adminDisplayProfileDetails(){
 }
 
 function adminDisplayCountryReport(){
+    var tableName = "Tradeworkers";
+    var tradeworkers = adminGenericDisplayTableSetUp(tableName,"");
+    var search = "Availability=1";
+    var availableTradeworkers = adminGenericDisplayTableSetUp(tableName,search);
+    console.log("The following are tradeworkers within the bounds of South Africa:" + tradeworkers.length);
+    console.log("Of these tradeworkers :" + availableTradeworkers.length + " are available for requests: ");
+    console.log("With 9 provinces");
+    var gautengInfo = adminDisplayProvincialReport("Gauteng");
+    console.log(gautengInfo);
+    console.log("The following is gauteng information size: " + gautengInfo.length);
+}
+
+function adminDisplayProvincialReport(provinceName){
+    var returnValue = [];
     var documentDisplayID = "admin-manage-country-reports-areainformation";
     //document.getElementById('admin-manage-country-reports-search').value.trim()
-    var searchValue = "Gauteng";
+    var searchValue = provinceName;
     var tableName = "Locations";
-    var gautengLocations = adminGenericDisplayTableSetUp(tableName,searchValue);
+    var areaLocations = adminGenericDisplayTableSetUp(tableName,searchValue);
     tableName = "Tradeworkers";
     var tradeworkers = adminGenericDisplayTableSetUp(tableName,"");
-    var totalTradeworkersGauteng = [];
+    var totalTradeworkersArea = [];
 
     var counter = 0;
-    console.log("........................................");
-    console.log("The following is part of reports\n The number of areas within gauteng " + gautengLocations.length);
+    //console.log("........................................");
+    //console.log("The following is part of reports\n The number of areas within " + provinceName + " " + areaLocations.length);
+    returnValue['NumberLocationsIn' + provinceName] = areaLocations.length;
     var requestsPerArea = [];
-    for(var i = 0;i < gautengLocations.length;i++){
+    for(var i = 0;i < areaLocations.length;i++){
         tableName = "LocationsPerUser";
-        searchValue = "locationID=" + gautengLocations[i]['locationID'];
+        searchValue = "locationID=" + areaLocations[i]['locationID'];
         requestsPerArea[i] = adminGenericDisplayTableSetUp(tableName,searchValue);
 
-        console.log(requestsPerArea[i]);
+        //console.log(requestsPerArea[i]);
         for(var t = 0;t < tradeworkers.length;t++){
             var exists = false;
             var tradeworkerID = tradeworkers[t]['UserID'];
             for(var p = 0; p < requestsPerArea[i].length && !exists;p++){
                 var tradeworkerCompareID = requestsPerArea[i][p]['UserID'];
-                var totalTradeworkerExists = true;
-                for(var z = 0;z < totalTradeworkersGauteng.length;z++){
-                    if(totalTradeworkersGauteng[z] == tradeworkerCompareID){
-                        totalTradeworkerExists = false;
+                var totalTradeworkerExists = false;
+                for(var z = 0;z < totalTradeworkersArea.length;z++){
+                    if(totalTradeworkersArea[z] == tradeworkerCompareID){
+                        totalTradeworkerExists = true;
                     }
                 }
-                if(tradeworkerID == tradeworkerCompareID && totalTradeworkerExists){
+                if(tradeworkerID == tradeworkerCompareID && !totalTradeworkerExists){
                     exists = true;
-                    totalTradeworkersGauteng[counter++] = tradeworkerID;
+                    totalTradeworkersArea[counter++] = tradeworkerID;
                 }
 
             }
         }
-        console.log(gautengLocations[i]['locationName'] + ": has the following amount of tradeworkers available: " + requestsPerArea[i].length);
+        //console.log(areaLocations[i]['locationName'] + ": has the following amount of tradeworkers available: " + requestsPerArea[i].length);
     }
-    console.log("The following is tradeworkers available in gauteng " + totalTradeworkersGauteng.length + " compared to tradeworkers in the provinces combined: " + tradeworkers.length);
-    console.log(gautengLocations);
-    console.log(tradeworkers);
-    console.log(totalTradeworkersGauteng);
-    console.log("........................................");
+
+    //console.log("The following is tradeworkers available in gauteng " + totalTradeworkersArea.length + " compared to tradeworkers in the provinces combined: " + tradeworkers.length);
+    returnValue['TotalTradeWorkersInArea' + provinceName] = totalTradeworkersArea.length;
+    //console.log(areaLocations);
+    //console.log(tradeworkers);
+    //console.log(totalTradeworkersArea);
+    //console.log("........................................");
+    return returnValue;
 }
 
 function adminDisplayBlockUser(){
