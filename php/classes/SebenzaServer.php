@@ -1149,8 +1149,8 @@ class SebenzaServer {
                     $returnValue[$r]["EstimatedCompletionDate"] = $jobResults[0]['EstimatedCompletionDate'];
                     $returnValue[$r]["JobStatus"] = $jobResults[0]['Status'];
                     $returnValue[$r]["JobID"] = $jobResults[0]['JobID'];
-                    $returnValue[$r]["TradeworkerReq"] = $jobResults[0]['Notifier'];
-                    $returnValue[$r]["Notifier"] = $jobResults[0]['TradeworkerRequest'];
+                    $returnValue[$r]["TradeworkerReq"] = $jobResults[0]['TradeworkerRequest'];
+                    $returnValue[$r]["Notifier"] = $jobResults[0]['Notifier'];
                 }
                 $workType = self::returnWorkTypes($fullRequest[0]['workTypeID']);
                 $command = "SELECT `locationName`,`Province`,`City` FROM `LOCATIONS` WHERE `locationID` = ?";
@@ -1736,6 +1736,17 @@ class SebenzaServer {
         return $returnValue;
     }
 
+    public static function confirmTerminatedJobNotification($jobID){
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "UPDATE `JOB_PER_USER` SET `Notifier` = ? WHERE `JobID` = ?";
+        if($dbHandler->runCommand($command,0,$jobID)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     public static function homeuserTerminateJob($jobID,$reason){
         $returnValue = false;
         $dbHandler = self::fetchDatabaseHandler();
@@ -1839,6 +1850,19 @@ if (!empty($_POST)) {
                 break;
             case 'homeuser-initiateJobExtension-request':
                 $response = json_encode("Should be extending the job for the tradeworker selected server response");
+                break;
+            case 'tradeworker-accept-jobTerminated-confirmation':
+                $condition = SebenzaServer::serverSecurityCheck();
+                if($condition){
+                    if(isset($_POST['ignore-tradeworker-confirm-jobTermination-ID']))
+                        $response = json_encode(SebenzaServer::confirmTerminatedJobNotification($_POST['ignore-tradeworker-confirm-jobTermination-ID']));
+                    else
+                        $response = json_encode(false);
+                }
+                else{
+                    $response = json_encode(false);
+                }
+
                 break;
             case 'register-contractor':
                 //Ensure all skill are set

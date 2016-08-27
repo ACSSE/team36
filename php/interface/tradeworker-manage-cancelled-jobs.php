@@ -1,11 +1,11 @@
 <div class="full-height full-width" xmlns="http://www.w3.org/1999/html">
-    <h1>Manage Job Request</h1>
+    <h1>Manage Cancelled Jobs</h1>
     <!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->
-    <form id="homeuser-manage-requests-completed" name="homeuser-manage-requests-completed">
+    <form id="tradeworker-manage-cancelled" name="tradeworker-manage-cancelled">
         <div class="row">
             <div class="column large-11">
                 <label>Search:</label>
-                <input type="text" name="ignore-homeuser-manageRTradeworker-completed-search-0" id="homeuser-manageRTradeworker-completed-search-0"/>
+                <input type="text" name="tradeworker-cancelled-search-0" id="tradeworker-cancelled-search-0"/>
             </div>
             <div class="column large-1">
 
@@ -14,7 +14,7 @@
         <div class="row">
             <div class="column large-11">
                 <label>Sort By:</label>
-                <select id="homeuser-manageRTradeworker-completed-sortBy-0" name="ignore-homeuser-manageRTradeworker-completed-sortBy-0">
+                <select id="tradeworker-cancelled-sortBy-0" name="tradeworker-cancelled-sortBy-0">
                     <option value="WorkType">Work Type</option>
                     <option value="initialDate">Date Request is sent</option>
                     <option value="commencementDate">Commencement Date</option>
@@ -28,19 +28,22 @@
         </div>
         <div class="row">
             <div class="column large-11">
-                <div class=" full-width" id="homeuser-manageRTradeworker-completed-areainformation" style="overflow-y: auto; height: 400px">
+                <div class=" full-width" id="tradeworker-cancelled-areainformation" style="overflow-y: auto; height: 400px">
 
                 </div>
             </div>
         </div>
     </form>
-    <form id="homeuser-manageRTradeworker-completed-selected-request" name="homeuser-manageRTradeworker-completed-selected-request">
-        <input type="hidden" value="-50" id="homeuser-manageRTradeworker-completed-selected-request-id" name="ignore-homeuser-manageRTradeworker-completed-selected-request-id">
-    </form>
-</div>
 
-<div class="small reveal" id="homeuser-manageRequest-completed-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
-    <div id="homeuser-manageRequest-completed-modal-additionalInfo">
+
+
+</div>
+<form id="tradeworker-manage-cancelled-tradeworker-remove-form" name="tradeworker-manage-cancelled-tradeworker-remove-form">
+    <input type="hidden" id="tradeworker-cancelled-tradeworkerID-toRemove" name="ignore-tradeworker-cancelled-tradeworkerID-toRemove" value="-50">
+</form>
+
+<div class="small reveal" id="tradeworker-cancelled-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+    <div id="tradeworker-cancelled-modal-additionalInfo">
 
     </div>
     <button class="close-button" data-close aria-label="Close reveal" type="button">
@@ -48,8 +51,8 @@
     </button>
 </div>
 
-<div class="reveal" id="homeuser-manageRequest-completed-modal-response" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
-    <div id="homeuser-manageRequest-completed-modal-response-additionalInfo">
+<div class="reveal" id="tradeworker-cancelled-modal-response" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
+    <div id="tradeworker-cancelled-modal-response-additionalInfo">
 
     </div>
     <button class="close-button" data-close aria-label="Close reveal" type="button">

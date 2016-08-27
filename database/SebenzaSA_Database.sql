@@ -101,6 +101,7 @@ CREATE TABLE `SPECIALIZATIONS_PER_USER` (
   `specID` integer not null auto_increment,
   `UserID` integer not null,
   `workTypeID` integer not null,
+  `Recommendations` integer not null DEFAULT 0,
   PRIMARY KEY (`specID`),
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`),
   FOREIGN KEY (`workTypeID`) REFERENCES SPECIALIZATIONS(`workTypeID`)
