@@ -27,6 +27,9 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
                         //echo 'UserID: '.SebenzaServer::fetchSessionHandler()->getSessionVariable("UserID");
                         include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-main-page.php";
                         break;
+                    case 3:
+                        include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/admin-main-page.php";
+                        break;
                     default:
                         SebenzaServer::redirect("/");
                         break;

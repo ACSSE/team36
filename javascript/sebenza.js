@@ -2071,6 +2071,271 @@ function handleHomeuserInitiateJobResponse(response){
     }
 }
 
+var adminRequestArray;
+function handleAdminFetchJobRequests(response){
+    adminRequestArray = JSON.parse(response);
+    console.log(adminRequestArray);
+    if(typeof adminRequestArray == 'object'){
+        adminSearchSpecializationArray();
+        adminGenericDisplayTable();
+        adminDisplayBlockUser();
+        adminDisplayCountryReport();
+        adminDisplayProfileDetails();
+    }
+}
+
+function adminDisplayProfileDetails(){
+    console.log("Should be doing profile details 3");
+
+        console.log("Should be doing profile details 1");
+        if(adminRequestArray.hasOwnProperty('RegisteredUsers')){
+            console.log("Should be doing profile details");
+            var table = "RegisteredUsers";
+            var search = "TypeOfUser=3";
+            var profileDetails = adminGenericDisplayTableSetUp(table,search);
+            adminDisplayGenericTable(profileDetails,'admin-manage-profile-areainformation');
+        }
+
+}
+
+function adminDisplayCountryReport(){
+    var documentDisplayID = "admin-manage-country-reports-areainformation";
+    //document.getElementById('admin-manage-country-reports-search').value.trim()
+    var searchValue = "Gauteng";
+    var tableName = "Locations";
+    var gautengLocations = adminGenericDisplayTableSetUp(tableName,searchValue);
+    tableName = "Tradeworkers";
+    var tradeworkers = adminGenericDisplayTableSetUp(tableName,"");
+    var totalTradeworkersGauteng = [];
+
+    var counter = 0;
+    console.log("........................................");
+    console.log("The following is part of reports\n The number of areas within gauteng " + gautengLocations.length);
+    var requestsPerArea = [];
+    for(var i = 0;i < gautengLocations.length;i++){
+        tableName = "LocationsPerUser";
+        searchValue = "locationID=" + gautengLocations[i]['locationID'];
+        requestsPerArea[i] = adminGenericDisplayTableSetUp(tableName,searchValue);
+
+        console.log(requestsPerArea[i]);
+        for(var t = 0;t < tradeworkers.length;t++){
+            var exists = false;
+            var tradeworkerID = tradeworkers[t]['UserID'];
+            for(var p = 0; p < requestsPerArea[i].length && !exists;p++){
+                var tradeworkerCompareID = requestsPerArea[i][p]['UserID'];
+                var totalTradeworkerExists = true;
+                for(var z = 0;z < totalTradeworkersGauteng.length;z++){
+                    if(totalTradeworkersGauteng[z] == tradeworkerCompareID){
+                        totalTradeworkerExists = false;
+                    }
+                }
+                if(tradeworkerID == tradeworkerCompareID && totalTradeworkerExists){
+                    exists = true;
+                    totalTradeworkersGauteng[counter++] = tradeworkerID;
+                }
+
+            }
+        }
+        console.log(gautengLocations[i]['locationName'] + ": has the following amount of tradeworkers available: " + requestsPerArea[i].length);
+    }
+    console.log("The following is tradeworkers available in gauteng " + totalTradeworkersGauteng.length + " compared to tradeworkers in the provinces combined: " + tradeworkers.length);
+    console.log(gautengLocations);
+    console.log(tradeworkers);
+    console.log(totalTradeworkersGauteng);
+    console.log("........................................");
+}
+
+function adminDisplayBlockUser(){
+    var tableName = 'RegisteredUsers';
+    var searchValue = document.getElementById('admin-manage-block-user-search').value;
+    if(adminRequestArray.hasOwnProperty(tableName) && adminRequestArray[tableName].length > 0){
+        var tablesToPrint = adminGenericDisplayTableSetUp(tableName,searchValue);
+        adminDisplayGenericTable(tablesToPrint,'admin-manage-block-user-areainformation');
+    }
+    else{
+        document.getElementById('admin-manage-block-user-areainformation').innerHTML = "<h5>The table selected [" + tableName + "] does not exist on the database</h5>";
+    }
+}
+
+function adminGenericDisplayTable(){
+    var tableName = document.getElementById('admin-manage-tables-select').value;
+    var searchValue = document.getElementById('admin-manage-tables-search').value;
+    if(adminRequestArray.hasOwnProperty(tableName) && adminRequestArray[tableName].length > 0){
+        var tablesToPrint = adminGenericDisplayTableSetUp(tableName,searchValue);
+        adminDisplayGenericTable(tablesToPrint,'admin-manage-tables-areainformation');
+    }
+    else{
+        document.getElementById('admin-manage-tables-areainformation').innerHTML = "<h5>The table selected does not have any entries currently</h5>";
+    }
+
+}
+
+function adminSearchSpecializationArray(){
+    var searchValue = document.getElementById('admin-manage-specialization-search').value;
+    var tableName = "Specializations";
+    //console.log("The following is the search box value: " + searchValue);
+
+    if(adminRequestArray.hasOwnProperty(tableName) && adminRequestArray[tableName].length > 0) {
+        var specializationsArray = adminGenericDisplayTableSetUp(tableName,searchValue);
+        adminDisplayGenericTable(specializationsArray,'admin-manage-specialization-areainformation');
+    }
+}
+
+function adminGenericDisplayTableSetUp(tableName,searchValue){
+    var table = tableName;
+    var searchTerm = "";
+    var columnName = "";
+    if(searchValue.indexOf("=") > 0){
+        var spl = searchValue.split("=");
+        columnName = spl[0];
+        searchTerm = spl[1];
+    }
+    else{
+        searchTerm = searchValue;
+    }
+
+
+    var relevantIndexArray = [];
+    var found = false;
+    var counter = 0;
+    var tableToView = [];
+    var fullTable = "";
+    //console.log("Choosing generic Table for " + table + " with the following search term: " +searchTerm);
+    for(var item in adminRequestArray){
+        if(adminRequestArray.hasOwnProperty(item)){
+            if(item == table){
+                fullTable = item;
+                for(var index in adminRequestArray[item]){
+                    if(adminRequestArray[item].hasOwnProperty(index)){
+                        found = false;
+                        for(var name in adminRequestArray[item][index]){
+                            if(columnName == ""){
+                                if(!found)
+                                    if(adminRequestArray[item][index].hasOwnProperty(name)){
+                                        if(searchTerm != ""){
+                                            var target = adminRequestArray[item][index][name];
+                                            var contains = -1;
+                                            if (typeof target == "string") {
+                                                contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+                                                if (contains >= 0) {
+                                                    //console.log("Found match at " + counter);
+                                                    relevantIndexArray.push(counter);
+                                                    found = true;
+                                                }
+                                            }
+                                            else {
+                                                if (target == searchTerm) {
+                                                    relevantIndexArray.push(counter);
+                                                    found = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                            }
+                            else{
+                                if(name == columnName)
+                                if(!found)
+                                    if(adminRequestArray[item][index].hasOwnProperty(name)){
+                                        if(searchTerm != ""){
+                                            var target = adminRequestArray[item][index][name];
+                                            var contains = -1;
+                                            if (typeof target == "string") {
+                                                contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+                                                if (contains >= 0) {
+                                                    //console.log("Found match at " + counter);
+                                                    relevantIndexArray.push(counter);
+                                                    found = true;
+                                                }
+                                            }
+                                            else {
+                                                if (target == searchTerm) {
+                                                    relevantIndexArray.push(counter);
+                                                    found = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                            }
+
+                        }
+                        counter++;
+
+                    }
+                }
+            }
+        }
+    }
+    while(relevantIndexArray.length > 0){
+        tableToView.push(adminRequestArray[fullTable][relevantIndexArray.pop()]);
+    }
+
+    if(tableToView.length > 0){
+        return tableToView;
+    }
+    else{
+        tableToView = adminRequestArray[fullTable];
+        return tableToView;
+    }
+}
+
+function adminDisplayGenericTable(tableToDisplay,displayElementID){
+    var onceOff = false;
+    var tableStart = "<table>";
+    var tableHead = "<thead>";
+    var endTableHead = "</thead><tbody>";
+    var tableEnd = "</tbody></table>";
+    var tableBody = "";
+    var tableConstructed = "";
+    //console.log("Attempting to display table:" + tableToDisplay);
+    if(tableToDisplay.length > 0) {
+        for (var item in tableToDisplay) {
+            if (tableToDisplay.hasOwnProperty(item)) {
+                tableBody += '<tr>';
+                for (var index in tableToDisplay[item]) {
+                    if (tableToDisplay[item].hasOwnProperty(index)) {
+                        if (!onceOff) {
+                            tableHead += '<th>' + index + '</th>';
+                        }
+
+                        tableBody += '<td>' + tableToDisplay[item][index] + '</td>';
+                    }
+                }
+                tableBody += '</tr>';
+                onceOff = true;
+            }
+        }
+
+        if(onceOff){
+            document.getElementById(displayElementID).innerHTML = tableStart + tableHead + endTableHead + tableBody + tableEnd;
+        }
+    }
+    else{
+        console.log("Something went wrong in displaying of tables");
+    }
+}
+
+function adminDisplaySpecializations(specializationsArray){
+    console.log("Displaying specializations: ");
+    var html = '<table>' +
+        '<thead>' +
+        '<th colspan="1">ID</th>' +
+        '<th colspan="2">WorkType</th>' +
+        '<th colspan="2">Description</th>' +
+        '<th colspan="1">Selected</th>' +
+        '</thead><tbody>';
+    for(var j = 0;j < specializationsArray.length;j++){
+        html += '<tr>' +
+            '<td colspan="1"> ' + specializationsArray[j]['workTypeID'] + '</td>' +
+            '<td colspan="2"> ' + specializationsArray[j]['WorkType'] + '</td>' +
+            '<td colspan="3"> ' + specializationsArray[j]['Description'] + '</td>' +
+            '</tr>';
+
+    }
+    html += '</tbody></table>';
+    document.getElementById('admin-manage-specialization-areainformation').innerHTML = html;
+}
+
+
 var homeuserJobRequestArray;
 function handleHomeuserFetchJobRequests(response){
     homeuserJobRequestArray = JSON.parse(response);

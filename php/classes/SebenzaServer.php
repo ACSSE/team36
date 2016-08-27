@@ -1276,7 +1276,7 @@ class SebenzaServer {
     public static function fetchUserType(){
         $sessionHandler = self::fetchSessionHandler();
         $result = $sessionHandler->getSessionVariable("UserType");
-        if($result < 3)
+        if($result <= 3)
             return $result;
         else
             return -1;
@@ -1684,6 +1684,219 @@ class SebenzaServer {
         }
     }
 
+    public static function adminFetchRegisteredUsers(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `REGISTERED_USER`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchSpecializations(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `SPECIALIZATIONS`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchConfirmations(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `CONFIRMATIONS`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchHomeuserLocations(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `HOMEUSER_LOCATIONS`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchLocations(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `LOCATIONS`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchAreaPerLocations(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `AREA_PER_LOCATION`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchTradeworker(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `TRADE_WORKER`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchLocationsPerUser(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `LOCATIONS_PER_USER`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchSpecializationsPerUser(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `SPECIALIZATIONS_PER_USER`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchHomeuser(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `HOMEUSER`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchQuoteRequest(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `QUOTE_REQUEST`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchQuote(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `QUOTE`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchJobPerUser(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `JOB_PER_USER`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function adminFetchReasonForTermination(){
+        $returnValue = null;
+        $dbHandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `REASON_FOR_JOB_TERMINATION`";
+        if($dbHandler->runCommand($command)){
+            $returnValue = $dbHandler->getResults();
+        }
+
+        return $returnValue;
+    }
+
+    public static function fetchDatabaseTablesRequests(){
+        $returnValue = null;
+        $registerUsers = self::adminFetchRegisteredUsers();
+        if($registerUsers != null){
+            $returnValue['RegisteredUsers'] = $registerUsers;
+        }
+
+        $specializations = self::adminFetchSpecializations();
+        if($specializations != null){
+            $returnValue['Specializations'] = $specializations;
+        }
+        $confirmation = self::adminFetchConfirmations();
+        if($confirmation != null){
+            $returnValue['Confirmations'] = $confirmation;
+        }
+        $homeuserLocation = self::adminFetchHomeuserLocations();
+        if($homeuserLocation != null){
+            $returnValue['HomeuserLocations'] = $homeuserLocation;
+        }
+        $locations = self::adminFetchLocations();
+        if($locations != null){
+            $returnValue['Locations'] = $locations;
+        }
+        $areaPerLocations = self::adminFetchAreaPerLocations();
+        if($areaPerLocations != null){
+            $returnValue['AreaPerLocations'] = $areaPerLocations;
+        }
+        $tradeworkers = self::adminFetchTradeworker();
+        if($tradeworkers != null){
+            $returnValue['Tradeworkers'] = $tradeworkers;
+        }
+        $locationsPerUser = self::adminFetchLocationsPerUser();
+        if($locationsPerUser != null){
+            $returnValue['LocationsPerUser'] = $locationsPerUser;
+        }
+        $homeusers = self::adminFetchHomeuser();
+        if($homeusers != null){
+            $returnValue['Homeuser'] = $homeusers;
+        }
+        $quoteRequest = self::adminFetchQuoteRequest();
+        if($quoteRequest != null){
+            $returnValue['QuoteRequest'] = $quoteRequest;
+        }
+        $quote = self::adminFetchQuote();
+        if($quote != null){
+            $returnValue['Quote'] = $quote;
+        }
+        $jobPerUser = self::adminFetchJobPerUser();
+        if($jobPerUser != null){
+            $returnValue['JobPerUser'] = $jobPerUser;
+        }
+        $reasonForJobTermination = self::adminFetchReasonForTermination();
+        if($reasonForJobTermination != null){
+            $returnValue['ReasonForJobTermination'] = $reasonForJobTermination;
+        }
+
+        return $returnValue;
+    }
+
     public static function fetchUserID(){
         $sessionHandler = self::fetchSessionHandler();
         $userID = $sessionHandler->getSessionVariable("UserID");
@@ -2066,6 +2279,9 @@ if (!empty($_POST)) {
                     $response = json_encode($result);
                     if($result != -1)
                     switch ($result){
+                        case "3":
+                            $response = json_encode(SebenzaServer::fetchDatabaseTablesRequests());
+                            break;
                         case "1":
                             //Contractor
                             $response = json_encode("Should be dealing with contractor request job management");

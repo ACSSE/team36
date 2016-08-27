@@ -139,23 +139,6 @@ CREATE TABLE `HOMEUSER` (
 	FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`)
 );
 
-DROP TABLE IF EXISTS `QUOTE_PER_USER`;
-CREATE TABLE `QUOTE_PER_USER` (
-  `QuoteID` integer not null auto_increment,
-  `QuoteNumber` integer not null unique,
-  `QuotedUser` varchar(40) not null,
-  `QuoteProducer` varchar(40) not null,
-  `QuoteDescription` varchar(40) not null,
-  `DateInitialised` date not null,
-  `QuoteProceedDate` date not null,
-  `QuotePrice` double not null,
-  `QuotedTime` integer not null,
-  `JobProceedDate` date not null,
-  `Status` boolean not null,
-  PRIMARY KEY (`QuoteID`),
-  FOREIGN KEY (`QuoteProducer`) REFERENCES REGISTERED_USER(`Username`)
-);
-
 DROP TABLE IF EXISTS `QUOTE_REQUEST`;
 CREATE TABLE `QUOTE_REQUEST` (
   `RequestID` integer not null auto_increment,
@@ -240,11 +223,11 @@ CREATE TABLE `NOTIFICATION` (
 INSERT 	 INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name` , `Confirmation`, `PersonalID`)
 	VALUES	('firstUser', 'user1@email.co.za', '0831231234', 0, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name1', 'surname1',1,'910468784213648'),
 			('secondUser', 'user2@email.co.za', '0832342345', 2, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name2', 'surname2',1,'910468784213641'),
-			('thirdUser', 'user3@email.co.za', '0832123345', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name3', 'surname3',1,'910468784213642'),
-			('fourthUser', 'user4@email.co.za', '0832543673', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name4', 'surname4',1,'910468784213643'),
+			('thirdUser', 'user3@email.co.za', '0832123345', 2, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name3', 'surname3',1,'910468784213642'),
+			('fourthUser', 'user4@email.co.za', '0832543673', 2, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name4', 'surname4',1,'910468784213643'),
 			('fifthUser', 'user5@email.co.za', '0832345235', 1, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name5', 'surname5',1,'910468784213644'),
-			('sixthUser', 'user6@email.co.za', '0832886435', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name6', 'surname6',1,'910468784213645'),
-			('seventhUser', 'user7@email.co.za', '0831234675', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name7', 'surname7',1,'910468784213646'),
+			('sixthUser', 'user6@email.co.za', '0832886435', 2, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name6', 'surname6',1,'910468784213645'),
+			('admin', 'user7@email.co.za', '0831234675', 3, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name7', 'surname7',1,'910468784213646'),
 			('contractor', 'user8@email.co.za', '0837543215', 1, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name8', 'surname8',1,'910468784213647'),
 			('homeUser', 'user9@email.co.za', '0831234325', 2, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name9', 'surname9',1,'910468784213649'),
 			('TradeWorker', 'user10@email.co.za', '0831212675', 0, '$2y$10$20lIJidCeh.z.BGGupMMrOFPtSMmNLLaOOgO1xhr3SxEQsTYKKoGW', 'name10', 'surname10',1,'910468784213640'),
