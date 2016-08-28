@@ -2080,7 +2080,7 @@ function handleAdminFetchJobRequests(response){
         adminGenericDisplayTable();
         adminDisplayBlockUser();
         adminDisplayCountryReport();
-        adminDisplayProvincialReport("Gauteng");
+        //adminDisplayProvincialReport("GP");
         adminDisplayProfileDetails();
     }
 }
@@ -2103,13 +2103,23 @@ function adminDisplayCountryReport(){
     var tableName = "Tradeworkers";
     var tradeworkers = adminGenericDisplayTableSetUp(tableName,"");
     var search = "Availability=1";
-    var availableTradeworkers = adminGenericDisplayTableSetUp(tableName,search);
+    var availableTradeworkers = admin3DimensionalSearchArray(tableName,search);
     console.log("The following are tradeworkers within the bounds of South Africa:" + tradeworkers.length);
     console.log("Of these tradeworkers :" + availableTradeworkers.length + " are available for requests: ");
     console.log("With 9 provinces");
-    var gautengInfo = adminDisplayProvincialReport("Gauteng");
+    var gautengInfo = adminDisplayProvincialReport("GP");
     console.log(gautengInfo);
-    console.log("The following is gauteng information size: " + gautengInfo.length);
+    var westernCapeInfo = adminDisplayProvincialReport("WC");
+    console.log(westernCapeInfo);
+    var nCapeInfo = adminDisplayProvincialReport("NC");
+    console.log(nCapeInfo);
+    var eCapeInfo = adminDisplayProvincialReport("EC");
+    console.log(eCapeInfo);
+    var kznInfo = adminDisplayProvincialReport("KZN");
+    console.log(kznInfo);
+    var fsInfo = adminDisplayProvincialReport("FS");
+    console.log(fsInfo);
+    //console.log("The following is gauteng information size: " + gautengInfo.length);
 }
 
 function adminDisplayProvincialReport(provinceName){
@@ -2118,7 +2128,7 @@ function adminDisplayProvincialReport(provinceName){
     //document.getElementById('admin-manage-country-reports-search').value.trim()
     var searchValue = provinceName;
     var tableName = "Locations";
-    var areaLocations = adminGenericDisplayTableSetUp(tableName,searchValue);
+    var areaLocations = admin3DimensionalSearchArray(tableName,searchValue);
     tableName = "Tradeworkers";
     var tradeworkers = adminGenericDisplayTableSetUp(tableName,"");
     var totalTradeworkersArea = [];
@@ -2128,15 +2138,17 @@ function adminDisplayProvincialReport(provinceName){
     //console.log("The following is part of reports\n The number of areas within " + provinceName + " " + areaLocations.length);
     returnValue['NumberLocationsIn' + provinceName] = areaLocations.length;
     var requestsPerArea = [];
+    //returnValue['Areas' + provinceName] = areaLocations;
     for(var i = 0;i < areaLocations.length;i++){
         tableName = "LocationsPerUser";
         searchValue = "locationID=" + areaLocations[i]['locationID'];
-        requestsPerArea[i] = adminGenericDisplayTableSetUp(tableName,searchValue);
+        requestsPerArea[i] = admin3DimensionalSearchArray(tableName,searchValue);
 
         //console.log(requestsPerArea[i]);
         for(var t = 0;t < tradeworkers.length;t++){
             var exists = false;
             var tradeworkerID = tradeworkers[t]['UserID'];
+            if(requestsPerArea[i] != null)
             for(var p = 0; p < requestsPerArea[i].length && !exists;p++){
                 var tradeworkerCompareID = requestsPerArea[i][p]['UserID'];
                 var totalTradeworkerExists = false;
@@ -2157,6 +2169,7 @@ function adminDisplayProvincialReport(provinceName){
 
     //console.log("The following is tradeworkers available in gauteng " + totalTradeworkersArea.length + " compared to tradeworkers in the provinces combined: " + tradeworkers.length);
     returnValue['TotalTradeWorkersInArea' + provinceName] = totalTradeworkersArea.length;
+    //returnValue['TotalTradeWorkersInAreaArray' + provinceName] = totalTradeworkersArea;
     //console.log(areaLocations);
     //console.log(tradeworkers);
     //console.log(totalTradeworkersArea);
@@ -2197,6 +2210,103 @@ function adminSearchSpecializationArray(){
     if(adminRequestArray.hasOwnProperty(tableName) && adminRequestArray[tableName].length > 0) {
         var specializationsArray = adminGenericDisplayTableSetUp(tableName,searchValue);
         adminDisplayGenericTable(specializationsArray,'admin-manage-specialization-areainformation');
+    }
+}
+
+function admin3DimensionalSearchArray(tableName,searchValue){
+    var table = tableName;
+    var searchTerm = "";
+    var columnName = "";
+    if(searchValue.indexOf("=") > 0){
+        var spl = searchValue.split("=");
+        columnName = spl[0];
+        searchTerm = spl[1];
+    }
+    else{
+        searchTerm = searchValue;
+    }
+
+
+    var relevantIndexArray = [];
+    var found = false;
+    var counter = 0;
+    var tableToView = [];
+    var fullTable = "";
+    //console.log("Choosing generic Table for " + table + " with the following search term: " +searchTerm);
+    for(var item in adminRequestArray){
+        if(adminRequestArray.hasOwnProperty(item)){
+            if(item == table){
+                fullTable = item;
+                for(var index in adminRequestArray[item]){
+                    if(adminRequestArray[item].hasOwnProperty(index)){
+                        found = false;
+                        for(var name in adminRequestArray[item][index]){
+                            if(columnName == ""){
+                                if(!found)
+                                    if(adminRequestArray[item][index].hasOwnProperty(name)){
+                                        if(searchTerm != ""){
+                                            var target = adminRequestArray[item][index][name];
+                                            var contains = -1;
+                                            if (typeof target == "string") {
+                                                contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+                                                if (contains >= 0) {
+                                                    //console.log("Found match at " + counter);
+                                                    relevantIndexArray.push(counter);
+                                                    found = true;
+                                                }
+                                            }
+                                            else {
+                                                if (target == searchTerm) {
+                                                    relevantIndexArray.push(counter);
+                                                    found = true;
+                                                }
+                                            }
+                                        }
+                                    }
+                            }
+                            else{
+                                if(name == columnName)
+                                    if(!found)
+                                        if(adminRequestArray[item][index].hasOwnProperty(name)){
+                                            if(searchTerm != ""){
+                                                var target = adminRequestArray[item][index][name];
+                                                var contains = -1;
+                                                if (typeof target == "string") {
+                                                    contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+                                                    if (contains >= 0) {
+                                                        //console.log("Found match at " + counter);
+                                                        relevantIndexArray.push(counter);
+                                                        found = true;
+                                                    }
+                                                }
+                                                else {
+                                                    if (target == searchTerm) {
+                                                        relevantIndexArray.push(counter);
+                                                        found = true;
+                                                    }
+                                                }
+                                            }
+                                        }
+                            }
+
+                        }
+                        counter++;
+
+                    }
+                }
+            }
+        }
+    }
+    while(relevantIndexArray.length > 0){
+        tableToView.push(adminRequestArray[fullTable][relevantIndexArray.pop()]);
+    }
+
+    if(tableToView.length > 0){
+        return tableToView;
+    }
+    else{
+        tableToView = null;
+        return tableToView;
     }
 }
 

@@ -152,10 +152,10 @@ class SebenzaServer {
         $link = "http://localhost:31335/index.php?email=".$email."&key=".$keyToSend;
         $title = "Sebenza South Africa";
         $emailConMessage = '<b>Thank you for registering with SebenzaSA!</b><br/> please click on the following link for confirmation<a href="'.$link.'">'.$title.'</a><br/>If it was not you that registered for the SebenzaSA site, you can ignore this email';
-//        $condition = self::mailClient($email,$keyToSend,$input,$emailConMessage);
-        $condition = true;
+        $condition = self::mailClient($email,$keyToSend,$emailConMessage);
+//        $condition = true;
         //$test = "";
-        $returnValue = true;
+        $returnValue = false;
         if ($condition) {
             switch ($type) {
                 case 'contractor':
@@ -485,6 +485,11 @@ class SebenzaServer {
                     $cellNumber = $input[6];
                     $homeNumber = $input[7];
                     $availability = $input[8];
+                    if($availability){
+                        $availability = 1;
+                    }
+                    else
+                        $availability = 0;
                     $numLocations = $input[9];
                     $numSkills = $input[10];
                     $command = "INSERT INTO `REGISTERED_USER` (`Username`, `Email`, `ContactNumber`, `TypeOfUser`, `Password`, `Surname`, `Name` , `PersonalID`) VALUES (?,?,?,?,?,?,?,?)";

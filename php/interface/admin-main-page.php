@@ -1,13 +1,3 @@
-<?php
-/**
- * Created by PhpStorm.
- * User: Brandon Faul
- * Date: 2016/04/01
- * Time: 7:09 PM
- */
-SebenzaServer::addNotification(9,"This is a new notification(duplication)");
-?>
-
 <div class="row collapse background-image" xmlns="http://www.w3.org/1999/html">
     <div class="small-3 columns full-height" style="background-color: rgba(20, 20, 20, 0.9)">
         <ul class="vertical menu" data-accordion-menu>
@@ -35,7 +25,7 @@ SebenzaServer::addNotification(9,"This is a new notification(duplication)");
 
     </div>
     <div class="small-9 columns full-height">
-        <div class="full-height" style="max-height: 100%">
+        <div class="full-height">
             <div class="tabs-panel full-height user-panels" id="panel1v" style="display: block;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/admin-manage-specializations.php";
@@ -74,27 +64,13 @@ SebenzaServer::addNotification(9,"This is a new notification(duplication)");
         </div>
     </div>
 </div>
-
-<div class="reveal" id="homeuser-homepage-notification-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
-    <div id="homeuser-homepage-notification-modal-additionalInfo">
-
-    </div>
-</div>
-
-<div class="reveal" id="homeuser-homepage-notification-modal-response" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
-    <div id="homeuser-homepage-notification-modal-response-additionalInfo">
-
-    </div>
-    <button class="close-button" data-close aria-label="Close reveal" type="button">
-        <span aria-hidden="true">&times;</span>
-    </button>
-</div>
-
 <script>
     //The following is used to request all data necessary for the homeuser to be displayed
     //used by - homeuser-manage-requests.php,homeuser-manage-initiate-jobs
     sendAJAXRequest('fetch-job-requests', handleAdminFetchJobRequests);
-//    sendAJAXRequest('fetch-admin-profile-details', handleHomeuserFetchProfileDetails);
+    //    sendAJAXRequest('fetch-admin-profile-details', handleHomeuserFetchProfileDetails);
     //This brings up the confirmation between homeuser and tradeworker
     //    homeuserRequestsNotifier();
 </script>
+
+

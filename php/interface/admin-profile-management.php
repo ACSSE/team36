@@ -14,5 +14,5 @@
                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
             </button>
         </div>
-    <div>
+    </div>
 </div>
