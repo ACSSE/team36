@@ -1,11 +1,11 @@
 package oasys.za.ac.uj.team36.Model;
 
-import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Entity;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
+
+import com.android.volley.Response;
+import com.android.volley.toolbox.StringRequest;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -19,8 +19,6 @@ import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.HttpConnectionParams;
 import org.apache.http.params.HttpParams;
-import org.apache.*;
-import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONObject;
 
@@ -31,6 +29,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -38,7 +37,6 @@ import java.security.BasicPermission;
 import java.util.ArrayList;
 import java.util.* ;
 import java.util.jar.Attributes;
-
 import oasys.za.ac.uj.team36.tests.Main;
 
 /**
@@ -51,7 +49,7 @@ public class ServerHandler {
     public String response = "" ;
     ProgressDialog progressDialog ;
     public static final int TIMEOUT = 1000 * 15 ;
-    public static final String SERVER_ADDRESS = "http://10.0.0.6:31335/php/classes/SebenzaServer.php" ;
+    public static final String SERVER_ADDRESS = "http://10.0.0.9:31335/php/classes/SebenzaServer.php" ;
 
     public String data="" ;
     public BufferedWriter wr ;
@@ -71,24 +69,27 @@ public class ServerHandler {
         progressDialog.setMessage("Please wait...");
     }
 
-    public void setURL(String address){
-        response += "Connecting =" ;
+    public String setURL(String address){
+        String s = "" ;
+        s = "Connecting =" ;
         try {
             url = new URL(address);
-            response += "set" ;
-        }catch (Exception e){
+            s += "set" ;
+        }catch (MalformedURLException e){
             e.printStackTrace();
-            response += e +"\n";
+            s += e +"\n";
         }
-        response += "out = \n";
+        return s;
     }
 
-    public void openUrl(){
+    public String openUrl(){
+
+        String s = "";
         if(url!= null){
-            response += "NN + " ;
+            s += "NN + " ;
             try {
                 con = (HttpURLConnection) url.openConnection() ;
-                response += "Connection open" ;
+                s += "Connection open" ;
                 con.setReadTimeout(10000);
                 con.setConnectTimeout(15000);
                 con.setRequestMethod("POST");
@@ -96,32 +97,37 @@ public class ServerHandler {
                 con.setDoOutput(true);
             }catch(Exception e){
                 e.printStackTrace();
-                response += e ;
+                s += e ;
             }
 
         }else
         {
-            response += "url is not set" ;
+            s += "url is not set" ;
         }
+
+        return s ;
     }
-    public void writeData(String data){
+    public String writeData(String data){
+        String s = "" ;
         if(url != null & con != null){
-                response += "fine not null" ;
+                s += "fine not null" ;
             try{
-                response += "ABOUT TO SEND" ;
+                s += "ABOUT TO SEND" ;
                 os = con.getOutputStream();
                 wr = new BufferedWriter(new OutputStreamWriter(os,"UTF-8"));
-                response += "Sending data connection open = \n" ;
+                s += "Sending data connection open = \n" ;
                 wr.write(data);
-                response += "Sending data writen = \n" ;
+                s += "Sending data writen = \n" ;
                 wr.flush();
                 wr.close() ;
+                con.connect();
             }catch (Exception e){
                 e.printStackTrace();
             }
         }else{
-            response += "No connection for writing" ;
+            s += "No connection for writing" ;
         }
+        return s;
     }
     public StringBuilder readResponse(){
         String line ;
@@ -168,17 +174,20 @@ public class ServerHandler {
         }
         return i ;
     }
-    public void closeStreams(){
+    public String closeStreams(){
+        String s = "" ;
         if( con!= null & os != null){
             try{
+                s += "Stream closed" ;
                 os.close();
                 con.disconnect();
             }catch (Exception e){
                 e.printStackTrace();
             }
         }else{
-            response += "streams have not been set" ;
+            s += "streams have not been set" ;
         }
+        return s ;
     }
 
     public void storeUserInfo(RegisteredUser user, GetUserCallback callback) {
@@ -280,16 +289,18 @@ public class ServerHandler {
             String password = (String) params[1];
 
 
-            response += "Strating. . . ";
+            response += "Strating. . . \n";
+            String a = "" ;
+            a += setURL(SERVER_ADDRESS.toString()) + "\n";
+            String d  = setData(username, password);
+            a += openUrl() + "\n";
 
-            setURL(SERVER_ADDRESS.toString());
-            setData(username, password);
-            openUrl();
-
-            writeData(setData(username, password));
+            response += writeData(d) + "\n";
             int code = resposeCode();
-            sb = readResponse();
-            closeStreams();
+            response += "Response code: " + code + "\n";
+            //sb = readResponse();
+            //response += "Response: " + sb.toString() +"\n";
+            response += closeStreams() + "\n";
 
             return response;
 
@@ -360,48 +371,20 @@ public class ServerHandler {
         }
     }
 
+    public class loginRequest extends StringRequest{
+        public static final String SERVER_ADDRESS_URL = "http://10.0.0.9:31335/php/classes/SebenzaServer.php" ;
+        private Map<String,String> params ;
 
-    public class testLogin extends AsyncTask<String, String,String>{
-        @Override
-        protected String doInBackground(String... params) {
+        public loginRequest(String username, String password, Response.Listener<String> listener){
+            super(Method.POST, SERVER_ADDRESS_URL, listener, null) ;
+            params = new HashMap<>() ;
+            params.put("action", "login");
+            params.put("username",username);
+            params.put("password",password);
+        }
 
-            String username = (String)params[0];
-            String password = (String)params[1];
-            response += "params set  \n" ;
-
-            try {
-                // Create a new HttpClient and Post Header
-                response += "Starting client = \n" ;
-                HttpParams p = new BasicHttpParams();
-                HttpClient httpclient = new DefaultHttpClient(p);
-                HttpPost httppost = new HttpPost(SERVER_ADDRESS);
-
-                response += "post set  \n";
-
-                // Add your data
-                List<NameValuePair> nameValuePairs = new ArrayList<NameValuePair>(3);
-                nameValuePairs.add(new BasicNameValuePair("action", "login"));
-                nameValuePairs.add(new BasicNameValuePair("username", username));
-                nameValuePairs.add(new BasicNameValuePair("password", password));
-
-                UrlEncodedFormEntity ent = new UrlEncodedFormEntity(nameValuePairs, "utf-8") ;
-
-                httppost.setEntity(ent);
-                response += "set data\n" ;
-                // Execute HTTP Post Request
-                HttpResponse Response = httpclient.execute(httppost);
-               // int status = Response.getStatusLine().getStatusCode();
-                HttpEntity e = Response.getEntity() ;
-                response += "data posted, status = \n";
-                String res = e.getContent().toString() ;
-
-            } catch (ClientProtocolException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            return response;
+        public Map<String, String> getParams(){
+            return params ;
         }
     }
 }
