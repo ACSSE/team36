@@ -111,7 +111,7 @@
             <label>Are you currently available to be requested by users to do the specified work you have selected:</label>
             <div class="switch large">
                 <input class="switch-input" id="availability-tradeWorker-switch" type="checkbox" name="ignore-availability-tradeWorker-switch" checked>
-                <label class="switch-paddle" for="availability-tradeWorker">
+                <label class="switch-paddle" for="availability-tradeWorker-switch">
                     <span class="show-for-sr">Availability</span>
                     <span class="switch-active" aria-hidden="true">Yes</span>
                     <span class="switch-inactive" aria-hidden="true">no</span>

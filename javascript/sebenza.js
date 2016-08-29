@@ -2071,6 +2071,10 @@ function handleHomeuserInitiateJobResponse(response){
     }
 }
 
+//Chart.js related functions
+
+//End Chart.js related functions
+
 var adminRequestArray;
 function handleAdminFetchJobRequests(response){
     adminRequestArray = JSON.parse(response);
@@ -2109,16 +2113,28 @@ function adminDisplayCountryReport(){
     console.log("With 9 provinces");
     var gautengInfo = adminDisplayProvincialReport("GP");
     console.log(gautengInfo);
+    var availableGauteng = admin2DimensionalSearchArray(gautengInfo['TotalTradeWorkersInAreaArrayGP'],"Availability=1");
+    console.log("Gauteng has " + availableGauteng.length + " tradeworkers available");
     var westernCapeInfo = adminDisplayProvincialReport("WC");
     console.log(westernCapeInfo);
+    var availableWC = admin2DimensionalSearchArray(westernCapeInfo['TotalTradeWorkersInAreaArrayWC'],"Availability=1");
+    console.log("Western Cape has " + availableWC.length + " tradeworkers available");
     var nCapeInfo = adminDisplayProvincialReport("NC");
     console.log(nCapeInfo);
+    var availablenCape = admin2DimensionalSearchArray(nCapeInfo['TotalTradeWorkersInAreaArrayNC'],"Availability=1");
+    console.log("Northern Cape has " + availablenCape.length + " tradeworkers available");
     var eCapeInfo = adminDisplayProvincialReport("EC");
     console.log(eCapeInfo);
+    var availableEastCape = admin2DimensionalSearchArray(eCapeInfo['TotalTradeWorkersInAreaArrayEC'],"Availability=1");
+    console.log("Eastern Cape has " + availableEastCape.length + " tradeworkers available");
     var kznInfo = adminDisplayProvincialReport("KZN");
     console.log(kznInfo);
+    var availableKZN = admin2DimensionalSearchArray(kznInfo['TotalTradeWorkersInAreaArrayKZN'],"Availability=1");
+    console.log("KZN has " + availableKZN.length + " tradeworkers available");
     var fsInfo = adminDisplayProvincialReport("FS");
     console.log(fsInfo);
+    var availableFS = admin2DimensionalSearchArray(fsInfo['TotalTradeWorkersInAreaArrayFS'],"Availability=1");
+    console.log("FreeState has " + availableFS.length + " tradeworkers available");
     //console.log("The following is gauteng information size: " + gautengInfo.length);
 }
 
@@ -2131,44 +2147,55 @@ function adminDisplayProvincialReport(provinceName){
     var areaLocations = admin3DimensionalSearchArray(tableName,searchValue);
     tableName = "Tradeworkers";
     var tradeworkers = adminGenericDisplayTableSetUp(tableName,"");
+    var availableTradeworkers = admin3DimensionalSearchArray(tableName,"Availability=1");
     var totalTradeworkersArea = [];
 
     var counter = 0;
     //console.log("........................................");
     //console.log("The following is part of reports\n The number of areas within " + provinceName + " " + areaLocations.length);
     returnValue['NumberLocationsIn' + provinceName] = areaLocations.length;
-    var requestsPerArea = [];
+    var locationsPerArea = [];
     //returnValue['Areas' + provinceName] = areaLocations;
     for(var i = 0;i < areaLocations.length;i++){
         tableName = "LocationsPerUser";
         searchValue = "locationID=" + areaLocations[i]['locationID'];
-        requestsPerArea[i] = admin3DimensionalSearchArray(tableName,searchValue);
+        locationsPerArea[i] = admin3DimensionalSearchArray(tableName,searchValue);
 
-        //console.log(requestsPerArea[i]);
+        //console.log(locationsPerArea[i]);
         for(var t = 0;t < tradeworkers.length;t++){
             var exists = false;
+            var isAvailable = false;
             var tradeworkerID = tradeworkers[t]['UserID'];
-            if(requestsPerArea[i] != null)
-            for(var p = 0; p < requestsPerArea[i].length && !exists;p++){
-                var tradeworkerCompareID = requestsPerArea[i][p]['UserID'];
+            if(locationsPerArea[i] != null)
+            for(var p = 0; p < locationsPerArea[i].length && !exists;p++){
+                var tradeworkerCompareID = locationsPerArea[i][p]['UserID'];
                 var totalTradeworkerExists = false;
+                var available = false;
                 for(var z = 0;z < totalTradeworkersArea.length;z++){
-                    if(totalTradeworkersArea[z] == tradeworkerCompareID){
+                    if(totalTradeworkersArea[z]['UserID'] == tradeworkerCompareID){
                         totalTradeworkerExists = true;
+                    }
+                }
+                for(var b = 0;b < availableTradeworkers.length;b++){
+                    var toCompare = availableTradeworkers[b]['UserID'];
+                    if(tradeworkerCompareID == toCompare){
+                        available = true;
                     }
                 }
                 if(tradeworkerID == tradeworkerCompareID && !totalTradeworkerExists){
                     exists = true;
-                    totalTradeworkersArea[counter++] = tradeworkerID;
+                    //totalTradeworkersArea[counter] = available;
+                    totalTradeworkersArea[counter++] = tradeworkers[t];
                 }
 
             }
         }
-        //console.log(areaLocations[i]['locationName'] + ": has the following amount of tradeworkers available: " + requestsPerArea[i].length);
+        //console.log(areaLocations[i]['locationName'] + ": has the following amount of tradeworkers available: " + locationsPerArea[i].length);
     }
 
     //console.log("The following is tradeworkers available in gauteng " + totalTradeworkersArea.length + " compared to tradeworkers in the provinces combined: " + tradeworkers.length);
     returnValue['TotalTradeWorkersInArea' + provinceName] = totalTradeworkersArea.length;
+    returnValue['TotalTradeWorkersInAreaArray' + provinceName] = totalTradeworkersArea;
     //returnValue['TotalTradeWorkersInAreaArray' + provinceName] = totalTradeworkersArea;
     //console.log(areaLocations);
     //console.log(tradeworkers);
@@ -2299,6 +2326,98 @@ function admin3DimensionalSearchArray(tableName,searchValue){
     }
     while(relevantIndexArray.length > 0){
         tableToView.push(adminRequestArray[fullTable][relevantIndexArray.pop()]);
+    }
+
+    if(tableToView.length > 0){
+        return tableToView;
+    }
+    else{
+        tableToView = null;
+        return tableToView;
+    }
+}
+
+function admin2DimensionalSearchArray(array,searchValue){
+    //var table = tableName;
+
+    var searchTerm = "";
+    var columnName = "";
+    if(searchValue.indexOf("=") > 0){
+        var spl = searchValue.split("=");
+        columnName = spl[0];
+        searchTerm = spl[1];
+    }
+    else{
+        searchTerm = searchValue;
+    }
+
+
+    var relevantIndexArray = [];
+    var found = false;
+    var counter = 0;
+    var tableToView = [];
+    var fullTable = "";
+    //console.log("Choosing generic Table for " + table + " with the following search term: " +searchTerm);
+    for(var index in array){
+        if(array.hasOwnProperty(index)){
+            found = false;
+            for(var name in array[index]){
+                if(columnName == ""){
+                    if(!found)
+                        if(array[index].hasOwnProperty(name)){
+                            if(searchTerm != ""){
+                                var target = array[index][name];
+                                var contains = -1;
+                                if (typeof target == "string") {
+                                    contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+                                    if (contains >= 0) {
+                                        //console.log("Found match at " + counter);
+                                        relevantIndexArray.push(counter);
+                                        found = true;
+                                    }
+                                }
+                                else {
+                                    if (target == searchTerm) {
+                                        relevantIndexArray.push(counter);
+                                        found = true;
+                                    }
+                                }
+                            }
+                        }
+                }
+                else{
+                    if(name == columnName)
+                        if(!found)
+                            if(array[index].hasOwnProperty(name)){
+                                if(searchTerm != ""){
+                                    var target = array[index][name];
+                                    var contains = -1;
+                                    if (typeof target == "string") {
+                                        contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+                                        if (contains >= 0) {
+                                            //console.log("Found match at " + counter);
+                                            relevantIndexArray.push(counter);
+                                            found = true;
+                                        }
+                                    }
+                                    else {
+                                        if (target == searchTerm) {
+                                            relevantIndexArray.push(counter);
+                                            found = true;
+                                        }
+                                    }
+                                }
+                            }
+                }
+
+            }
+            counter++;
+
+        }
+    }
+
+    while(relevantIndexArray.length > 0){
+        tableToView.push(array[relevantIndexArray.pop()]);
     }
 
     if(tableToView.length > 0){
