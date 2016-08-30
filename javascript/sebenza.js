@@ -11,7 +11,10 @@ $(document).ready(function () {
     var sPage = sPath.substring(sPath.lastIndexOf('/') + 1);
     if(sPage == "areainformation-page.php"){
         sendAJAXRequest('fetch-worker-locations',handleFetchWorkerLocations);
+    }else if(sPage == "userPage.php"){
+        sendAJAXRequest('fetch-job-requests', handleAdminFetchJobRequests);
     }
+    //graphTestRun();
 
 });
 
@@ -2072,7 +2075,203 @@ function handleHomeuserInitiateJobResponse(response){
 }
 
 //Chart.js related functions
+var randomScalingFactor = function() {
+    return (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100);
+};
+var randomColorFactor = function() {
+    return Math.round(Math.random() * 255);
+};
+var randomColor = function() {
+    return 'rgba(' + randomColorFactor() + ',' + randomColorFactor() + ',' + randomColorFactor() + ',0.7)';
+};
 
+function graphTestRun(){
+    var labels = ["January", "February", "March", "April", "May", "June", "July"];
+    var data = [];
+    data[0] = [44,55,11,33,44];
+    var dataHeadings = ["red","green","blue","yellow","brown"];
+    var colours = [randomColor(),randomColor(),randomColor(),randomColor(),randomColor()];
+    var barChartData = createPolarAreaGraphConfig(dataHeadings,data,colours,"MyChart");
+    var ctx = document.getElementById("canvas").getContext("2d");
+    var ctx1 = document.getElementById("canvas1").getContext("2d");
+    //var test = new Chart(ctx1, barChartData);
+    //window.myPolarArea = Chart.PolarArea(ctx1, barChartData);
+    //window.myBar = test;
+}
+
+function createPolarAreaGraphConfig(labels,data,colors,label){
+
+
+    //{
+    //    "datasets":[{
+    //    data:["-87,23,91,-44,15"],"backgroundColor":["rgba(252,180,2,0.7)","rgba(170,247,25,0.7)","rgba(240,48,25,0.7)","rgba(196,75,150,0.7)","rgba(173,141,189,0.7)"],"label":"MyChart"}],"labels":["Dataset 1","Dataset 2","Dataset 3","Dataset 4","Dataset 5"]}
+
+    var dataCreate = '{"data": {"datasets":[{"data":[';
+
+    for(var r = 0;r < data.length;r++){
+        dataCreate += '"' + data[r] + '"';
+        if(r != data.length - 1){
+            dataCreate += ',';
+        }
+        else{
+            dataCreate += "],";
+        }
+    }
+    dataCreate += '"backgroundColor":[';
+    for(var j = 0;j < colors.length;j++){
+        dataCreate += '"' + colors[j] + '"';
+        if(j != colors.length - 1){
+            dataCreate += ',';
+        }
+        else{
+            dataCreate += "],";
+        }
+    }
+    dataCreate += '"label":"' + label + '"}]';
+    dataCreate += ',"labels":[';
+    for(var q = 0;q < labels.length;q++){
+        dataCreate += '"' + labels[q] + '"';
+        if(q != labels.length - 1){
+            dataCreate += ',';
+        }
+        else{
+            dataCreate += "]";
+        }
+    }
+    dataCreate += '},';
+    dataCreate += '"options": {' +
+    '"responsive": "true",' +
+        '"legend": {' +
+        '"position": "top"' +
+    '},' +
+    '"title": {' +
+    '"display": "true",' +
+    '"text": "Chart.js Polar Area Chart"' +
+    '},' +
+    '"scale": {' +
+    '"ticks": {' +
+    '"beginAtZero": "true"' +
+    '},' +
+    '"reverse": "false"' +
+    '},' +
+    '"animation": {' +
+        '"animateRotate": "false",' +
+            '"animateScale": "true"' +
+    '}' +
+    '}}';
+
+    //var dataCreate = '{"data":[';
+    //
+    //    for(var r = 0;r < data.length;r++){
+    //        dataCreate += '"' + data[r] + '"';
+    //        if(r != data.length - 1){
+    //            dataCreate += ',';
+    //        }
+    //        else{
+    //            dataCreate += "],";
+    //        }
+    //    }
+    //    dataCreate += '"backgroundColor":[';
+    //    for(var j = 0;j < colors.length;j++){
+    //        dataCreate += '"' + colors[j] + '"';
+    //        if(j != colors.length - 1){
+    //            dataCreate += ',';
+    //        }
+    //        else{
+    //            dataCreate += "],";
+    //        }
+    //    }
+    //    dataCreate += '"label":"' + label + '"';
+    //    dataCreate += ',"labels":[';
+    //    for(var q = 0;q < labels.length;q++){
+    //        dataCreate += '"' + labels[q] + '"';
+    //        if(q != labels.length - 1){
+    //            dataCreate += ',';
+    //        }
+    //        else{
+    //            dataCreate += "]";
+    //        }
+    //    }
+    //    dataCreate += '}';
+
+
+    console.log("......");
+
+    //console.log(test);
+    console.log("......");
+    //console.log(dataCreate);
+    //console.log(JSON.stringify(barChartData));
+    //console.log(barChartData);
+    var toParse = JSON.parse(dataCreate);
+    console.log(toParse);
+
+    var config = toParse;
+
+    return config;
+}
+
+function createBarGraphConfig(chartHeader,chartLabels,data,datalabels,backgroundColour){
+    //var dataCreate = '{"Labels":["test","test2","test3"],"datasets":[{"data":["test","test2","test3"]},{"color":["test1","test4","test7"]}]}' ;
+    var dataCreate = '{"labels":[';
+    for(var t = 0;t<chartLabels.length;t++){
+        dataCreate += '"' + chartLabels[t] + '"';
+
+
+        if(t < chartLabels.length - 1)
+            dataCreate += ",";
+    }
+    dataCreate += "]";
+    dataCreate += ',"datasets": [' ;
+    var label = '{"label":[';
+    var color = '{"backgroundColor":[';
+    var da = '{"data":[';
+    for(var j = 0;j<data.length;j++){
+
+        dataCreate += '{"label":"' + datalabels[j] + '",'; //single values
+        dataCreate += '"backgroundColor":"' + backgroundColour[j] +  '",'; //single rgba values
+        dataCreate += '"data":['; //array of values [5,4,2] e.g data[j][0] = 5
+            for(var p = 0;p<data[j].length;p++){
+                dataCreate += '"' + data[j][p] + '"';
+                if(p != data[j].length - 1){
+                    dataCreate += ",";
+                }
+                else if(p == data[j].length - 1 && j != data.length - 1){
+                    dataCreate += "]},";
+                }
+            }
+    }
+    dataCreate += ']}]}';
+    console.log("......");
+    //console.log(dataCreate);
+    console.log("......");
+    //console.log(dataCreate);
+    //console.log(JSON.stringify(barChartData));
+    //console.log(barChartData);
+    var toParse = JSON.parse(dataCreate);
+    var values = {
+    type: 'bar',
+    data:toParse,
+    options: {
+        // Elements options apply to all of the options unless overridden in a dataset
+        // In this case, we are setting the border of each bar to be 2px wide and green
+        elements: {
+            rectangle: {
+                borderWidth: 2,
+                borderColor: 'rgb(0, 0, 0)',
+                borderSkipped: 'bottom'
+            }
+        },
+        responsive: true,
+        legend: {
+            position: 'top'
+        },
+        title: {
+            display: true,
+            text: chartHeader
+        }}};
+
+    return values;
+}
 //End Chart.js related functions
 
 var adminRequestArray;
@@ -2104,6 +2303,7 @@ function adminDisplayProfileDetails(){
 }
 
 function adminDisplayCountryReport(){
+    //graphTestRun();
     var tableName = "Tradeworkers";
     var tradeworkers = adminGenericDisplayTableSetUp(tableName,"");
     var search = "Availability=1";
@@ -2113,29 +2313,30 @@ function adminDisplayCountryReport(){
     console.log("With 9 provinces");
     var gautengInfo = adminDisplayProvincialReport("GP");
     console.log(gautengInfo);
-    var availableGauteng = admin2DimensionalSearchArray(gautengInfo['TotalTradeWorkersInAreaArrayGP'],"Availability=1");
-    console.log("Gauteng has " + availableGauteng.length + " tradeworkers available");
     var westernCapeInfo = adminDisplayProvincialReport("WC");
     console.log(westernCapeInfo);
-    var availableWC = admin2DimensionalSearchArray(westernCapeInfo['TotalTradeWorkersInAreaArrayWC'],"Availability=1");
-    console.log("Western Cape has " + availableWC.length + " tradeworkers available");
     var nCapeInfo = adminDisplayProvincialReport("NC");
     console.log(nCapeInfo);
-    var availablenCape = admin2DimensionalSearchArray(nCapeInfo['TotalTradeWorkersInAreaArrayNC'],"Availability=1");
-    console.log("Northern Cape has " + availablenCape.length + " tradeworkers available");
     var eCapeInfo = adminDisplayProvincialReport("EC");
     console.log(eCapeInfo);
-    var availableEastCape = admin2DimensionalSearchArray(eCapeInfo['TotalTradeWorkersInAreaArrayEC'],"Availability=1");
-    console.log("Eastern Cape has " + availableEastCape.length + " tradeworkers available");
     var kznInfo = adminDisplayProvincialReport("KZN");
     console.log(kznInfo);
-    var availableKZN = admin2DimensionalSearchArray(kznInfo['TotalTradeWorkersInAreaArrayKZN'],"Availability=1");
-    console.log("KZN has " + availableKZN.length + " tradeworkers available");
     var fsInfo = adminDisplayProvincialReport("FS");
     console.log(fsInfo);
-    var availableFS = admin2DimensionalSearchArray(fsInfo['TotalTradeWorkersInAreaArrayFS'],"Availability=1");
-    console.log("FreeState has " + availableFS.length + " tradeworkers available");
     //console.log("The following is gauteng information size: " + gautengInfo.length);
+    var labels = ["Gauteng", "Western Cape", "Northern Cape", "Eastern Cape", "KwaZulu-Natal", "FreeState"];
+    var data = [];
+    data[0] = [gautengInfo['TotalTradeWorkersInArea'], westernCapeInfo['TotalTradeWorkersInArea'], nCapeInfo['TotalTradeWorkersInArea'], eCapeInfo['TotalTradeWorkersInArea'], kznInfo['TotalTradeWorkersInArea'], fsInfo['TotalTradeWorkersInArea']];
+    data[1] = [gautengInfo['TotalTradeWorkersAvailableInArea'], westernCapeInfo['TotalTradeWorkersAvailableInArea'], nCapeInfo['TotalTradeWorkersAvailableInArea'], eCapeInfo['TotalTradeWorkersAvailableInArea'], kznInfo['TotalTradeWorkersAvailableInArea'], fsInfo['TotalTradeWorkersAvailableInArea']];
+    var dataHeadings = ["Total Tradeworkers","Available Tradeworkers"];
+    var colours = [randomColor(),randomColor()];
+    var barChartData = createBarGraphConfig("Provincial Tradeworker Indicator",labels,data,dataHeadings,colours);
+    var ctx = document.getElementById("canvas").getContext("2d");
+    //var ctx1 = document.getElementById("canvas1").getContext("2d");
+    var test = new Chart(ctx, barChartData);
+    window.myBar = test;
+    graphTestRun();
+
 }
 
 function adminDisplayProvincialReport(provinceName){
@@ -2153,7 +2354,7 @@ function adminDisplayProvincialReport(provinceName){
     var counter = 0;
     //console.log("........................................");
     //console.log("The following is part of reports\n The number of areas within " + provinceName + " " + areaLocations.length);
-    returnValue['NumberLocationsIn' + provinceName] = areaLocations.length;
+    returnValue['NumberLocationsIn'] = areaLocations.length;
     var locationsPerArea = [];
     //returnValue['Areas' + provinceName] = areaLocations;
     for(var i = 0;i < areaLocations.length;i++){
@@ -2194,9 +2395,11 @@ function adminDisplayProvincialReport(provinceName){
     }
 
     //console.log("The following is tradeworkers available in gauteng " + totalTradeworkersArea.length + " compared to tradeworkers in the provinces combined: " + tradeworkers.length);
-    returnValue['TotalTradeWorkersInArea' + provinceName] = totalTradeworkersArea.length;
-    returnValue['TotalTradeWorkersInAreaArray' + provinceName] = totalTradeworkersArea;
-    //returnValue['TotalTradeWorkersInAreaArray' + provinceName] = totalTradeworkersArea;
+    var availableTradeworkersArea = admin2DimensionalSearchArray(totalTradeworkersArea,"Availability=1");
+    returnValue['TotalTradeWorkersInArea'] = totalTradeworkersArea.length;
+    returnValue['TotalTradeWorkersInAreaArray'] = totalTradeworkersArea;
+    returnValue['TotalTradeWorkersAvailableInArea'] = availableTradeworkersArea.length;
+    returnValue['TotalTradeWorkersAvailableInAreaArray'] = availableTradeworkersArea;
     //console.log(areaLocations);
     //console.log(tradeworkers);
     //console.log(totalTradeworkersArea);

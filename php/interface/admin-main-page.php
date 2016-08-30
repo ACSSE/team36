@@ -67,7 +67,7 @@
 <script>
     //The following is used to request all data necessary for the homeuser to be displayed
     //used by - homeuser-manage-requests.php,homeuser-manage-initiate-jobs
-    sendAJAXRequest('fetch-job-requests', handleAdminFetchJobRequests);
+
     //    sendAJAXRequest('fetch-admin-profile-details', handleHomeuserFetchProfileDetails);
     //This brings up the confirmation between homeuser and tradeworker
     //    homeuserRequestsNotifier();
