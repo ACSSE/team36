@@ -91,9 +91,9 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                 break ;
 
             case R.id.tvRegisterLink:
-             /*   AlertDialog.Builder dialog = new AlertDialog.Builder(Main.this) ;
+                AlertDialog.Builder dialog = new AlertDialog.Builder(Main.this) ;
                 dialog.setTitle("Welcome") ;
-                dialog.setMessage("What type of user would you Like to register as a?") ;
+                dialog.setMessage("What type of user would you Like to register as?") ;
                 dialog.setPositiveButton("Home user",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -109,9 +109,8 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                 }
 
             });
-                dialog.setNegativeButton("Cancel",null);
-                dialog.show();*/
-                startActivity(new Intent(Main.this, registerHomeUser.class));
+                dialog.show();
+                //startActivity(new Intent(Main.this, registerHomeUser.class));
 
                 break ;
         }
