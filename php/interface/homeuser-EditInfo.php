@@ -21,5 +21,14 @@
         </div>
     </div>
 
+    <div class="row">
+        <div class="large-2 medium-2 large-offset-9 medium-offset-9 columns">
+            <button type="submit" class="warning button radius" id="updateInfo-button"
+                    onclick="sendAJAXRequest('homeuser-update-information',handleHomeUserUpdateProfileDeitails);">
+                Update Profile Information
+            </button>
+
+        </div>
+    </div>
 
 </div>

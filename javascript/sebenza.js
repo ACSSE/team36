@@ -3557,8 +3557,7 @@ function toggleUserPageArea(toToggle){
     }
 }
 
-function handleTradeworkerFetchProfileDetails(response)
-{
+function handleTradeworkerFetchProfileDetails(response) {
     var result = JSON.parse(response);
     console.log("The following is handleTradeworkerFetchProfileDetails :" + response);
     //genericPrintObject(result);
@@ -3576,7 +3575,6 @@ function handleTradeworkerFetchProfileDetails(response)
         console.log("Cannot fill in user details")
     }
 }
-
 function handleHomeuserFetchProfileDetails(response){
     var result = JSON.parse(response);
     console.log("The following is handleHomeuserFetchProfileDetails :" + response);
@@ -3595,6 +3593,19 @@ function handleHomeuserFetchProfileDetails(response){
         console.log("Cannot fill in user details")
     }
 }
+
+
+function handleTradeWorkerUpdateProfileDeitails(response){
+    var result = JSON.parse(response);
+    console.log("Details: " + " " + response);
+
+}
+function handleHomeUserUpdateProfileDeitails(response){
+    var result = JSON.parse(response);
+    console.log("Details: " + " " + response);
+
+}
+
 
 //Used in contractor registration to add more skills up to three maximum
 function toggleSwitch(id,validationID){
