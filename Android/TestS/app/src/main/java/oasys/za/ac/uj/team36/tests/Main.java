@@ -1,53 +1,30 @@
 package oasys.za.ac.uj.team36.tests;
 
 
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.NameValuePair;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.entity.UrlEncodedFormEntity;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.impl.client.DefaultHttpClient;
-import org.apache.http.message.BasicNameValuePair;
-import org.apache.http.params.BasicHttpParams;
-import org.apache.http.params.HttpConnectionParams;
-import org.apache.http.params.HttpParams;
-import org.apache.http.util.EntityUtils;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.toolbox.Volley;
+
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLEncoder;
-import java.util.ArrayList;
-import java.util.List;
 
 import oasys.za.ac.uj.team36.Model.*;
 
 
 public class Main extends AppCompatActivity implements View.OnClickListener{
 
-
-    JsonParser JP = new JsonParser() ;
     private static final String DB_URL = "http://10.0.0.6:31335/php/classes/SebenzaServer.php" ;
-    private static final String Tag_Sucess = "SUCESS" ;
 
     public static final int TIMEOUT = 1000 * 15 ;
     Button bLogin ;
@@ -82,66 +59,66 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         {
             case R.id.bLogin:
 
-                String uName = etUsername.getText().toString() ;
-                String pass = etPassword.getText().toString() ;
+                 String uName = etUsername.getText().toString() ;
+                 String pass = etPassword.getText().toString() ;
 
-                user = new RegisteredUser(uName, pass);
+                Response.Listener<String> responseL = new Response.Listener<String>(){
+                    @Override
+                    public void onResponse(String response) {
+                        //response is from the php file
+                        try {
+                           // JSONObject jsonResponse = new JSONObject(response);
+                            String s = response;
+                           // boolean success = jsonResponse.getBoolean("successfulLogin") ;
+                            if(s.equalsIgnoreCase("true")){
+                                startActivity(new Intent(Main.this, HomeUser.class));
+                            }else{
+                                AlertDialog.Builder d = new AlertDialog.Builder(Main.this);
+                                d.setMessage("Unsuccessful Login, Please try again : " + s);
+                                d.setTitle("Error") ;
+                                d.setNegativeButton("Retry", null) ;
+                                d.create().show();
+                            }
+                        }catch (Exception ex){
+                            ex.printStackTrace();
+                        }
+                    }
+                };
+                loginRequest r = new loginRequest(uName, pass,responseL) ;
+                RequestQueue q = Volley.newRequestQueue(Main.this) ;
+                q.add(r) ;
 
-                ServerHandler s = new ServerHandler(this) ;
-                String a = s.login( user);
-
-                if(a.length()<0){
-
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(Main.this) ;
-                    dialog.setTitle("Welcome") ;
-                    dialog.setMessage("You are now Logged in") ;
-                    dialog.setPositiveButton("OK",null);
-                    dialog.show();
-                    startActivity(new Intent(this, HomeUser.class));
-
-                }else
-                {
-                    AlertDialog.Builder dialog = new AlertDialog.Builder(Main.this) ;
-                    dialog.setTitle("Sorry") ;
-                    dialog.setMessage(s.response) ;
-                    dialog.setPositiveButton("OK",null);
-                    dialog.show();
-                }
-
-                //startActivity(new Intent(this, HomeUser.class ));
                 break ;
 
             case R.id.tvRegisterLink:
-                startActivity(new Intent(this, HomeUser.class ));
+             /*   AlertDialog.Builder dialog = new AlertDialog.Builder(Main.this) ;
+                dialog.setTitle("Welcome") ;
+                dialog.setMessage("What type of user would you Like to register as a?") ;
+                dialog.setPositiveButton("Home user",new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                       startActivity(new Intent(Main.this, registerHomeUser.class));
+
+                    }
+
+                });
+                dialog.setNeutralButton("TradeWorker", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    startActivity(new Intent(Main.this, registerTradeWorker.class));
+                }
+
+            });
+                dialog.setNegativeButton("Cancel",null);
+                dialog.show();*/
+                startActivity(new Intent(Main.this, registerHomeUser.class));
+
                 break ;
         }
 
     }
 
-    private void authenticate(RegisteredUser user)
-    {
 
- /*       ServerHandler serv = new ServerHandler(this);
-        serv.fetchUserDataAsync(user,new GetUserCallback(){
-            @Override
-            public void finished(RegisteredUser user) {
-                if(user == null)
-                {
-                    showErrorDialog("Invalid details") ;
-                }
-            }
-        });*/
-        showErrorDialog("Invalid details") ;
-    }
-
-    private void showErrorDialog(String message)
-    {
-        AlertDialog.Builder dialog = new AlertDialog.Builder(Main.this) ;
-        dialog.setTitle("Whoops!") ;
-        dialog.setMessage(message) ;
-        dialog.setPositiveButton("OK",null);
-        dialog.show();
-    }
 
     private void logIn(RegisteredUser user){
         localDB.setUserLoggedIn(true);
