@@ -1981,6 +1981,22 @@ class SebenzaServer {
         return $returnValue;
     }
 
+
+    public static function homeuserUpdateProfileDeials($name,$surname,$username,$email,$cellnumber):bool{
+        $returnValue = false ;
+        $dbHandler = self::fetchDatabaseHandler();
+        $userID = self::fetchSessionHandler()->getSessionVariable("UserID");
+        $command = "UPDATE `REGISTERED_USER` SET `Username` = ?,`Email` = ?,`Name` = ?,`Surname` = ?,`ContactNumber` = ? WHERE `UserID` = ?" ;
+        if($dbHandler->runCommand($command,$username,$email,$name,$surname,$cellnumber,$userID)){
+                $returnValue = "DB updated";
+            }else
+        {
+            $returnValue = "did not update" ;
+        }
+        return $returnValue ;
+    }
+
+
 }
 //The following is currently used to receive the confirmation requests from the user
 if (!empty($_GET)){
@@ -2469,6 +2485,42 @@ if (!empty($_POST)) {
 
                 break;
 
+            case'tradeworker-update-information':
+                $continue = SebenzaServer::serverSecurityCheck();
+                if($continue)
+                {
+                    if(!isset($_POST['name-tradeworker-edit'])&& !isset($_POST['surname-tradeworker-edit'])
+                        && !isset($_POST['username-tradeworker-edit'])&& !isset($_POST['email-tradeworker-edit'])
+                        && !isset($_POST['cellnumber-tradeworker-edit'])){
+                        $response = json_encode(SebenzaServer::homeuserUpdateProfileDeials(SebenzaServer::fetchSessionHandler()
+                            ->getSessionVariable("UserID"),$_POST['name-tradeworker-edit'],$_POST['surname-tradeworker-edit'],
+                            $_POST['username-tradeworker-edit'],$_POST['email-tradeworker-edit'],$_POST['cellnumber-tradeworker-edit']));
+                    }else{
+                        $response = json_encode("Not Set") ;
+                    }
+                }else{
+                    $response= json_encode("Error") ;
+                }
+                break;
+            case'homeuser-update-information':
+                $continue = SebenzaServer::serverSecurityCheck();
+                if($continue)
+                {
+                    $response = json_encode("A+") ;
+                    if(isset($_POST['name-homeuser-edit'])&&isset($_POST['surname-homeuser-edit'])
+                        &&isset($_POST['username-homeuser-edit'])&&isset($_POST['email-homeuser-edit'])
+                        &&isset($_POST['cellnumber-homeuser-edit']))
+                    {
+                        $response = json_encode(SebenzaServer::homeuserUpdateProfileDeials($_POST['name-homeuser-edit'],
+                            $_POST['surname-homeuser-edit'],$_POST['username-homeuser-edit'],$_POST['email-homeuser-edit']
+                            ,$_POST['cellnumber-homeuser-edit']));
+                   }else{
+                        $response = json_encode("Not Set") ;
+                    }
+                }else{
+                    $response= json_encode("Error") ;
+                }
+                break;
             default:
                 //If the action was not one of the handled cases, respond appropriately
                 $response = json_encode("Request not recognised.");
