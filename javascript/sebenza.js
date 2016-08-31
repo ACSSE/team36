@@ -12,7 +12,7 @@ $(document).ready(function () {
     if(sPage == "areainformation-page.php"){
         sendAJAXRequest('fetch-worker-locations',handleFetchWorkerLocations);
     }else if(sPage == "userPage.php"){
-        sendAJAXRequest('fetch-job-requests', handleAdminFetchJobRequests);
+
     }
     //graphTestRun();
 
@@ -1807,6 +1807,10 @@ function toggleHomeuserUserComment(){
     $('#homeuser-initiateJobCompletion-userComment-information').foundation('toggle');
 }
 
+function toggleGenericDiv(divID){
+    $('#'+ divID).foundation('toggle');
+}
+
 function homeuserCompleteJobInitiate(){
     console.log("Should be completing");
     var input = $("form input[name=ignore-requested-user-onGoingJobs-selected]:radio");
@@ -1870,6 +1874,29 @@ function homeuserCompleteJobInitiate(){
         '</div>' +
         '</div>' +
         '</div>' +
+        '<div class="row">' +
+        '<div class="column medium-11 large-11">' +
+        '<label>Would you like to add pictures now:</label>' +
+        '<div class="switch large">' +
+        '<input class="switch-input" id="homeuser-initiateJobCompletion-pictureAddition-switch" type="checkbox" name="ignore-homeuser-initiateJobCompletion-pictureAddition-switch" onclick="toggleGenericDiv(\'homeuser-initiateJobCompletion-Picture-information\')">' +
+        '<label class="switch-paddle" for="homeuser-initiateJobCompletion-pictureAddition-switch">' +
+        '<span class="show-for-sr">Pictures</span>' +
+        '<span class="switch-active" aria-hidden="true">Yes</span>' +
+        '<span class="switch-inactive" aria-hidden="true">no</span>' +
+        '</label>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '<div class="row">' +
+        '<div class="column large-11 medium 11">' +
+        '<div id="homeuser-initiateJobCompletion-Picture-information" data-toggler data-animate="fade-in fade-out" style="display:none">' +
+        '<label>Please select a picture to be added:</label><input type="file" name="ignore-homeuser-initiateJobCompletion-Picture-0" id="homeuser-initiateJobCompletion-Picture-0" class="REQ_VAL">' +
+        '<div class="additional-info top-padding" id="homeuser-initiateJobCompletion-Picture-0-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please ensure a jpg or png was selected</p>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
+        '</div>' +
         '</form>';
     html += '<div class="row">' +
         '<div class="large-3 large-offset-8 medium-offset-8 medium-3 columns">' +
@@ -1884,8 +1911,18 @@ function homeuserCompleteJobInitiate(){
     document.getElementById("homeuser-ongoingJobs-modal-additionalInfo").innerHTML = html;
     var jobComment = $("#homeuser-initiateJobCompletion-jobComment-information");
     var userComment = $("#homeuser-initiateJobCompletion-userComment-information");
+    var pictureAddition = $("#homeuser-initiateJobCompletion-Picture-information");
     new Foundation.Toggler(jobComment,'data-animate="fade-in fade-out"');
     new Foundation.Toggler(userComment,'data-animate="fade-in fade-out"');
+    new Foundation.Toggler(pictureAddition,'data-animate="fade-in fade-out"');
+
+    pictureAddition.on("on.zf.toggler", function(e) {
+            document.getElementById('homeuser-initiateJobCompletion-Picture-0').name = "homeuser-initiateJobCompletion-Picture-0";
+        })
+        .on("off.zf.toggler", function(e) {
+            document.getElementById('homeuser-initiateJobCompletion-Picture-0').name = "ignore-homeuser-initiateJobCompletion-Picture-0";
+        });
+
     jobComment.on("on.zf.toggler", function(e) {
             document.getElementById('homeuser-initiateJobCompletion-jobComment').name = "homeuser-initiateJobCompletion-jobComment";
         })
@@ -1901,6 +1938,7 @@ function homeuserCompleteJobInitiate(){
         });
     new Foundation.Toggler($("#homeuser-initiateJobCompletion-jobComment-info"),'data-animate="fade-in fade-out"');
     new Foundation.Toggler($("#homeuser-initiateJobCompletion-userComment-info"),'data-animate="fade-in fade-out"');
+    new Foundation.Toggler($("#homeuser-initiateJobCompletion-Picture-0-info"),'data-animate="fade-in fade-out"');
 }
 
 function handleHomeuserInitiateJobCompletionResponse(response){
