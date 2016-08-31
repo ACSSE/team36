@@ -20,4 +20,5 @@
     <string name="title_activity_register_home_user">Register</string>
     <string name="section_format">Hello World from section: %1$d</string>
     <string name="title_activity_registertrade_worker">Register</string>
+    <string name="title_activity_reg">reg</string>
 </resources>
