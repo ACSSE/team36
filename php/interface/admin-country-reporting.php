@@ -23,17 +23,17 @@
         <div class="row">
             <div class="column large-11">
                 <div class="full-width" id="admin-manage-country-reports-areainformation" style="overflow-y: auto; height: 400px">
-                    <div id="container" style="width: 75%;">
-                        <canvas id="canvas"></canvas>
-                    </div>
-                    <div id="container1" style="width: 75%;">
-                        <canvas id="canvas1"></canvas>
-                    </div>
-                    <button id="randomizeData">Randomize Data</button>
-                    <button id="addDataset">Add Dataset</button>
-                    <button id="removeDataset">Remove Dataset</button>
-                    <button id="addData">Add Data</button>
-                    <button id="removeData">Remove Data</button>
+<!--                    <div id="container" style="width: 75%;">-->
+<!--                        <canvas id="canvas"></canvas>-->
+<!--                    </div>-->
+<!--                    <div id="container1" style="width: 75%;">-->
+<!--                        <canvas id="canvas1"></canvas>-->
+<!--                    </div>-->
+<!--                    <button id="randomizeData">Randomize Data</button>-->
+<!--                    <button id="addDataset">Add Dataset</button>-->
+<!--                    <button id="removeDataset">Remove Dataset</button>-->
+<!--                    <button id="addData">Add Data</button>-->
+<!--                    <button id="removeData">Remove Data</button>-->
                 </div>
             </div>
         </div>

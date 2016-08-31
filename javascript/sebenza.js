@@ -2075,8 +2075,11 @@ function handleHomeuserInitiateJobResponse(response){
 }
 
 //Chart.js related functions
+//var randomScalingFactor = function() {
+//    return (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100);
+//};
 var randomScalingFactor = function() {
-    return (Math.random() > 0.5 ? 1.0 : -1.0) * Math.round(Math.random() * 100);
+    return Math.round(Math.random() * 100);
 };
 var randomColorFactor = function() {
     return Math.round(Math.random() * 255);
@@ -2086,31 +2089,205 @@ var randomColor = function() {
 };
 
 function graphTestRun(){
-    var labels = ["January", "February", "March", "April", "May", "June", "July"];
-    var data = [];
-    data[0] = [44,55,11,33,44];
-    var dataHeadings = ["red","green","blue","yellow","brown"];
-    var colours = [randomColor(),randomColor(),randomColor(),randomColor(),randomColor()];
-    var barChartData = createPolarAreaGraphConfig(dataHeadings,data,colours,"MyChart");
-    var ctx = document.getElementById("canvas").getContext("2d");
-    var ctx1 = document.getElementById("canvas1").getContext("2d");
+    //var labels = ["January", "February", "March", "April", "May"];
+    //var data = [];
+    //data[0] = [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()];
+    //data[1] = [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()];
+    //data[2] = [randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor(),randomScalingFactor()];
+    //var dataHeadings = ["red","green","blue"];
+    //var colours = [];
+    //colours = [randomColor(),randomColor(),randomColor(),randomColor(),randomColor()];
+    //colours[1] = [randomColor(),randomColor(),randomColor(),randomColor(),randomColor()];
+    //colours[2] = [randomColor(),randomColor(),randomColor(),randomColor(),randomColor()];
+    //var barChartData = createPolarAreaGraphConfig(dataHeadings,data,colours,"MyChart");
+    //var config = createPieGraphConfig(dataHeadings,colours,data,3);
+    //var config = createLineGraphConfig(labels,data,dataHeadings);
+    //var ctx = document.getElementById("canvas").getContext("2d");
+    //var ctx1 = document.getElementById("canvas1").getContext("2d");
+    //window.myLine = new Chart(ctx1, config);
+    //window.myPie = new Chart(ctx1, config);
     //var test = new Chart(ctx1, barChartData);
     //window.myPolarArea = Chart.PolarArea(ctx1, barChartData);
     //window.myBar = test;
 }
 
+function createCanvas(canvasName,divToDisplayID,width){
+    var html ='<div name="' + divToDisplayID + '" style="width:' + width + '%;">' +
+            '<canvas id="' + canvasName + '"></canvas>' +
+            '</div>';
+    document.getElementById(divToDisplayID).innerHTML += html;
+}
+function createLineGraphConfig(labels,data,dataLabel,heading){
+    var dataCreate = '{"labels":[';
+    for(var k=0;k<labels.length;k++){
+        dataCreate += '"' + labels[k] + '"';
+        if(k<labels.length - 1){
+            dataCreate += ',';
+        }
+        else{
+            dataCreate += '],';
+        }
+    }
+        dataCreate += '"datasets":[';
+
+    for(var j = 0;j<data.length;j++){
+        dataCreate += '{"label":"' + dataLabel[j] + '",'+
+                        '"data":[' + data[j] +']';
+        if(j<data.length - 1){
+            dataCreate += '},';
+        }
+        else{
+            dataCreate += '}]';
+        }
+    }
+    dataCreate += '}';
+
+    //console.log(dataCreate);
+    var toParse = JSON.parse(dataCreate);
+    //console.log(toParse);
+
+    var config = {
+        type: 'line',
+        data:toParse,
+
+        options: {
+            responsive: true,
+            title:{
+                display:true,
+                text:heading
+            },
+            tooltips: {
+                mode: 'label',
+                callbacks: {
+                    // beforeTitle: function() {
+                    //     return '...beforeTitle';
+                    // },
+                    // afterTitle: function() {
+                    //     return '...afterTitle';
+                    // },
+                    // beforeBody: function() {
+                    //     return '...beforeBody';
+                    // },
+                    // afterBody: function() {
+                    //     return '...afterBody';
+                    // },
+                    // beforeFooter: function() {
+                    //     return '...beforeFooter';
+                    // },
+                    // footer: function() {
+                    //     return 'Footer';
+                    // },
+                    // afterFooter: function() {
+                    //     return '...afterFooter';
+                    // },
+                }
+            },
+            hover: {
+                mode: 'dataset'
+            },
+            scales: {
+                xAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Month'
+                    }
+                }],
+                yAxes: [{
+                    display: true,
+                    scaleLabel: {
+                        display: true,
+                        labelString: 'Value'
+                    },
+                    ticks: {
+                        suggestedMin: -10,
+                        suggestedMax: 250,
+                    }
+                }]
+            }
+        }
+    };
+
+    $.each(config.data.datasets, function(i, dataset) {
+        dataset.borderColor = randomColor(0.4);
+        dataset.backgroundColor = randomColor(0.5);
+        dataset.pointBorderColor = randomColor(0.7);
+        dataset.pointBackgroundColor = randomColor(0.5);
+        dataset.pointBorderWidth = 1;
+    });
+
+    //console.log(config);
+
+    return config;
+}
+
+//This will display multilevel pie graph, where the labels is a single dimension array, and the colors and data are multidimesions arrays where numDatasets represents the
+//1st dimension and will result in the multi-level pie chart to be drawn when greater then 1, if it is 1 it will draw a single level pie chart
+//data[][],labels[],colors[][],numDatasets
+function createPieGraphConfig(labels,colors,data,numDatasets,heading){
+    var dataCreate = '{"type":"pie","data": {"datasets":[';
+
+    for(var c = 0;c < numDatasets;c++){
+        dataCreate += '{"data":[';
+
+        for(var r = 0;r < data[c].length;r++){
+            dataCreate +=  data[c][r];
+            if(r < data[c].length - 1){
+                dataCreate += ',';
+            }
+            else{
+                dataCreate += "],";
+            }
+        }
+        dataCreate += '"backgroundColor":[';
+        for(var j = 0;j < colors[c].length;j++){
+            dataCreate += '"' + colors[c][j] + '"';
+            if(j != colors[c].length - 1){
+                dataCreate += ',';
+            }
+            else{
+                dataCreate += "]";
+            }
+        }
+        if(c < numDatasets - 1){
+            dataCreate += "},"
+        }
+        else{
+            dataCreate += "}]"
+        }
+
+
+    }
+    dataCreate += ',"labels":[';
+    for(var q = 0;q < labels.length;q++){
+        dataCreate += '"' + labels[q] + '"';
+        if(q != labels.length - 1){
+            dataCreate += ',';
+        }
+        else{
+            dataCreate += "]";
+        }
+    }
+
+
+
+    dataCreate += '},';
+    dataCreate += '"options": {"title":{"display": "true","text": "' + heading + '"},' +
+        '"responsive": "true"}}';
+
+    //console.log(dataCreate);
+    var toParse = JSON.parse(dataCreate);
+    return toParse;
+}
+//Single array of values representing the labels, data and colors where the it will be displayed then in a radial graph
+//label is single value string
+//labels[],data[][],colors[],label
 function createPolarAreaGraphConfig(labels,data,colors,label){
-
-
-    //{
-    //    "datasets":[{
-    //    data:["-87,23,91,-44,15"],"backgroundColor":["rgba(252,180,2,0.7)","rgba(170,247,25,0.7)","rgba(240,48,25,0.7)","rgba(196,75,150,0.7)","rgba(173,141,189,0.7)"],"label":"MyChart"}],"labels":["Dataset 1","Dataset 2","Dataset 3","Dataset 4","Dataset 5"]}
-
     var dataCreate = '{"data": {"datasets":[{"data":[';
 
     for(var r = 0;r < data.length;r++){
-        dataCreate += '"' + data[r] + '"';
-        if(r != data.length - 1){
+        dataCreate +=  data[r];
+        if(r < data.length - 1){
             dataCreate += ',';
         }
         else{
@@ -2146,7 +2323,7 @@ function createPolarAreaGraphConfig(labels,data,colors,label){
     '},' +
     '"title": {' +
     '"display": "true",' +
-    '"text": "Chart.js Polar Area Chart"' +
+    '"text": ' + heading + '' +
     '},' +
     '"scale": {' +
     '"ticks": {' +
@@ -2160,56 +2337,24 @@ function createPolarAreaGraphConfig(labels,data,colors,label){
     '}' +
     '}}';
 
-    //var dataCreate = '{"data":[';
-    //
-    //    for(var r = 0;r < data.length;r++){
-    //        dataCreate += '"' + data[r] + '"';
-    //        if(r != data.length - 1){
-    //            dataCreate += ',';
-    //        }
-    //        else{
-    //            dataCreate += "],";
-    //        }
-    //    }
-    //    dataCreate += '"backgroundColor":[';
-    //    for(var j = 0;j < colors.length;j++){
-    //        dataCreate += '"' + colors[j] + '"';
-    //        if(j != colors.length - 1){
-    //            dataCreate += ',';
-    //        }
-    //        else{
-    //            dataCreate += "],";
-    //        }
-    //    }
-    //    dataCreate += '"label":"' + label + '"';
-    //    dataCreate += ',"labels":[';
-    //    for(var q = 0;q < labels.length;q++){
-    //        dataCreate += '"' + labels[q] + '"';
-    //        if(q != labels.length - 1){
-    //            dataCreate += ',';
-    //        }
-    //        else{
-    //            dataCreate += "]";
-    //        }
-    //    }
-    //    dataCreate += '}';
+    //console.log(dataCreate);
+    //console.log(JSON.stringify(config));
+    //console.log("......");
 
-
-    console.log("......");
-
-    //console.log(test);
-    console.log("......");
+    //console.log(config);
+    //console.log("......");
     //console.log(dataCreate);
     //console.log(JSON.stringify(barChartData));
     //console.log(barChartData);
     var toParse = JSON.parse(dataCreate);
-    console.log(toParse);
+    //console.log(toParse);
 
-    var config = toParse;
 
-    return config;
+
+    return toParse;
 }
 
+//chartHeader = string, chartLabels[],data[][],datalabels[],backgroundColour[]
 function createBarGraphConfig(chartHeader,chartLabels,data,datalabels,backgroundColour){
     //var dataCreate = '{"Labels":["test","test2","test3"],"datasets":[{"data":["test","test2","test3"]},{"color":["test1","test4","test7"]}]}' ;
     var dataCreate = '{"labels":[';
@@ -2241,9 +2386,9 @@ function createBarGraphConfig(chartHeader,chartLabels,data,datalabels,background
             }
     }
     dataCreate += ']}]}';
-    console.log("......");
+    //console.log("......");
     //console.log(dataCreate);
-    console.log("......");
+    //console.log("......");
     //console.log(dataCreate);
     //console.log(JSON.stringify(barChartData));
     //console.log(barChartData);
@@ -2303,13 +2448,49 @@ function adminDisplayProfileDetails(){
 }
 
 function adminDisplayCountryReport(){
+    createCanvas('canvas','admin-manage-country-reports-areainformation',100);
+    createCanvas('canvas1','admin-manage-country-reports-areainformation',100);
+    createCanvas('canvas2','admin-manage-country-reports-areainformation',100);
     //graphTestRun();
     var tableName = "Tradeworkers";
     var tradeworkers = adminGenericDisplayTableSetUp(tableName,"");
     var search = "Availability=1";
     var availableTradeworkers = admin3DimensionalSearchArray(tableName,search);
+    var totalRequests = adminGenericDisplayTableSetUp("Quote","");
     console.log("The following are tradeworkers within the bounds of South Africa:" + tradeworkers.length);
     console.log("Of these tradeworkers :" + availableTradeworkers.length + " are available for requests: ");
+    console.log("The following is the number of total requests: " + totalRequests.length);
+    var requestsMonth = [0,0,0,0,0,0,0,0,0,0,0,0];
+    var confirmedRequests = [0,0,0,0,0,0,0,0,0,0,0,0];
+    var terminatedRequests = [0,0,0,0,0,0,0,0,0,0,0,0];
+    var request = adminGenericDisplayTableSetUp("QuoteRequest","");
+
+        for(var v = 0;v < request.length;v++){
+            console.log(request[v]['JobCommencementDate']);
+            var date = new Date(request[v]['JobCommencementDate']);
+            //console.log(date);
+            var month = date.getMonth();
+            //console.log("this is the month: " + month);
+            console.log(request[v]['RequestID']);
+            var relatedRequests = admin2DimensionalSearchArray(totalRequests,"RequestID=" + request[v]['RequestID']);
+            if(relatedRequests != null){
+                console.log(".....1.....");
+                var acceptedRequests = admin2DimensionalAndSearchArray(relatedRequests,"HomeuserResponse=3","Status=3");
+                var rejectedRequests = admin2DimensionalOrSearchArray(relatedRequests,"HomeuserResponse=2","Status=2");
+                console.log(".....1.....");
+                if(acceptedRequests != null){
+                    confirmedRequests[month] += acceptedRequests.length;
+                }
+                if(rejectedRequests != null){
+                    terminatedRequests[month] += rejectedRequests.length;
+                }
+
+                console.log("Adding to array");
+                requestsMonth[month] += relatedRequests.length;
+            }
+        }
+    console.log(confirmedRequests);
+    console.log(requestsMonth);
     console.log("With 9 provinces");
     var gautengInfo = adminDisplayProvincialReport("GP");
     console.log(gautengInfo);
@@ -2332,10 +2513,31 @@ function adminDisplayCountryReport(){
     var colours = [randomColor(),randomColor()];
     var barChartData = createBarGraphConfig("Provincial Tradeworker Indicator",labels,data,dataHeadings,colours);
     var ctx = document.getElementById("canvas").getContext("2d");
+    var ctx1 = document.getElementById("canvas1").getContext("2d");
+    var ctx2 = document.getElementById("canvas2").getContext("2d");
     //var ctx1 = document.getElementById("canvas1").getContext("2d");
-    var test = new Chart(ctx, barChartData);
+    var test = new Chart(ctx1, barChartData);
+
+    //graphTestRun();
+    var labels = ["Available Tradeworkers","Unavailable Tradeworkers"];
+    var colors = [];
+    colors[0] = [randomColor(),randomColor()];
+
+    data = [];
+    data[0] = [availableTradeworkers.length,tradeworkers.length - availableTradeworkers.length];
+
+    var pieChartData = createPieGraphConfig(labels,colors,data,1,"Total Tradeworkers");
+
+
+    data = [requestsMonth,confirmedRequests,terminatedRequests];
+    labels = ["January","Febuary","March","April","May","June","July","August","September","October","November","December"];
+    var dataLabel = ['Total Number Requests Sent Out','Total Confirmed Requests','Total Rejected Requests'];
+    var lineChartData = createLineGraphConfig(labels,data,dataLabel,"Overall Requests Report");
+    //createCanvas('canvas2','admin-manage-country-reports-areainformation',100);
+
+    window.myLine = new Chart(ctx2, lineChartData);
     window.myBar = test;
-    graphTestRun();
+    window.myPie = new Chart(ctx, pieChartData);
 
 }
 
@@ -2397,6 +2599,23 @@ function adminDisplayProvincialReport(provinceName){
     //console.log("The following is tradeworkers available in gauteng " + totalTradeworkersArea.length + " compared to tradeworkers in the provinces combined: " + tradeworkers.length);
     var availableTradeworkersArea = admin2DimensionalSearchArray(totalTradeworkersArea,"Availability=1");
     returnValue['TotalTradeWorkersInArea'] = totalTradeworkersArea.length;
+    var requestsPerArea = [];
+    tableName = "Quote";
+    var quotes = adminGenericDisplayTableSetUp(tableName,"");
+    for(var x = 0;x < totalTradeworkersArea.length;x++){
+        tradeworkerID = totalTradeworkersArea[x]['UserID'];
+        var quoteToAdd = admin2DimensionalSearchArray(quotes,"RequestedUser="+tradeworkerID);
+        //console.log(quoteToAdd);
+        if(quoteToAdd != null){
+            requestsPerArea.push(quoteToAdd);
+        }
+    }
+
+    if(requestsPerArea.length > 0){
+        returnValue['RequestsInAreaArray'] = requestsPerArea;
+        returnValue['TotalRequest'] = requestsPerArea.length;
+    }
+
     returnValue['TotalTradeWorkersInAreaArray'] = totalTradeworkersArea;
     returnValue['TotalTradeWorkersAvailableInArea'] = availableTradeworkersArea.length;
     returnValue['TotalTradeWorkersAvailableInAreaArray'] = availableTradeworkersArea;
@@ -2617,6 +2836,316 @@ function admin2DimensionalSearchArray(array,searchValue){
             counter++;
 
         }
+    }
+
+    while(relevantIndexArray.length > 0){
+        tableToView.push(array[relevantIndexArray.pop()]);
+    }
+
+    if(tableToView.length > 0){
+        return tableToView;
+    }
+    else{
+        tableToView = null;
+        return tableToView;
+    }
+}
+
+function admin2DimensionalAndSearchArray(array,searchValue,searchValue1){
+    //var table = tableName;
+    //console.log("The following values are coming in: " + searchValue1 + " " + searchValue);
+    var searchTerm = "";
+    var columnName = "";
+    if(searchValue.indexOf("=") > 0){
+        var spl = searchValue.split("=");
+        columnName = spl[0];
+        searchTerm = spl[1];
+    }
+    else{
+        searchTerm = searchValue;
+    }
+
+    var searchTerm1 = "";
+    var columnName1 = "";
+    if(searchValue1.indexOf("=") > 0){
+        var spl1 = searchValue1.split("=");
+        columnName1 = spl1[0];
+        searchTerm1 = spl1[1];
+    }
+    else{
+        searchTerm1 = searchValue1;
+    }
+    var target = null;
+    var contains = -1;
+    var contains1 = -1;
+    var foundA = false;
+    var foundB = false;
+    var relevantIndexArray = [];
+    var found = false;
+    var counter = 0;
+    var tableToView = [];
+    var fullTable = "";
+
+    //console.log("Choosing generic Table for " + table + " with the following search term: " +searchTerm);
+    for(var index in array){
+        if(array.hasOwnProperty(index)){
+            //console.log("Searching through: " + index + " looking for " + columnName + "=" + searchTerm + " and " + columnName1  + "=" + searchTerm1);
+            found = false;
+            foundA = false;
+            foundB = false;
+            for(var name in array[index]){
+                if(columnName == "" && columnName1 == ""){
+                    if(!foundA || !foundB)
+                        if(array[index].hasOwnProperty(name)){
+                            if(searchTerm != ""){
+                                 target = array[index][name];
+                                 contains = -1;
+                                 contains1 = -1;
+                                if (typeof target == "string") {
+                                    contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+                                    contains1 = target.toLowerCase().indexOf(searchTerm1.toLowerCase());
+                                    if (contains >= 0 || contains>=0) {
+                                        console.log("Found match at " + counter);
+                                        if(contains > 0){
+                                            foundA = true;
+                                        }
+                                        if(contains1 > 0){
+                                            foundB = true;
+                                        }
+
+                                    }
+                                }
+                                else {
+                                    if (target == searchTerm) {
+                                        console.log("Found match at " + counter);
+                                        foundA = true;
+                                    }
+                                    else if(target == searchTerm1){
+                                        console.log("Found match at " + counter);
+                                        foundB = true;
+                                    }
+                                }
+                            }
+                        }
+                }
+                else{
+                    if(name == columnName){
+                        if(!foundA && !foundB){
+                            if(array[index].hasOwnProperty(name)){
+                                if(searchTerm != ""){
+                                    target = array[index][name];
+                                    contains = -1;
+                                    if (typeof target == "string") {
+                                        contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+
+                                        if (contains >= 0) {
+                                            console.log("Found match at " + counter);
+                                            if(contains > 0){
+                                                foundA = true;
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        if (target == searchTerm) {
+                                            console.log("4Found match at " + counter + " target: " + target + " searchTerm: " + searchTerm);
+                                            foundA = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(name == columnName1){
+                        if(!foundA && !foundB){
+                            if(array[index].hasOwnProperty(name)){
+                                if(searchTerm != ""){
+                                    target = array[index][name];
+                                    contains = -1;
+                                    if (typeof target == "string") {
+                                        contains = target.toLowerCase().indexOf(searchTerm1.toLowerCase());
+
+                                        if (contains >= 0) {
+                                            console.log("Found match at " + counter);
+                                            if(contains > 0){
+                                                foundB = true;
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        if(target == searchTerm1){
+                                            console.log("5Found match at " + counter);
+                                            foundB = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            if(foundA && foundB){
+                relevantIndexArray.push(counter);
+            }
+            counter++;
+
+        }
+
+    }
+
+    while(relevantIndexArray.length > 0){
+        tableToView.push(array[relevantIndexArray.pop()]);
+    }
+
+    if(tableToView.length > 0){
+        return tableToView;
+    }
+    else{
+        tableToView = null;
+        return tableToView;
+    }
+}
+
+function admin2DimensionalOrSearchArray(array,searchValue,searchValue1){
+    //var table = tableName;
+    console.log("The following values are coming in: " + searchValue1 + " " + searchValue);
+    var searchTerm = "";
+    var columnName = "";
+    if(searchValue.indexOf("=") > 0){
+        var spl = searchValue.split("=");
+        columnName = spl[0];
+        searchTerm = spl[1];
+    }
+    else{
+        searchTerm = searchValue;
+    }
+
+    var searchTerm1 = "";
+    var columnName1 = "";
+    if(searchValue1.indexOf("=") > 0){
+        var spl1 = searchValue1.split("=");
+        columnName1 = spl1[0];
+        searchTerm1 = spl1[1];
+    }
+    else{
+        searchTerm1 = searchValue1;
+    }
+    var target = null;
+    var contains = -1;
+    var contains1 = -1;
+    var foundA = false;
+    var foundB = false;
+    var relevantIndexArray = [];
+    var found = false;
+    var counter = 0;
+    var tableToView = [];
+    var fullTable = "";
+
+    //console.log("Choosing generic Table for " + table + " with the following search term: " +searchTerm);
+    for(var index in array){
+        if(array.hasOwnProperty(index)){
+            //console.log("Searching through: " + index + " looking for " + columnName + "=" + searchTerm + " and " + columnName1  + "=" + searchTerm1);
+            found = false;
+            foundA = false;
+            foundB = false;
+            for(var name in array[index]){
+                if(columnName == "" && columnName1 == ""){
+                    if(!foundA && !foundB)
+                        if(array[index].hasOwnProperty(name)){
+                            if(searchTerm != ""){
+                                target = array[index][name];
+                                contains = -1;
+                                contains1 = -1;
+                                if (typeof target == "string") {
+                                    contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+                                    contains1 = target.toLowerCase().indexOf(searchTerm1.toLowerCase());
+                                    if (contains >= 0 || contains>=0) {
+                                        //console.log("1Found match at " + counter);
+                                        if(contains > 0){
+                                            foundA = true;
+                                        }
+                                        if(contains1 > 0){
+                                            foundB = true;
+                                        }
+
+                                    }
+                                }
+                                else {
+                                    if (target == searchTerm) {
+                                        //console.log("2Found match at " + counter);
+                                        foundA = true;
+                                    }
+                                    else if(target == searchTerm1){
+                                        //console.log("3Found match at " + counter);
+                                        foundB = true;
+                                    }
+                                }
+                            }
+                        }
+                }
+                else{
+                    if(name == columnName){
+                        if(!foundA && !foundB){
+                            if(array[index].hasOwnProperty(name)){
+                                if(searchTerm != ""){
+                                    target = array[index][name];
+                                    contains = -1;
+                                    if (typeof target == "string") {
+                                        contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+
+                                        if (contains >= 0) {
+                                            //console.log("Found match at " + counter);
+                                            if(contains > 0){
+                                                foundA = true;
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        if (target == searchTerm) {
+                                            //console.log("4Found match at " + counter + " target: " + target + " searchTerm: " + searchTerm);
+                                            foundA = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(name == columnName1){
+                        if(!foundA && !foundB){
+                            if(array[index].hasOwnProperty(name)){
+                                if(searchTerm != ""){
+                                    target = array[index][name];
+                                    contains = -1;
+                                    if (typeof target == "string") {
+                                        contains = target.toLowerCase().indexOf(searchTerm1.toLowerCase());
+
+                                        if (contains >= 0) {
+                                            console.log("Found match at " + counter);
+                                            if(contains > 0){
+                                                foundB = true;
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        if(target == searchTerm1){
+                                            console.log("5Found match at " + counter);
+                                            foundB = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            if(foundA || foundB){
+                relevantIndexArray.push(counter);
+            }
+            counter++;
+
+        }
+
     }
 
     while(relevantIndexArray.length > 0){
