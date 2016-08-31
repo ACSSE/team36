@@ -35,7 +35,7 @@
             <li><a href="#">Profile Management</a>
                 <ul class="menu vertical nested">
                     <li><a onclick="toggleUserPageArea('panel6v')">General Details</a></li>
-                    <li><a onclick="toggleUserPageArea('panel7v')">Locations</a></li>
+                    <li><a onclick="toggleUserPageArea('panel10v')">Locations</a></li>
 
                 </ul>
             </li>
@@ -74,6 +74,13 @@
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-EditInfo.php";
                 ?>
             </div>
+
+            <div class="tabs-panel full-height user-panels" id="panel10v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+                <?php
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-EditLocation.php";
+                ?>
+            </div>
+
             <div class="tabs-panel full-height user-panels" id="panel7v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-requests-completed.php";
@@ -113,6 +120,7 @@
     //used by - homeuser-manage-requests.php,homeuser-manage-initiate-jobs
     sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
     sendAJAXRequest('fetch-homeuser-profile-details', handleHomeuserFetchProfileDetails);
+    sendAJAXRequest('fetch-homeuser-location-details', handleHomeuserFetchLocationDetails);
     //This brings up the confirmation between homeuser and tradeworker
     //    homeuserRequestsNotifier();
 </script>

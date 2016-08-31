@@ -94,7 +94,7 @@
             </div>
             <div class="tabs-panel full-height user-panels" id="panel6v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-EditInfo.php";
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-EditLocation.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel7v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
@@ -135,4 +135,5 @@
     //tradeworkerRequestsNotifier();
     sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
     sendAJAXRequest('fetch-tradeworker-profile-details',handleTradeworkerFetchProfileDetails);
+    sendAJAXRequest('fetch-tradeworker-location-details', handleTradeworkerFetchLocationDetails);
 </script>

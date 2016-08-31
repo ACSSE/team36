@@ -4325,6 +4325,43 @@ function handleHomeuserFetchProfileDetails(response){
         console.log("Cannot fill in user details")
     }
 }
+function handleHomeuserFetchLocationDetails(response){
+    console.log("The following is handleHomeuserLocationDetails :" + response);
+    var result = JSON.parse(response);
+
+    //genericPrintObject(result);
+    console.log(result) ;
+    if(result.length > 0)
+    { //`StreetNumber`,`Route`,`Sublocality`,`Locality`,`AdministrativeArea`
+        console.log("accessing the array :" + result[0]['StreetNumber'] + " " + result[0]['Route'] + " " + result[0]['Sublocality'] + " " + result[0]['Locality'] + " " + result[0]['AdministrativeArea']);
+        document.getElementById("StreetNumber-homeuser-edit").value = result[0]["StreetNumber"] ;
+        document.getElementById("Route-homeuser-edit").value = result[0]["Route"] ;
+        document.getElementById("Sublocality-homeuser-edit").value = result[0]["Sublocality"] ;
+        document.getElementById("Locality-homeuser-edit").value = result[0]["Locality"] ;
+        document.getElementById("AdministrativeArea-homeuser-edit").value = result[0]["AdministrativeArea"] ;
+    }else
+    {
+        console.log("Cannot fill in user details")
+    }
+}
+function handleTradeworkerFetchLocationDetails(response){
+    var result = JSON.parse(response);
+    console.log("The following is handleTradeworkerLocationDetails :" + response);
+    //genericPrintObject(result);
+    console.log(result) ;
+    if(result.length > 0)
+    { //`StreetNumber`,`Route`,`Sublocality`,`Locality`,`AdministrativeArea`
+        console.log("accessing the array :" + result[0]['StreetNumber'] + " " + result[0]['Route'] + " " + result[0]['Sublocality'] + " " + result[0]['Locality'] + " " + result[0]['AdministrativeArea']);
+        document.getElementById("StreetNumber-tradeworker-edit").value = result[0]["StreetNumber"] ;
+        document.getElementById("Route-tradeworker-edit").value = result[0]["Route"] ;
+        document.getElementById("Sublocality-tradeworker-edit").value = result[0]["Sublocality"] ;
+        document.getElementById("Locality-tradeworker-edit").value = result[0]["Locality"] ;
+        document.getElementById("AdministrativeArea-tradeworker-edit").value = result[0]["AdministrativeArea"] ;
+    }else
+    {
+        console.log("Cannot fill in user details")
+    }
+}
 
 
 function handleTradeWorkerUpdateProfileDeitails(response){

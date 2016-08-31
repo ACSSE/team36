@@ -1982,7 +1982,7 @@ class SebenzaServer {
     }
 
 
-    public static function homeuserUpdateProfileDeials($name,$surname,$username,$email,$cellnumber):bool{
+    public static function userUpdateProfileDeials($name, $surname, $username, $email, $cellnumber):bool{
         $returnValue = false ;
         $dbHandler = self::fetchDatabaseHandler();
         $userID = self::fetchSessionHandler()->getSessionVariable("UserID");
@@ -1995,6 +1995,30 @@ class SebenzaServer {
         }
         return $returnValue ;
     }
+
+    public static function fetchHomeUserLocationDetails(){
+    $returnValue = false ;
+    $dbHandler = self::fetchDatabaseHandler();
+    $userID = self::fetchSessionHandler()->getSessionVariable("UserID");
+    $command1 = "SELECT `locationID` FROM `LOCATIONS_PER_USER` WHERE `UserID`= ?" ;
+        $dbHandler->runCommand($command1,$userID);
+        $lID = $dbHandler->getResults();
+    $command = "SELECT * FROM `HOMEUSER_LOCATIONS` WHERE `UserID` = ? AND `locationID` = ?";
+    $dbHandler->runCommand($command,$userID,$lID);
+        $userDetails = $dbHandler->getResults();
+        //still some details that need to be added but hope you get the idea
+        //`StreetNumber`,`Route`,`Sublocality`,`Locality`,`AdministrativeArea`
+        if(count($userDetails) > 0) {
+            $returnValue[0]['StreetNumber'] = $userDetails[0]['StreetNumber'];
+            $returnValue[0]['Route'] = $userDetails[0]['Route'];
+            $returnValue[0]['Sublocality'] = $userDetails[0]['Sublocality'];
+            $returnValue[0]['Locality'] = $userDetails[0]['Locality'];
+            $returnValue[0]['AdministrativeArea'] = $userDetails[0]['AdministrativeArea'];
+        }else{
+            $returnValue = false ;
+        }
+  return $returnValue ;
+}
 
 
 }
@@ -2492,7 +2516,7 @@ if (!empty($_POST)) {
                     if(!isset($_POST['name-tradeworker-edit'])&& !isset($_POST['surname-tradeworker-edit'])
                         && !isset($_POST['username-tradeworker-edit'])&& !isset($_POST['email-tradeworker-edit'])
                         && !isset($_POST['cellnumber-tradeworker-edit'])){
-                        $response = json_encode(SebenzaServer::homeuserUpdateProfileDeials(SebenzaServer::fetchSessionHandler()
+                        $response = json_encode(SebenzaServer::userUpdateProfileDeials(SebenzaServer::fetchSessionHandler()
                             ->getSessionVariable("UserID"),$_POST['name-tradeworker-edit'],$_POST['surname-tradeworker-edit'],
                             $_POST['username-tradeworker-edit'],$_POST['email-tradeworker-edit'],$_POST['cellnumber-tradeworker-edit']));
                     }else{
@@ -2511,7 +2535,7 @@ if (!empty($_POST)) {
                         &&isset($_POST['username-homeuser-edit'])&&isset($_POST['email-homeuser-edit'])
                         &&isset($_POST['cellnumber-homeuser-edit']))
                     {
-                        $response = json_encode(SebenzaServer::homeuserUpdateProfileDeials($_POST['name-homeuser-edit'],
+                        $response = json_encode(SebenzaServer::userUpdateProfileDeials($_POST['name-homeuser-edit'],
                             $_POST['surname-homeuser-edit'],$_POST['username-homeuser-edit'],$_POST['email-homeuser-edit']
                             ,$_POST['cellnumber-homeuser-edit']));
                    }else{
@@ -2521,6 +2545,30 @@ if (!empty($_POST)) {
                     $response= json_encode("Error") ;
                 }
                 break;
+
+            case'fetch-homeuser-location-details' :
+                $continue = SebenzaServer::serverSecurityCheck();
+                if($continue)
+                {
+                    $response = json_encode(SebenzaServer::fetchHomeUserLocationDetails()) ;
+                }else{
+                    $resonse = json_encode(false) ;
+                }
+                break;
+            case'fetch-tradeworker-location-details' :
+                $continue = SebenzaServer::serverSecurityCheck();
+                if($continue)
+                {
+                    $response = json_encode(SebenzaServer::fetchTradeworkerLocationDetails()) ;
+                }else{
+                    $resonse = json_encode(false) ;
+                }
+
+                break;
+            case'':
+                break;
+            case'':
+                break ;
             default:
                 //If the action was not one of the handled cases, respond appropriately
                 $response = json_encode("Request not recognised.");
