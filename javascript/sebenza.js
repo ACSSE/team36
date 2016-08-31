@@ -4363,6 +4363,16 @@ function handleTradeworkerFetchLocationDetails(response){
     }
 }
 
+function handleHomeUserUpdateLocationDeitails(response){
+    var result = JSON.parse(response);
+    console.log("Details: " + " " + response);
+
+}
+function handleTradeworkerUpdateLocationDeitails(response){
+    var result = JSON.parse(response);
+    console.log("Details: " + " " + response);
+
+}
 
 function handleTradeWorkerUpdateProfileDeitails(response){
     var result = JSON.parse(response);

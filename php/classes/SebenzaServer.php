@@ -2513,9 +2513,9 @@ if (!empty($_POST)) {
                 $continue = SebenzaServer::serverSecurityCheck();
                 if($continue)
                 {
-                    if(!isset($_POST['name-tradeworker-edit'])&& !isset($_POST['surname-tradeworker-edit'])
-                        && !isset($_POST['username-tradeworker-edit'])&& !isset($_POST['email-tradeworker-edit'])
-                        && !isset($_POST['cellnumber-tradeworker-edit'])){
+                    if(isset($_POST['name-tradeworker-edit'])&& isset($_POST['surname-tradeworker-edit'])
+                        && isset($_POST['username-tradeworker-edit'])&& isset($_POST['email-tradeworker-edit'])
+                        && isset($_POST['cellnumber-tradeworker-edit'])){
                         $response = json_encode(SebenzaServer::userUpdateProfileDeials(SebenzaServer::fetchSessionHandler()
                             ->getSessionVariable("UserID"),$_POST['name-tradeworker-edit'],$_POST['surname-tradeworker-edit'],
                             $_POST['username-tradeworker-edit'],$_POST['email-tradeworker-edit'],$_POST['cellnumber-tradeworker-edit']));
@@ -2565,9 +2565,34 @@ if (!empty($_POST)) {
                 }
 
                 break;
-            case'':
+
+            case'update-tradeworker-location-details':
+                $continue = SebenzaServer::serverSecurityCheck();
+                if($continue)
+                {
+                    if(isset($_POST["StreetNumber-tradeworker-edit"]) && isset($_POST["Route-tradeworker-edit"]) && isset($_POST["Sublocality-tradeworker-edit"])
+                        && isset($_POST["Locality-tradeworker-edit"]) && isset($_POST["AdministrativeArea-tradeworker-edit"])){
+                        $response = json_encode(true) ;
+                    }else{
+                        $response = json_encode(false) ;
+                    }
+                }else{
+                    $resonse = json_encode(false) ;
+                }
                 break;
-            case'':
+            case'update-homeuser-location-details':
+                $continue = SebenzaServer::serverSecurityCheck();
+                if($continue)
+                {
+                    if(isset($_POST["StreetNumber-homeuser-edit"]) && isset($_POST["Route-homeuser-edit"]) && isset($_POST["Sublocality-homeuser-edit"])
+                        && isset($_POST["Locality-homeuser-edit"]) && isset($_POST["AdministrativeArea-homeuser-edit"])){
+                        $response = json_encode(true) ;
+                    }else{
+                        $response = json_encode("Not Set") ;
+                    }
+                }else{
+                    $resonse = json_encode(false) ;
+                }
                 break ;
             default:
                 //If the action was not one of the handled cases, respond appropriately
