@@ -24,11 +24,11 @@ import oasys.za.ac.uj.team36.Model.*;
 
 public class Main extends AppCompatActivity implements View.OnClickListener{
 
-    private static final String DB_URL = "http://10.0.0.6:31335/php/classes/SebenzaServer.php" ;
+    private static final String DB_URL = "http://10.0.0.9:31335/php/classes/SebenzaServer.php" ;
 
     public static final int TIMEOUT = 1000 * 15 ;
     Button bLogin ;
-    TextView tvRegisterLink ;
+    TextView tvRegisterLink, tvmain;
     EditText etUsername ,etPassword ;
     UserLocalDatabase localDB ;
     RegisteredUser user ;
@@ -45,10 +45,11 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         etPassword = (EditText) findViewById(R.id.etPassword);
         bLogin = (Button) findViewById(R.id.bLogin) ;
         tvRegisterLink = (TextView) findViewById(R.id.tvRegisterLink) ;
+        tvmain = (TextView) findViewById(R.id.tvMain) ;
 
         bLogin.setOnClickListener(this);
         tvRegisterLink.setOnClickListener(this);
-
+        tvmain.setOnClickListener(this);
         localDB = new UserLocalDatabase(this) ;
     }
 
@@ -97,7 +98,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                 dialog.setPositiveButton("Home user",new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                       startActivity(new Intent(Main.this, registerHomeUser.class));
+                       startActivity(new Intent(Main.this, regHomeuser.class));
 
                     }
 
@@ -105,7 +106,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                 dialog.setNeutralButton("TradeWorker", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent(Main.this, registerTradeWorker.class));
+                    startActivity(new Intent(Main.this, regTradeworker.class));
                 }
 
             });
@@ -113,6 +114,9 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                 //startActivity(new Intent(Main.this, registerHomeUser.class));
 
                 break ;
+            case R.id.tvMain:
+                startActivity(new Intent(Main.this, HomeUser.class));
+                break;
         }
 
     }

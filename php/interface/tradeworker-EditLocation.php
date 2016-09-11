@@ -1,4 +1,5 @@
 <div class="full-height full-width">
+    <form id="tradeworker-editLocation-form" name="tradeworker-editLocation-form">
     <h1>Location:</h1>
     <div class="row">
         <div class="column large-11 medium 11">
@@ -59,5 +60,5 @@
 
         </div>
     </div>
-
+    </form>
 </div>

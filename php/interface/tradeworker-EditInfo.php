@@ -1,4 +1,5 @@
 <div class="full-height full-width">
+    <form id="tradeworker-editInfo-form" name="tradeworker-editInfo-form">
     <h1>Details:</h1>
     <div class="row">
         <div class="column medium-11 large-11">

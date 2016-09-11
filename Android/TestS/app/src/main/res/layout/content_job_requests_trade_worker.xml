@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="oasys.za.ac.uj.team36.tests.JobRequestsTradeWorker"
+    tools:showIn="@layout/activity_job_requests_trade_worker">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Job Date"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14pt"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/tvDate"
+            android:gravity="center_horizontal"
+            android:textColor="#000"
+            android:textSize="10pt"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Job Details"
+            android:gravity="center_horizontal"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14pt"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:gravity="center_horizontal"
+            android:textSize="9pt"
+            android:text="Job type"/>
+        <EditText
+            android:id="@+id/etType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:gravity="center_horizontal"
+            android:textSize="9pt"
+            android:editable="false"
+            android:inputType="text"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:gravity="center_horizontal"
+            android:textSize="9pt"
+            android:text="Decription "/>
+        <EditText
+            android:id="@+id/etDecription"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:gravity="center_horizontal"
+            android:textSize="9pt"
+            android:inputType="text"
+            android:editable="false"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Job Location"
+            android:gravity="center_horizontal"
+            android:textColor="@color/colorPrimary"
+            android:textSize="14pt"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="9pt"
+            android:gravity="center_horizontal"
+            android:text="Street number"/>
+
+        <EditText
+            android:id="@+id/etsNumHU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="9pt"
+            android:inputType="number"
+            android:editable="false"
+            android:gravity="center_horizontal"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="9pt"
+            android:gravity="center_horizontal"
+            android:text="Street Name"/>
+
+        <EditText
+            android:id="@+id/etsNameHU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="9pt"
+            android:gravity="center_horizontal"
+            android:editable="false"
+            android:inputType="text"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="9pt"
+            android:gravity="center_horizontal"
+            android:text="Sub area"/>
+
+        <EditText
+            android:id="@+id/etSubLocalHU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="9pt"
+            android:gravity="center_horizontal"
+            android:editable="false"
+            android:inputType="text"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:gravity="center_horizontal"
+            android:textSize="9pt"
+            android:text="Area"/>
+
+        <EditText
+            android:id="@+id/etLocalHU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:inputType="text"
+            android:gravity="center_horizontal"
+            android:editable="false"
+            android:textSize="9pt"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="9pt"
+            android:gravity="center_horizontal"
+            android:text="Area"/>
+
+        <EditText
+            android:id="@+id/etAdminAreaHU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#000000"
+            android:textSize="9pt"
+            android:inputType="text"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/bAcceptJobRequestTW"
+            android:layout_width="match_parent"
+            android:text="RESPOND TO REQUEST"
+            android:textColor="#000000"
+            android:background="@color/colorPrimary"
+            android:textSize="10pt"
+            android:layout_marginBottom="12dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
