@@ -1,4 +1,5 @@
 <div class="full-height full-width">
+    <form id="homeuser-editInfo-form" name="homeuser-editInfo-form">
     <h1>Details:</h1>
     <div class="row">
         <div class="column medium-11 large-11">
@@ -24,11 +25,11 @@
     <div class="row">
         <div class="large-2 medium-2 large-offset-9 medium-offset-9 columns">
             <button type="submit" class="warning button radius" id="updateInfo-button"
-                    onclick="sendAJAXRequest('homeuser-update-information',handleHomeUserUpdateProfileDeitails);">
+                    onclick="sendAJAXRequest('homeuser-update-information',handleHomeUserUpdateProfileDeitails,'homeuser-editInfo-form');">
                 Update Profile Information
             </button>
 
         </div>
     </div>
-
+</form>
 </div>

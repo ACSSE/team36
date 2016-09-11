@@ -1,7 +1,12 @@
 package oasys.za.ac.uj.team36.tests;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -22,6 +27,9 @@ public class HomeUser extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
     private LinearLayout mContainerView;
 
+    private Notification.Builder notification;
+    private static final int uniqueID = 45782 ; // Id for each notification
+
     private FragmentManager fm ;
 
     View v ;
@@ -33,6 +41,9 @@ public class HomeUser extends AppCompatActivity
         //initiate the Home user with the home users main fragment
        // fm = getSupportFragmentManager();
        // fm.beginTransaction().replace(R.id.content_frame, new MainHomeUser()).commit();
+
+        notification = new Notification.Builder(this);
+        notification.setAutoCancel(true); // maiking notification disappear once this screen has loaded
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -94,6 +105,9 @@ public class HomeUser extends AppCompatActivity
              startActivity(new Intent(this, Main.class));
             return true;
         }
+        if (id == R.id.action_notification) {
+            setNotification();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -107,7 +121,9 @@ public class HomeUser extends AppCompatActivity
 
         fm = getSupportFragmentManager();
         if (id == R.id.nav_requestTradeworker) {
-            //TODO Handle the action
+            Intent i = new Intent(HomeUser.this, requestTradeworker.class);
+            this.finish();  //Kill the activity from which you will go to next activity
+            startActivity(i);
         } else if (id == R.id.nav_ManageJobs) {
             // TODO Handle the action
         } else if (id == R.id.nav_InitiateJob) {
@@ -127,5 +143,21 @@ public class HomeUser extends AppCompatActivity
         return true;
     }
 
+    public void setNotification(){
+
+        notification.setSmallIcon(R.drawable.favicon);
+        notification.setTicker("This is the ticker") ;
+        notification.setWhen(System.currentTimeMillis());
+        notification.setContentTitle("Test Notification");
+        notification.setContentText("Body text of the notification");
+        //handle click of notification on screen
+        Intent intent = new Intent(this, HomeUser.class);
+        PendingIntent pend = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        notification.setContentIntent(pend) ;
+        // Building the actual notification on home screen scroll down
+        NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        nm.notify(uniqueID, notification.build());
+
+    }
 
 }

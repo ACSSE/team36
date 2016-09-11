@@ -1,5 +1,6 @@
 package oasys.za.ac.uj.team36.tests;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -92,7 +93,9 @@ public class TradeWorker extends AppCompatActivity
         int id = item.getItemId();
         fm = getSupportFragmentManager();
         if (id == R.id.nav_jobRequests) {
-            // TODO Handle the camera action
+            Intent i = new Intent(TradeWorker.this, JobRequestsTradeWorker.class);
+            this.finish();  //Kill the activity from which you will go to next activity
+            startActivity(i);
         } else if (id == R.id.nav_InitiatedJobsTW) {
             // TODO Handle the camera action
         } else if (id == R.id.nav_OngoingJobsTW) {

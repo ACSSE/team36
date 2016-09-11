@@ -19,23 +19,22 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import oasys.za.ac.uj.team36.Model.Home_User;
-import oasys.za.ac.uj.team36.Model.RegisteredUser;
-import oasys.za.ac.uj.team36.Model.ServerHandler;
-import oasys.za.ac.uj.team36.Model.registerRequest;
 
-public class Register_HomeUser extends AppCompatActivity implements View.OnClickListener{
+public class regTradeworker extends AppCompatActivity implements View.OnClickListener {
 
-    private static final String DB_URL = "http://10.0.0.6:31335/php/classes/SebenzaServer.php" ;
-    Button bRegisterHomeUser;
+    Button bRegisterTrade;
 
     EditText etUsername ,etPassword, etEmail, etPhone, etName, etSurname,etID ;
+    EditText strnumber, strname, subarea, area,province ;
+    EditText skilset ;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register__home_user);
+        setContentView(R.layout.activity_reg_tradeworker);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
+        // User details
         etName = (EditText) findViewById(R.id.etName) ;
         etSurname = (EditText) findViewById(R.id.etSurname) ;
         etUsername = (EditText) findViewById(R.id.etUsername) ;
@@ -43,28 +42,39 @@ public class Register_HomeUser extends AppCompatActivity implements View.OnClick
         etEmail = (EditText) findViewById(R.id.etEmail) ;
         etPhone = (EditText) findViewById(R.id.etPhone) ;
         etPassword = (EditText) findViewById(R.id.etUsername) ;
-        bRegisterHomeUser = (Button) findViewById(R.id.bRegisterHomeUser) ;
-        bRegisterHomeUser.setOnClickListener(this);
 
+        // location details
+        strnumber = (EditText) findViewById(R.id.etsNumHU) ;
+        strname = (EditText) findViewById(R.id.etsNameHU) ;
+        subarea = (EditText) findViewById(R.id.etSubLocalHU) ;
+        area = (EditText) findViewById(R.id.etLocalHU) ;
+        province = (EditText) findViewById(R.id.etAdminAreaHU) ;
+
+        // Skill set
+        skilset = (EditText) findViewById(R.id.etSkill) ;
+
+        bRegisterTrade = (Button) findViewById(R.id.bRegisterTradeWorker) ;
+        bRegisterTrade.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View v) {
+
         switch (v.getId())
         {
             case R.id.bRegisterHomeUser:
                 Response.Listener<String> responseL = new Response.Listener<String>(){
                     @Override
                     public void onResponse(String response) {
-                    //response is from the php file
+                        //response is from the php file
                         try {
                             JSONObject jsonResponse = new JSONObject(response);
 
                             boolean success = jsonResponse.getBoolean("") ;
                             if(success){
-                                startActivity(new Intent(Register_HomeUser.this, Home_User.class));
+                                startActivity(new Intent(regTradeworker.this, Home_User.class));
                             }else{
-                                AlertDialog.Builder d = new AlertDialog.Builder(Register_HomeUser.this);
+                                AlertDialog.Builder d = new AlertDialog.Builder(regTradeworker.this);
                                 d.setMessage("Unsuccessful Registration, Please try again");
                                 d.setTitle("Error") ;
                                 d.setNegativeButton("Retry", null) ;
@@ -75,11 +85,9 @@ public class Register_HomeUser extends AppCompatActivity implements View.OnClick
                         }
                     }
                 };
-            //registerRequest r = new registerRequest(name,surname, username, id,phone, email, password) ;
-                RequestQueue q = Volley.newRequestQueue(Register_HomeUser.this) ;
-              //  q.add(r) ;
+                //registerRequest r = new registerRequest(name,surname, username, id,phone, email, password) ;
+                RequestQueue q = Volley.newRequestQueue(regTradeworker.this) ;
+                //  q.add(r) ;
         }
     }
-
-
 }

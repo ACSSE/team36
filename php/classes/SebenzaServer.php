@@ -1514,43 +1514,6 @@ class SebenzaServer {
         return $returnValue;
     }
 
-    public static function fetchProfileUserDetails($userID){
-        $returnValue = false;
-        $userType = self::fetchUserType();
-        $dbhandler = self::fetchDatabaseHandler();
-        $command = "SELECT * FROM `REGISTERED_USER` WHERE `UserID` = ?";
-        $dbhandler->runCommand($command,$userID);
-        $userDetails = $dbhandler->getResults();
-        //still some details that need to be added but hope you get the idea
-        if(count($userDetails) > 0){
-            $returnValue[0]['Username'] = $userDetails[0]['Username'];
-            $returnValue[0]['Email'] = $userDetails[0]['Email'];
-            $returnValue[0]['Name'] = $userDetails[0]['Name'];
-            $returnValue[0]['Surname'] = $userDetails[0]['Surname'];
-            $returnValue[0]['ContactNumber'] = $userDetails[0]['ContactNumber'];
-            switch($userType){
-                case 0:
-                    //dealing with tradeworker tables related specifically to tradeworker
-                    break;
-                case 1:
-                    //dealing with contractor tables related specifically to contractor
-                    break;
-                case 2:
-                    //dealing with homeuser tables related specifically to homeuser
-                    $command = "SELECT `Subscribed` FROM `HOMEUSER` WHERE `UserID` = ?";
-                    $dbhandler->runCommand($command,$userID);
-                    $homeuserDetails = $dbhandler->getResults();
-                    //breaks the json object with this line of code
-                  //  $returnValue[0]['Subscribed'] = $homeuserDetails[0]['Subscribed'];
-                    break;
-                default:
-                    $returnValue = false;
-                    break;
-            }
-        }
-        return $returnValue;
-    }
-
     public static function homeuserFetchRequests(){
         $dbhandler = self::fetchDatabaseHandler();
         $command = "SELECT `RequestID`,`workTypeID`,`JobDescription`,`Address`,`DateInitialised`,`JobCommencementDate`,`NumberOfWorkersRequested`,`NumberOfWorkersAccepted` FROM `QUOTE_REQUEST` WHERE `UserID` = ?";
@@ -1981,6 +1944,42 @@ class SebenzaServer {
         return $returnValue;
     }
 
+    public static function fetchProfileUserDetails($userID){
+        $returnValue = false;
+        $userType = self::fetchUserType();
+        $dbhandler = self::fetchDatabaseHandler();
+        $command = "SELECT * FROM `REGISTERED_USER` WHERE `UserID` = ?";
+        $dbhandler->runCommand($command,$userID);
+        $userDetails = $dbhandler->getResults();
+        //still some details that need to be added but hope you get the idea
+        if(count($userDetails) > 0){
+            $returnValue[0]['Username'] = $userDetails[0]['Username'];
+            $returnValue[0]['Email'] = $userDetails[0]['Email'];
+            $returnValue[0]['Name'] = $userDetails[0]['Name'];
+            $returnValue[0]['Surname'] = $userDetails[0]['Surname'];
+            $returnValue[0]['ContactNumber'] = $userDetails[0]['ContactNumber'];
+            switch($userType){
+                case 0:
+                    //dealing with tradeworker tables related specifically to tradeworker
+                    break;
+                case 1:
+                    //dealing with contractor tables related specifically to contractor
+                    break;
+                case 2:
+                    //dealing with homeuser tables related specifically to homeuser
+                    $command = "SELECT `Subscribed` FROM `HOMEUSER` WHERE `UserID` = ?";
+                    $dbhandler->runCommand($command,$userID);
+                    $homeuserDetails = $dbhandler->getResults();
+                    //breaks the json object with this line of code
+                    //  $returnValue[0]['Subscribed'] = $homeuserDetails[0]['Subscribed'];
+                    break;
+                default:
+                    $returnValue = false;
+                    break;
+            }
+        }
+        return $returnValue;
+    }
 
     public static function userUpdateProfileDeials($name, $surname, $username, $email, $cellnumber):bool{
         $returnValue = false ;
@@ -2020,6 +2019,28 @@ class SebenzaServer {
   return $returnValue ;
 }
 
+    public static function fetchTradeworkerLocationDetails() {
+        $returnValue = false ;
+        $dbHandler = self::fetchDatabaseHandler();
+        $userID = self::fetchSessionHandler()->getSessionVariable("UserID");
+        $locations = array();
+        $command = "SELECT `locationID` FROM `LOCATIONS` WHERE `UserID` = ?";
+            $dbHandler->runCommand($command,$userID);
+            $lID = $dbHandler->getResults();
+            if(count($lID) > 0){
+                $command = "SELECT * FROM `LOCATIONS_PER_USER` WHERE `UserID` =? AND `LocationID` =?";
+                $dbHandler->runCommand($command, $userID,lID);
+                $locations = $dbHandler->getResults();
+                if(count($locations)>0) {
+                    $returnValue = $locations;
+                }else{
+                    $returnValue = false;
+                }
+            }
+            else{
+                $returnValue = false;
+            }
+    }
 
 }
 //The following is currently used to receive the confirmation requests from the user
