@@ -29,7 +29,7 @@
         <div class="row">
             <div class="column medium-11 large-11">
                 <!--Can use the onChange event to set up what-ever is necessary according to the type selected-->
-                <label>Select Work Type:</label> <select id="homeuser-rTradeworker-work-type-0" name="homeuser-rTradeworker-work-type-0" form="register-homeuser-rTradeworker-form" class="REQ_VAL">
+                <label>Select Work Type:</label> <select id="homeuser-rTradeworker-work-type-0" name="homeuser-rTradeworker-work-type-0" form="homeuser-rTradeworker-form" class="REQ_VAL">
                     <script>
                         requestGenericWorkTypes('homeuser-rTradeworker-work-type-0');
                     </script>

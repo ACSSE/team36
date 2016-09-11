@@ -2019,7 +2019,59 @@ class SebenzaServer {
         }
   return $returnValue ;
 }
+public static function addPictureToServer($fileID,$uniqueID){
+    $target_dir = "../../UploadedPictures/".$uniqueID;
+    $target_file = $target_dir . basename($_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"]);
+    $uploadOk = 1;
+    $value = "";
+    $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+    // Check if image file is a actual image or fake image
+    //if(isset($_POST["submit"])) {
+    $check = getimagesize($_FILES["homeuser-initiateJobCompletion-Picture-0"]["tmp_name"]);
+    if($check !== false) {
+        $response = json_encode("Is image");
+        $value .= "Is image";
+        $uploadOk = 1;
+    } else {
+        $value .= "File is not an image.";
+        $value .=$_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"];
+        $response = json_encode("File is not an image.");
+        $uploadOk = 0;
+    }
 
+    if (file_exists($target_file)) {
+        $response = json_encode("Sorry, file already exists.");
+        $value .= "Sorry, file already exists.";
+        $uploadOk = 0;
+    }
+
+    if ($_FILES["homeuser-initiateJobCompletion-Picture-0"]["size"] > 500000) {
+        $value .= "Sorry, your file is too large.";
+        $response = json_encode("Sorry, your file is too large.");
+        $uploadOk = 0;
+    }
+
+    // Allow certain file formats
+    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+        && $imageFileType != "gif" ) {
+        $value .= "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+        $response = json_encode("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
+        $uploadOk = 0;
+    }
+
+    if ($uploadOk == 0) {
+        $value .= "Sorry, your file was not uploaded..";
+        $response = json_encode("Sorry, your file was not uploaded..");;
+        // if everything is ok, try to upload file
+    } else {
+        if (move_uploaded_file($_FILES["homeuser-initiateJobCompletion-Picture-0"]["tmp_name"], $target_file)) {
+            $response = json_encode(true);
+        } else {
+            $response = json_encode("Sorry, there was an error uploading your file.");
+
+        }
+    }
+}
 
 }
 //The following is currently used to receive the confirmation requests from the user
@@ -2105,6 +2157,9 @@ if (!empty($_POST)) {
                 break;
             case 'homeuser-initiateJobCompletion-request':
                 $response = json_encode("Should be completing the job for tradeworker");
+                // basename($_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"]) get fileName to add to the database then retrieve that value to make up the proceeding next value
+                // unique value sent to be picture name - $picID,$jobID,$userID
+                $response = json_encode($_POST);
                 break;
             case 'homeuser-initiateJobExtension-request':
                 $response = json_encode("Should be extending the job for the tradeworker selected server response");

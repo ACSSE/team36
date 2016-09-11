@@ -4,6 +4,7 @@
 * http://www.ondeweb.in/ajax-login-form-with-jquery-and-php/
 * http://stackoverflow.com/questions/4038567/prevent-redirect-after-form-is-submitted
  */
+
 $(document).ready(function () {
     //Prevents form submission from activating a page refresh
     $('form').submit(function () {return false;});
@@ -72,6 +73,61 @@ function modalToggler(){
     redirectToHome();
 }
 
+function sendAJAXPictures (action,responseFunction,formID) {
+    if (typeof action == 'string' && typeof responseFunction == 'function' && (typeof formID == 'string' || formID == null)) {
+        //Validate the form
+        if (formID != null) {
+            if (validateForm(formID)) {
+                //Upon successful validation, build the ajax data object
+                //Generate the input from the input tags of the form
+                var form = document.getElementById(formID);
+                //console.log(formData);
+                if (form != null) {
+                    var forms = document.forms.namedItem(formID);
+                    var oData = new FormData(forms);
+                    oData.append("action",action);
+                    var inputTags = form.getElementsByTagName('input');
+                    if (inputTags.length > 0) {
+                        var inputTag;
+                        var i;
+                        for (i = 0; i < inputTags.length; i++) {
+                            inputTag = inputTags[i];
+                            //document.querySelector(inputTag);
+                            if(inputTag.name.substr(inputTag.name.length - 6) == "switch"){
+                                oData.append(inputTag.name.substr(7),document.getElementById(inputTag.name.substr(7)).checked);
+                            }
+                        }
+                    }
+                    console.log("..3..");
+                    //of shows as an error but it does work the current javascript library that exists within phpStorm for checking I think it may be deprecated
+                    for(var pair of oData.entries()) {
+                        console.log(pair[0]+ ', '+ pair[1]);
+                    }
+                    console.log("..3..");
+                }
+                //All ajax requests are handled by php/classes/SebenzaServer.php
+                $.ajax({
+                    type: 'POST',
+                    url: 'php/classes/SebenzaServer.php',
+                    data: oData,
+                    cache       : false,
+                    contentType : false,
+                    processData : false,
+                    success: responseFunction
+                });
+            }
+        } else {
+            $.ajax({
+                type: 'POST',
+                url: 'php/classes/SebenzaServer.php',
+                data: {action: action},
+                success: responseFunction
+            });
+        }
+    }
+
+}
+
 function sendAJAXRequest (action, responseFunction, formID) {
     //Check the types of the parameters
     if (typeof action == 'string' && typeof responseFunction == 'function' && (typeof formID == 'string' || formID == null)) {
@@ -82,7 +138,12 @@ function sendAJAXRequest (action, responseFunction, formID) {
                 var objectJSON = '{"action":"' + action + '"';
                 //Generate the input from the input tags of the form
                 var form = document.getElementById(formID);
+                //console.log(formData);
                 if (form != null) {
+                    var forms = document.forms.namedItem(formID);
+                    var oData = new FormData(forms);
+                    oData.append("action",action);
+                    console.log(oData);
                     var inputTags = form.getElementsByTagName('input');
                     var selectTags = form.getElementsByTagName('select');
                     var textareaTags = form.getElementsByTagName('textarea');
@@ -91,6 +152,7 @@ function sendAJAXRequest (action, responseFunction, formID) {
                         var i;
                         for (i = 0; i < inputTags.length; i++) {
                             inputTag = inputTags[i];
+                            //document.querySelector(inputTag);
                             objectJSON += ', "' + inputTag.name + '":"' + inputTag.value + '"';
                             if(inputTag.name.substr(inputTag.name.length - 6) == "switch"){
                                 objectJSON += ', "' + inputTag.name.substr(7) + '":"' + document.getElementById(inputTag.name.substr(7)).checked + '"';
@@ -138,6 +200,7 @@ function sendAJAXRequest (action, responseFunction, formID) {
 
 function handleLoginResponse(response) {
     var success = JSON.parse(response);
+    console.log(success);
     if (success) {
         window.location = 'userPage.php';
     } else {
@@ -1826,7 +1889,7 @@ function homeuserCompleteJobInitiate(){
     }
 
     var html = '<h3>Initiating completion process</h3>' +
-        '<form id="homeuser-initiateJobCompletion-form" name="homeuser-initiateJobCompletion-form">' +
+        '<form id="homeuser-initiateJobCompletion-form" name="homeuser-initiateJobCompletion-form"  method="post" enctype="multipart/form-data">' +
         '<input type="hidden" id="homeuser-initiateJobCompletion-jobID" name="ignore-homeuser-initiateJobCompletion-jobID" value=' + spl[1] + '>' +
         '<div class="row">' +
         '<div class="column medium-11 large-11">' +
@@ -1900,7 +1963,7 @@ function homeuserCompleteJobInitiate(){
         '</form>';
     html += '<div class="row">' +
         '<div class="large-3 large-offset-8 medium-offset-8 medium-3 columns">' +
-        '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="sendAJAXRequest(\'homeuser-initiateJobCompletion-request\',handleHomeuserInitiateJobCompletionResponse,\'homeuser-initiateJobCompletion-form\')">' +
+        '<button type="top-bar-button button submit" class="button success" style="margin-top: 0.2em" onclick="sendAJAXPictures(\'homeuser-initiateJobCompletion-request\',handleHomeuserInitiateJobCompletionResponse,\'homeuser-initiateJobCompletion-form\')">' +
         'Complete Job' +
         '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
         '</button>' +
@@ -2517,6 +2580,7 @@ function adminDisplayCountryReport(){
                 var rejectedRequests = admin2DimensionalOrSearchArray(relatedRequests,"HomeuserResponse=2","Status=2");
                 console.log(".....1.....");
                 if(acceptedRequests != null){
+                    console.log("Accepted Requests logged:");
                     confirmedRequests[month] += acceptedRequests.length;
                 }
                 if(rejectedRequests != null){
@@ -2968,7 +3032,7 @@ function admin2DimensionalAndSearchArray(array,searchValue,searchValue1){
                 }
                 else{
                     if(name == columnName){
-                        if(!foundA && !foundB){
+                        if(!foundA || !foundB){
                             if(array[index].hasOwnProperty(name)){
                                 if(searchTerm != ""){
                                     target = array[index][name];
@@ -2994,7 +3058,7 @@ function admin2DimensionalAndSearchArray(array,searchValue,searchValue1){
                         }
                     }
                     else if(name == columnName1){
-                        if(!foundA && !foundB){
+                        if(!foundA || !foundB){
                             if(array[index].hasOwnProperty(name)){
                                 if(searchTerm != ""){
                                     target = array[index][name];

@@ -7,7 +7,7 @@
     }
 </style>
 
-<div class="full-height full-width" xmlns="http://www.w3.org/1999/html">
+<div class="full-width full-height" xmlns="http://www.w3.org/1999/html">
     <h1>Country Reports</h1>
     <!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->
     <form id="admin-manage-country-reports-search-form" name="admin-manage-country-reports-search-form">
@@ -22,7 +22,7 @@
         </div>
         <div class="row">
             <div class="column large-11">
-                <div class="full-width" id="admin-manage-country-reports-areainformation" style="overflow-y: auto; height: 400px">
+                <div class="full-width" id="admin-manage-country-reports-areainformation" style="overflow-y: auto;height: 550px">
 <!--                    <div id="container" style="width: 75%;">-->
 <!--                        <canvas id="canvas"></canvas>-->
 <!--                    </div>-->
@@ -38,24 +38,7 @@
             </div>
         </div>
     </form>
-
-
-    <div class="row">
-        <div class="large-4 large-offset-4 medium-offset-4 medium-4 columns">
-            <button type="button" class="button warning" style="margin-top: 0.5em" onclick="">
-                Edit Selected
-                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
-            </button>
-        </div>
-        <div class="large-4 medium-4 columns">
-            <button type="button" class="button alert" style="margin-top: 0.5em" onclick="">
-                Add new
-                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
-            </button>
-        </div>
-    </div>
 </div>
-
 <div class="small reveal" id="admin-manage-country-reports-modal" data-reveal data-animation-in="spin-in" data-close-on-click="false" data-close-on-esc="false" data-animation-out="spin-out">
     <div id="admin-manage-country-reports-modal-additionalInfo">
 

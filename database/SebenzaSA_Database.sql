@@ -183,6 +183,39 @@ CREATE TABLE `JOB_PER_USER` (
   FOREIGN KEY (`QuoteID`) REFERENCES QUOTE(`QuoteID`)
 );
 
+DROP TABLE IF EXISTS `PICTURES_PER_JOB`;
+CREATE TABLE `PICTURES_PER_JOB` (
+  `PictureID` integer not null auto_increment,
+  `JobID` integer not null,
+  `UserID` INTEGER NOT NULL,
+  `PictureName` VARCHAR(150) NOT NULL,
+  PRIMARY KEY (`PictureID`),
+  FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`),
+  FOREIGN KEY (`JobID`) REFERENCES JOB_PER_USER(`JobID`)
+);
+
+DROP TABLE IF EXISTS `REVIEW_PER_JOB`;
+CREATE TABLE `REVIEW_PER_JOB` (
+  `ReviewID` integer not null auto_increment,
+  `JobID` integer not null,
+  `UserID` INTEGER NOT NULL,
+  `JobSatisfaction` INTEGER NOT NULL,
+  `TradeworkerSatisfaction` INTEGER NOT NULL,
+  PRIMARY KEY (`ReviewID`),
+  FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`),
+  FOREIGN KEY (`JobID`) REFERENCES JOB_PER_USER(`JobID`)
+);
+
+DROP TABLE IF EXISTS `REASON_FOR_DISSATISFACTION`;
+CREATE TABLE `REASON_FOR_DISSATISFACTION` (
+  `ReasonID` integer not null auto_increment,
+  `ReviewID` INTEGER NOT NULL,
+  `Explanation` VARCHAR(250) not null,
+  `Selection` INTEGER NOT NULL,
+  PRIMARY KEY (`ReasonID`),
+  FOREIGN KEY (`ReviewID`) REFERENCES REVIEW_PER_JOB(`ReviewID`)
+);
+
 DROP TABLE IF EXISTS `REASON_FOR_JOB_TERMINATION`;
 CREATE TABLE `REASON_FOR_JOB_TERMINATION` (
   `ReasonID` integer not null auto_increment,
@@ -381,3 +414,29 @@ INSERT INTO `locations_per_user` (`localID`, `UserID`, `locationID`) VALUES
 INSERT INTO `NOTIFICATION` (`UserID`,`Message`)
     VALUES (9,'Welcome!'),
       (9, 'This is a second notification!');
+
+INSERT INTO `area_per_location` (`AreaID`, `StreetNumber`, `Road`, `AreaName`, `locationID`) VALUES
+  (1, '14', '15th Avenue', 'Edenvale', 6);
+
+INSERT INTO `quote_request` (`RequestID`, `UserID`, `NumberOfWorkersRequested`, `NumberOfWorkersAccepted`, `workTypeID`, `JobDescription`, `Address`, `DateInitialised`, `JobCommencementDate`, `Status`) VALUES
+  (1, 9, 1, 1, 6, 'Hello', 1, '2016-08-30 21:11:37', '2016-09-01', 1),
+  (2, 9, 1, 0, 6, 'Please do the following', 1, '2016-08-31 00:24:19', '2016-06-02', 0),
+  (3, 9, 1, 0, 6, 'Please do the following', 1, '2016-08-31 00:24:36', '2016-05-16', 0),
+  (4, 9, 1, 0, 6, 'Please do the following', 1, '2016-08-31 00:24:47', '2016-04-13', 0),
+  (5, 9, 1, 0, 6, 'Please do the following', 1, '2016-08-31 00:24:58', '2016-03-14', 0),
+  (6, 9, 1, 0, 6, 'Please do the following', 1, '2016-08-31 00:25:01', '2016-03-14', 0),
+  (7, 9, 1, 0, 6, 'Please do the following', 1, '2016-08-31 00:25:18', '2016-10-28', 0),
+  (8, 9, 1, 0, 6, 'Please do this', 1, '2016-09-03 13:22:29', '2016-12-02', 0);
+
+INSERT INTO `quote` (`QuoteID`, `RequestID`, `RequestedUser`, `Status`, `HomeuserResponse`) VALUES
+  (1, 1, 12, 3, 3),
+  (2, 2, 12, 0, 0),
+  (3, 3, 12, 0, 0),
+  (4, 4, 12, 0, 0),
+  (5, 5, 12, 0, 0),
+  (6, 6, 12, 0, 0),
+  (7, 7, 12, 0, 0),
+  (8, 8, 14, 0, 0);
+
+INSERT INTO `job_per_user` (`JobID`, `QuoteID`, `JobProceedDate`, `AgreedPrice`, `EstimatedCompletionDate`, `Status`, `TradeworkerRequest`, `Notifier`) VALUES
+  (1, 1, '2016-09-01', 800, '2016-09-06', 0, 0, 0);
