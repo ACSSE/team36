@@ -3,10 +3,10 @@ package oasys.za.ac.uj.team36.tests;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
+import android.content.res.TypedArray;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.provider.Settings;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
@@ -19,9 +19,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Button;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.BaseAdapter;
+import android.widget.Gallery;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.Toast;
 
 public class HomeUser extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -33,6 +37,16 @@ public class HomeUser extends AppCompatActivity
     private FragmentManager fm ;
 
     View v ;
+
+    //the images to display
+    private Integer[] imageIDs = {
+            R.drawable.labour8,
+            R.drawable.scaff,
+            R.drawable.construc,
+            R.drawable.paint,
+            R.drawable.brick,
+    };
+    ImageView selectedImage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +61,20 @@ public class HomeUser extends AppCompatActivity
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+     /*   Gallery gallery = (Gallery) findViewById(R.id.gallery);
+        gallery.setAdapter(new ImageAdapter(this));
+        selectedImage =(ImageView)findViewById(R.id.imageView1);
+        gallery.setSpacing(1);
+        gallery.setAdapter(new ImageAdapter(this));
+        // clicklistener for Gallery
+        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+                Toast.makeText(HomeUser.this, "Your selected position = " + position, Toast.LENGTH_SHORT).show();
+                // show the selected Image
+                selectedImage.setImageResource(imageIDs[position]);
+            }
+        });*/
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -100,8 +128,7 @@ public class HomeUser extends AppCompatActivity
             return true;
         }
         if (id == R.id.action_logoutHU) {
-            // TODO call logout function
-            // TODO redirect to main page
+            this.finish();
              startActivity(new Intent(this, Main.class));
             return true;
         }
@@ -122,16 +149,20 @@ public class HomeUser extends AppCompatActivity
         fm = getSupportFragmentManager();
         if (id == R.id.nav_requestTradeworker) {
             Intent i = new Intent(HomeUser.this, requestTradeworker.class);
-            this.finish();  //Kill the activity from which you will go to next activity
+           // this.finish();  //Kill the activity from which you will go to next activity
             startActivity(i);
         } else if (id == R.id.nav_ManageJobs) {
-            // TODO Handle the action
+            Intent i = new Intent(HomeUser.this, ManageJobsHomeuser.class);
+            startActivity(i);
         } else if (id == R.id.nav_InitiateJob) {
-            // TODO Handle the action
+            Intent i = new Intent(HomeUser.this, InitiatedJobsHomeuser.class);
+            startActivity(i);
         } else if (id == R.id.nav_OngoingJobs) {
-            // TODO Handle the action
+            Intent i = new Intent(HomeUser.this, OngoingJobsHomeuser.class);
+            startActivity(i);
         } else if (id == R.id.nav_FinishedJobs) {
-            // TODO Handle the action
+            Intent i = new Intent(HomeUser.this, FinishedJobsHomeuser.class);
+            startActivity(i);
         } else if (id == R.id.nav_editDetails) {
                 fm.beginTransaction().replace(R.id.content_frame, new EditDetailsHomeUser()).commit();
         } else if (id == R.id.nav_editLocation) {
@@ -146,10 +177,10 @@ public class HomeUser extends AppCompatActivity
     public void setNotification(){
 
         notification.setSmallIcon(R.drawable.favicon);
-        notification.setTicker("This is the ticker") ;
+        notification.setTicker("Sebenza SA notification") ;
         notification.setWhen(System.currentTimeMillis());
-        notification.setContentTitle("Test Notification");
-        notification.setContentText("Body text of the notification");
+        notification.setContentTitle("Notification recieved");
+        notification.setContentText("You have been sent a in app notification");
         //handle click of notification on screen
         Intent intent = new Intent(this, HomeUser.class);
         PendingIntent pend = PendingIntent.getActivity(this,0,intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -158,6 +189,48 @@ public class HomeUser extends AppCompatActivity
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         nm.notify(uniqueID, notification.build());
 
+    }
+
+    public class ImageAdapter extends BaseAdapter {
+        private Context context;
+        //the images to display
+        private Integer[] imageIDs = {
+                R.drawable.labour8,
+                R.drawable.scaff,
+                R.drawable.construc,
+                R.drawable.paint,
+                R.drawable.brick,
+        };
+        private int itemBackground;
+        public ImageAdapter(Context c)
+        {
+            context = c;
+            // sets a grey background; wraps around the images
+            TypedArray a =obtainStyledAttributes(R.styleable.MyGallery);
+            itemBackground = a.getResourceId(R.styleable.MyGallery_android_galleryItemBackground, 0);
+            a.recycle();
+        }
+        // returns the number of images
+        public int getCount() {
+            return imageIDs.length;
+        }
+        // returns the ID of an item
+        public Object getItem(int position) {
+            return position;
+        }
+        // returns the ID of an item
+        public long getItemId(int position) {
+            return position;
+        }
+        // returns an ImageView view
+        public View getView(int position, View convertView, ViewGroup parent) {
+            ImageView imageView = new ImageView(context);
+            imageView.setImageResource(imageIDs[position]);
+            imageView.setLayoutParams(new Gallery.LayoutParams(100, 100));
+            imageView.setBackgroundResource(itemBackground);
+            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+            return imageView;
+        }
     }
 
 }

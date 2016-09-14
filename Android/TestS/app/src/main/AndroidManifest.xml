@@ -22,10 +22,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".Register_HomeUser"
-            android:label="@string/title_activity_register__home_user"
-            android:theme="@style/AppTheme.NoActionBar" />
-        <activity
             android:name=".HomeUser"
             android:label="@string/title_activity_home_user__template"
             android:theme="@style/AppTheme.NoActionBar" />
@@ -34,13 +30,49 @@
             android:label="@string/title_activity_trade_worker"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".registerHomeUser"
-            android:label="@string/title_activity_register_home_user"
+            android:name=".regHomeuser"
+            android:label="@string/title_activity_reg_homeuser"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".registerTradeWorker"
-            android:label="@string/title_activity_registertrade_worker"
+            android:name=".regTradeworker"
+            android:label="@string/title_activity_reg_tradeworker"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".requestTradeworker"
+            android:label="@string/title_activity_request_tradeworker"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".JobRequestsTradeWorker"
+            android:label="Job Request"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OngoingJobsTradeworker"
+            android:label="@string/title_activity_ongoing_jobs_tradeworker"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".FinishedJobsTradeworker"
+            android:label="@string/title_activity_finished_jobs_tradeworker"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".InitiatedJobsTradeWorker"
+            android:label="@string/title_activity_initiated_jobs_trade_worker"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".OngoingJobsHomeuser"
+            android:label="@string/title_activity_ongoing_jobs_homeuser"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".InitiatedJobsHomeuser"
+            android:label="@string/title_activity_initiated_jobs_homeuser"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".FinishedJobsHomeuser"
+            android:label="@string/title_activity_finished_jobs_homeuser"
+            android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".ManageJobsHomeuser"
+            android:label="@string/title_activity_manage_jobs_homeuser"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 
 </manifest>

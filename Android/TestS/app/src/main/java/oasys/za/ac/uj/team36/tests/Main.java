@@ -1,8 +1,10 @@
 package oasys.za.ac.uj.team36.tests;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +16,13 @@ import android.widget.TextView;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.toolbox.HttpClientStack;
+import com.android.volley.toolbox.HttpStack;
 import com.android.volley.toolbox.Volley;
 
+import org.apache.http.client.CookieStore;
+import org.apache.http.impl.client.BasicCookieStore;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,14 +31,16 @@ import oasys.za.ac.uj.team36.Model.*;
 
 public class Main extends AppCompatActivity implements View.OnClickListener{
 
-    private static final String DB_URL = "http://10.0.0.9:31335/php/classes/SebenzaServer.php" ;
-
+    private static final String DB_URL = "http://10.254.164.98:31335/php/classes/SebenzaServer.php" ;
+    private HttpStack httpStack = null;
+    private CookieStore cookieStore = null;
+    private DefaultHttpClient httpclient = null;
     public static final int TIMEOUT = 1000 * 15 ;
-    Button bLogin ;
-    TextView tvRegisterLink, tvmain;
-    EditText etUsername ,etPassword ;
-    UserLocalDatabase localDB ;
-    RegisteredUser user ;
+    private Button bLogin ;
+    private TextView tvRegisterLink, tvmain;
+    private EditText etUsername ,etPassword ;
+    private UserLocalDatabase localDB ;
+    private RegisteredUser user ;
 
 
     @Override
@@ -40,6 +49,11 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        httpclient = new DefaultHttpClient();
+        cookieStore = new BasicCookieStore();
+        httpclient.setCookieStore( cookieStore );
+        httpStack = new HttpClientStack( httpclient );
 
         etUsername = (EditText) findViewById(R.id.etUsername) ;
         etPassword = (EditText) findViewById(R.id.etPassword);
@@ -60,8 +74,8 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         {
             case R.id.bLogin:
 
-                 String uName = etUsername.getText().toString() ;
-                 String pass = etPassword.getText().toString() ;
+                 final String uName = etUsername.getText().toString() ;
+                 final String pass = etPassword.getText().toString() ;
 
                 Response.Listener<String> responseL = new Response.Listener<String>(){
                     @Override
@@ -72,7 +86,13 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                             String s = response;
                            // boolean success = jsonResponse.getBoolean("successfulLogin") ;
                             if(s.equalsIgnoreCase("true")){
-                                startActivity(new Intent(Main.this, HomeUser.class));
+                                if (uName.startsWith("H")|| uName.startsWith("h")){
+                                    startActivity(new Intent(Main.this, HomeUser.class));
+                                }else if(uName.startsWith("T")|| uName.startsWith("t")){
+                                    startActivity(new Intent(Main.this, TradeWorker.class));
+                                }else{
+                                    startActivity(new Intent(Main.this, TradeWorker.class));
+                                }
                             }else{
                                 AlertDialog.Builder d = new AlertDialog.Builder(Main.this);
                                 d.setMessage("Unsuccessful Login, Please try again : " + s);
@@ -86,7 +106,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                     }
                 };
                 loginRequest r = new loginRequest(uName, pass,responseL) ;
-                RequestQueue q = Volley.newRequestQueue(Main.this) ;
+                RequestQueue q = Volley.newRequestQueue(Main.this,httpStack) ;
                 q.add(r) ;
 
                 break ;
@@ -115,7 +135,15 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
 
                 break ;
             case R.id.tvMain:
-                startActivity(new Intent(Main.this, HomeUser.class));
+                String u = etUsername.getText().toString() ;
+                if (u.startsWith("H")|| u.startsWith("h")){
+                    startActivity(new Intent(Main.this, HomeUser.class));
+                }else if(u.startsWith("T")|| u.startsWith("t")){
+                    startActivity(new Intent(Main.this, TradeWorker.class));
+                }else{
+                    startActivity(new Intent(Main.this, TradeWorker.class));
+                }
+
                 break;
         }
 

@@ -11,7 +11,7 @@ import java.util.Map;
  */
 
 public class registerRequest extends StringRequest {
-    public static final String SERVER_ADDRESS_URL = "http://10.0.0.9:31335/php/classes/SebenzaServer.php" ;
+    public static final String SERVER_ADDRESS_URL = "http://10.254.164.98:31335/php/classes/SebenzaServer.php" ;
     private Map<String,String> params ;
 
     public registerRequest(int type,String name, String surname, String username, int IDn, int phoneN, String email, String password,int strnum,String strname, String subA,String area, String adminA,String Skill, Response.Listener<String> listener){
