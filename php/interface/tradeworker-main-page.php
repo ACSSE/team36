@@ -20,7 +20,7 @@
                 <a href="#">Manage Jobs</a>
                 <ul class="menu vertical nested">
                     <li><a onclick="toggleUserPageArea('panel3v')">Initiated Jobs</a></li>
-                    <li><a onclick="toggleUserPageArea('panel3v')">Completed Jobs</a></li>
+                    <li><a onclick="toggleUserPageArea('panel8v')">Completed Jobs</a></li>
                     <li><a onclick="toggleUserPageArea('panel4v')">Unfinished Jobs</a></li>
                 </ul>
             </li>
@@ -104,7 +104,7 @@
             </div>
             <div class="tabs-panel full-height user-panels" id="panel8v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-completed-jobs.php";
                 ?>
             </div>
         </div>

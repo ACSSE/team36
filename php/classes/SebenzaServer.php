@@ -1156,6 +1156,18 @@ class SebenzaServer {
                     $returnValue[$r]["JobID"] = $jobResults[0]['JobID'];
                     $returnValue[$r]["TradeworkerReq"] = $jobResults[0]['TradeworkerRequest'];
                     $returnValue[$r]["Notifier"] = $jobResults[0]['Notifier'];
+                    if($jobResults[0]['Status'] == 1){
+                        $command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";
+                        $dbhandler->runCommand($command,$jobResults[0]['JobID']);
+                        $picturesResult = $dbhandler->getResults();
+                        if(count($picturesResult) > 0){
+                            $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureCount"] = count($picturesResult);
+                            for($q = 0;$q < count($picturesResult);$q++){
+                                $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureID-".$q] = $picturesResult[$q]['PictureID'].'_'.$picturesResult[$q]['JobID'].'_'.$picturesResult[$q]['UserID'].'_'.$picturesResult[$q]['PictureName'];
+                            }
+
+                        }
+                    }
                 }
                 $workType = self::returnWorkTypes($fullRequest[0]['workTypeID']);
                 $command = "SELECT `locationName`,`Province`,`City` FROM `LOCATIONS` WHERE `locationID` = ?";
@@ -1241,6 +1253,18 @@ class SebenzaServer {
 
                                 $returnValue[$r]["ReasonFor-".$r] = $terminatedJobResults[0]["Reason"];
                                 $returnValue[$r]["DateTerminated-".$r] = $terminatedJobResults[0]["DateTerminated"];
+                            }
+                            else if($jobsInitiated[0]['Status'] == 1){
+                                $command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";
+                                $dbhandler->runCommand($command,$jobsInitiated[0]['JobID']);
+                                $picturesResult = $dbhandler->getResults();
+                                if(count($picturesResult) > 0){
+                                    $returnValue[$r]['JobID-'.$r.'-'."PictureCount"] = count($picturesResult);
+                                    for($q = 0;$q < count($picturesResult);$q++){
+                                        $returnValue[$r]['JobID-'.$r.'-'."PictureID-".$q] = $picturesResult[$q]['PictureID'].'_'.$picturesResult[$q]['JobID'].'_'.$picturesResult[$q]['UserID'].'_'.$picturesResult[$q]['PictureName'];
+                                    }
+
+                                }
                             }
                         }
                         $returnValue[$i]['QuoteID-'.$r] = $quotes[$r]['QuoteID'];
@@ -1997,81 +2021,138 @@ class SebenzaServer {
     }
 
     public static function fetchHomeUserLocationDetails(){
-    $returnValue = false ;
-    $dbHandler = self::fetchDatabaseHandler();
-    $userID = self::fetchSessionHandler()->getSessionVariable("UserID");
-    $command1 = "SELECT `locationID` FROM `LOCATIONS_PER_USER` WHERE `UserID`= ?" ;
-        $dbHandler->runCommand($command1,$userID);
+        $returnValue = false ;
+        $dbHandler = self::fetchDatabaseHandler();
+        $userID = self::fetchSessionHandler()->getSessionVariable("UserID");
+        $command1 = "SELECT `locationID` FROM `LOCATIONS_PER_USER` WHERE `UserID`= ?" ;
+            $dbHandler->runCommand($command1,$userID);
+            $lID = $dbHandler->getResults();
+        $command = "SELECT * FROM `HOMEUSER_LOCATIONS` WHERE `UserID` = ? AND `locationID` = ?";
+        $dbHandler->runCommand($command,$userID,$lID);
+            $userDetails = $dbHandler->getResults();
+            //still some details that need to be added but hope you get the idea
+            //`StreetNumber`,`Route`,`Sublocality`,`Locality`,`AdministrativeArea`
+            if(count($userDetails) > 0) {
+                $returnValue[0]['StreetNumber'] = $userDetails[0]['StreetNumber'];
+                $returnValue[0]['Route'] = $userDetails[0]['Route'];
+                $returnValue[0]['Sublocality'] = $userDetails[0]['Sublocality'];
+                $returnValue[0]['Locality'] = $userDetails[0]['Locality'];
+                $returnValue[0]['AdministrativeArea'] = $userDetails[0]['AdministrativeArea'];
+            }else{
+                $returnValue = false ;
+            }
+        return $returnValue ;
+    }
+
+    public static function fetchTradeworkerLocationDetails() {
+        $returnValue = false ;
+        $dbHandler = self::fetchDatabaseHandler();
+        $userID = self::fetchSessionHandler()->getSessionVariable("UserID");
+        $locations = array();
+        $command = "SELECT `locationID` FROM `LOCATIONS` WHERE `UserID` = ?";
+        $dbHandler->runCommand($command,$userID);
         $lID = $dbHandler->getResults();
-    $command = "SELECT * FROM `HOMEUSER_LOCATIONS` WHERE `UserID` = ? AND `locationID` = ?";
-    $dbHandler->runCommand($command,$userID,$lID);
-        $userDetails = $dbHandler->getResults();
-        //still some details that need to be added but hope you get the idea
-        //`StreetNumber`,`Route`,`Sublocality`,`Locality`,`AdministrativeArea`
-        if(count($userDetails) > 0) {
-            $returnValue[0]['StreetNumber'] = $userDetails[0]['StreetNumber'];
-            $returnValue[0]['Route'] = $userDetails[0]['Route'];
-            $returnValue[0]['Sublocality'] = $userDetails[0]['Sublocality'];
-            $returnValue[0]['Locality'] = $userDetails[0]['Locality'];
-            $returnValue[0]['AdministrativeArea'] = $userDetails[0]['AdministrativeArea'];
-        }else{
-            $returnValue = false ;
+        if(count($lID) > 0){
+            $command = "SELECT * FROM `LOCATIONS_PER_USER` WHERE `UserID` =? AND `LocationID` =?";
+            $dbHandler->runCommand($command, $userID,lID);
+            $locations = $dbHandler->getResults();
+            if(count($locations)>0) {
+                $returnValue = $locations;
+            }else{
+                $returnValue = false;
+            }
         }
-  return $returnValue ;
-}
-public static function addPictureToServer($fileID,$uniqueID){
-    $target_dir = "../../UploadedPictures/".$uniqueID;
-    $target_file = $target_dir . basename($_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"]);
-    $uploadOk = 1;
-    $value = "";
-    $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
-    // Check if image file is a actual image or fake image
-    //if(isset($_POST["submit"])) {
-    $check = getimagesize($_FILES["homeuser-initiateJobCompletion-Picture-0"]["tmp_name"]);
-    if($check !== false) {
-        $response = json_encode("Is image");
-        $value .= "Is image";
+        else{
+            $returnValue = false;
+        }
+    }
+    //The following method is used when the homeuser presses complete job
+    public static  function homeuserOverallSatisfiedWithCompletedJob($jobID,$pictureName){
+        $command = "UPDATE `JOB_PER_USER` SET `Status` = ?, `Notifier` = ? WHERE `JobID` = ?";
+        $dbhandler = self::fetchDatabaseHandler();
+        $userID = self::fetchUserID();
+        if($dbhandler->runCommand($command,1,1,$jobID)){
+            $command = "INSERT INTO `REVIEW_PER_JOB` (`JobID`, `UserID`, `JobSatisfaction`, `TradeworkerSatisfaction`) VALUES (?,?,?,?)";
+            if($dbhandler->runCommand($command,$jobID,$userID,1,1)){
+            //adding the picture to the system, add the name of the picture to the database so that it can be displayed to users.
+                $command = "INSERT INTO `PICTURES_PER_JOB` (`JobID`, `UserID`, `PictureName`) VALUES (?,?,?)";
+                if($dbhandler->runCommand($command,$jobID,$userID,$pictureName)){
+                    $picID = $dbhandler->getInsertID();
+                    $uniquePicName = $picID."_".$jobID."_".$userID."_";
+                    $condition = SebenzaServer::addPictureToServer($uniquePicName);
+                    if($condition)
+                        $returnValue = true;
+                    else
+                        $returnValue = false;
+                }
+                else{
+                    $returnValue = false;
+                }
+            }
+            else{
+                $returnValue = false;
+            }
+        }
+        else{
+            $returnValue = false;
+        }
+        return $returnValue;
+    }
+    public static function addPictureToServer($uniqueID){
+        $target_dir = "../../UploadedPictures/".$uniqueID;
+        $target_file = $target_dir . basename($_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"]);
         $uploadOk = 1;
-    } else {
-        $value .= "File is not an image.";
-        $value .=$_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"];
-        $response = json_encode("File is not an image.");
-        $uploadOk = 0;
-    }
-
-    if (file_exists($target_file)) {
-        $response = json_encode("Sorry, file already exists.");
-        $value .= "Sorry, file already exists.";
-        $uploadOk = 0;
-    }
-
-    if ($_FILES["homeuser-initiateJobCompletion-Picture-0"]["size"] > 500000) {
-        $value .= "Sorry, your file is too large.";
-        $response = json_encode("Sorry, your file is too large.");
-        $uploadOk = 0;
-    }
-
-    // Allow certain file formats
-    if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
-        && $imageFileType != "gif" ) {
-        $value .= "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-        $response = json_encode("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
-        $uploadOk = 0;
-    }
-
-    if ($uploadOk == 0) {
-        $value .= "Sorry, your file was not uploaded..";
-        $response = json_encode("Sorry, your file was not uploaded..");;
-        // if everything is ok, try to upload file
-    } else {
-        if (move_uploaded_file($_FILES["homeuser-initiateJobCompletion-Picture-0"]["tmp_name"], $target_file)) {
-            $response = json_encode(true);
+        $value = "";
+        $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
+        // Check if image file is a actual image or fake image
+        //if(isset($_POST["submit"])) {
+        $check = getimagesize($_FILES["homeuser-initiateJobCompletion-Picture-0"]["tmp_name"]);
+        if($check !== false) {
+            $response = json_encode("Is image");
+            $value .= "Is image";
+            $uploadOk = 1;
         } else {
-            $response = json_encode("Sorry, there was an error uploading your file.");
-
+            $value .= "File is not an image.";
+            $value .=$_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"];
+            $response = json_encode("File is not an image.");
+            $uploadOk = 0;
         }
+
+        if (file_exists($target_file)) {
+            $response = json_encode("Sorry, file already exists.");
+            $value .= "Sorry, file already exists.";
+            $uploadOk = 0;
+        }
+
+        if ($_FILES["homeuser-initiateJobCompletion-Picture-0"]["size"] > 500000) {
+            $value .= "Sorry, your file is too large.";
+            $response = json_encode("Sorry, your file is too large.");
+            $uploadOk = 0;
+        }
+
+        // Allow certain file formats
+        if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
+            && $imageFileType != "gif" ) {
+            $value .= "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
+            $response = json_encode("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
+            $uploadOk = 0;
+        }
+
+        if ($uploadOk == 0) {
+            $value .= "Sorry, your file was not uploaded..";
+            $response = json_encode("Sorry, your file was not uploaded..");;
+            // if everything is ok, try to upload file
+        } else {
+            if (move_uploaded_file($_FILES["homeuser-initiateJobCompletion-Picture-0"]["tmp_name"], $target_file)) {
+                $response = json_encode(true);
+            } else {
+                $response = json_encode("Sorry, there was an error uploading your file.");
+
+            }
+        }
+
+        return $response;
     }
-}
 
 }
 //The following is currently used to receive the confirmation requests from the user
@@ -2156,10 +2237,27 @@ if (!empty($_POST)) {
                 }
                 break;
             case 'homeuser-initiateJobCompletion-request':
-                $response = json_encode("Should be completing the job for tradeworker");
+                //$response = json_encode("Should be completing the job for tradeworker");
                 // basename($_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"]) get fileName to add to the database then retrieve that value to make up the proceeding next value
                 // unique value sent to be picture name - $picID,$jobID,$userID
-                $response = json_encode($_POST);
+                if(isset($_POST['homeuser-initiateJobCompletion-jobSatisfaction-switch']) && isset($_POST['homeuser-initiateJobCompletion-userRecommendation-switch']) && isset($_POST['homeuser-initiateJobCompletion-pictureAddition-switch'])){
+                    //homeuser is satisfied with the job as well as with the tradeworker and he has added a picture
+                   if($_POST['homeuser-initiateJobCompletion-jobSatisfaction-switch'] == 'true' && $_POST['homeuser-initiateJobCompletion-userRecommendation-switch'] == "true" && $_POST['homeuser-initiateJobCompletion-pictureAddition-switch'] == "true"){
+                       //Set the job satisfaction to thumbs up as well as set the tradeworker satisfaction to thumbs up
+                       if(isset($_POST['ignore-homeuser-initiateJobCompletion-jobID'])){
+                           $response = json_encode(SebenzaServer::homeuserOverallSatisfiedWithCompletedJob($_POST['ignore-homeuser-initiateJobCompletion-jobID'],basename($_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"])));
+                       }
+                       else{
+                           $response = json_encode(false);
+                       }
+                   }
+                    //TODO: Need to add all the other cases where the homeuser is either not happy with the job or the tradeworker or if pictures aren't uploaded.
+                }
+                else{
+                    $response = json_encode(false);
+                }
+
+
                 break;
             case 'homeuser-initiateJobExtension-request':
                 $response = json_encode("Should be extending the job for the tradeworker selected server response");
