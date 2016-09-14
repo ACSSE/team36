@@ -1271,6 +1271,18 @@ class SebenzaServer {
 
                                 }
                             }
+                            else if($jobsInitiated[0]['Status'] == 1){
+                                $command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";
+                                $dbhandler->runCommand($command,$jobsInitiated[0]['JobID']);
+                                $picturesResult = $dbhandler->getResults();
+                                if(count($picturesResult) > 0){
+                                    $returnValue[$r]['JobID-'.$r.'-'."PictureCount"] = count($picturesResult);
+                                    for($q = 0;$q < count($picturesResult);$q++){
+                                        $returnValue[$r]['JobID-'.$r.'-'."PictureID-".$q] = $picturesResult[$q]['PictureID'].'_'.$picturesResult[$q]['JobID'].'_'.$picturesResult[$q]['UserID'].'_'.$picturesResult[$q]['PictureName'];
+                                    }
+
+                                }
+                            }
                         }
                         $returnValue[$i]['QuoteID-'.$r] = $quotes[$r]['QuoteID'];
                         $returnValue[$i]['RequestedUser-'.$r] = $quotes[$r]['RequestedUser'];
