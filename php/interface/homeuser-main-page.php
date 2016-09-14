@@ -5,7 +5,7 @@
  * Date: 2016/04/01
  * Time: 7:09 PM
  */
-    SebenzaServer::addNotification(9,"This is a new notification(duplication)");
+    //SebenzaServer::addNotification(9,"This is a new notification(duplication)");
 ?>
 
 <div class="row collapse background-image" xmlns="http://www.w3.org/1999/html">
@@ -28,7 +28,7 @@
                 <ul class="menu vertical nested">
                     <li><a onclick="toggleUserPageArea('panel4v')">Jobs To initiate</a></li>
                     <li><a onclick="toggleUserPageArea('panel5v')">Ongoing Jobs</a></li>
-                    <li><a onclick="toggleUserPageArea('panel5v')">Finished Jobs</a></li>
+                    <li><a onclick="toggleUserPageArea('panel11v')">Finished Jobs</a></li>
                     <li><a onclick="toggleUserPageArea('panel9v')">Cancelled Jobs</a></li>
                 </ul>
             </li>
@@ -62,6 +62,11 @@
             <div class="tabs-panel full-height user-panels" id="panel4v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-initiate-jobs.php";
+                ?>
+            </div>
+            <div class="tabs-panel full-height user-panels" id="panel11v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+                <?php
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-completed-jobs.php";
                 ?>
             </div>
             <div class="tabs-panel full-height user-panels" id="panel5v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
