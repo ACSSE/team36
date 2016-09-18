@@ -81,14 +81,16 @@ class SebenzaServer {
         if ($session->exists("dbHandler")) {
             $dbHandler = $session->getSessionVariable("dbHandler");
         } else {
-            $dbHandler = new DatabaseHandler("localhost","root","Sebenza","SebenzaSA_Database");
+            $dbHandler = new DatabaseHandler("eu-cdbr-azure-west-d.cloudapp.net","bb5f5a5205e9c5","74c8233a","sebenzasa_database");
+            //$dbHandler = new DatabaseHandler("localhost","root","Sebenza","SebenzaSA_Database");
             $session->setSessionVariable("dbHandler", $dbHandler);
         }
         return $dbHandler;
     }
 
     public static function createAndResetDatabase():bool {
-        $dbHandler = new DatabaseHandler("localhost","root","Sebenza","");
+        $dbHandler = new DatabaseHandler("eu-cdbr-azure-west-d.cloudapp.net","bb5f5a5205e9c5","74c8233a","");
+        //$dbHandler = new DatabaseHandler("localhost","root","Sebenza","");
         $success = $dbHandler->executeSQLScriptFile("database/SebenzaSA_Database.sql");
         self::fetchSessionHandler()->setSessionVariable("dbHandler", $dbHandler);
         return $success;
@@ -641,7 +643,7 @@ class SebenzaServer {
         $mail->Host = 'smtp.gmail.com';  // Specify main and backup SMTP servers
         $mail->SMTPAuth = true;                               // Enable SMTP authentication
         $mail->Username = '215040496@student.uj.ac.za';                 // SMTP username
-        $mail->Password = '';                           // SMTP password
+        $mail->Password = '@Uj-436518';                           // SMTP password
         $mail->SMTPSecure = 'tls';                            // Enable TLS encryption, `ssl` also accepted
         $mail->Port = 587;                                    // TCP port to connect to
         $mail->IsHTML(true);
