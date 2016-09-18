@@ -320,7 +320,6 @@ INSERT 	 INTO `SPECIALIZATIONS` (`WorkType`, `Description`)
     ('foundation-Layer', 'Person who lays foundation for buildings'),
 			('Tree-Feller', 'Person who removes trees');
 
-<<<<<<< 1d14902eee089f9fadd2a7c7bbcc735e35fcfcf4
 INSERT INTO `specializations_per_user` (`specID`, `UserID`, `workTypeID`, `Recommendations`) VALUES
   (1, 10, 1, 0),
   (2, 10, 3, 0),
@@ -411,38 +410,6 @@ INSERT INTO `locations_per_user` (`localID`, `UserID`, `locationID`) VALUES
   (32, 23, 32),
   (33, 24, 33),
   (34, 24, 34);
-=======
-INSERT 	 INTO `SPECIALIZATIONS_PER_USER` (`UserID`, `workTypeID`)
-  VALUES	(101,1),
-          (101,31),
-          (101,61),
-          (111,21),
-          (111,41),
-          (121,51),
-          (131,81),
-          (131,71),
-        	(121,61);
-
-INSERT 	 INTO `TRADE_WORKER` (`UserID`, `DateWorked` , `Availability`)
-VALUES	(101,'20160801',FALSE),
-        (111,'20160801',TRUE),
-        (121,'20160702',TRUE),
-        (131,'20160801',TRUE);
-
-INSERT INTO `HOMEUSER` (`UserID`,`Subscribed`)
-VALUES (91,0);
-
-INSERT 	 INTO `LOCATIONS_PER_USER` (`UserID`, `locationID`)
-VALUES	(101,1),
-        (101,31),
-        (101,61),
-        (111,21),
-        (111,41),
-        (121,51),
-        (131,61),
-        (131,71),
-        (121,61);
->>>>>>> fixing azure database index values
 
 INSERT INTO `NOTIFICATION` (`UserID`,`Message`)
     VALUES (9,'Welcome!'),
