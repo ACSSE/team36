@@ -5,7 +5,7 @@
  * Date: 2016/04/01
  * Time: 7:09 PM
  */
-    SebenzaServer::addNotification(9,"This is a new notification(duplication)");
+    //SebenzaServer::addNotification(9,"This is a new notification(duplication)");
 ?>
 
 <div class="row collapse background-image" xmlns="http://www.w3.org/1999/html">

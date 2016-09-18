@@ -17,7 +17,7 @@ public class UserLocalDatabase {
     SharedPreferences localDB ; // requires instantiation via a contrext from the activvity its used in
 
     public UserLocalDatabase(Context context){
-        localDB = context.getSharedPreferences(SP_NAME, 0) ;
+        localDB = context.getSharedPreferences(SP_NAME, context.MODE_PRIVATE) ;
     }
 
     /*

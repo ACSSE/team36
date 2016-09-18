@@ -1240,19 +1240,36 @@ class SebenzaServer {
                             $returnValue[$i]['AgreedPrice-'.$r] = $jobsInitiated[0]['AgreedPrice'];
                             $returnValue[$i]['EstimatedCompletionDate-'.$r] = $jobsInitiated[0]['EstimatedCompletionDate'];
                             $returnValue[$i]['JobStatus-'.$r] = $jobsInitiated[0]['Status'];
-                            $returnValue[$r]["Notifier-".$r] = $jobsInitiated[0]['Notifier'];
-                            $returnValue[$r]["TradeworkerReq-".$r] = $jobsInitiated[0]['TradeworkerRequest'];
+                            $returnValue[$i]["Notifier-".$r] = $jobsInitiated[0]['Notifier'];
+                            $returnValue[$i]["TradeworkerReq-".$r] = $jobsInitiated[0]['TradeworkerRequest'];
+                            $command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";
+//                            $dbhandler->runCommand($command,$jobsInitiated[0]['JobID']);
+//                            $picturesResult = $dbhandler->getResults();
+//                            $returnValue[$i]['JobID-'.$r.'-'."PictureCount"] = count($picturesResult);
                             if($jobsInitiated[0]['Status'] == 2){
                                 $command = "SELECT `UserTerminated`,`Reason`,`DateTerminated` FROM `REASON_FOR_JOB_TERMINATION` WHERE `JobID` = ?";
                                 $dbhandler->runCommand($command,$jobsInitiated[0]['JobID']);
                                 $terminatedJobResults = $dbhandler->getResults();
                                 if($terminatedJobResults[0]["UserTerminated"] == $userID)
-                                    $returnValue[$r]["UserTerminated-".$r] = "You terminated";
+                                    $returnValue[$i]["UserTerminated-".$r] = "You terminated";
                                 else
-                                    $returnValue[$r]["UserTerminated-".$r] = "Tradeworker terminated";
+                                    $returnValue[$i]["UserTerminated-".$r] = "Tradeworker terminated";
 
-                                $returnValue[$r]["ReasonFor-".$r] = $terminatedJobResults[0]["Reason"];
-                                $returnValue[$r]["DateTerminated-".$r] = $terminatedJobResults[0]["DateTerminated"];
+                                $returnValue[$i]["ReasonFor-".$r] = $terminatedJobResults[0]["Reason"];
+                                $returnValue[$i]["DateTerminated-".$r] = $terminatedJobResults[0]["DateTerminated"];
+                            }
+                            if($jobsInitiated[0]['Status'] == 1){
+                                $command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";
+                                $dbhandler->runCommand($command,$jobsInitiated[0]['JobID']);
+                                $picturesResult = $dbhandler->getResults();
+                                $returnValue[$i]['JobID-'.$r.'-'."PictureCount"] = count($picturesResult);
+                                if(count($picturesResult) > 0){
+                                    //$returnValue[$r]['JobID-'.$r.'-'."PictureCount"] = count($picturesResult);
+                                    for($q = 0;$q < count($picturesResult);$q++){
+                                        $returnValue[$i]['JobID-'.$r.'-'."PictureID-".$q] = $picturesResult[$q]['PictureID'].'_'.$picturesResult[$q]['JobID'].'_'.$picturesResult[$q]['UserID'].'_'.$picturesResult[$q]['PictureName'];
+                                    }
+
+                                }
                             }
                             else if($jobsInitiated[0]['Status'] == 1){
                                 $command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";

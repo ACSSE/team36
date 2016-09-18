@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="10dp"
+    android:background="@drawable/back1"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:context="oasys.za.ac.uj.team36.tests.OngoingJobsTradeworker"
+    tools:showIn="@layout/activity_ongoing_jobs_tradeworker">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="17pt"
+        android:textColor="#000"
+        android:text="No Ongoing Jobs to Display" />
+
+</android.support.v4.widget.NestedScrollView>

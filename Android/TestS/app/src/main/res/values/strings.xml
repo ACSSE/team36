@@ -114,4 +114,11 @@
     <string name="title_activity_reg_tradeworker">Register</string>
     <string name="title_activity_request_tradeworker">Create Your Job</string>
     <string name="title_activity_job_requests_trade_worker">JobRequestsTradeWorker</string>
+    <string name="title_activity_ongoing_jobs_tradeworker">Ongoing Jobs</string>
+    <string name="title_activity_finished_jobs_tradeworker">Finished Jobs</string>
+    <string name="title_activity_initiated_jobs_trade_worker">Initiated Jobs</string>
+    <string name="title_activity_ongoing_jobs_homeuser">Ongoing Job(s)</string>
+    <string name="title_activity_initiated_jobs_homeuser">Initiated Job(s)</string>
+    <string name="title_activity_finished_jobs_homeuser">Finished Job(s)</string>
+    <string name="title_activity_manage_jobs_homeuser">Manage Your Job(s)</string>
 </resources>
