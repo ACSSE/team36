@@ -81,14 +81,14 @@ class SebenzaServer {
         if ($session->exists("dbHandler")) {
             $dbHandler = $session->getSessionVariable("dbHandler");
         } else {
-            $dbHandler = new DatabaseHandler("eu-cdbr-azure-west-d.cloudapp.net","bb5f5a5205e9c5","74c8233a","sebenzasa_database");
+            $dbHandler = new DatabaseHandler("localhost","root","Sebenza","SebenzaSA_Database");
             $session->setSessionVariable("dbHandler", $dbHandler);
         }
         return $dbHandler;
     }
 
     public static function createAndResetDatabase():bool {
-        $dbHandler = new DatabaseHandler("eu-cdbr-azure-west-d.cloudapp.net","bb5f5a5205e9c5","74c8233a","");
+        $dbHandler = new DatabaseHandler("localhost","root","Sebenza","");
         $success = $dbHandler->executeSQLScriptFile("database/SebenzaSA_Database.sql");
         self::fetchSessionHandler()->setSessionVariable("dbHandler", $dbHandler);
         return $success;
@@ -149,7 +149,7 @@ class SebenzaServer {
         $username = $input[0];
         $keyToSend = self::hashPassword($email + $username + time());
         //TODO: Uncomment to allow emails to be sent
-        $link = "http://sebenzasa.azurewebsites.net//index.php?email=".$email."&key=".$keyToSend;
+        $link = "http://localhost:31335/index.php?email=".$email."&key=".$keyToSend;
         $title = "Sebenza South Africa";
         $emailConMessage = '<b>Thank you for registering with SebenzaSA!</b><br/> please click on the following link for confirmation<a href="'.$link.'">'.$title.'</a><br/>If it was not you that registered for the SebenzaSA site, you can ignore this email';
         $condition = self::mailClient($email,$keyToSend,$emailConMessage);
