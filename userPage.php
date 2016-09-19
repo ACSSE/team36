@@ -18,6 +18,7 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
             if(isset($USER_TYPE)) {
                 switch ($USER_TYPE) {
                     case 0:
+                        echo '<script src="javascript/sebenzaTradeworker.js"></script>';
                         include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-main-page.php";
                         break;
                     case 1:
@@ -25,9 +26,11 @@ include_once $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
                         break;
                     case 2:
                         //echo 'UserID: '.SebenzaServer::fetchSessionHandler()->getSessionVariable("UserID");
+                        echo '<script src="javascript/sebenzaHomeuser.js"></script>';
                         include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-main-page.php";
                         break;
                     case 3:
+                        echo '<script src="javascript/sebenzaAdmin.js"></script>';
                         include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/admin-main-page.php";
                         break;
                     default:
