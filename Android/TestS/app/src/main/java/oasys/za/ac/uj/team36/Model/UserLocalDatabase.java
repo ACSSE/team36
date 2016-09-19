@@ -13,11 +13,11 @@ import android.content.SharedPreferences;
  * the use of a shared preference.
  */
 public class UserLocalDatabase {
-    public static final String SP_NAME = "user_details" ;
-    SharedPreferences localDB ; // requires instantiation via a contrext from the activvity its used in
+    public static final String SHAREDPREF_NAME = "user_details" ;
+    SharedPreferences localDB ; // requires instantiation via a context from the activity its used in
 
     public UserLocalDatabase(Context context){
-        localDB = context.getSharedPreferences(SP_NAME, context.MODE_PRIVATE) ;
+        localDB = context.getSharedPreferences(SHAREDPREF_NAME, context.MODE_PRIVATE) ;
     }
 
     /*
@@ -25,13 +25,16 @@ public class UserLocalDatabase {
      */
     public void storeUserData(RegisteredUser user) {
         SharedPreferences.Editor editor = localDB.edit();
+        editor.putInt("UserID",user.getUserID()) ;
         editor.putString("name", user.getName());
         editor.putString("surname", user.getSurname());
+        editor.putString("surname", user.getUsername());
         editor.putString("email", user.getEmail());
         editor.putString("password", user.getPassword());
-        editor.putInt("ID",user.getIDnum());
-        editor.putInt("phoneNumber",user.getPhoneN());
+        editor.putInt("PersonalID",user.getIDnum());
+        editor.putInt("contactNumber",user.getPhoneN());
         editor.putInt("userType",user.getUserType());
+        editor.putInt("Confirmation",user.getConfirm());
 
         editor.commit();
     }
@@ -45,12 +48,13 @@ public class UserLocalDatabase {
         String username = localDB.getString("username", "");
         String email = localDB.getString("email", "");
         String password =  localDB.getString("password", "");
-
-        int ID = localDB.getInt("ID", -1);
-        int phone = localDB.getInt("phone", -1);
-        int userType = localDB.getInt("userTpe",0) ;
-        boolean isAvailable = localDB.getBoolean("isAvailable", true);
-        RegisteredUser storedUSer = new RegisteredUser(name,surname,ID,username,email,phone,password,userType);
+        int userID = localDB.getInt("UserID", -1);
+        int ID = localDB.getInt("PersonalID", -1);
+        int phone = localDB.getInt("contactNumber", -1);
+        int userType = localDB.getInt("userTpe",-1) ;
+        int confirm = localDB.getInt("",-1) ;
+       // boolean isAvailable = localDB.getBoolean("isAvailable", true);
+        RegisteredUser storedUSer = new RegisteredUser(userID,name,surname,ID,username,email,phone,password,userType,confirm);
 
         return storedUSer;
     }
@@ -86,5 +90,33 @@ public class UserLocalDatabase {
         editor.clear();
         editor.commit();
     }
+
+    public void setSessionVariables(int Userid, String Username, int UserType, int Confirmation){
+        SharedPreferences.Editor editor = localDB.edit();
+        editor.putInt("UserID", Userid);
+        editor.putString("Username", Username);
+        editor.putInt("UserType", UserType);
+        editor.putInt("UserConfirmation", Confirmation);
+
+    }
+
+    public int getSessionUserID(){
+        return localDB.getInt("UserID",-1);
+    }
+    public String getSessionUserUsername(){
+        return localDB.getString("Username","");
+    }
+    public int getSessionUserType(){
+        return localDB.getInt("UserType",-1);
+    }
+    public int getSessionUserConfirmation(){
+        return localDB.getInt("UserConfirmation",-1);
+    }
+
+    public void clearSessionVariables(){
+
+    }
+
+
 
 }

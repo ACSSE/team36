@@ -1,10 +1,8 @@
 package oasys.za.ac.uj.team36.tests;
 
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -14,24 +12,28 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpClientStack;
 import com.android.volley.toolbox.HttpStack;
-import com.android.volley.toolbox.Volley;
 
 import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.BasicCookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
 import org.json.JSONException;
-import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import oasys.za.ac.uj.team36.Model.*;
+import oasys.za.ac.uj.team36.Requests.MyRequest;
+import oasys.za.ac.uj.team36.Requests.loginRequest;
 
 
 public class Main extends AppCompatActivity implements View.OnClickListener{
 
-    private static final String DB_URL = "http://10.254.164.98:31335/php/classes/SebenzaServer.php" ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.7:31335/php/classes/SebenzaServer.php" ;
     private HttpStack httpStack = null;
     private CookieStore cookieStore = null;
     private DefaultHttpClient httpclient = null;
@@ -39,9 +41,10 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
     private Button bLogin ;
     private TextView tvRegisterLink, tvmain;
     private EditText etUsername ,etPassword ;
-    private UserLocalDatabase localDB ;
+    private UserLocalDatabase DB ;
     private RegisteredUser user ;
-
+    private String Name, Surname, Username, Email, Password;
+    private int IDnum, PhoneN,confirm, userType, UserID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         bLogin.setOnClickListener(this);
         tvRegisterLink.setOnClickListener(this);
         tvmain.setOnClickListener(this);
-        localDB = new UserLocalDatabase(this) ;
+        DB = new UserLocalDatabase(this) ;
     }
 
     @Override
@@ -73,65 +76,12 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         switch (v.getId())
         {
             case R.id.bLogin:
-
-                 final String uName = etUsername.getText().toString() ;
-                 final String pass = etPassword.getText().toString() ;
-
-                Response.Listener<String> responseL = new Response.Listener<String>(){
-                    @Override
-                    public void onResponse(String response) {
-                        //response is from the php file
-                        try {
-                           // JSONObject jsonResponse = new JSONObject(response);
-                            String s = response;
-                           // boolean success = jsonResponse.getBoolean("successfulLogin") ;
-                            if(s.equalsIgnoreCase("true")){
-                                if (uName.startsWith("H")|| uName.startsWith("h")){
-                                    startActivity(new Intent(Main.this, HomeUser.class));
-                                }else if(uName.startsWith("T")|| uName.startsWith("t")){
-                                    startActivity(new Intent(Main.this, TradeWorker.class));
-                                }else{
-                                    startActivity(new Intent(Main.this, TradeWorker.class));
-                                }
-                            }else{
-                                AlertDialog.Builder d = new AlertDialog.Builder(Main.this);
-                                d.setMessage("Unsuccessful Login, Please try again : " + s);
-                                d.setTitle("Error") ;
-                                d.setNegativeButton("Retry", null) ;
-                                d.create().show();
-                            }
-                        }catch (Exception ex){
-                            ex.printStackTrace();
-                        }
-                    }
-                };
-                loginRequest r = new loginRequest(uName, pass,responseL) ;
-                RequestQueue q = Volley.newRequestQueue(Main.this,httpStack) ;
-                q.add(r) ;
-
+                loginR();
+                setlogIn();
                 break ;
 
             case R.id.tvRegisterLink:
-                AlertDialog.Builder dialog = new AlertDialog.Builder(Main.this) ;
-                dialog.setTitle("Welcome") ;
-                dialog.setMessage("What type of user would you Like to register as?") ;
-                dialog.setPositiveButton("Home user",new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                       startActivity(new Intent(Main.this, regHomeuser.class));
-
-                    }
-
-                });
-                dialog.setNeutralButton("TradeWorker", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    startActivity(new Intent(Main.this, regTradeworker.class));
-                }
-
-            });
-                dialog.show();
-                //startActivity(new Intent(Main.this, registerHomeUser.class));
+                regLink();
 
                 break ;
             case R.id.tvMain:
@@ -149,13 +99,129 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
 
     }
 
-
-
-    private void logIn(RegisteredUser user){
-        localDB.setUserLoggedIn(true);
-        localDB.storeUserData(user);
+    private void setlogIn(){
+        DB.setUserLoggedIn(true);
     }
 
+
+    private void regLink(){
+        AlertDialog.Builder dialog = new AlertDialog.Builder(Main.this) ;
+        dialog.setTitle("Welcome") ;
+        dialog.setMessage("What type of user would you Like to register as?") ;
+        dialog.setPositiveButton("Home user",new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Main.this, regHomeuser.class));
+
+            }
+
+        });
+        dialog.setNeutralButton("TradeWorker", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                startActivity(new Intent(Main.this, regTradeworker.class));
+            }
+
+        });
+        dialog.show();
+        //startActivity(new Intent(Main.this, registerHomeUser.class));
+    }
+
+    private void loginR(){
+        final String uName = etUsername.getText().toString() ;
+        final String pass = etPassword.getText().toString() ;
+        Response.Listener<String> responseL = new Response.Listener<String>(){
+            @Override
+            public void onResponse(String response) {
+                //response is from the php file
+                try {
+                    String s = response;
+
+                    if(s.equalsIgnoreCase("true")){
+                        int type = fetchDetails(uName);
+                        if (type == 2){
+                            startActivity(new Intent(Main.this, HomeUser.class));
+                        }
+                        if(type == 0){
+                            startActivity(new Intent(Main.this, TradeWorker.class));
+                        }
+                   /*     AlertDialog.Builder d = new AlertDialog.Builder(Main.this);
+                        d.setMessage("User type: " + type);
+                        d.setTitle("Type") ;
+                        d.setNegativeButton("Retry", null) ;
+                        d.create().show();*/
+                    }else{
+                        AlertDialog.Builder d = new AlertDialog.Builder(Main.this);
+                        d.setMessage("Unsuccessful Login, Please try again : " + s);
+                        d.setTitle("Error") ;
+                        d.setNegativeButton("Retry", null) ;
+                        d.create().show();
+                    }
+                }catch (Exception ex){
+                    ex.printStackTrace();
+                }
+            }
+        };
+        loginRequest r = new loginRequest(uName, pass,responseL) ;
+        MySingleton.getInsance(Main.this).addToRequestQueue(r);
+    }
+
+    // the following function will fetch all the users details from the DB
+    // as wel as Store it in the shared preference file in UserLocalDatabase
+    // It will also set the session variables
+    // will return the users ID aswell for login purposes
+    private int fetchDetails(String uName){
+
+        Map<String,String> params = new HashMap<>();
+        params.put("action","android-fetchUserDetails") ;
+        params.put("android-username",uName);
+        MyRequest req = new MyRequest(SERVER_ADDRESS_URL, params, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    String s = response.toString();
+
+                    Name =  response.getJSONObject(0).getString("Name");
+                    confirm = response.getJSONObject(0).getInt("Confirmation");
+                    PhoneN = response.getJSONObject(0).getInt("ContactNumber");
+                    //(4) = user recomendation rating
+                    Email = response.getJSONObject(0).getString("Email");
+                    Password = response.getJSONObject(0).getString("Password");
+                    IDnum = response.getJSONObject(0).getInt("PersonalID") ;
+                    Username = response.getJSONObject(0).getString("Username");
+                    userType = response.getJSONObject(0).getInt("TypeOfUser");
+                    UserID = response.getJSONObject(0).getInt("UserID");
+                    Surname = response.getJSONObject(0).getString("Surname");
+
+                    //test to see if array is parsed correctly (__Working__)
+                   /* String so = Name + " :\n " + confirm+ " :\n " + PhoneN + " :\n " + Email + " :\n "
+                            + Password + " :\n " + IDnum + " :\n "  + Username +  " :\n" + userType +  " :\n"
+                            + UserID+  " :\n"+ Surname;*/
+
+                     user = new RegisteredUser(UserID,Name,Surname,IDnum,Username,Email,PhoneN,Password,userType,confirm);
+                    DB.storeUserData(user);
+                    //Set session variables here
+                    //TODO: Set session variables local to the phone for use in the server
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String st = error.toString() ;
+                AlertDialog.Builder d = new AlertDialog.Builder(Main.this);
+                d.setMessage("Response : " + st.toString());
+                d.setTitle("Your Error") ;
+                d.setNegativeButton("Retry", null) ;
+                d.create().show();
+            }
+        }) ;
+
+        MySingleton.getInsance(Main.this).addToRequestQueue(req);
+        return userType;
+    }
 
 
 

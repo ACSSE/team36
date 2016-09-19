@@ -22,12 +22,8 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 
-
-import oasys.za.ac.uj.team36.Model.fetchJobRequests;
+import oasys.za.ac.uj.team36.Requests.fetchJobRequests;
 
 public class JobRequestsTradeWorker extends AppCompatActivity implements View.OnClickListener{
     private HttpStack httpStack = null;

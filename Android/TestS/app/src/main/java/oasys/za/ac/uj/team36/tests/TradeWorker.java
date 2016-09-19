@@ -26,12 +26,15 @@ import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import oasys.za.ac.uj.team36.Model.UserLocalDatabase;
+
 public class TradeWorker extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private FragmentManager fm ;
     private Notification.Builder notification;
     private static final int uniqueID = 45788 ; // Id for each notification
+    private UserLocalDatabase DB ;
 
     //the images to display
     private Integer[] imageIDs = {
@@ -49,7 +52,7 @@ public class TradeWorker extends AppCompatActivity
         setContentView(R.layout.activity_trade_worker);
         notification = new Notification.Builder(this);
         notification.setAutoCancel(true); // maiking notification disappear once this screen has loaded
-
+        DB = new UserLocalDatabase(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -116,7 +119,9 @@ public class TradeWorker extends AppCompatActivity
             return true;
         }
         if (id == R.id.action_logoutTW) {
-             this.finish();
+            this.finish();
+            removelogIn();
+            DB.clearLocalDBdata();
             startActivity(new Intent(this,Main.class));
         }
         if (id == R.id.action_notification) {
@@ -178,7 +183,9 @@ public class TradeWorker extends AppCompatActivity
         nm.notify(uniqueID, notification.build());
 
     }
-
+    private void removelogIn(){
+        DB.setUserLoggedIn(false);
+    }
     public class ImageAdapter extends BaseAdapter {
         //the images to display
         private Integer[] imageIDs = {
