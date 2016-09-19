@@ -9,7 +9,7 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -20,23 +20,34 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.Toast;
+
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import oasys.za.ac.uj.team36.Model.MySingleton;
+import oasys.za.ac.uj.team36.Model.RegisteredUser;
+import oasys.za.ac.uj.team36.Model.UserLocalDatabase;
+import oasys.za.ac.uj.team36.Requests.MyRequest;
 
 public class HomeUser extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
-    private LinearLayout mContainerView;
 
+    public static final String SERVER_ADDRESS_URL = "http://10.0.0.7:31335/php/classes/SebenzaServer.php" ;
     private Notification.Builder notification;
     private static final int uniqueID = 45782 ; // Id for each notification
-
-    private FragmentManager fm ;
-
-    View v ;
+    private UserLocalDatabase DB ;
+    private RegisteredUser user ;
 
     //the images to display
     private Integer[] imageIDs = {
@@ -48,6 +59,10 @@ public class HomeUser extends AppCompatActivity
     };
     ImageView selectedImage;
 
+
+    private String Name, Surname, Username, Email, Password;
+    private int IDnum, PhoneN,confirm, userType, UserID;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -56,6 +71,7 @@ public class HomeUser extends AppCompatActivity
        // fm = getSupportFragmentManager();
        // fm.beginTransaction().replace(R.id.content_frame, new MainHomeUser()).commit();
 
+        DB = new UserLocalDatabase(this) ;
         notification = new Notification.Builder(this);
         notification.setAutoCancel(true); // maiking notification disappear once this screen has loaded
 
@@ -94,9 +110,10 @@ public class HomeUser extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-/*        v = findViewById(R.id.content_frame);
-        mContainerView = (LinearLayout) findViewById(R.id.content_frame);*/
-
+        //get the users details stored in the shared preference
+        //result is stored in global variable user (Registered user)
+        fetchUserDetails();
+        //TODO: set user profile up here (names, email etc. )
     }
 
     @Override
@@ -129,13 +146,17 @@ public class HomeUser extends AppCompatActivity
         }
         if (id == R.id.action_logoutHU) {
             this.finish();
-             startActivity(new Intent(this, Main.class));
+            removelogIn();
+            DB.clearLocalDBdata();
+            startActivity(new Intent(this, Main.class));
             return true;
         }
         if (id == R.id.action_notification) {
             setNotification();
         }
-
+        if (id == R.id.action_testServer) {
+            fetchUserDetails();
+        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -146,7 +167,6 @@ public class HomeUser extends AppCompatActivity
         int id = item.getItemId();
         // mContainerView.removeView((View) v.getParent());
 
-        fm = getSupportFragmentManager();
         if (id == R.id.nav_requestTradeworker) {
             Intent i = new Intent(HomeUser.this, requestTradeworker.class);
            // this.finish();  //Kill the activity from which you will go to next activity
@@ -164,7 +184,7 @@ public class HomeUser extends AppCompatActivity
             Intent i = new Intent(HomeUser.this, FinishedJobsHomeuser.class);
             startActivity(i);
         } else if (id == R.id.nav_editDetails) {
-                fm.beginTransaction().replace(R.id.content_frame, new EditDetailsHomeUser()).commit();
+
         } else if (id == R.id.nav_editLocation) {
             // TODO Handle the action
         }
@@ -189,6 +209,13 @@ public class HomeUser extends AppCompatActivity
         NotificationManager nm = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         nm.notify(uniqueID, notification.build());
 
+    }
+    private void removelogIn(){
+        DB.setUserLoggedIn(false);
+    }
+
+    public void fetchUserDetails(){
+       user =  DB.getLoggedInUser();
     }
 
     public class ImageAdapter extends BaseAdapter {

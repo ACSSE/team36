@@ -25,6 +25,24 @@ class SebenzaServer {
         ob_end_flush();
     }
 
+    public static function testServer($username){
+
+        //Validate the function's params
+        if (is_string($username)) {
+            //Get an instance of the database and session handlers
+            $dbHandler = self::fetchDatabaseHandler();
+            //Fetch the relevant user's data
+            $dbHandler->runCommand("SELECT * FROM REGISTERED_USER WHERE `Username` = ?", $username);
+            $result = $dbHandler->getResults();
+            //If a single result was returned from database
+            if (count($result) == 1) {
+                return $result;
+            }
+        }
+        return $result;
+
+    }
+
     public static function login($username, $password):bool {
         //Assume failure
         $successfulLogin = false;
@@ -2766,6 +2784,47 @@ if (!empty($_POST)) {
                     $resonse = json_encode(false) ;
                 }
                 break ;
+
+            case 'android-fetchUserDetails':
+                if(isset($_POST['android-username'])) {
+                    $response = json_encode(SebenzaServer::testServer($_POST['android-username']));
+                }else{
+                    json_encode(false);
+                }
+                break;
+            case 'android-fetch-job-requests':
+                if(isset($_POST['android-usertype']) && isset($_POST['android-UserID'])){
+                $result = $_POST['android-usertype'];
+                    //Due to information being sent back being different for all the users switch case to check the type of user before calling the function
+                    $response = json_encode($result);
+                    if($result != -1)
+                        switch ($result){
+                            case "3":
+                                $response = json_encode(SebenzaServer::fetchDatabaseTablesRequests());
+                                break;
+                            case "1":
+                                //Contractor
+                                $response = json_encode("Should be dealing with contractor request job management");
+                                break;
+                            case "2":
+                                //Homeuser
+//                            $response = json_encode("Should be dealing with homeuser request job management");
+                                $response = json_encode(SebenzaServer::fetchHomeuserJobRequests($_POST['android-UserID']));
+                                break;
+                            case "0":
+                                //Tradeworker
+                                $response = json_encode(SebenzaServer::fetchTradeworkerJobRequests($_POST['android-UserID']));
+                                break;
+                            default:
+                                $response = json_encode("Unrecognized");
+                                break;
+                        }
+
+                else{
+                    $response = json_encode(false);
+                }
+                }
+                break;
             default:
                 //If the action was not one of the handled cases, respond appropriately
                 $response = json_encode("Request not recognised.");

@@ -3,8 +3,6 @@ package oasys.za.ac.uj.team36.tests;
 import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -17,8 +15,6 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import oasys.za.ac.uj.team36.Model.Home_User;
 
 public class regHomeuser extends AppCompatActivity implements View.OnClickListener{
     @Override
@@ -35,7 +31,7 @@ public class regHomeuser extends AppCompatActivity implements View.OnClickListen
 
                             boolean success = jsonResponse.getBoolean("") ;
                             if(success){
-                                startActivity(new Intent(regHomeuser.this, Home_User.class));
+                                startActivity(new Intent(regHomeuser.this, HomeUser.class));
                             }else{
                                 AlertDialog.Builder d = new AlertDialog.Builder(regHomeuser.this);
                                 d.setMessage("Unsuccessful Registration, Please try again");
