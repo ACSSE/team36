@@ -12,14 +12,15 @@
             <li>
                 <a href="#">Manage Requests</a>
                 <ul class="menu vertical nested">
-                    <li><a onclick="toggleUserPageArea('panel1v')">Job Requests</a></li>
+                    <li><a aria-describedby="messageCount" onclick="toggleUserPageArea('panel1v')">Job Requests<div style="margin-left: 2em" id="tradeworker-ongoing-request-toAccept-badge"></div></a></li>
+
                     <li><a onclick="toggleUserPageArea('panel2v')">Cancelled Requests</a></li>
                 </ul>
             </li>
             <li>
                 <a href="#">Manage Jobs</a>
                 <ul class="menu vertical nested">
-                    <li><a onclick="toggleUserPageArea('panel3v')">Initiated Jobs</a></li>
+                    <li><a onclick="toggleUserPageArea('panel3v')">Initiated Jobs<div style="margin-left: 2em" id="tradeworker-ongoing-jobs-badge"></div></a></li>
                     <li><a onclick="toggleUserPageArea('panel8v')">Completed Jobs</a></li>
                     <li><a onclick="toggleUserPageArea('panel4v')">Unfinished Jobs</a></li>
                 </ul>

@@ -33,8 +33,15 @@
                 </div>
             </div>
         </div>
+        <div class="row">
+            <div class="large-4 large-offset-4 medium-offset-4 medium-4 columns">
+                <button type="button" class="button" style="background-color: #3aff29"  onclick="tradeworkerPrintCompletedJobs()">
+                    Print
+                    <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
+                </button>
+            </div>
+        </div>
     </form>
-
 
 
 </div>

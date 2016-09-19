@@ -6,7 +6,11 @@
  * Time: 3:24 PM
  */?>
     <!--DOCUMENT END-->
+<div class="section-to-print" style="visibility:hidden">
+    <p>test</p>
+</div>
         </div>
+
         <!-- Foundation required code-->
 
         <script>

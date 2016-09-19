@@ -1842,8 +1842,8 @@ select {
   font-size: 0.6rem;
   text-align: center;
   border-radius: 50%;
-  background: #2199e8;
-  color: #fefefe; }
+  background: #cc8b00;
+  color: black; }
   .badge.secondary {
     background: #777;
     color: #fefefe; }

@@ -82,6 +82,20 @@ hr {
     display:none;/* hide initially http://foundation.zurb.com/forum/posts/37588-toggler-with-motion-ui---hide-element-initially*/
 }
 
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    .section-to-print, .section-to-print * {
+        visibility: visible;
+    }
+    .section-to-print {
+        position: absolute;
+        left: 0;
+        top: 0;
+    }
+}
+
 #areainformation-medium-large {
     position:absolute;
     top: 7rem; /*must be same as logo height*/
@@ -399,12 +413,3 @@ h4 {
 @media only screen and (max-width: 600px) and (orientation: landscape) {
     /*Override classes here*/
 }
-
-/*test*/
-.accordion-navigation > a:after {
-    content: "↡";
-    padding-left: 5px;
-    float: right;
-    font-size: 20px; }
-.accordion-navigation.active > a:after {
-    content: "↟"; }

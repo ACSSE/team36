@@ -1059,6 +1059,8 @@ function genericTableGenerate(table){
     for(j = 0;j <table.length;j++){
         tableBody += '<tr><td>' + (j+1) +'</td>';
         //console.log(j);
+
+        temp = table[j].length;
         for(var item in table[j]){
 
             if(table[j].hasOwnProperty(item)){
