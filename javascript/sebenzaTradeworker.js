@@ -52,7 +52,7 @@ function tradeworkerDisplayRequest(){
         document.getElementById("tradeworker-manageRequest-areainformation").innerHTML = html;
     }
     else{
-        html = genericTableGenerate(tradeworkerOngoingRequestArray);
+        html = genericTableGenerate(tradeworkerOngoingRequestArray,'ongoing-requests');
         document.getElementById("tradeworker-manageRequest-areainformation").innerHTML = html;
     }
 }
@@ -145,7 +145,7 @@ function tradeworkerDisplayOngoingJobs(){
         document.getElementById('tradeworker-ongoingJobs-areainformation').innerHTML = "<h3>There are no ongoing jobs to display</h3>";
     }
     else{
-        document.getElementById('tradeworker-ongoingJobs-areainformation').innerHTML = genericTableGenerate(tradeworkerOngoingJobsArray);
+        document.getElementById('tradeworker-ongoingJobs-areainformation').innerHTML = genericTableGenerate(tradeworkerOngoingJobsArray,'ongoing-jobs');
     }
 }
 
@@ -486,7 +486,7 @@ function tradeworkerDisplayCompletedJob(){
         document.getElementById('tradeworker-completed-areainformation').innerHTML = "<h3>There are no completed jobs to display</h3>";
     }
     else{
-        document.getElementById('tradeworker-completed-areainformation').innerHTML = genericTableGenerate(tradeworkerCompletedJobsArray);
+        document.getElementById('tradeworker-completed-areainformation').innerHTML = genericTableGenerate(tradeworkerCompletedJobsArray,'completed-jobs');
     }
 }
 
@@ -497,7 +497,7 @@ function tradeworkerDisplayCancelledJob(){
         document.getElementById('tradeworker-cancelled-areainformation').innerHTML = html;
     }
     else{
-        document.getElementById('tradeworker-cancelled-areainformation').innerHTML = genericTableGenerate(tradeworkerCancelledJobsArray);
+        document.getElementById('tradeworker-cancelled-areainformation').innerHTML = genericTableGenerate(tradeworkerCancelledJobsArray,'cancelled-jobs');
     }
 
 }
@@ -606,7 +606,7 @@ function tradeworkerDisplayCancelledRequest(){
         document.getElementById("tradeworker-manageRequest-cancelled-areainformation").innerHTML = html;
     }
     else{
-        html = genericTableGenerate(tradeworkerCancelledRequestArray);
+        html = genericTableGenerate(tradeworkerCancelledRequestArray,'cancelled-request');
         document.getElementById("tradeworker-manageRequest-cancelled-areainformation").innerHTML = html;
     }
 }

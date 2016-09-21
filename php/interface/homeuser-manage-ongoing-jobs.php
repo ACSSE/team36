@@ -2,13 +2,16 @@
     <h1>Manage Ongoing Jobs</h1>
     <!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->
     <form id="homeuser-manage-ongoingJobs" name="homeuser-manage-ongoingJobs">
-        <div class="row">
-            <div class="column large-11">
-                <label>Search:</label>
-                <input type="text" name="homeuser-ongoingJobs-search-0" id="homeuser-ongoingJobs-search-0"/>
-            </div>
-            <div class="column large-1">
-
+        <div class="column small-11">
+            <div class="row collapse" >
+                <div class="column large-2">
+                    <label>Column:</label>
+                    <select id="homeuser-ongoingJobs-search-column" name="ignore-homeuser-ongoingJobs-search-column" onchange="userGenericSearchTable('homeuser-ongoingJobs-search','ongoing-jobs')">
+                    </select>
+                </div>
+                <div class="column large-10">
+                    <label>Search:</label><input type="text" name="ignore-homeuser-ongoingJobs-search" id="homeuser-ongoingJobs-search" oninput="userGenericSearchTable('homeuser-ongoingJobs-search','ongoing-jobs')"/>
+                </div>
             </div>
         </div>
         <div class="row">

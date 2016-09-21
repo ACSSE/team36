@@ -2,10 +2,25 @@
     <h1>Manage Job Request</h1>
     <!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->
     <form id="homeuser-manage-requests-completed" name="homeuser-manage-requests-completed">
+        <div class="row large-uncollapse">
+            <div class="column small-11">
+                <div class="row collapse" >
+                    <div class="column large-2" style="padding-left: 0.9375rem">
+                        <label>Column:</label>
+                        <select id="homeuser-manageRTradeworker-completed-search-column" name="ignore-homeuser-manageRTradeworker-completed-search-column" onchange="userGenericSearchTable('homeuser-manageRTradeworker-completed-search','completed-requests')">
+                        </select>
+                    </div>
+                    <div class="column large-10" style="padding-right: 0.9375rem">
+                        <label>Search:</label><input type="text" name="ignore-homeuser-manageRTradeworker-completed-search" id="homeuser-manageRTradeworker-completed-search" oninput="userGenericSearchTable('homeuser-manageRTradeworker-completed-search','completed-requests')"/>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row">
             <div class="column large-11">
-                <label>Search:</label>
-                <input type="text" name="ignore-homeuser-manageRTradeworker-completed-search-0" id="homeuser-manageRTradeworker-completed-search-0"/>
+
             </div>
             <div class="column large-1">
 

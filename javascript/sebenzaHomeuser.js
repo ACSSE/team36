@@ -33,7 +33,7 @@ function handleHomeuserFetchJobRequests(response){
 }
 
 function homeuserDisplayCompletedJobs(){
-    var html = genericTableGenerate(homeuserCompletedJobsArray);
+    var html = genericTableGenerate(homeuserCompletedJobsArray,'completed-jobs');
     if(homeuserCompletedJobsArray.length < 1){
         document.getElementById('homeuser-completed-areainformation').innerHTML = "<h3>There are no completed jobs to display</h3>";
     }
@@ -43,7 +43,7 @@ function homeuserDisplayCompletedJobs(){
 }
 
 function homeuserDisplayCancelledJobs(){
-    var html = genericTableGenerate(homeuserCancelledJobsArray);
+    var html = genericTableGenerate(homeuserCancelledJobsArray,'cancelled-jobs');
     if(homeuserCancelledJobsArray.length < 1){
         document.getElementById('homeuser-cancelled-areainformation').innerHTML = "<h3>There are no ongoing jobs to display</h3>";
     }
@@ -53,7 +53,7 @@ function homeuserDisplayCancelledJobs(){
 }
 
 function homeuserDisplayRequestsCancelled(){
-    var html = genericTableGenerate(homeuserCancelledRequestArray);
+    var html = genericTableGenerate(homeuserCancelledRequestArray,'cancelled-requests');
     if(homeuserCancelledRequestArray.length < 1){
         document.getElementById('homeuser-manageRTradeworker-cancelled-areainformation').innerHTML = "<h3>There are currently no job requests to display</h3>";
     }
@@ -62,7 +62,7 @@ function homeuserDisplayRequestsCancelled(){
 }
 
 function homeuserDisplayRequestsCompleted(){
-    var html = genericTableGenerate(homeuserCompletedRequestArray);
+    var html = genericTableGenerate(homeuserCompletedRequestArray,'completed-requests');
     if(homeuserCompletedRequestArray.length < 1){
         document.getElementById('homeuser-manageRTradeworker-completed-areainformation').innerHTML = "<h3>There are currently no job requests to display</h3>";
     }
@@ -71,7 +71,7 @@ function homeuserDisplayRequestsCompleted(){
 }
 
 function homeuserDisplayOngoingJobs(){
-    var html = genericTableGenerate(homeuserOngoingJobsArray);
+    var html = genericTableGenerate(homeuserOngoingJobsArray,'ongoing-jobs');
     if(homeuserOngoingJobsArray.length < 1){
 
         document.getElementById('homeuser-ongoingJobs-areainformation').innerHTML = "<h3>There are no ongoing jobs to display</h3>";
@@ -244,12 +244,15 @@ function homeuserBuildUpInterfaceArrays(){
         //Setting up the request arrays, this is done according to the Request Status of the job
         if(requestStatus == 0) {
             homeuserOngoingRequestArray[homeuserOngoingRequestArrayCounter++] = {'Quote Date' : commencementDate,'Work Type' : jobType, 'Number Requested' : numWorkers, 'Number Accepted' : numWorkersAccepted,'Description' : jobDescription, 'Selected' : '<div class="full-width" style="padding-left: 50%"><input type="radio" name="ignore-job-requests-ongoing" id="homeuser-manageRTradeworker-requestID-' + j + '" value="' + tableIndex + "_" + quoteRequest + '" readonly></div>'};
+            userGenericFillColumnSelectTags('homeuser-manageRTradeworker-search-column',['Quote Date','Work Type','Number Requested','Number Accepted','Description']);
         }
         else if(requestStatus == 1){
             homeuserCompletedRequestArray[homeuserCompletedRequestArrayCounter++] = {'Quote Date' : commencementDate,'Work Type' : jobType, 'Number Requested' : numWorkers, 'Number Accepted' : numWorkersAccepted,'Description' : jobDescription, 'Selected' : '<div class="full-width" style="padding-left: 50%"><input type="radio" name="ignore-job-requests-completed" id="homeuser-manageRTradeworker-requestID-' + j + '" value="' + tableIndex + "_" + quoteRequest + '" readonly></div>'};
+            userGenericFillColumnSelectTags('homeuser-manageRTradeworker-completed-search-column',['Quote Date','Work Type','Number Requested','Number Accepted','Description']);
         }
         else{
             homeuserCancelledRequestArray[homeuserCancelledRequestArrayCounter++] = {'Quote Date' : commencementDate,'Work Type' : jobType, 'Number Requested' : numWorkers, 'Number Accepted' : numWorkersAccepted,'Description' : jobDescription, 'Selected' : '<div class="full-width" style="padding-left: 50%"><input type="radio" name="ignore-job-requests-cancelled" id="homeuser-manageRTradeworker-requestID-' + j + '" value="' + tableIndex + "_" + quoteRequest + '" readonly></div>'};
+            userGenericFillColumnSelectTags('homeuser-manageRTradeworker-cancelled-search-column',['Quote Date','Work Type','Number Requested','Number Accepted','Description']);
         }
         //The following will set up an individual list of all the requests that occur during
         for (var i = 0; i < homeuserJobRequestArray[j]['NumberOfWorkersRequested']; i++) {
@@ -264,6 +267,7 @@ function homeuserBuildUpInterfaceArrays(){
                     quoteDate = homeuserJobRequestArray[j]['JobCommencementDate'];
                     tableIndex = j;
                     homeuserJobsToInitiateArray[homeuserJobsToInitiateArrayCounter++] = {'Name' : name,'Surname' : surname, 'Contact Details' : contactNumber, 'Work Type' : workType,'Quote Date' : quoteDate, 'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="job-initiate-selected" id="requested-user-id" value="' + tableIndex + "_" + quoteID + '"></div>'};
+                    userGenericFillColumnSelectTags('homeuser-manageJobInitiate-search-column',['Name','Surname','Contact Details','Work Type','Quote Date']);
                 }
             }
 
@@ -277,12 +281,15 @@ function homeuserBuildUpInterfaceArrays(){
                 tableIndex = j;
                 if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 0){
                     homeuserOngoingJobsArray[homeuserOngoingJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>', 'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div>'};
+                    userGenericFillColumnSelectTags('homeuser-ongoingJobs-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                 }
                 if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 2){
                     homeuserCancelledJobsArray[homeuserCancelledJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>', 'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div>'};
+                    userGenericFillColumnSelectTags('homeuser-cancelled-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                 }
                 if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 1){
                     homeuserCompletedJobsArray[homeuserCompletedJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>', 'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div>'};
+                    userGenericFillColumnSelectTags('homeuser-completed-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                 }
             }
         }
@@ -290,7 +297,7 @@ function homeuserBuildUpInterfaceArrays(){
 }
 
 function homeuserDisplayRequests(){
-    var html = genericTableGenerate(homeuserOngoingRequestArray);
+    var html = genericTableGenerate(homeuserOngoingRequestArray,'ongoing-requests');
     if(homeuserOngoingRequestArray.length < 1){
         document.getElementById('homeuser-manageRTradeworker-areainformation').innerHTML = "<h3>There are currently no job requests to display</h3>";
     }
@@ -299,7 +306,7 @@ function homeuserDisplayRequests(){
 }
 
 function homeuserDisplayJobsToInitiate(){
-    var html = genericTableGenerate(homeuserJobsToInitiateArray);
+    var html = genericTableGenerate(homeuserJobsToInitiateArray,'jobs-toInitiate');
     if(homeuserJobsToInitiateArray.length < 1){
         document.getElementById('homeuser-manageJobInitiate-areainformation').innerHTML = "<h3>There are currently no jobs to initiate</h3>";
     }

@@ -1050,17 +1050,18 @@ function createBarGraphConfig(chartHeader,chartLabels,data,datalabels,background
 }
 //End Chart.js related functions
 
-function genericTableGenerate(table){
+function genericTableGenerate(table,tableName){
     var tableBeginning = "<table><thead><tr>";
     var tableHeaders = '<th>#</th>';
-    var tableHeaderEnd = '</tr></thead><tbody>';
+    var tableHeaderEnd = "</tr></thead><tbody id='" + tableName + "'>";
     var tableBody = '';
     var j = 0;
+    if(table.length)
     for(j = 0;j <table.length;j++){
         tableBody += '<tr><td>' + (j+1) +'</td>';
         //console.log(j);
 
-        temp = table[j].length;
+        //temp = table[j].length;
         for(var item in table[j]){
 
             if(table[j].hasOwnProperty(item)){
@@ -1079,6 +1080,72 @@ function genericTableGenerate(table){
     return html;
 }
 
+function userGenericFillColumnSelectTags(selectTagID,headers){
+    var select = document.getElementById(selectTagID);
+    select.innerHTML = '<option value="-1">All</option>';
+    select.innerHTML += '<option value="0">#</option>';
+    for(var i = 0;i < headers.length;i++){
+        select.innerHTML += '<option value="' + (i + 1) + '">' + headers[i] + '</option>';
+    }
+}
+
+function userGenericSearchTable(inputID,tableID){
+    var searchWord = document.getElementById(inputID).value;
+    var column = document.getElementById(inputID + "-column").value;
+    console.log("This is the column value: " + column);
+    generic2DimensionalSearchArray(tableID,searchWord.toUpperCase(),column);
+}
+
+//One flaw if the string starts with "<" then the search will fail
+function generic2DimensionalSearchArray(tableID,searchWord,columnID){
+    var td,i;
+    var table = document.getElementById(tableID);
+    var tr = table.getElementsByTagName("tr");
+    var found = false;
+    var counter = [];
+    //Comparing all the columns for a match
+    if(columnID == -1){
+        //console.log("Searching in all columns");
+        for(i = 0;i < tr.length;i++){
+            found = false;
+            td = tr[i].getElementsByTagName("td");
+            for(var j = 0;j < td.length && found != true;j++){
+                console.log(td[j]);
+                if(td[j].innerHTML.length > 3)
+                console.log(td[j].innerHTML.toUpperCase().substring(0,1));
+                if(td[j].innerHTML.toUpperCase().indexOf("<") == -1 ){
+                    if(td[j].innerHTML.toUpperCase().indexOf(searchWord) > -1 ){
+                        found = true;
+                        tr[i].style.display = "";
+                        counter.push(j);
+                    }
+                    else{
+                        tr[i].style.display = "none";
+                    }
+                }
+                else{
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+    else{
+        //console.log("Searching in specified columns");
+        //Comparing a certain column for a match
+        for(i = 0;i < tr.length;i++){
+            td = tr[i].getElementsByTagName("td")[columnID];
+            //console.log(td.innerHTML);
+            if(td.innerHTML.toUpperCase().indexOf(searchWord) > -1){
+                tr[i].style.display = "";
+            }
+            else{
+                tr[i].style.display = "none";
+            }
+        }
+    }
+    console.log(true);
+    console.log(counter);
+}
 
 /*The following function fills up the userPageModal-medium-large with information related to it*/
 function homeUserJobRequestModalFill(type, location) {
