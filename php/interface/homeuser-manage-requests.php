@@ -19,12 +19,7 @@
     <div class="row">
         <div class="column large-11">
             <label>Sort By:</label>
-            <select id="homeuser-manageRTradeworker-sortBy-0" name="ignore-homeuser-manageRTradeworker-sortBy-0">
-                <option value="WorkType">Work Type</option>
-                <option value="initialDate">Date Request is sent</option>
-                <option value="commencementDate">Commencement Date</option>
-                <option value="accepted">Status</option>
-                <option value="Sub_locality">Area</option>
+            <select id="homeuser-manageRTradeworker-sortBy" name="ignore-homeuser-manageRTradeworker-sortBy" onchange="userGenericSortTable('ongoing-requests','homeuser-manageRTradeworker-sortBy')">
             </select>
         </div>
         <div class="column large-1">

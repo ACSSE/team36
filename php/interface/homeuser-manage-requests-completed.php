@@ -29,12 +29,7 @@
         <div class="row">
             <div class="column large-11">
                 <label>Sort By:</label>
-                <select id="homeuser-manageRTradeworker-completed-sortBy-0" name="ignore-homeuser-manageRTradeworker-completed-sortBy-0">
-                    <option value="WorkType">Work Type</option>
-                    <option value="initialDate">Date Request is sent</option>
-                    <option value="commencementDate">Commencement Date</option>
-                    <option value="accepted">Status</option>
-                    <option value="Sub_locality">Area</option>
+                <select id="homeuser-manageRTradeworker-completed-sortBy" name="ignore-homeuser-manageRTradeworker-completed-sortBy" onchange="userGenericSortTable('completed-requests','homeuser-manageRTradeworker-completed-sortBy')">
                 </select>
             </div>
             <div class="column large-1">

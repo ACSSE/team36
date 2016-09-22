@@ -18,7 +18,7 @@
         <div class="row">
             <div class="column large-11">
                 <label>Sort By:</label>
-                <select id="homeuser-completed-sortBy-0" name="homeuser-completed-sortBy-0">
+                <select id="homeuser-completed-sortBy" name="homeuser-completed-sortBy" onchange="userGenericSortTable('completed-jobs','homeuser-completed-sortBy')">
                     <option value="WorkType">Work Type</option>
                     <option value="initialDate">Date Request is sent</option>
                     <option value="commencementDate">Commencement Date</option>

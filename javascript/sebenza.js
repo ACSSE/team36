@@ -1110,9 +1110,9 @@ function generic2DimensionalSearchArray(tableID,searchWord,columnID){
             found = false;
             td = tr[i].getElementsByTagName("td");
             for(var j = 0;j < td.length && found != true;j++){
-                console.log(td[j]);
+                //console.log(td[j]);
                 if(td[j].innerHTML.length > 3)
-                console.log(td[j].innerHTML.toUpperCase().substring(0,1));
+                //console.log(td[j].innerHTML.toUpperCase().substring(0,1));
                 if(td[j].innerHTML.toUpperCase().indexOf("<") == -1 ){
                     if(td[j].innerHTML.toUpperCase().indexOf(searchWord) > -1 ){
                         found = true;
@@ -1143,8 +1143,8 @@ function generic2DimensionalSearchArray(tableID,searchWord,columnID){
             }
         }
     }
-    console.log(true);
-    console.log(counter);
+    //console.log(true);
+    //console.log(counter);
 }
 
 /*The following function fills up the userPageModal-medium-large with information related to it*/
@@ -1159,6 +1159,164 @@ function homeUserOngoingJobModalFill(type, location){
     var button = ' <div class="sebenza-select-button"><div class="row"><div class="columns"><button type="button" class="alert button login-button" id=terminate-job-button">Terminate</button></div><div class="columns align-center"><button type="button" class="warning button login-button" id=extend-button">Extend</button></div><div class="columns"><button type="button" class="success button login-button" id=complete-button">Complete</button></div></div></div>';
     document.getElementById("jobDescript").innerHTML += button;
 
+}
+
+function userGenericSortSelectFill(selectID,array){
+    var select = document.getElementById(selectID);
+    select.innerHTML = '<option value="0">#(asc)</option>';
+    select.innerHTML += '<option value="1">#(dsc)</option>';
+    for(var i = 0;i < array.length;i++){
+        select.innerHTML += '<option value="' + ((i + 1) * 2) + '">' + array[i] + '(asc)</option>';
+        select.innerHTML += '<option value="' + (((i + 1) * 2) + 1) + '">' + array[i] + '(dsc)</option>';
+    }
+}
+
+function userGenericSortTable(table,select){
+    var column = document.getElementById(select).value;
+    var tb = document.getElementById(table);
+    var tr= tb.getElementsByTagName("tr");
+    var sortedRows = tb.getElementsByTagName("tr");
+    var td,td2;
+    var testCase = -1;
+    var datePatt = /\d{4}-\d{2}-\d{2}/;
+    var numPatt = /\d+/;
+    var fltNum = /\d+\.\d{2}/;
+    var ascending;
+    if(column % 2 == 0){
+        ascending = true;
+    }
+    else{
+        ascending = false;
+    }
+    column = parseInt(column /= 2);
+    td = tr[0].getElementsByTagName("td")[column].innerHTML;
+        //td = tr[0].getElementsByTagName("td")[column].innerHTML;
+    if(datePatt.test(td)){
+        console.log("Dealing with dates");
+        testCase = 0;
+    }
+    else if(numPatt.test(td)){
+        console.log("Dealing with integers");
+        testCase = 1;
+    }
+    else if(fltNum.test(td)){
+        console.log("Dealing with floats");
+        testCase = 2;
+    }
+    else{
+        console.log("Dealing with alphabet");
+        testCase = 3;
+    }
+    //for(var)
+    var j = 0;
+    var td2Row = [];
+    for(var i = 1;i < tr.length;i++){
+        for(var x = 0;x < sortedRows[i].getElementsByTagName("td").length;x++){
+            td2Row[x] = sortedRows[i].getElementsByTagName("td")[x].innerHTML;
+        }
+
+        td2  = sortedRows[i].getElementsByTagName("td")[column].innerHTML;
+        j = i;
+
+        switch (testCase){
+            case 0:
+                if(ascending){
+                    while(j > 0 && Date.parse(sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML) > Date.parse(td2)){
+                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
+                            sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
+                        }
+                        j--;
+                    }
+                }
+                else{
+                    while(j > 0 && Date.parse(sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML) < Date.parse(td2)){
+                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
+                            sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
+                        }
+                        j--;
+                    }
+                }
+                for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
+                    sortedRows[j].getElementsByTagName("td")[x].innerHTML = td2Row[x];
+                }
+                break;
+            case 1:
+                if(ascending){
+                    while(j > 0 && parseInt(sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML) > parseInt(td2)){
+                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
+                            sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
+                        }
+                        j--;
+                    }
+                }
+                else{
+                    while(j > 0 && parseInt(sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML) < parseInt(td2)){
+                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
+                            sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
+                        }
+                        j--;
+                    }
+                }
+                for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
+                    sortedRows[j].getElementsByTagName("td")[x].innerHTML = td2Row[x];
+                }
+                break;
+            case 2:
+                if(ascending){
+                    while(j > 0 && parseFloat(sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML) > parseFloat(td2)){
+                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
+                            sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
+                        }
+                        j--;
+                    }
+                }
+                else{
+                    while(j > 0 && parseFloat(sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML) < parseFloat(td2)){
+                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
+                            sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
+                        }
+                        j--;
+                    }
+                }
+                for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
+                    sortedRows[j].getElementsByTagName("td")[x].innerHTML = td2Row[x];
+                }
+                break;
+            case 3:
+                if(ascending){
+                    while(j > 0 && sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML > td2){
+                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
+                            sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
+                        }
+                        j--;
+                    }
+                }
+                else{
+                    while(j > 0 && sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML < td2){
+                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
+                            sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
+                        }
+                        j--;
+                    }
+                }
+                for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
+                    sortedRows[j].getElementsByTagName("td")[x].innerHTML = td2Row[x];
+                }
+                break;
+            default:
+                console.log("Could not sort");
+                break;
+        }
+    }
+    console.log(sortedRows);
 }
 
 var workTypeSelectTagID;
