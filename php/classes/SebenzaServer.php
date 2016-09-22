@@ -2816,7 +2816,7 @@ if (!empty($_POST)) {
                                 $response = json_encode(SebenzaServer::fetchTradeworkerJobRequests($_POST['android-UserID']));
                                 break;
                             default:
-                                $response = json_encode("Unrecognized");
+                                $response = json_encode("Unrecognized User");
                                 break;
                         }
 
