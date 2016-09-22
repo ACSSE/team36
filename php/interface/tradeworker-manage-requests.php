@@ -5,24 +5,29 @@
     <h1>Manage Job Request</h1>
     <!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->
     <form id="tradeworker-manage-requests" name="tradeworker-manage-requests">
-    <div class="row">
-        <div class="column large-11">
-            <label>Search:</label>
-            <input type="text" name="tradeworker-manageRequest-search-0" id="tradeworker-manageRequest-search-0"/>
-        </div>
-        <div class="column large-1">
 
+    <div class="column small-11">
+        <div class="row collapse" >
+            <div class="column large-2">
+                <label>Column:</label>
+                <select id="tradeworker-manageRequest-search-column" name="ignore-tradeworker-manageRequest-search-column" onchange="userGenericSearchTable('tradeworker-manageRequest-search','ongoing-requests')">
+                </select>
+            </div>
+            <div class="column large-10">
+                <label>Search:</label><input type="text" name="ignore-tradeworker-manageRequest-search" id="tradeworker-manageRequest-search" oninput="userGenericSearchTable('tradeworker-manageRequest-search','ongoing-requests')"/>
+
+            </div>
         </div>
     </div>
     <div class="row">
         <div class="column large-11">
             <label>Sort By:</label>
-            <select id="tradeworker-manageRequest-sortBy-0" name="tradeworker-manageRequest-sortBy-0">
-                <option value="WorkType">Work Type</option>
-                <option value="initialDate">Date Request is sent</option>
-                <option value="commencementDate">Commencement Date</option>
-                <option value="accepted">Status</option>
-                <option value="Sub_locality">Area</option>
+            <select id="tradeworker-manageRequest-sortBy" name="tradeworker-manageRequest-sortBy" onchange="userGenericSortTable('ongoing-requests','tradeworker-manageRequest-sortBy')">
+                <option value="0">#(asc)</option>
+                <option value="1">#(dsc)</option>
+                <option value="2">Commencement Date(asc)</option>
+                <option value="3">Commencement Date(dsc)</option>
+                <option value="4">Job Type(asc)</option>
             </select>
         </div>
         <div class="column large-1">

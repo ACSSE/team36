@@ -2,24 +2,23 @@
     <h1>Initiated Jobs</h1>
     <!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->
     <form id="tradeworker-manage-ongoingJobs" name="tradeworker-manage-ongoingJobs">
-        <div class="row">
-            <div class="column large-11">
-                <label>Search:</label>
-                <input type="text" name="tradeworker-ongoingJobs-search-0" id="tradeworker-ongoingJobs-search-0"/>
-            </div>
-            <div class="column large-1">
 
+        <div class="column small-11">
+            <div class="row collapse" >
+                <div class="column large-2">
+                    <label>Column:</label>
+                    <select id="tradeworker-ongoingJobs-search-column" name="ignore-tradeworker-ongoingJobs-search-column" onchange="userGenericSearchTable('tradeworker-ongoingJobs-search','ongoing-jobs')">
+                    </select>
+                </div>
+                <div class="column large-10">
+                    <label>Search:</label><input type="text" name="ignore-tradeworker-ongoingJobs-search" id="tradeworker-ongoingJobs-search" oninput="userGenericSearchTable('tradeworker-ongoingJobs-search','ongoing-jobs')"/>
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="column large-11">
                 <label>Sort By:</label>
-                <select id="tradeworker-ongoingJobs-sortBy-0" name="tradeworker-ongoingJobs-sortBy-0">
-                    <option value="WorkType">Work Type</option>
-                    <option value="initialDate">Date Request is sent</option>
-                    <option value="commencementDate">Commencement Date</option>
-                    <option value="accepted">Status</option>
-                    <option value="Sub_locality">Area</option>
+                <select id="tradeworker-ongoingJobs-sortBy" name="tradeworker-ongoingJobs-sortBy" onchange="userGenericSortTable('ongoing-jobs','tradeworker-ongoingJobs-sortBy')">
                 </select>
             </div>
             <div class="column large-1">

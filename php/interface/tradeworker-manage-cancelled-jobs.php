@@ -2,24 +2,22 @@
     <h1>Manage Cancelled Jobs</h1>
     <!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->
     <form id="tradeworker-manage-cancelled" name="tradeworker-manage-cancelled">
-        <div class="row">
-            <div class="column large-11">
-                <label>Search:</label>
-                <input type="text" name="tradeworker-cancelled-search-0" id="tradeworker-cancelled-search-0"/>
-            </div>
-            <div class="column large-1">
-
+        <div class="column small-11">
+            <div class="row collapse" >
+                <div class="column large-2">
+                    <label>Column:</label>
+                    <select id="tradeworker-cancelled-search-column" name="ignore-tradeworker-cancelled-search-column" onchange="userGenericSearchTable('tradeworker-cancelled-search','ongoing-jobs')">
+                    </select>
+                </div>
+                <div class="column large-10">
+                    <label>Search:</label><input type="text" name="ignore-tradeworker-cancelled-search" id="tradeworker-cancelled-search" oninput="userGenericSearchTable('tradeworker-cancelled-search','cancelled-jobs')"/>
+                </div>
             </div>
         </div>
         <div class="row">
             <div class="column large-11">
                 <label>Sort By:</label>
-                <select id="tradeworker-cancelled-sortBy-0" name="tradeworker-cancelled-sortBy-0">
-                    <option value="WorkType">Work Type</option>
-                    <option value="initialDate">Date Request is sent</option>
-                    <option value="commencementDate">Commencement Date</option>
-                    <option value="accepted">Status</option>
-                    <option value="Sub_locality">Area</option>
+                <select id="tradeworker-cancelled-sortBy-jobs" name="tradeworker-cancelled-sortBy-jobs" onchange="userGenericSortTable('cancelled-jobs','tradeworker-cancelled-sortBy-jobs')">
                 </select>
             </div>
             <div class="column large-1">

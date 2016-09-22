@@ -5,24 +5,23 @@
     <h1>Manage Cancelled Request</h1>
     <!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->
     <form id="tradeworker-manage-requests-cancelled" name="tradeworker-manage-requests-cancelled">
-        <div class="row">
-            <div class="column large-11">
-                <label>Search:</label>
-                <input type="text" name="tradeworker-manageRequest-cancelled-search-0" id="tradeworker-manageRequest-cancelled-search-0"/>
-            </div>
-            <div class="column large-1">
-
+        <div class="column small-11">
+            <div class="row collapse" >
+                <div class="column large-2">
+                    <label>Column:</label>
+                    <select id="tradeworker-manageRequest-cancelled-search-column" name="ignore-tradeworker-manageRequest-cancelled-search-column" onchange="userGenericSearchTable('tradeworker-manageRequest-cancelled-search','cancelled-request')">
+                    </select>
+                </div>
+                <div class="column large-10">
+                    <label>Search:</label><input type="text" name="ignore-tradeworker-manageRequest-cancelled-search" id="tradeworker-manageRequest-cancelled-search" oninput="userGenericSearchTable('tradeworker-manageRequest-cancelled-search','cancelled-request')"/>
+                </div>
             </div>
         </div>
+
         <div class="row">
             <div class="column large-11">
                 <label>Sort By:</label>
-                <select id="tradeworker-manageRequest-cancelled-sortBy-0" name="tradeworker-manageRequest-cancelled-sortBy-0">
-                    <option value="WorkType">Work Type</option>
-                    <option value="initialDate">Date Request is sent</option>
-                    <option value="commencementDate">Commencement Date</option>
-                    <option value="accepted">Status</option>
-                    <option value="Sub_locality">Area</option>
+                <select id="tradeworker-manageRequest-cancelled-sortBy" name="tradeworker-manageRequest-cancelled-sortBy" onchange="userGenericSortTable('cancelled-request','tradeworker-manageRequest-cancelled-sortBy')">
                 </select>
             </div>
             <div class="column large-1">
