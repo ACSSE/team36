@@ -172,16 +172,16 @@ public class HomeUser extends AppCompatActivity
            // this.finish();  //Kill the activity from which you will go to next activity
             startActivity(i);
         } else if (id == R.id.nav_ManageJobs) {
-            Intent i = new Intent(HomeUser.this, ManageJobsHomeuser.class);
+            Intent i = new Intent(HomeUser.this, HomeuserManageJobs.class);
             startActivity(i);
         } else if (id == R.id.nav_InitiateJob) {
-            Intent i = new Intent(HomeUser.this, InitiatedJobsHomeuser.class);
+            Intent i = new Intent(HomeUser.this, HomeuserInitiatedJobs.class);
             startActivity(i);
         } else if (id == R.id.nav_OngoingJobs) {
-            Intent i = new Intent(HomeUser.this, OngoingJobsHomeuser.class);
+            Intent i = new Intent(HomeUser.this, HomeuserOngoingJobs.class);
             startActivity(i);
         } else if (id == R.id.nav_FinishedJobs) {
-            Intent i = new Intent(HomeUser.this, FinishedJobsHomeuser.class);
+            Intent i = new Intent(HomeUser.this, HomeuserFinishedJobs.class);
             startActivity(i);
         } else if (id == R.id.nav_editDetails) {
 

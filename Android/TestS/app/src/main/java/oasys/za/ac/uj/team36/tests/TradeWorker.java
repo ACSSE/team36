@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -25,6 +26,8 @@ import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import java.io.File;
 
 import oasys.za.ac.uj.team36.Model.UserLocalDatabase;
 
@@ -94,6 +97,7 @@ public class TradeWorker extends AppCompatActivity
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
+            clearSharedPref();
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
@@ -122,6 +126,7 @@ public class TradeWorker extends AppCompatActivity
             this.finish();
             removelogIn();
             DB.clearLocalDBdata();
+            clearSharedPref();
             startActivity(new Intent(this,Main.class));
         }
         if (id == R.id.action_notification) {
@@ -139,19 +144,18 @@ public class TradeWorker extends AppCompatActivity
         int id = item.getItemId();
         fm = getSupportFragmentManager();
         if (id == R.id.nav_jobRequests) {
-            Intent i = new Intent(TradeWorker.this, JobRequestsTradeWorker.class);
-            //this.finish();  //Kill the activity from which you will go to next activity
+            Intent i = new Intent(TradeWorker.this, TradeworkerJobRequests.class);
             startActivity(i);
         } else if (id == R.id.nav_InitiatedJobsTW) {
-            Intent i = new Intent(TradeWorker.this, InitiatedJobsTradeWorker.class);
-            //this.finish();  //Kill the activity from which you will go to next activity
+            Intent i = new Intent(TradeWorker.this, TradeworkerInitiatedJobs.class);
+           //this.finish();  //Kill the activity from which you will go to next activity
             startActivity(i);
         } else if (id == R.id.nav_OngoingJobsTW) {
-            Intent i = new Intent(TradeWorker.this, OngoingJobsTradeworker.class);
+            Intent i = new Intent(TradeWorker.this, TradeworkerOngoingJobs.class);
             //this.finish();  //Kill the activity from which you will go to next activity
             startActivity(i);
         } else if (id == R.id.nav_FinishedJobsTW) {
-            Intent i = new Intent(TradeWorker.this, FinishedJobsTradeworker.class);
+            Intent i = new Intent(TradeWorker.this, TradeworkerFinishedJobs.class);
             //this.finish();  //Kill the activity from which you will go to next activity
             startActivity(i);
         } else if (id == R.id.nav_editDetailsTW) {
@@ -183,9 +187,16 @@ public class TradeWorker extends AppCompatActivity
         nm.notify(uniqueID, notification.build());
 
     }
+
     private void removelogIn(){
         DB.setUserLoggedIn(false);
     }
+
+    public void clearSharedPref(){
+       DB.clearLocalDBdata();
+    }
+
+
     public class ImageAdapter extends BaseAdapter {
         //the images to display
         private Integer[] imageIDs = {

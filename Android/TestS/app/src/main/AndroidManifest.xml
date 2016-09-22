@@ -42,36 +42,36 @@
             android:label="@string/title_activity_request_tradeworker"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".JobRequestsTradeWorker"
-            android:label="Job Request"
+            android:name=".TradeworkerJobRequests"
+            android:label="@string/title_activity_tradeworker_job_requests"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".OngoingJobsTradeworker"
-            android:label="@string/title_activity_ongoing_jobs_tradeworker"
+            android:name=".TradeworkerInitiatedJobs"
+            android:label="@string/title_activity_tradeworker_initiated_jobs"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".FinishedJobsTradeworker"
-            android:label="@string/title_activity_finished_jobs_tradeworker"
+            android:name=".TradeworkerOngoingJobs"
+            android:label="@string/title_activity_tradeworker_ongoing_jobs"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".InitiatedJobsTradeWorker"
-            android:label="@string/title_activity_initiated_jobs_trade_worker"
+            android:name=".TradeworkerFinishedJobs"
+            android:label="@string/title_activity_tradeworker_finished_jobs"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".OngoingJobsHomeuser"
-            android:label="@string/title_activity_ongoing_jobs_homeuser"
+            android:name=".HomeuserOngoingJobs"
+            android:label="@string/title_activity_homeuser_ongoing_jobs"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".InitiatedJobsHomeuser"
-            android:label="@string/title_activity_initiated_jobs_homeuser"
+            android:name=".HomeuserFinishedJobs"
+            android:label="@string/title_activity_homeuser_finished_jobs"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".FinishedJobsHomeuser"
-            android:label="@string/title_activity_finished_jobs_homeuser"
+            android:name=".HomeuserInitiatedJobs"
+            android:label="@string/title_activity_homeuser_initiated_jobs"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".ManageJobsHomeuser"
-            android:label="@string/title_activity_manage_jobs_homeuser"
+            android:name=".HomeuserManageJobs"
+            android:label="@string/title_activity_homeuser_manage_jobs"
             android:theme="@style/AppTheme.NoActionBar"></activity>
     </application>
 

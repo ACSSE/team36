@@ -13,17 +13,18 @@ import android.content.SharedPreferences;
  * the use of a shared preference.
  */
 public class UserLocalDatabase {
-    public static final String SHAREDPREF_NAME = "user_details" ;
+    public static final String SHAREDPREF_NAME = "user-details" ;
     SharedPreferences localDB ; // requires instantiation via a context from the activity its used in
 
     public UserLocalDatabase(Context context){
-        localDB = context.getSharedPreferences(SHAREDPREF_NAME, context.MODE_PRIVATE) ;
+        localDB = context.getSharedPreferences(SHAREDPREF_NAME, Context.MODE_PRIVATE) ;
     }
 
     /*
      * Storing a user's data once logged in.
      */
     public void storeUserData(RegisteredUser user) {
+
         SharedPreferences.Editor editor = localDB.edit();
         editor.putInt("UserID",user.getUserID()) ;
         editor.putString("name", user.getName());
@@ -51,9 +52,8 @@ public class UserLocalDatabase {
         int userID = localDB.getInt("UserID", -1);
         int ID = localDB.getInt("PersonalID", -1);
         int phone = localDB.getInt("contactNumber", -1);
-        int userType = localDB.getInt("userTpe",-1) ;
+        int userType = localDB.getInt("userType",-1) ;
         int confirm = localDB.getInt("",-1) ;
-       // boolean isAvailable = localDB.getBoolean("isAvailable", true);
         RegisteredUser storedUSer = new RegisteredUser(userID,name,surname,ID,username,email,phone,password,userType,confirm);
 
         return storedUSer;

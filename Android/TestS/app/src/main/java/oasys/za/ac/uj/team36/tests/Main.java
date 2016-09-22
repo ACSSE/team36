@@ -1,12 +1,16 @@
 package oasys.za.ac.uj.team36.tests;
 
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -23,6 +27,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
 import org.json.JSONException;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -34,10 +44,6 @@ import oasys.za.ac.uj.team36.Requests.loginRequest;
 public class Main extends AppCompatActivity implements View.OnClickListener{
 
     private static final String SERVER_ADDRESS_URL = "http://10.0.0.7:31335/php/classes/SebenzaServer.php" ;
-    private HttpStack httpStack = null;
-    private CookieStore cookieStore = null;
-    private DefaultHttpClient httpclient = null;
-    public static final int TIMEOUT = 1000 * 15 ;
     private Button bLogin ;
     private TextView tvRegisterLink, tvmain;
     private EditText etUsername ,etPassword ;
@@ -45,6 +51,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
     private RegisteredUser user ;
     private String Name, Surname, Username, Email, Password;
     private int IDnum, PhoneN,confirm, userType, UserID;
+    SharedPreferences pref ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,11 +59,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-        httpclient = new DefaultHttpClient();
-        cookieStore = new BasicCookieStore();
-        httpclient.setCookieStore( cookieStore );
-        httpStack = new HttpClientStack( httpclient );
 
         etUsername = (EditText) findViewById(R.id.etUsername) ;
         etPassword = (EditText) findViewById(R.id.etPassword);
@@ -68,6 +70,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         tvRegisterLink.setOnClickListener(this);
         tvmain.setOnClickListener(this);
         DB = new UserLocalDatabase(this) ;
+        setFalseData();
     }
 
     @Override
@@ -138,7 +141,11 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                     String s = response;
 
                     if(s.equalsIgnoreCase("true")){
+                        // fetch users details
                         int type = fetchDetails(uName);
+                        //store user details
+                        setSharePreference();
+                        setSharePreference();
                         if (type == 2){
                             startActivity(new Intent(Main.this, HomeUser.class));
                         }
@@ -198,8 +205,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                             + Password + " :\n " + IDnum + " :\n "  + Username +  " :\n" + userType +  " :\n"
                             + UserID+  " :\n"+ Surname;*/
 
-                     user = new RegisteredUser(UserID,Name,Surname,IDnum,Username,Email,PhoneN,Password,userType,confirm);
-                    DB.storeUserData(user);
                     //Set session variables here
                     //TODO: Set session variables local to the phone for use in the server
 
@@ -224,5 +229,41 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
     }
 
 
+    public void setSharePreference(){
+
+        user = new RegisteredUser(UserID,Name,Surname,IDnum,Username,Email,PhoneN,Password,userType,confirm);
+        DB.storeUserData(user);
+/*        pref = getSharedPreferences("user-details", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = pref.edit();
+
+        editor.putInt("UserID",user.getUserID()) ;
+        editor.putString("name", user.getName());
+        editor.putString("surname", user.getSurname());
+        editor.putString("surname", user.getUsername());
+        editor.putString("email", user.getEmail());
+        editor.putString("password", user.getPassword());
+        editor.putInt("PersonalID",user.getIDnum());
+        editor.putInt("contactNumber",user.getPhoneN());
+        editor.putInt("userType",user.getUserType());
+        editor.putInt("Confirmation",user.getConfirm());
+        editor.commit();*/
+
+        // test to see if works
+      /*  RegisteredUser u = DB.getLoggedInUser() ;
+        AlertDialog.Builder d = new AlertDialog.Builder(Main.this);
+        d.setMessage("Response : " + u.getUsername() + "\n" + u.getUserID()+ "\n" + u.getSurname());
+        d.setTitle("Your OK") ;
+        d.setNegativeButton("Retry", null) ;
+        d.create().show();*/
+    }
+
+    public void clearSharedPref(){
+       DB.clearLocalDBdata();
+    }
+
+    public void setFalseData(){
+        RegisteredUser u = new RegisteredUser(1,"n","s",-10,"as1","as1@mail.co.za",6,"dbyusgcwuy",-1,-1);
+        DB.storeUserData(u);
+    }
 
 }

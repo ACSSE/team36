@@ -8,7 +8,7 @@ public class RegisteredUser {
     private String Name, Surname, Username, Email, Password;
     private int IDnum, PhoneN,confirm, userID, userType;
 
-    public RegisteredUser(){};
+    public RegisteredUser(){}
 
     public RegisteredUser(int usersID,String name, String surname, int ID, String username, String email,
                           int phoneNumber, String password, int userT, int confirmation) {
