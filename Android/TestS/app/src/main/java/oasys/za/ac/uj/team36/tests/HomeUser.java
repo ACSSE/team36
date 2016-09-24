@@ -9,7 +9,6 @@ import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -21,24 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Gallery;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import oasys.za.ac.uj.team36.Model.MySingleton;
 import oasys.za.ac.uj.team36.Model.RegisteredUser;
 import oasys.za.ac.uj.team36.Model.UserLocalDatabase;
-import oasys.za.ac.uj.team36.Requests.MyRequest;
 
 public class HomeUser extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -48,16 +33,6 @@ public class HomeUser extends AppCompatActivity
     private static final int uniqueID = 45782 ; // Id for each notification
     private UserLocalDatabase DB ;
     private RegisteredUser user ;
-
-    //the images to display
-    private Integer[] imageIDs = {
-            R.drawable.labour8,
-            R.drawable.scaff,
-            R.drawable.construc,
-            R.drawable.paint,
-            R.drawable.brick,
-    };
-    ImageView selectedImage;
 
 
     private String Name, Surname, Username, Email, Password;
@@ -70,27 +45,12 @@ public class HomeUser extends AppCompatActivity
         //initiate the Home user with the home users main fragment
        // fm = getSupportFragmentManager();
        // fm.beginTransaction().replace(R.id.content_frame, new MainHomeUser()).commit();
-
         DB = new UserLocalDatabase(this) ;
         notification = new Notification.Builder(this);
         notification.setAutoCancel(true); // maiking notification disappear once this screen has loaded
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-     /*   Gallery gallery = (Gallery) findViewById(R.id.gallery);
-        gallery.setAdapter(new ImageAdapter(this));
-        selectedImage =(ImageView)findViewById(R.id.imageView1);
-        gallery.setSpacing(1);
-        gallery.setAdapter(new ImageAdapter(this));
-        // clicklistener for Gallery
-        gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-                Toast.makeText(HomeUser.this, "Your selected position = " + position, Toast.LENGTH_SHORT).show();
-                // show the selected Image
-                selectedImage.setImageResource(imageIDs[position]);
-            }
-        });*/
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -210,6 +170,7 @@ public class HomeUser extends AppCompatActivity
         nm.notify(uniqueID, notification.build());
 
     }
+
     private void removelogIn(){
         DB.setUserLoggedIn(false);
     }
@@ -218,46 +179,5 @@ public class HomeUser extends AppCompatActivity
        user =  DB.getLoggedInUser();
     }
 
-    public class ImageAdapter extends BaseAdapter {
-        private Context context;
-        //the images to display
-        private Integer[] imageIDs = {
-                R.drawable.labour8,
-                R.drawable.scaff,
-                R.drawable.construc,
-                R.drawable.paint,
-                R.drawable.brick,
-        };
-        private int itemBackground;
-        public ImageAdapter(Context c)
-        {
-            context = c;
-            // sets a grey background; wraps around the images
-            TypedArray a =obtainStyledAttributes(R.styleable.MyGallery);
-            itemBackground = a.getResourceId(R.styleable.MyGallery_android_galleryItemBackground, 0);
-            a.recycle();
-        }
-        // returns the number of images
-        public int getCount() {
-            return imageIDs.length;
-        }
-        // returns the ID of an item
-        public Object getItem(int position) {
-            return position;
-        }
-        // returns the ID of an item
-        public long getItemId(int position) {
-            return position;
-        }
-        // returns an ImageView view
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ImageView imageView = new ImageView(context);
-            imageView.setImageResource(imageIDs[position]);
-            imageView.setLayoutParams(new Gallery.LayoutParams(100, 100));
-            imageView.setBackgroundResource(itemBackground);
-            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-            return imageView;
-        }
-    }
 
 }

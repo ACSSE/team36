@@ -1,16 +1,13 @@
 package oasys.za.ac.uj.team36.tests;
 
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,34 +15,23 @@ import android.widget.TextView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.HttpClientStack;
-import com.android.volley.toolbox.HttpStack;
 
-import org.apache.http.client.CookieStore;
-import org.apache.http.impl.client.BasicCookieStore;
-import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONArray;
-import org.json.JSONException;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.HashMap;
 import java.util.Map;
 
 import oasys.za.ac.uj.team36.Model.*;
-import oasys.za.ac.uj.team36.Requests.MyRequest;
+import oasys.za.ac.uj.team36.Requests.MyRequestJArray;
+import oasys.za.ac.uj.team36.Requests.MyRequestString;
 import oasys.za.ac.uj.team36.Requests.loginRequest;
 
 
 public class Main extends AppCompatActivity implements View.OnClickListener{
 
-    private static final String SERVER_ADDRESS_URL = "http://10.0.0.7:31335/php/classes/SebenzaServer.php" ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.4:31335/php/classes/SebenzaServer.php" ;
     private Button bLogin ;
-    private TextView tvRegisterLink, tvmain;
+    private TextView tvRegisterLink;
     private EditText etUsername ,etPassword ;
     private UserLocalDatabase DB ;
     private RegisteredUser user ;
@@ -64,11 +50,9 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         etPassword = (EditText) findViewById(R.id.etPassword);
         bLogin = (Button) findViewById(R.id.bLogin) ;
         tvRegisterLink = (TextView) findViewById(R.id.tvRegisterLink) ;
-        tvmain = (TextView) findViewById(R.id.tvMain) ;
 
         bLogin.setOnClickListener(this);
         tvRegisterLink.setOnClickListener(this);
-        tvmain.setOnClickListener(this);
         DB = new UserLocalDatabase(this) ;
         setFalseData();
     }
@@ -87,17 +71,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                 regLink();
 
                 break ;
-            case R.id.tvMain:
-                String u = etUsername.getText().toString() ;
-                if (u.startsWith("H")|| u.startsWith("h")){
-                    startActivity(new Intent(Main.this, HomeUser.class));
-                }else if(u.startsWith("T")|| u.startsWith("t")){
-                    startActivity(new Intent(Main.this, TradeWorker.class));
-                }else{
-                    startActivity(new Intent(Main.this, TradeWorker.class));
-                }
-
-                break;
         }
 
     }
@@ -133,10 +106,14 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
     private void loginR(){
         final String uName = etUsername.getText().toString() ;
         final String pass = etPassword.getText().toString() ;
-        Response.Listener<String> responseL = new Response.Listener<String>(){
+
+        Map<String,String> params = new HashMap<>() ;
+        params.put("action", "login");
+        params.put("username",uName);
+        params.put("password",pass);
+        MyRequestString requestLogin = new MyRequestString(SERVER_ADDRESS_URL, params, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                //response is from the php file
                 try {
                     String s = response;
 
@@ -144,7 +121,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                         // fetch users details
                         int type = fetchDetails(uName);
                         //store user details
-                        setSharePreference();
                         setSharePreference();
                         if (type == 2){
                             startActivity(new Intent(Main.this, HomeUser.class));
@@ -168,9 +144,18 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                     ex.printStackTrace();
                 }
             }
-        };
-        loginRequest r = new loginRequest(uName, pass,responseL) ;
-        MySingleton.getInsance(Main.this).addToRequestQueue(r);
+        },new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                AlertDialog.Builder d = new AlertDialog.Builder(Main.this);
+                d.setMessage("Unsuccessful Login, Please try again : " + error);
+                d.setTitle("Error") ;
+                d.setNegativeButton("Retry", null) ;
+                d.create().show();
+            }
+        });
+
+        MySingleton.getInsance(Main.this).addToRequestQueue(requestLogin);
     }
 
     // the following function will fetch all the users details from the DB
@@ -182,7 +167,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         Map<String,String> params = new HashMap<>();
         params.put("action","android-fetchUserDetails") ;
         params.put("android-username",uName);
-        MyRequest req = new MyRequest(SERVER_ADDRESS_URL, params, new Response.Listener<JSONArray>() {
+        MyRequestJArray req = new MyRequestJArray(SERVER_ADDRESS_URL, params, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 try {

@@ -1485,6 +1485,48 @@ class SebenzaServer {
         }
     }
 
+    public static function acceptRequestAndroid($requestID, $userID, $userType){
+        $dbhandler = self::fetchDatabaseHandler();
+        if($userType != -1){
+            switch($userType){
+                case 0:
+                    $command = "UPDATE `QUOTE` SET `Status` = ? WHERE `QuoteID` = ? AND `RequestedUser` = ?";
+                    //Status = 1 means the request has been accepted
+                    if($dbhandler->runCommand($command,1,$requestID,$userID)){
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                    break;
+                case 1:
+                    return 'Dealing with contractor accept request';
+                    break;
+                case 2:
+                    //Dealing with homeuser accept request
+                    $command = "UPDATE `QUOTE` SET `HomeuserResponse` = ? WHERE `QuoteID` = ?";
+                    //Status = 1 means the request has been accepted
+                    if($dbhandler->runCommand($command,1,$requestID)){
+                        //Consider incrementing number of workers accepted here or do it perhaps after a job has been initiated between yourself and the tradeworker
+//                        self::incrementNumberOfWorkersAccepted($requestID);
+                        return true;
+                    }
+                    else{
+                        return false;
+                    }
+                    break;
+                case 3:
+                    return 'Should be dealing with admin';
+                    break;
+                default:
+                    return 'unrecognized usertype';
+                    break;
+            }
+        }
+        else{
+            return "This should have worked ".$userType;
+        }
+    }
 
     public static function isUnique($value,$condition,$type){
         switch($type){
@@ -2824,6 +2866,14 @@ if (!empty($_POST)) {
                     $response = json_encode(false);
                 }
                 }
+                break;
+            case 'android-tradeworker-accept-request':
+                if(isset($_POST['android-tradeworker-selected-request-id']) && isset($_POST['android-UserID']) && isset($_POST['android-usertype'])) {
+                    $response = json_encode(SebenzaServer::acceptRequestAndroid($_POST['android-tradeworker-selected-request-id'],$_POST['android-UserID'],$_POST['android-usertype']));
+                }else{
+                    $response = json_encode(false);
+                }
+
                 break;
             default:
                 //If the action was not one of the handled cases, respond appropriately
