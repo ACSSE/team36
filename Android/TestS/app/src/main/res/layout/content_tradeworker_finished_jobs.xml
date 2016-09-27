@@ -5,15 +5,18 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="oasys.za.ac.uj.team36.tests.TradeworkerFinishedJobs"
+    tools:context=".TradeworkerCompletedJobs"
     tools:showIn="@layout/activity_tradeworker_finished_jobs">
 
     <ListView
         android:id="@+id/lvFinisehdTW"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:divider="@color/colorPrimaryDark"
+        android:dividerHeight="1.5dp">
     </ListView>
 
 </LinearLayout>

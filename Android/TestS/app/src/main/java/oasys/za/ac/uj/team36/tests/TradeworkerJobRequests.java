@@ -29,6 +29,7 @@ import oasys.za.ac.uj.team36.Model.RegisteredUser;
 import oasys.za.ac.uj.team36.Model.UserLocalDatabase;
 import oasys.za.ac.uj.team36.Requests.MyRequestJArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 public class TradeworkerJobRequests extends AppCompatActivity {
 
@@ -37,6 +38,7 @@ public class TradeworkerJobRequests extends AppCompatActivity {
     SharedPreferences pref ;
     private int utype, uID;
     private JSONArray allRequests;
+    private JSONObject[] finalRequests ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,7 +168,7 @@ public class TradeworkerJobRequests extends AppCompatActivity {
 
     // display jobs in a list for user to read
     public void populateListView(String[] req, int length){
-
+        finalRequests = new JSONObject[length];
         final String[] a = new String[length]; // create an empty array;
         int count = 0;
 
@@ -174,8 +176,14 @@ public class TradeworkerJobRequests extends AppCompatActivity {
             if (req[i].toString() == "") {
                 //dont add to view list
             }else {
-                a[count]= req[i];
-                count++;
+                try{
+                    finalRequests[count] = allRequests.getJSONObject(i);
+                    a[count]= req[i];
+                    count++;
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+
             }
 
         }
@@ -193,16 +201,16 @@ public class TradeworkerJobRequests extends AppCompatActivity {
     }
 
     public void respondToRequest(int position){
-        int statusResponse ;
+        int jStatus ;
         try {
-             statusResponse= allRequests.getJSONObject(position).getInt("Status");
-            if(statusResponse == 0){
+            jStatus= finalRequests[position].getInt("Status");
+            if(jStatus == 0){
                 String description, commencementDate, locationName ;
                 final int rID ;
-                    description = allRequests.getJSONObject(position).getString("JobDescription");
-                    commencementDate = allRequests.getJSONObject(position).getString("JobCommencementDate");
-                    locationName = allRequests.getJSONObject(position).getString("locationName");
-                    rID  = allRequests.getJSONObject(position).getInt("QuoteID");
+                    description = finalRequests[position].getString("JobDescription");
+                    commencementDate = finalRequests[position].getString("JobCommencementDate");
+                    locationName = finalRequests[position].getString("locationName");
+                    rID  = finalRequests[position].getInt("QuoteID");
 
                     AlertDialog.Builder d = new AlertDialog.Builder(TradeworkerJobRequests.this);
                     d.setMessage("---JOB " + position +" CONFIRMATION---" + "\nDate: " +commencementDate +"\nDescription:"

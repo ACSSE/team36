@@ -4,19 +4,20 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    android:background="@color/colorPrimary"
+    android:padding = "10dp"
     android:orientation="vertical"
+    android:background="@color/colorPrimary"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="oasys.za.ac.uj.team36.tests.HomeuserOngoingJobs"
-    tools:showIn="@layout/activity_homeuser_ongoing_jobs">
+    tools:context="oasys.za.ac.uj.team36.tests.TradeworkerCancelledJobs"
+    tools:showIn="@layout/activity_tradeworker_cancelled_jobs">
 
     <ListView
-        android:id="@+id/lvjobrequestsTW"
+        android:id="@+id/lvCancelledTW"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:divider="@color/colorPrimaryDark"
-        android:dividerHeight="1.5dp">
+        android:dividerHeight="1.5dp"
+        >
     </ListView>
 
 </LinearLayout>

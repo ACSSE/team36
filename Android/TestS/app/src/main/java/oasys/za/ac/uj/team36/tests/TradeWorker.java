@@ -3,9 +3,7 @@ package oasys.za.ac.uj.team36.tests;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,9 +17,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 
 
 import oasys.za.ac.uj.team36.Model.UserLocalDatabase;
@@ -121,15 +116,12 @@ public class TradeWorker extends AppCompatActivity
             startActivity(i);
         } else if (id == R.id.nav_InitiatedJobsTW) {
             Intent i = new Intent(TradeWorker.this, TradeworkerInitiatedJobs.class);
-           //this.finish();  //Kill the activity from which you will go to next activity
             startActivity(i);
         } else if (id == R.id.nav_OngoingJobsTW) {
-            Intent i = new Intent(TradeWorker.this, TradeworkerOngoingJobs.class);
-            //this.finish();  //Kill the activity from which you will go to next activity
+            Intent i = new Intent(TradeWorker.this, TradeworkerCompletedJobs.class);
             startActivity(i);
         } else if (id == R.id.nav_FinishedJobsTW) {
-            Intent i = new Intent(TradeWorker.this, TradeworkerFinishedJobs.class);
-            //this.finish();  //Kill the activity from which you will go to next activity
+            Intent i = new Intent(TradeWorker.this, TradeworkerCancelledJobs.class);
             startActivity(i);
         } else if (id == R.id.nav_editDetailsTW) {
             // TODO Handle the camera action
