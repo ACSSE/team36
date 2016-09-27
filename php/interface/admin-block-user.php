@@ -13,6 +13,16 @@
         </div>
         <div class="row">
             <div class="column large-11">
+                <label>Sort By:</label>
+                <select id="admin-manage-block-user-sortBy" name="admin-manage-block-user-sortBy"  onchange="userGenericSortTable('block-table','admin-manage-block-user-sortBy')">
+                </select>
+            </div>
+            <div class="column large-1">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="column large-11">
                 <div class=" full-width" id="admin-manage-block-user-areainformation" style="overflow-y: auto; height: 400px">
 
                 </div>

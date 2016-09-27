@@ -2,7 +2,6 @@
  * Created by Brandon on 2016/09/17.
  */
 
-
 var adminRequestArray;
 function handleAdminFetchJobRequests(response){
     adminRequestArray = JSON.parse(response);
@@ -14,6 +13,9 @@ function handleAdminFetchJobRequests(response){
         adminDisplayCountryReport();
         //adminDisplayProvincialReport("GP");
         adminDisplayProfileDetails();
+        SetUpTableSortBySelect('specialization-table-headers','admin-specialization-sortBy');
+        //SetUpTableSortBySelect('generic-table-headers','admin-view-table-sortBy');
+        SetUpTableSortBySelect('block-table-headers','admin-manage-block-user-sortBy');
     }
 }
 
@@ -26,7 +28,7 @@ function adminDisplayProfileDetails(){
         var table = "RegisteredUsers";
         var search = "TypeOfUser=3";
         var profileDetails = adminGenericDisplayTableSetUp(table,search);
-        adminDisplayGenericTable(profileDetails,'admin-manage-profile-areainformation');
+        adminDisplayGenericTable(profileDetails,'admin-manage-profile-areainformation','profile-table');
     }
 
 }
@@ -216,7 +218,7 @@ function adminDisplayBlockUser(){
     var searchValue = document.getElementById('admin-manage-block-user-search').value;
     if(adminRequestArray.hasOwnProperty(tableName) && adminRequestArray[tableName].length > 0){
         var tablesToPrint = adminGenericDisplayTableSetUp(tableName,searchValue);
-        adminDisplayGenericTable(tablesToPrint,'admin-manage-block-user-areainformation');
+        adminDisplayGenericTable(tablesToPrint,'admin-manage-block-user-areainformation','block-table');
     }
     else{
         document.getElementById('admin-manage-block-user-areainformation').innerHTML = "<h5>The table selected [" + tableName + "] does not exist on the database</h5>";
@@ -228,7 +230,8 @@ function adminGenericDisplayTable(){
     var searchValue = document.getElementById('admin-manage-tables-search').value;
     if(adminRequestArray.hasOwnProperty(tableName) && adminRequestArray[tableName].length > 0){
         var tablesToPrint = adminGenericDisplayTableSetUp(tableName,searchValue);
-        adminDisplayGenericTable(tablesToPrint,'admin-manage-tables-areainformation');
+        adminDisplayGenericTable(tablesToPrint,'admin-manage-tables-areainformation','generic-table');
+        SetUpTableSortBySelect('generic-table-headers','admin-view-table-sortBy')
     }
     else{
         document.getElementById('admin-manage-tables-areainformation').innerHTML = "<h5>The table selected does not have any entries currently</h5>";
@@ -243,7 +246,7 @@ function adminSearchSpecializationArray(){
 
     if(adminRequestArray.hasOwnProperty(tableName) && adminRequestArray[tableName].length > 0) {
         var specializationsArray = adminGenericDisplayTableSetUp(tableName,searchValue);
-        adminDisplayGenericTable(specializationsArray,'admin-manage-specialization-areainformation');
+        adminDisplayGenericTable(specializationsArray,'admin-manage-specialization-areainformation','specialization-table');
     }
 }
 
@@ -843,11 +846,36 @@ function adminGenericDisplayTableSetUp(tableName,searchValue){
     }
 }
 
-function adminDisplayGenericTable(tableToDisplay,displayElementID){
+function adminUserGenericSortSelectFill(selectID,array){
+    var select = document.getElementById(selectID);
+    select.innerHTML = "";
+    for(var i = 0;i < array.length;i++){
+        select.innerHTML += '<option value="' + ((i) * 2) + '">' + array[i] + '(asc)</option>';
+        select.innerHTML += '<option value="' + (((i) * 2) + 1) + '">' + array[i] + '(dsc)</option>';
+    }
+}
+
+function SetUpTableSortBySelect(tableName,selectID){
+    var table = document.getElementById(tableName);
+    var tr = table.getElementsByTagName("tr");
+    var headers = [];
+    for(var i = 0;i < tr.length;i++){
+        var th = tr[i].getElementsByTagName("th");
+
+        for(var j = 0;j<th.length;j++){
+            //console.log("The following is the table headers!!!!!!! " + th[j].innerHTML);
+            headers.push(th[j].innerHTML);
+        }
+
+    }
+    adminUserGenericSortSelectFill(selectID,headers);
+}
+
+function adminDisplayGenericTable(tableToDisplay,displayElementID,tableName){
     var onceOff = false;
     var tableStart = "<table>";
-    var tableHead = "<thead>";
-    var endTableHead = "</thead><tbody>";
+    var tableHead = "<thead id='" + tableName + "-headers'>";
+    var endTableHead = "</thead><tbody id='" + tableName + "'>";
     var tableEnd = "</tbody></table>";
     var tableBody = "";
     var tableConstructed = "";

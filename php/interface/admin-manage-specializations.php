@@ -11,6 +11,16 @@
 
             </div>
         </div>
+            <div class="row">
+                <div class="column large-11">
+                    <label>Sort By:</label>
+                    <select id="admin-specialization-sortBy" name="admin-specialization-sortBy"  onchange="userGenericSortTable('specialization-table','admin-specialization-sortBy')">
+                    </select>
+                </div>
+                <div class="column large-1">
+
+                </div>
+            </div>
         <div class="row">
             <div class="column large-11">
                 <div class=" full-width" id="admin-manage-specialization-areainformation" style="overflow-y: auto; height: 400px">

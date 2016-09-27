@@ -13,7 +13,7 @@
         </div>
         <div class="row">
             <div class="column large-11">
-                <label>Sort By:</label>
+                <label>Selected Table:</label>
                 <select id="admin-manage-tables-select" name="ignore-admin-manage-tables-select" onchange="adminGenericDisplayTable()">
                     <option value="RegisteredUsers" selected>Registered Users Table</option>
                     <option value="HomeuserLocations">Home user locations Table</option>
@@ -34,6 +34,18 @@
 
             </div>
         </div>
+
+        <div class="row">
+            <div class="column large-11">
+                <label>Sort By:</label>
+                <select id="admin-view-table-sortBy" name="admin-view-table-sortBy"  onchange="userGenericSortTable('generic-table','admin-view-table-sortBy')">
+                </select>
+            </div>
+            <div class="column large-1">
+
+            </div>
+        </div>
+
         <div class="row">
             <div class="column large-11">
                 <div class=" full-width" id="admin-manage-tables-areainformation" style="overflow-y: auto; height: 400px">

@@ -1192,19 +1192,19 @@ function userGenericSortTable(table,select){
     td = tr[0].getElementsByTagName("td")[column].innerHTML;
         //td = tr[0].getElementsByTagName("td")[column].innerHTML;
     if(datePatt.test(td)){
-        console.log("Dealing with dates");
+       // console.log("Dealing with dates");
         testCase = 0;
     }
     else if(numPatt.test(td)){
-        console.log("Dealing with integers");
+      //  console.log("Dealing with integers");
         testCase = 1;
     }
     else if(fltNum.test(td)){
-        console.log("Dealing with floats");
+       // console.log("Dealing with floats");
         testCase = 2;
     }
     else{
-        console.log("Dealing with alphabet");
+        //console.log("Dealing with alphabet");
         testCase = 3;
     }
     //for(var)
@@ -1222,7 +1222,7 @@ function userGenericSortTable(table,select){
             case 0:
                 if(ascending){
                     while(j > 0 && Date.parse(sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML) > Date.parse(td2)){
-                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        //console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
                         for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
                             sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
                         }
@@ -1231,7 +1231,7 @@ function userGenericSortTable(table,select){
                 }
                 else{
                     while(j > 0 && Date.parse(sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML) < Date.parse(td2)){
-                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        //console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
                         for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
                             sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
                         }
@@ -1245,7 +1245,7 @@ function userGenericSortTable(table,select){
             case 1:
                 if(ascending){
                     while(j > 0 && parseInt(sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML) > parseInt(td2)){
-                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        //console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
                         for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
                             sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
                         }
@@ -1254,7 +1254,7 @@ function userGenericSortTable(table,select){
                 }
                 else{
                     while(j > 0 && parseInt(sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML) < parseInt(td2)){
-                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        //console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
                         for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
                             sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
                         }
@@ -1268,7 +1268,7 @@ function userGenericSortTable(table,select){
             case 2:
                 if(ascending){
                     while(j > 0 && parseFloat(sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML) > parseFloat(td2)){
-                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        //console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
                         for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
                             sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
                         }
@@ -1277,7 +1277,7 @@ function userGenericSortTable(table,select){
                 }
                 else{
                     while(j > 0 && parseFloat(sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML) < parseFloat(td2)){
-                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        //console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
                         for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
                             sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
                         }
@@ -1291,7 +1291,7 @@ function userGenericSortTable(table,select){
             case 3:
                 if(ascending){
                     while(j > 0 && sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML > td2){
-                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        //console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
                         for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
                             sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
                         }
@@ -1300,7 +1300,7 @@ function userGenericSortTable(table,select){
                 }
                 else{
                     while(j > 0 && sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML < td2){
-                        console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
+                        //console.log("comparing: " + sortedRows[j - 1].getElementsByTagName("td")[column].innerHTML + ": " + td2);
                         for(x = 0;x < sortedRows[j].getElementsByTagName("td").length;x++){
                             sortedRows[j].getElementsByTagName("td")[x].innerHTML = sortedRows[j - 1].getElementsByTagName("td")[x].innerHTML;
                         }
@@ -1316,7 +1316,7 @@ function userGenericSortTable(table,select){
                 break;
         }
     }
-    console.log(sortedRows);
+    //console.log(sortedRows);
 }
 
 var workTypeSelectTagID;
