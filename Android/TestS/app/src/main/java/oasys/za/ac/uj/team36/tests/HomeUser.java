@@ -4,11 +4,14 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -22,8 +25,20 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import oasys.za.ac.uj.team36.Model.MySingleton;
 import oasys.za.ac.uj.team36.Model.RegisteredUser;
 import oasys.za.ac.uj.team36.Model.UserLocalDatabase;
+import oasys.za.ac.uj.team36.Requests.MyRequestJArray;
 
 public class HomeUser extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
@@ -32,7 +47,9 @@ public class HomeUser extends AppCompatActivity
     private Notification.Builder notification;
     private static final int uniqueID = 45782 ; // Id for each notification
     private UserLocalDatabase DB ;
-    private RegisteredUser user ;
+    SharedPreferences pref ;
+    private int utype, uID;
+    private JSONArray allRequests;
 
 
     private String Name, Surname, Username, Email, Password;
@@ -70,10 +87,7 @@ public class HomeUser extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        //get the users details stored in the shared preference
-        //result is stored in global variable user (Registered user)
-        fetchUserDetails();
-        //TODO: set user profile up here (names, email etc. )
+
     }
 
     @Override
@@ -115,7 +129,7 @@ public class HomeUser extends AppCompatActivity
             setNotification();
         }
         if (id == R.id.action_testServer) {
-            fetchUserDetails();
+
         }
         return super.onOptionsItemSelected(item);
     }
@@ -175,9 +189,122 @@ public class HomeUser extends AppCompatActivity
         DB.setUserLoggedIn(false);
     }
 
-    public void fetchUserDetails(){
-       user =  DB.getLoggedInUser();
+    // fetching user from shared preference
+    public void fetchUser(){
+        //pref = getSharedPreferences("user-details", Context.MODE_PRIVATE);
+        RegisteredUser u = DB.getLoggedInUser() ;
+        uID = u.getUserID();
+        utype = u.getUserType();
     }
 
+    public void fetchJobRequestConfirmationNotification(){
+
+        Map<String,String> params = new HashMap<>();
+        params.put("action","android-fetch-job-requests") ;
+        params.put("android-UserID",uID + "");
+        params.put("android-usertype",utype+ "");
+
+        MyRequestJArray req = new MyRequestJArray(SERVER_ADDRESS_URL, params, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                try {
+                    allRequests = response;
+                    handleJobRequestConfirmationNotification();
+
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                String st = error.toString() ;
+                AlertDialog.Builder d = new AlertDialog.Builder(HomeUser.this);
+                d.setMessage("Response : " + st.toString());
+                d.setTitle("Your Error") ;
+                d.setNegativeButton("Retry", null) ;
+                d.create().show();
+                //TODO: use a toast instead
+            }
+        }) ;
+
+        MySingleton.getInsance(HomeUser.this).addToRequestQueue(req);
+    }
+
+    public void handleJobRequestConfirmationNotification(){
+        int numItemsInList = allRequests.length() ;
+        String[] confirmationList = new String[numItemsInList] ;
+        int nActualRequests =0;
+        try {
+            for (int i = 0; i < numItemsInList; i++) {
+                int status = allRequests.getJSONObject(i).getInt("Status");
+                int homeuserResponse = allRequests.getJSONObject(i).getInt("HomeuserResponse");
+                if(homeuserResponse != 2 && status != 2){
+                    if(status == 1 && homeuserResponse == 1){
+                        String commencementDate = allRequests.getJSONObject(i).getString("JobCommencementDate");
+                        String description = allRequests.getJSONObject(i).getString("JobDescription");
+                        String worktype = allRequests.getJSONObject(i).getString("JobDescription");
+                        int streetNum = allRequests.getJSONObject(i).getInt("StreetNumber");
+                        String road = allRequests.getJSONObject(i).getString("JobDescription");
+                        String location = allRequests.getJSONObject(i).getString("JobDescription");
+                        String area = allRequests.getJSONObject(i).getString("JobDescription");
+                        String province = allRequests.getJSONObject(i).getString("Province");
+                        String huName = allRequests.getJSONObject(i).getString("HomeuserName");
+                        String huSurname = allRequests.getJSONObject(i).getString("HomeuserSurname");
+                        int huContact = allRequests.getJSONObject(i).getInt("HomeuserContact");
+
+                        String details = "Work Request Confirmation\n"+ "\nWork Details\n" + ""+ commencementDate
+                                + "\nWork Type: " + worktype + "\nDescription" +description + "\n\nAddress Details\n\n"
+                                +  "Number: " + streetNum + "\nRoad: " + road + "\nSub Area: " + location + "\nArea: "
+                                + area + "\nProvince: " + province + "\n\nHomeuser Details\n\n" + "Name: " + huName+
+                                "\nSurname: " + huSurname + "Contact Number: " + huContact ;
+                        confirmationList[i] = details;
+                        nActualRequests ++;
+
+                    }else{
+                        confirmationList[i] = "";
+                    }
+                }else{
+                    confirmationList[i] = "";
+                }
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        displayJobRequestConfirmationNotification(confirmationList, nActualRequests);
+    }
+
+    public void displayJobRequestConfirmationNotification(String[] confirms, int length){
+        JSONObject[] finalRequests = new JSONObject[length];
+        String[] a = new String[length]; // create an empty array;
+        int count = 0;
+        for(int i = 0 ; i < confirms.length ; i++) {
+            if (confirms[i].toString() == "") {
+                //dont show user job details
+            }else {
+                try{
+                    finalRequests[count] = allRequests.getJSONObject(i);
+                    a[count]= confirms[i];
+                    final int Qid =  allRequests.getJSONObject(i).getInt("QuoteID");
+                    AlertDialog.Builder d = new AlertDialog.Builder(HomeUser.this);
+                    d.setMessage(a[i].toString());
+                    d.setTitle("Job Confirmation") ;
+                    final int finalI = i;
+                    d.setNeutralButton("Confirm", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            //confirmJobRequest(Qid);
+                        }
+                    }) ;
+                    d.create().show();
+                    count++;
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+    }
 
 }

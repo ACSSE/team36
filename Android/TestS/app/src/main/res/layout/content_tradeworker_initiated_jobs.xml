@@ -11,6 +11,18 @@
     tools:context="oasys.za.ac.uj.team36.tests.TradeworkerInitiatedJobs"
     tools:showIn="@layout/activity_tradeworker_initiated_jobs">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tap job for details"
+        android:textSize="10pt"
+        android:gravity="center"
+        android:textColor="#FFF"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <ListView
         android:id="@+id/lvInitiatedTW"
         android:layout_height="wrap_content"

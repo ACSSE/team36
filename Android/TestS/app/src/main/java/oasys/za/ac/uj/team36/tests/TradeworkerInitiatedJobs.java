@@ -191,9 +191,9 @@ public class TradeworkerInitiatedJobs extends AppCompatActivity {
                 QouteID  = finalInitiatersJobs[position].getInt("QuoteID");
 
                 AlertDialog.Builder d = new AlertDialog.Builder(TradeworkerInitiatedJobs.this);
-                d.setMessage("INITIATED JOB REQUESTS" + "\nJob Start Date: " + date  + "\nAgreed Price: "
+                d.setMessage("Job Start Date: " + date  + "\nAgreed Price: "
                         + price+ "\nCompletion Date:" + EstimatedCDate + "\nWork Type: " + wtype);
-                d.setTitle("Job Requests") ;
+                d.setTitle("Initiated Job Requests") ;
                 d.setPositiveButton("Completion", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

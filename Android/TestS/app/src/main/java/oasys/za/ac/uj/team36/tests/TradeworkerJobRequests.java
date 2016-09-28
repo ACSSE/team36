@@ -50,7 +50,7 @@ public class TradeworkerJobRequests extends AppCompatActivity {
         DB = new UserLocalDatabase(this);
         fetchUser();
         fetchJobRequests();
-        displayRequestAcceptedNotification();
+       // displayRequestAcceptedNotification();
     }
     // fetch requests related to specific user
     public void fetchJobRequests(){
@@ -66,8 +66,8 @@ public class TradeworkerJobRequests extends AppCompatActivity {
             public void onResponse(JSONArray response) {
                 try {
                     allRequests = response;
+                    handleJobRequestConfirmationNotification();
                     displayJobRequests();
-
                 }catch(Exception e){
                     e.printStackTrace();
                 }
@@ -106,7 +106,7 @@ public class TradeworkerJobRequests extends AppCompatActivity {
 
                 if (homeuserResponse != 2 && statusResponse != 2) {
                     if(!allRequests.getJSONObject(i).has("JobID")){
-                        if((statusResponse == 0 ||statusResponse == 1 )&& homeuserResponse == 0) {
+                        if(statusResponse == 0 ||statusResponse == 1 ||statusResponse == 3) {
 
                             String commencementDate = allRequests.getJSONObject(i).getString("JobCommencementDate");
                             String description = allRequests.getJSONObject(i).getString("JobDescription");
@@ -205,25 +205,26 @@ public class TradeworkerJobRequests extends AppCompatActivity {
         try {
             jStatus= finalRequests[position].getInt("Status");
             if(jStatus == 0){
-                String description, commencementDate, locationName ;
+                String description, commencementDate, locationName, workt;
                 final int rID ;
                     description = finalRequests[position].getString("JobDescription");
                     commencementDate = finalRequests[position].getString("JobCommencementDate");
                     locationName = finalRequests[position].getString("locationName");
                     rID  = finalRequests[position].getInt("QuoteID");
+                    workt = finalRequests[position].getString("WorkType");
 
                     AlertDialog.Builder d = new AlertDialog.Builder(TradeworkerJobRequests.this);
-                    d.setMessage("---JOB " + position +" CONFIRMATION---" + "\nDate: " +commencementDate +"\nDescription:"
+                    d.setMessage("Work Type: "+ workt +"\nDate: " +commencementDate +"\nDescription:"
                             + description+ "\nArea: " + locationName);
-                    d.setTitle("Job Confirmation") ;
-                    d.setPositiveButton("Accept", new DialogInterface.OnClickListener() {
+                    d.setTitle("Job Resonse") ;
+                    d.setNeutralButton("Accept", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // send server request acceptance
                             acceptJobRequest(rID) ;
                         }
                     });
-                    d.setNeutralButton("Reject", new DialogInterface.OnClickListener() {
+                    d.setPositiveButton("Reject", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             // send server request reject
@@ -258,10 +259,10 @@ public class TradeworkerJobRequests extends AppCompatActivity {
                 try {
 
                     if(response.equalsIgnoreCase("true")){
-                        Toast.makeText(getApplicationContext(),"JOB " + rID + " ACCEPTED",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Job Confirmed",Toast.LENGTH_SHORT).show();
                         refreshActivty();
                     }else{
-                        Toast.makeText(getApplicationContext(),"Could not accept job",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(),"Could Not Confirm Job",Toast.LENGTH_SHORT).show();
                     }
 
                 }catch(Exception e){
@@ -289,49 +290,6 @@ public class TradeworkerJobRequests extends AppCompatActivity {
 
     }
 
-
-    public void displayRequestAcceptedNotification(){
-        try {
-            for (int i = 0; i < allRequests.length(); i++) {
-                if ((allRequests.getJSONObject(i).getInt("HomeuserResponse") == 1) &&
-                        (allRequests.getJSONObject(i).getInt("Status") == 1)) {
-                    String AreaName,City, JobCommencementDate,JobDescription,Name,Surname,Road,WorkType,locationName;
-                    final int ContactNumber,StreetNumber, qID;
-                    JobDescription = allRequests.getJSONObject(i).getString("JobDescription");
-                    JobCommencementDate = allRequests.getJSONObject(i).getString("JobCommencementDate");
-                    AreaName = allRequests.getJSONObject(i).getString("AreaName");
-                    City = allRequests.getJSONObject(i).getString("City");
-                    Name = allRequests.getJSONObject(i).getString("HomeuserName");
-                    Surname = allRequests.getJSONObject(i).getString("HomeuserSurname");
-                    Road = allRequests.getJSONObject(i).getString("Road");
-                    WorkType = allRequests.getJSONObject(i).getString("WorkType");
-                    StreetNumber = allRequests.getJSONObject(i).getInt("StreetNumber");
-                    ContactNumber = allRequests.getJSONObject(i).getInt("HomeuserContact");
-                    locationName = allRequests.getJSONObject(i).getString("locationName");
-                    qID = allRequests.getJSONObject(i).getInt("QuoteID");
-                    AlertDialog.Builder d = new AlertDialog.Builder(TradeworkerJobRequests.this);
-                    d.setMessage("JOB " + 1 +" NOTIFICATION\n" + "Work Details\n" + "Date of Job: " + JobCommencementDate + "\nJob Type:" + WorkType+ "\nDescription: "
-                            + JobDescription+ " \nAddress Details \n" + "Street Number: "+ StreetNumber+ "\nRoad: " + Road + "Sub Area: "
-                            + locationName + "Area: " + AreaName + "Province" + City + " \nHomeuser Details \n" + "Name:" + Name
-                            + "\nSurname" + Surname+ "\nContact Details:" +ContactNumber);
-                    d.setTitle("Job Notifiaction") ;
-                    d.setPositiveButton("Confirm", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            Toast.makeText(getApplicationContext(),"JOB" +qID + "CONFIRMED",Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    d.create().show();
-
-                }
-            }
-        }catch (JSONException e){
-            e.printStackTrace();
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
-
     public void refreshActivty(){
         // end the current activity thats running
         finish();
@@ -339,32 +297,120 @@ public class TradeworkerJobRequests extends AppCompatActivity {
         startActivity(getIntent());
     }
 
-    public void testList(){
-        final String[] FRUITS = new String[] { "Apple", "Avocado", "Banana",
-                "Blueberry", "Coconut", "Durian", "Guava", "Kiwifruit",
-                "Jackfruit", "Mango", "Olive", "Pear", "Sugar-apple" };
-        ListView listView = (ListView) findViewById(R.id.lvjobrequestsTW);
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.list_requests_item,FRUITS );
-        listView.setAdapter(adapter);
+    public void handleJobRequestConfirmationNotification(){
+        int numItemsInList = allRequests.length() ;
+        String[] confirmationList = new String[numItemsInList] ;
+        int nActualRequests =0;
+        try {
+            for (int i = 0; i < numItemsInList; i++) {
+                int status = allRequests.getJSONObject(i).getInt("Status");
+                int homeuserResponse = allRequests.getJSONObject(i).getInt("HomeuserResponse");
+                if(homeuserResponse != 2 && status != 2){
+                    if(status == 1 && homeuserResponse == 1){
+                        String commencementDate = allRequests.getJSONObject(i).getString("JobCommencementDate");
+                        String description = allRequests.getJSONObject(i).getString("JobDescription");
+                        String worktype = allRequests.getJSONObject(i).getString("WorkType");
+                        int streetNum = allRequests.getJSONObject(i).getInt("StreetNumber");
+                        String road = allRequests.getJSONObject(i).getString("Road");
+                        String location = allRequests.getJSONObject(i).getString("locationName");
+                        String area = allRequests.getJSONObject(i).getString("AreaName");
+                        String province = allRequests.getJSONObject(i).getString("Province");
+                        String huName = allRequests.getJSONObject(i).getString("HomeuserName");
+                        String huSurname = allRequests.getJSONObject(i).getString("HomeuserSurname");
+                        int huContact = allRequests.getJSONObject(i).getInt("HomeuserContact");
 
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Toast.makeText(getApplicationContext(),
-                        ((TextView) view).getText(), Toast.LENGTH_SHORT).show();
+                        String details ="Work Details\n\n" + "Date: "+ commencementDate
+                                + "\nWork Type: " + worktype + "\nDescription" +description + "\n\nAddress Details\n\n"
+                                +  "Number: " + streetNum + "\nRoad: " + road + "\nSub Area: " + location + "\nArea: "
+                                + area + "\nProvince: " + province + "\n\nHomeuser Details\n\n" + "Name: " + huName+
+                                "\nSurname: " + huSurname + "\nContact Number: " + huContact ;
+                        confirmationList[i] = details;
+                    }else{
+                        confirmationList[i] = "";
+                    }
+                }else{
+                    confirmationList[i] = "";
+                }
             }
-        });
-        Toast t = Toast.makeText(this,"No Requests to display",Toast.LENGTH_LONG) ;
-        t.show();
-
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        displayJobRequestConfirmationNotification(confirmationList, nActualRequests);
     }
 
-    public void printJobsTest(){
-           /*  AlertDialog.Builder d = new AlertDialog.Builder(TradeworkerJobRequests.this);
-                    d.setMessage("Response : " +"\n + " + requests[1].toString()+
-                            "\n + " + requests[2].toString() +"\n + " + requests[3].toString()+ "\n + " + requests[4].toString());
-                    d.setTitle("Your OK") ;
-                    d.setNegativeButton("Retry", null) ;
-                    d.create().show();*/
+    public void displayJobRequestConfirmationNotification(String[] confirms, int length){
+        Toast.makeText(getApplicationContext(),"DETAILS SET",Toast.LENGTH_LONG) ;
+        for(int i = 0 ; i < confirms.length ; i++) {
+            if (confirms[i].toString() == "") {
+                //dont show user job details
+            }else {
+                try{
+                    final int Qid =  allRequests.getJSONObject(i).getInt("QuoteID");
+                    AlertDialog.Builder d = new AlertDialog.Builder(TradeworkerJobRequests.this);
+                    d.setMessage(confirms[i].toString()+ "\n\n* NOTE: By clicking confirm you agree to do the job" );
+                    d.setTitle("Work Request Confirmation") ;
+                    final int finalI = i;
+                    d.setNeutralButton("Confirm", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            confirmJobRequestNotifiaction(Qid);
+                        }
+                    }) ;
+                    d.create().show();
+                }catch (JSONException e){
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+    }
+
+    public void confirmJobRequestNotifiaction(int QuoteID){
+        Map<String,String> params = new HashMap<>();
+        params.put("action","tradeworker-accept-confirmation") ;
+        params.put("ignore-tradeworker-request-notification-quoteID",QuoteID + "");
+
+        MyRequestString req = new MyRequestString(SERVER_ADDRESS_URL, params, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                try {
+                    String s = response ;
+                    if(s.equalsIgnoreCase("true")){
+                        AlertDialog.Builder d = new AlertDialog.Builder(TradeworkerJobRequests.this);
+                        d.setMessage("Request Confirmed");
+                        d.setTitle("Work Request Confirmation") ;
+                        d.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                return;
+                            }
+                        }) ;
+                        d.create().show();
+                    }else
+                    {
+                        AlertDialog.Builder d = new AlertDialog.Builder(TradeworkerJobRequests.this);
+                        d.setMessage("Request Could Not Confirm");
+                        d.setTitle("Work Request Confirmation") ;
+                        d.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                return;
+                            }
+                        }) ;
+                        d.create().show();
+                    }
+                }catch(Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Toast.makeText(getApplicationContext(), "An error has Occured" ,Toast.LENGTH_LONG);
+            }
+        }) ;
+
+        MySingleton.getInsance(TradeworkerJobRequests.this).addToRequestQueue(req);
     }
 }
