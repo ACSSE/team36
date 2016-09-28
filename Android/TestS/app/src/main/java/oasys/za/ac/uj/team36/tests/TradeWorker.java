@@ -3,13 +3,14 @@ package oasys.za.ac.uj.team36.tests;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.TypedArray;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -19,12 +20,24 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
+import android.widget.Toast;
 
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import oasys.za.ac.uj.team36.Model.MySingleton;
+import oasys.za.ac.uj.team36.Model.RegisteredUser;
 import oasys.za.ac.uj.team36.Model.UserLocalDatabase;
+import oasys.za.ac.uj.team36.Requests.MyRequestJArray;
+import oasys.za.ac.uj.team36.Requests.MyRequestString;
 
 public class TradeWorker extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -33,6 +46,10 @@ public class TradeWorker extends AppCompatActivity
     private Notification.Builder notification;
     private static final int uniqueID = 45788 ; // Id for each notification
     private UserLocalDatabase DB ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.4:31335/php/classes/SebenzaServer.php" ;
+    SharedPreferences pref ;
+    private int utype, uID;
+    private JSONArray allRequests;
 
 
     @Override
@@ -44,8 +61,6 @@ public class TradeWorker extends AppCompatActivity
         DB = new UserLocalDatabase(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -121,15 +136,12 @@ public class TradeWorker extends AppCompatActivity
             startActivity(i);
         } else if (id == R.id.nav_InitiatedJobsTW) {
             Intent i = new Intent(TradeWorker.this, TradeworkerInitiatedJobs.class);
-           //this.finish();  //Kill the activity from which you will go to next activity
             startActivity(i);
         } else if (id == R.id.nav_OngoingJobsTW) {
-            Intent i = new Intent(TradeWorker.this, TradeworkerOngoingJobs.class);
-            //this.finish();  //Kill the activity from which you will go to next activity
+            Intent i = new Intent(TradeWorker.this, TradeworkerCompletedJobs.class);
             startActivity(i);
         } else if (id == R.id.nav_FinishedJobsTW) {
-            Intent i = new Intent(TradeWorker.this, TradeworkerFinishedJobs.class);
-            //this.finish();  //Kill the activity from which you will go to next activity
+            Intent i = new Intent(TradeWorker.this, TradeworkerCancelledJobs.class);
             startActivity(i);
         } else if (id == R.id.nav_editDetailsTW) {
             // TODO Handle the camera action
@@ -168,5 +180,6 @@ public class TradeWorker extends AppCompatActivity
     public void clearSharedPref(){
        DB.clearLocalDBdata();
     }
+
 
 }
