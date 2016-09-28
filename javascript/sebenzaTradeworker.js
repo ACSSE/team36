@@ -526,9 +526,11 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
     //var status = tradeworkerJobRequestArray[tableIndex]["Accepted"];
     var status = tradeworkerJobRequestArray[tableIndex]['JobStatus'];
     var jobType = tradeworkerJobRequestArray[tableIndex]["WorkType"];
-    var html = '<h3>Request information</h3><table>';
+    var html = '<h3>Request information</h3>';
     var jobID = tradeworkerJobRequestArray[tableIndex]["JobID"];
-    html += '<tr> ' +
+    html += '<div class="row">' +
+        '<div class="column large-11 medium-11"><table>' +
+        '<tr> ' +
         '<td class="label">Address</td> ' +
         '<td><input type="text" name="tradeworker-ongoingJobs-Details-street_number-' + tableIndex + '" id="tradeworker-ongoingJobs-Details-street_number-' + tableIndex + '" value="' + streetNumber + '"  readonly> </td>' +
         '<td colspan="2"> <input type="text" name="tradeworker-ongoingJobs-Details-route-' + tableIndex + '" id="tradeworker-ongoingJobs-Details-route-' + tableIndex + '" value="' + street + '"  readonly> </td>' +
@@ -542,10 +544,10 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
         '<tr> ' +
         '<td class="label">Job Description:</td> <td colspan="2"> <input type="text" name="tradeworker-ongoingJobs-Details-WorkType-' + tableIndex + '" id="tradeworker-ongoingJobs-Details-WorkType-' + tableIndex + '" value="' + jobType + '"  readonly> </td> ' +
         '<td colspan="3"> <input type="text" name="tradeworker-ongoingJobs-Details-locality-' + tableIndex + '" id="tradeworker-ongoingJobs-Details-jobDescription-' + tableIndex + '" value="' + jobDescription + '"  readonly> </td> ' +
-        '</tr> </table>';
-    console.log(".....6......");
-    console.log(status);
-    console.log(".....6......");
+        '</tr> </table></div></div>';
+    //console.log(".....6......");
+    //console.log(status);
+    //console.log(".....6......");
     if(status == 0) {
         html +=   '<form id="tradeworker-manage-ongoingJobs-editableInformation-form" name="tradeworker-manage-ongoingJobs-editableInformation-form">' +
             '<div class="row">';
@@ -569,22 +571,23 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
             '</form>';
     }
     else if(status == 1){
-        html += '<div class="row">' +
-            '<h3>Pictures:</h3>' +
+        html += '<h3>Pictures:</h3>' +
+            '<div class="row">' +
+            '<div class="column large-11 medium-11">' +
             '<div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>' +
-            '<ul class="orbit-container">' +
+            '<ul class="orbit-container" id="tradeworker-completed-jobs-pic-orbiter" style="height: 600px;width: 800px">' +
             '<button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>' +
             '<button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>';
-        console.log("!!!5!!!");
-        console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureCount']);
-        console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureID-'+ 0]);
+        //console.log("!!!5!!!");
+        //console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureCount']);
+        //console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureID-'+ 0]);
 
-        console.log("!!!5!!!");
+        //console.log("!!!5!!!");
         for(var d = 0;d < tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];d++){
             var picFile = tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureID-'+ d];
-            console.log("!!!5!!!");
-            console.log(picFile);
-            console.log("!!!5!!!");
+            //console.log("!!!5!!!");
+            //console.log(picFile);
+            //console.log("!!!5!!!");
             var picName = picFile.split("_");
             html += '<li class="is-active orbit-slide">' +
                 '<img class="orbit-image" src="UploadedPictures/' + picFile + '" alt="Space">' +
@@ -592,23 +595,28 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
                 '</li>';
         }
 
-        html += '</ul>' +
-            '<nav class="orbit-bullets">';
-        for(var w = 0;w < tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];w++) {
-            if(w == 0){
-                html += '<button class="is-active" data-slide="0"><span class="show-for-sr">' + w + ' slide details.</span><span class="show-for-sr">Current Slide</span></button>';
-            }
-            else{
-                html += '<button data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span>';
-            }
-
-        }
-        html +='</nav>' +
+        html += '</ul>';
+        //    '<nav class="orbit-bullets">';
+        //for(var w = 0;w < tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];w++) {
+        //    if(w == 0){
+        //        html += '<button class="is-active" data-slide="0"><span class="show-for-sr">' + w + ' slide details.</span><span class="show-for-sr">Current Slide</span></button>';
+        //    }
+        //    else{
+        //        html += '<button data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span>';
+        //    }
+        //
+        //}
+        //html +='</nav>' +
+        html +='</div>' +
             '</div>' +
             '</div>';
     }
     $('#tradeworker-ongoingJobs-modal').foundation('toggle');
     document.getElementById("tradeworker-ongoingJobs-modal-additionalInfo").innerHTML = html;
+    picOrbiter = $('#tradeworker-completed-jobs-pic-orbiter');
+    //console.log(picOrbiter);
+    var elem = null;
+    elem = new Foundation.Orbit(picOrbiter);
 }
 
 function tradeworkerDisplayCancelledRequest(){

@@ -81,7 +81,7 @@ function homeuserDisplayOngoingJobs(){
     }
 }
 
-
+var picOrbiter = null;
 
 function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
     var street = homeuserJobRequestArray[tableIndex]["Road"];
@@ -97,7 +97,11 @@ function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
     var jobType = homeuserJobRequestArray[tableIndex]["WorkType"];
     var numWorkers = homeuserJobRequestArray[tableIndex]["NumberOfWorkersRequested"];
     var numWorkersAccepted = homeuserJobRequestArray[tableIndex]["NumberOfWorkersAccepted"];
-    var html = '<h3>Request information</h3><table>';
+    var html = '<h3>Request information</h3>' +
+        '<div class="row">' +
+        '<div class="column large-11 medium-11">' +
+        '<table>';
+
     html += '<tr> ' +
         '<td class="label">Address</td> ' +
         '<td><input type="text" name="homeuser-ongoingJobs-Details-street_number-' + tableIndex + '" id="homeuser-ongoingJobs-Details-street_number-' + tableIndex + '" value="' + streetNumber + '"  readonly> </td>' +
@@ -119,7 +123,9 @@ function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
         '<tr> ' +
         '<td class="label">Workers Requested</td> <td colspan="1"> <input type="text" name="homeuser-ongoingJobs-Details-requestedWorkers-' + tableIndex + '" id="homeuser-ongoingJobs-Details-requestedWorkers-' + tableIndex + '" value="' + numWorkers + '"  readonly> </td>' +
         '<td class="label">Workers Accepted</td> <td colspan="2"> <input type="text" name="homeuser-ongoingJobs-Details-acceptedWorkers-' + tableIndex + '" id="homeuser-ongoingJobs-Details-acceptedWorkers-' + tableIndex + '" value="' + numWorkersAccepted + '"  readonly> </td>' +
-        '</tr> </table>';
+        '</tr> </table>' +
+            '</div>' +
+        '</div>';
     if(homeuserJobRequestArray[tableIndex]['JobStatus-' + jobID] == 0){
         html += '<form id="homeuser-manage-ongoingJobs-editableInformation-form" name="homeuser-manage-ongoingJobs-editableInformation-form">' +
             '<div class="row">' +
@@ -129,7 +135,7 @@ function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
                 //    Remember to do this after it has been done to the html page else it will not work
             '<h3>Editable information:</h3>' +
             '<input type="hidden" value="' + jobID + '" id="homeuser-ongoingJobs-Details-jobID-' + tableIndex + '" name="ignore-homeuser-ongoingJobs-Details-jobID-' + tableIndex + '">' +
-            '<div class="column large-11 medium 11">' +
+            '<div class="column large-10 medium 10">' +
             '<label>Agreed price:</label><input type="number" step="0.01" min="20" name="homeuser-ongoingJobs-Details-agreedPrice-edit-' + tableIndex + '" id="homeuser-ongoingJobs-Details-agreedPrice-edit-' + tableIndex + '" class="REQ_VAL" value="' + estimatedPrice + '">' +
             '<div class="additional-info top-padding" id="homeuser-ongoingJobs-Details-agreedPrice-edit-' + tableIndex + '-info" data-toggler data-animate="fade-in fade-out">' +
             '<p class="help-text no-margins">Please select a date from the drop down</p>' +
@@ -142,43 +148,73 @@ function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
             '</form>';
     }
     if(homeuserJobRequestArray[tableIndex]['JobStatus-' + jobID] == 1){
-        html += '<div class="row">' +
-            '<h3>Pictures:</h3>' +
+        html += '<h3>Pictures: Total(' + homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'] + ')</h3>' +
+            '<div class="row" >' +
+            '<div class="column large-11" >' +
             '<div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>' +
-            '<ul class="orbit-container">' +
+            '<ul class="orbit-container" id="homeuser-completed-jobs-pic-orbiter" style="height: 600px;width: 800px">' +
             '<button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>' +
             '<button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>';
+        var toDisplay = false;
         for(var d = 0;d < homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];d++){
             var picFile = homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureID-'+ d];
 
 
 
             var picName = picFile.split("_");
-            html += '<li class="is-active orbit-slide">' +
-                '<img class="orbit-image" src="UploadedPictures/' + picFile + '" alt="Space">' +
-                '<figcaption class="orbit-caption">' + picName[picName.length - 1] + '</figcaption>' +
-                '</li>';
-        }
-
-        html += '</ul>' +
-            '<nav class="orbit-bullets">';
-        for(var w = 0;w < homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];w++) {
-            if(w == 0){
-                html += '<button class="is-active" data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span><span class="show-for-sr">Current Slide</span></button>';
+            if(!toDisplay){
+                html += '<li class="is-active orbit-slide">';
+                toDisplay = true;
             }
             else{
-                html += '<button data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span>';
+                html += '<li class="orbit-slide">';
             }
-
+            html += '<img class="orbit-image" src="UploadedPictures/' + picFile + '" alt="Space">' +
+                    '<figcaption class="orbit-caption">' + picName[picName.length - 1] + '</figcaption>' +
+                    '</li>';
         }
-        html +='</nav>' +
+
+        html += '</ul>';
+        //    '<nav class="orbit-bullets" id="nav-button-test">';
+        //for(var w = 0;w < homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];w++) {
+        //    if(w == 0){
+        //        html += '<button class="is-active" data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span><span class="show-for-sr">Current Slide</span></button>';
+        //    }
+        //    else{
+        //        html += '<button data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span>';
+        //    }
+        //
+        //}
+        //html +='</nav>' +
+        html +='</div>' +
             '</div>' +
             '</div>';
     }
 
+    var modalID = '#homeuser-completed-modal';
+    $(modalID).foundation('toggle');
+    document.getElementById("homeuser-completed-modal-additionalInfo").innerHTML = html;
+    picOrbiter = $('#homeuser-completed-jobs-pic-orbiter');
+    //console.log(picOrbiter);
+    var elem = null;
+    elem = new Foundation.Orbit(picOrbiter);
+    //new Foundation.Orbit($('#nav-button-test'),'data-nav-buttons');
+    //picOrbiter.foundation('reflow');
+    //$(document).foundation('reflow');
+    //$(document).foundation();
 
-    $('#homeuser-ongoingJobs-modal').foundation('toggle');
-    document.getElementById("homeuser-ongoingJobs-modal-additionalInfo").innerHTML = html;
+    //picOrbiter.foundation('destroy');
+    //console.log($(picOrbiter));
+    //$(picOrbiter).foundation();
+    //console.log($(picOrbiter));
+}
+
+function homeuserCompletedJobCloseButtonPress(){
+    console.log("Close pressed");
+    //document.getElementById("homeuser-completed-modal-additionalInfo").innerHTML = "";
+    //$(document).foundation();
+    $('#homeuser-completed-jobs-pic-orbiter').foundation('destroy');
+
 }
 
 function handleHomeuserUpdateAgreedPriceResponse(response){
@@ -992,8 +1028,8 @@ function homeuserCompleteJobInitiate(){
         '<div class="row">' +
         '<div class="column large-11 medium 11">' +
         '<div id="homeuser-initiateJobCompletion-Picture-information" data-toggler data-animate="fade-in fade-out" style="display:none">' +
-        '<label>Please select a picture to be added:</label><input type="file" name="ignore-homeuser-initiateJobCompletion-Picture-0" id="homeuser-initiateJobCompletion-Picture-0" class="REQ_VAL">' +
-        '<div class="additional-info top-padding" id="homeuser-initiateJobCompletion-Picture-0-info" data-toggler data-animate="fade-in fade-out">' +
+        '<label>Please select a picture to be added:</label><input type="file" name="ignore-homeuser-initiateJobCompletion-Picture-0[]" id="homeuser-initiateJobCompletion-Picture-0" class="REQ_VAL" multiple>' +
+        '<div class="additional-info top-padding" id="homeuser-initiateJobCompletion-Picture-0[]-info" data-toggler data-animate="fade-in fade-out">' +
         '<p class="help-text no-margins">Please ensure a jpg or png was selected</p>' +
         '</div>' +
         '</div>' +
@@ -1019,10 +1055,10 @@ function homeuserCompleteJobInitiate(){
     new Foundation.Toggler(pictureAddition,'data-animate="fade-in fade-out"');
 
     pictureAddition.on("on.zf.toggler", function(e) {
-            document.getElementById('homeuser-initiateJobCompletion-Picture-0').name = "homeuser-initiateJobCompletion-Picture-0";
+            document.getElementById('homeuser-initiateJobCompletion-Picture-0').name = "homeuser-initiateJobCompletion-Picture-0[]";
         })
         .on("off.zf.toggler", function(e) {
-            document.getElementById('homeuser-initiateJobCompletion-Picture-0').name = "ignore-homeuser-initiateJobCompletion-Picture-0";
+            document.getElementById('homeuser-initiateJobCompletion-Picture-0').name = "ignore-homeuser-initiateJobCompletion-Picture-0[]";
         });
 
     jobComment.on("on.zf.toggler", function(e) {
