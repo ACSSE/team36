@@ -2,7 +2,7 @@
  * Created by Brandon on 2016/09/17.
  */
 var homeuserJobRequestArray;
-function handleHomeuserFetchJobRequests(response){
+function handleFetchJobRequests(response){
     homeuserJobRequestArray = JSON.parse(response);
     //
     if(typeof homeuserJobRequestArray == 'object'){
@@ -296,7 +296,7 @@ function homeuserBuildUpInterfaceArrays(){
         //The following will set up an individual list of all the requests that occur during
         for (var i = 0; i < homeuserJobRequestArray[j]['NumberOfWorkersRequested']; i++) {
             if(homeuserJobRequestArray[j].hasOwnProperty('QuoteID-' + i)){
-                if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 1) {
+                if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 1 && !homeuserJobRequestArray[j].hasOwnProperty('JobID-' + i)) {
                     success = true;
                     name = homeuserJobRequestArray[j]['Name-' + i];
                     surname = homeuserJobRequestArray[j]['Surname-' + i];
@@ -349,6 +349,8 @@ function homeuserDisplayRequests(){
 }
 
 function homeuserDisplayJobsToInitiate(){
+    console.log("Should be displaying jobs to initiate table: ");
+    document.getElementById('homeuser-manageJobInitiate-areainformation').innerHTML = "<h3>There are currently no jobs to initiate</h3>";
     var html = genericTableGenerate(homeuserJobsToInitiateArray,'jobs-toInitiate');
     if(homeuserJobsToInitiateArray.length < 1){
         document.getElementById('homeuser-manageJobInitiate-areainformation').innerHTML = "<h3>There are currently no jobs to initiate</h3>";
@@ -388,7 +390,7 @@ function handleHomeuserRemoveTradeworkerFromRequestShortcutResponse(response){
             html += "The tradeworker was removed from the request";
             document.getElementById('homeuser-initiateJob-modal-additionalInfo').innerHTML = html;
             $('#homeuser-initiateJob-modal').foundation('toggle');
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else{
             html += "The tradeworker could not be removed from the request";
@@ -506,7 +508,7 @@ function handleHomeuserRejectRequestResponse(response){
             var html = "<h3>Request(s) Rejected</h3>";
             $('#homeuser-homepage-notification-modal-response').foundation('toggle');
             document.getElementById("homeuser-homepage-notification-modal-response-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
 
         }
         else{
@@ -523,7 +525,7 @@ function handleHomeuserAcceptRequestResponse(response){
             var html = "<h3>Request Accepted</h3>";
             $('#homeuser-homepage-notification-modal-response').foundation('toggle');
             document.getElementById("homeuser-homepage-notification-modal-response-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
 
         }
         else{
@@ -560,7 +562,7 @@ function handleHomeuserRemoveRequestResponse(response){
             var html = "<h3>The request has been cancelled</h3>Thank you for using SebenzaSA";
             $('#homeuser-manageRequest-modal').foundation('toggle');
             document.getElementById("homeuser-manageRequest-modal-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else{
             //The request was not cancel
@@ -768,7 +770,7 @@ function handleHomeuserRemoveTradeworkerFromRequestResponse(response){
             html = "<h3>Tradeworker Successfully removed from request</h3>";
             $('#homeuser-manageRequest-modal-response').foundation('toggle');
             document.getElementById("homeuser-manageRequest-modal-response-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else{
             html = "<h3>Could not remove Tradeworker Successfully</h3>If matter persists please contact admin for further assistance";
@@ -830,7 +832,7 @@ function handleHomeuserTerminateJobRequestRespones(response){
             html = "<h3>Job has been terminated</h3>";
             $('#homeuser-ongoingJobs-modal-response').foundation('toggle');
             document.getElementById("homeuser-ongoingJobs-modal-response-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
 
         }
         else{
@@ -1088,7 +1090,7 @@ function handleHomeuserInitiateJobCompletionResponse(response){
 
             $('#homeuser-completed-modal').foundation('toggle');
             document.getElementById("homeuser-completed-modal-additionalInfo").innerHTML = "<h3>The job has been completed</h3>";
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else{
 
@@ -1174,7 +1176,9 @@ function handleHomeuserInitiateJobResponseShortcut(response){
         var html;
         if(result){
             html = "<h3>The job has been initiated</h3>";
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            console.log("Fetching job requests: ");
+
+            //sendAJAXRequest('fetch-job-requests', handleFetchJobRequests)
         }
         else{
             html = "<h3>The job wasn't initiated</h3>";
@@ -1242,7 +1246,7 @@ function handleHomeuserInitiateJobResponse(response){
         var html;
         if(result){
             html = "<h3>The job has been initiated</h3>";
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else{
             html = "<h3>The job wasn't initiated</h3>";
@@ -1375,7 +1379,7 @@ function handlerTradeworkerResponse(response){
             var html = "<h3>Tradeworker Request successful</h3>";
             $('#homeuser-rTradeworker-notification-modal-response').foundation('toggle');
             document.getElementById("homeuser-rTradeworker-notification-modal-response-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else {
             console.log("The work request was unsuccessful: " + response);

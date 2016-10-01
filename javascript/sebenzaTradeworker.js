@@ -10,7 +10,7 @@ function handleTradeworkerAcceptRequest(response){
         //tradeworker-requests-notification-modal-additionalInfo
         $('#tradeworker-requests-notification-modal').foundation('toggle');
         document.getElementById("tradeworker-requests-notification-modal-additionalInfo").innerHTML = "<h3>The work request has been accepted</h3> notification to homeuser has been sent please await his response:";
-        sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
+        sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
     }
     else{
         console.log("something went wrong");
@@ -150,7 +150,7 @@ function tradeworkerDisplayOngoingJobs(){
 }
 
 var tradeworkerJobRequestArray;
-function handleTradeworkerFetchJobRequests(response){
+function handleFetchJobRequests(response){
     tradeworkerJobRequestArray = JSON.parse(response);
     //console.log("It got here:" + response);
     var value;
@@ -481,7 +481,7 @@ function handletradeworkerAcceptConfirmationJobTerminatedResponse(response){
         if(success){
             console.log("Noted");
             var html = "<h3>Notification noted</h3>";
-            sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
             $('#tradeworker-homepage-notification-modal-response').foundation('toggle');
             document.getElementById("tradeworker-homepage-notification-modal-response-additionalInfo").innerHTML = html;
 
@@ -695,7 +695,7 @@ function handletradeworkerAcceptConfirmationResponse(response){
 
             $('#tradeworker-homepage-notification-modal-response').foundation('toggle');
             document.getElementById("tradeworker-homepage-notification-modal-response-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
 
         }
         else{
