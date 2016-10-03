@@ -342,8 +342,7 @@ function tradeworkerBuildUpInterfaceArrays(){
                                                                                             'Estimated Complete Date' : estimatedCompletionDate,
                                                                                             'Work Type' :workType,
                                                                                             'Status':status,
-                                                                                            'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="tradeworkerDisplayJobFurtherDetails(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>',
-                                                                                            'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div>'
+                                                                                            'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="tradeworkerDisplayJobFurtherDetails(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'
                                                                                         };
                     userGenericFillColumnSelectTags('tradeworker-cancelled-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                     userGenericSortSelectFill('tradeworker-cancelled-sortBy-jobs',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
@@ -571,45 +570,66 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
             '</form>';
     }
     else if(status == 1){
-        html += '<h3>Pictures:</h3>' +
-            '<div class="row">' +
-            '<div class="column large-11 medium-11">' +
-            '<div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>' +
-            '<ul class="orbit-container" id="tradeworker-completed-jobs-pic-orbiter" style="height: 600px;width: 800px">' +
-            '<button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>' +
-            '<button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>';
-        //console.log("!!!5!!!");
-        //console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureCount']);
-        //console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureID-'+ 0]);
+        if(tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'] != 0) {
+            html += '<h3>Pictures:</h3>' +
+                '<div class="row">' +
+                '<div class="column large-11 medium-11">' +
+                '<div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>' +
+                '<ul class="orbit-container" id="tradeworker-completed-jobs-pic-orbiter" style="height: 600px;width: 800px">' +
+                '<button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>' +
+                '<button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>';
+            //console.log("!!!5!!!");
+            //console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureCount']);
+            //console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureID-'+ 0]);
 
-        //console.log("!!!5!!!");
-        for(var d = 0;d < tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];d++){
-            var picFile = tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureID-'+ d];
             //console.log("!!!5!!!");
-            //console.log(picFile);
-            //console.log("!!!5!!!");
-            var picName = picFile.split("_");
-            html += '<li class="is-active orbit-slide">' +
-                '<img class="orbit-image" src="UploadedPictures/' + picFile + '" alt="Space">' +
-                '<figcaption class="orbit-caption">' + picName[picName.length - 1] + '</figcaption>' +
-                '</li>';
+            for (var d = 0; d < tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount']; d++) {
+                var picFile = tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureID-' + d];
+                //console.log("!!!5!!!");
+                //console.log(picFile);
+                //console.log("!!!5!!!");
+                var picName = picFile.split("_");
+                html += '<li class="is-active orbit-slide">' +
+                    '<img class="orbit-image" src="UploadedPictures/' + picFile + '" alt="Space">' +
+                    '<figcaption class="orbit-caption">' + picName[picName.length - 1] + '</figcaption>' +
+                    '</li>';
+            }
+
+            html += '</ul>';
+            //    '<nav class="orbit-bullets">';
+            //for(var w = 0;w < tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];w++) {
+            //    if(w == 0){
+            //        html += '<button class="is-active" data-slide="0"><span class="show-for-sr">' + w + ' slide details.</span><span class="show-for-sr">Current Slide</span></button>';
+            //    }
+            //    else{
+            //        html += '<button data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span>';
+            //    }
+            //
+            //}
+            //html +='</nav>' +
+            html += '</div>' +
+                '</div>' +
+                '</div>';
+            html += '<div class="row">' +
+                    '<div class="large-3 columns">' +
+                    '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCompletedJob()">' +
+                    'Add Pictures' +
+                    '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+                    '</button>' +
+                    '</div>' +
+                    '</div>';
         }
-
-        html += '</ul>';
-        //    '<nav class="orbit-bullets">';
-        //for(var w = 0;w < tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];w++) {
-        //    if(w == 0){
-        //        html += '<button class="is-active" data-slide="0"><span class="show-for-sr">' + w + ' slide details.</span><span class="show-for-sr">Current Slide</span></button>';
-        //    }
-        //    else{
-        //        html += '<button data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span>';
-        //    }
-        //
-        //}
-        //html +='</nav>' +
-        html +='</div>' +
-            '</div>' +
-            '</div>';
+        else{
+            html += '<h3>Pictures:</h3><h5>Please add pictures from the job as soon as you can, will be confirmed by the homeuser</h5>' +
+                '<div class="row">' +
+                '<div class="large-3 columns">' +
+                '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCompletedJob()">' +
+                'Add Pictures' +
+                '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+                '</button>' +
+                '</div>' +
+                '</div>';
+        }
     }
     $('#tradeworker-ongoingJobs-modal').foundation('toggle');
     document.getElementById("tradeworker-ongoingJobs-modal-additionalInfo").innerHTML = html;
@@ -617,6 +637,10 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
     //console.log(picOrbiter);
     var elem = null;
     elem = new Foundation.Orbit(picOrbiter);
+}
+
+function tradeworkerAddPicturesToCompletedJob(){
+    console.log("Should be adding pictures to the completed job");
 }
 
 function tradeworkerDisplayCancelledRequest(){

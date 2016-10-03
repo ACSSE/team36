@@ -82,7 +82,7 @@ function homeuserDisplayOngoingJobs(){
 }
 
 var picOrbiter = null;
-
+var pictureCount = 0;
 function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
     var street = homeuserJobRequestArray[tableIndex]["Road"];
     var streetNumber = homeuserJobRequestArray[tableIndex]["StreetNumber"];
@@ -148,47 +148,60 @@ function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
             '</form>';
     }
     if(homeuserJobRequestArray[tableIndex]['JobStatus-' + jobID] == 1){
-        html += '<h3>Pictures: Total(' + homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'] + ')</h3>' +
-            '<div class="row" >' +
-            '<div class="column large-11" >' +
-            '<div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>' +
-            '<ul class="orbit-container" id="homeuser-completed-jobs-pic-orbiter" style="height: 600px;width: 800px">' +
-            '<button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>' +
-            '<button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>';
-        var toDisplay = false;
-        for(var d = 0;d < homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];d++){
-            var picFile = homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureID-'+ d];
+        pictureCount = homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];
+        if(homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'] != 0){
+            html += '<h3>Pictures: Total(' + homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'] + ')</h3>' +
+                '<div class="row" >' +
+                '<div class="column large-11" >' +
+                '<div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>' +
+                '<ul class="orbit-container" id="homeuser-completed-jobs-pic-orbiter" style="height: 600px;width: 800px">' +
+                '<button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>' +
+                '<button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>';
+            var toDisplay = false;
+            for(var d = 0;d < homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];d++){
+                var picFile = homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureID-'+ d];
 
 
 
-            var picName = picFile.split("_");
-            if(!toDisplay){
-                html += '<li class="is-active orbit-slide">';
-                toDisplay = true;
-            }
-            else{
-                html += '<li class="orbit-slide">';
-            }
-            html += '<img class="orbit-image" src="UploadedPictures/' + picFile + '" alt="Space">' +
+                var picName = picFile.split("_");
+                if(!toDisplay){
+                    html += '<li class="is-active orbit-slide">';
+                    toDisplay = true;
+                }
+                else{
+                    html += '<li class="orbit-slide">';
+                }
+                html += '<img class="orbit-image" src="UploadedPictures/' + picFile + '" alt="Space">' +
                     '<figcaption class="orbit-caption">' + picName[picName.length - 1] + '</figcaption>' +
                     '</li>';
-        }
-
-        html += '</ul>';
-        //    '<nav class="orbit-bullets" id="nav-button-test">';
-        //for(var w = 0;w < homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];w++) {
-        //    if(w == 0){
-        //        html += '<button class="is-active" data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span><span class="show-for-sr">Current Slide</span></button>';
-        //    }
-        //    else{
-        //        html += '<button data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span>';
-        //    }
-        //
-        //}
-        //html +='</nav>' +
-        html +='</div>' +
+            }
+            html += '</ul>';
+            html +='</div>' +
+                '</div>' +
+                '</div>' +
+            '<div class="row">' +
+            '<div class="large-3 columns">' +
+            '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="homeuserAddPicturesToCompletedJob()">' +
+            'Add Pictures' +
+            '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+            '</button>' +
             '</div>' +
             '</div>';
+        }
+        else{
+            html += '<h3>Pictures:</h3><h5>Please add pictures from the job as soon as you can, will be confirmed by the tradeworker</h5>' +
+                    '<div class="row">' +
+                    '<div class="large-3 columns">' +
+                    '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="homeuserAddPicturesToCompletedJob()">' +
+                    'Add Pictures' +
+                    '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+                    '</button>' +
+                    '</div>' +
+                    '</div>';
+        }
+
+
+
     }
 
     var modalID = '#homeuser-completed-modal';
@@ -209,10 +222,15 @@ function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
     //console.log($(picOrbiter));
 }
 
+function homeuserAddPicturesToCompletedJob(){
+    console.log("Should be adding pictures to completed job");
+}
+
 function homeuserCompletedJobCloseButtonPress(){
     console.log("Close pressed");
     //document.getElementById("homeuser-completed-modal-additionalInfo").innerHTML = "";
     //$(document).foundation();
+    if(pictureCount != 0)
     $('#homeuser-completed-jobs-pic-orbiter').foundation('destroy');
 
 }
@@ -325,12 +343,12 @@ function homeuserBuildUpInterfaceArrays(){
                     userGenericSortSelectFill('homeuser-ongoingJobsInitiate-sortBy',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                 }
                 if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 2){
-                    homeuserCancelledJobsArray[homeuserCancelledJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>', 'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div>'};
+                    homeuserCancelledJobsArray[homeuserCancelledJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'};
                     userGenericFillColumnSelectTags('homeuser-cancelled-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                     userGenericSortSelectFill('homeuser-cancelled-sortBy',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                 }
                 if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 1){
-                    homeuserCompletedJobsArray[homeuserCompletedJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>', 'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div>'};
+                    homeuserCompletedJobsArray[homeuserCompletedJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'};
                     userGenericFillColumnSelectTags('homeuser-completed-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                     userGenericSortSelectFill('homeuser-completed-sortBy',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                 }
@@ -1087,13 +1105,13 @@ function handleHomeuserInitiateJobCompletionResponse(response){
 
     if(typeof result == 'boolean'){
         if(result){
-
+            console.log(result);
             $('#homeuser-completed-modal').foundation('toggle');
             document.getElementById("homeuser-completed-modal-additionalInfo").innerHTML = "<h3>The job has been completed</h3>";
             sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else{
-
+            console.log(result);
             $('#homeuser-completed-modal').foundation('toggle');
             document.getElementById("homeuser-completed-modal-additionalInfo").innerHTML = "<h3>Something went wrong please contact admin</h3>";
         }
