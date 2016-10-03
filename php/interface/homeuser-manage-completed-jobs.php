@@ -50,7 +50,7 @@
     <div id="homeuser-completed-modal-additionalInfo">
 
     </div>
-    <button class="close-button" data-close aria-label="Close reveal" type="button">
+    <button class="close-button" data-close aria-label="Close reveal" type="button" id="homeuser-completed-jobs-modal-close-press" onclick="homeuserCompletedJobCloseButtonPress()">
         <span aria-hidden="true">&times;</span>
     </button>
 </div>

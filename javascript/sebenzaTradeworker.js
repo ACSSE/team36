@@ -10,7 +10,7 @@ function handleTradeworkerAcceptRequest(response){
         //tradeworker-requests-notification-modal-additionalInfo
         $('#tradeworker-requests-notification-modal').foundation('toggle');
         document.getElementById("tradeworker-requests-notification-modal-additionalInfo").innerHTML = "<h3>The work request has been accepted</h3> notification to homeuser has been sent please await his response:";
-        sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
+        sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
     }
     else{
         console.log("something went wrong");
@@ -150,7 +150,7 @@ function tradeworkerDisplayOngoingJobs(){
 }
 
 var tradeworkerJobRequestArray;
-function handleTradeworkerFetchJobRequests(response){
+function handleFetchJobRequests(response){
     tradeworkerJobRequestArray = JSON.parse(response);
     //console.log("It got here:" + response);
     var value;
@@ -342,8 +342,7 @@ function tradeworkerBuildUpInterfaceArrays(){
                                                                                             'Estimated Complete Date' : estimatedCompletionDate,
                                                                                             'Work Type' :workType,
                                                                                             'Status':status,
-                                                                                            'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="tradeworkerDisplayJobFurtherDetails(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>',
-                                                                                            'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div>'
+                                                                                            'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="tradeworkerDisplayJobFurtherDetails(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'
                                                                                         };
                     userGenericFillColumnSelectTags('tradeworker-cancelled-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                     userGenericSortSelectFill('tradeworker-cancelled-sortBy-jobs',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
@@ -481,7 +480,7 @@ function handletradeworkerAcceptConfirmationJobTerminatedResponse(response){
         if(success){
             console.log("Noted");
             var html = "<h3>Notification noted</h3>";
-            sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
             $('#tradeworker-homepage-notification-modal-response').foundation('toggle');
             document.getElementById("tradeworker-homepage-notification-modal-response-additionalInfo").innerHTML = html;
 
@@ -526,9 +525,11 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
     //var status = tradeworkerJobRequestArray[tableIndex]["Accepted"];
     var status = tradeworkerJobRequestArray[tableIndex]['JobStatus'];
     var jobType = tradeworkerJobRequestArray[tableIndex]["WorkType"];
-    var html = '<h3>Request information</h3><table>';
+    var html = '<h3>Request information</h3>';
     var jobID = tradeworkerJobRequestArray[tableIndex]["JobID"];
-    html += '<tr> ' +
+    html += '<div class="row">' +
+        '<div class="column large-11 medium-11"><table>' +
+        '<tr> ' +
         '<td class="label">Address</td> ' +
         '<td><input type="text" name="tradeworker-ongoingJobs-Details-street_number-' + tableIndex + '" id="tradeworker-ongoingJobs-Details-street_number-' + tableIndex + '" value="' + streetNumber + '"  readonly> </td>' +
         '<td colspan="2"> <input type="text" name="tradeworker-ongoingJobs-Details-route-' + tableIndex + '" id="tradeworker-ongoingJobs-Details-route-' + tableIndex + '" value="' + street + '"  readonly> </td>' +
@@ -542,10 +543,10 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
         '<tr> ' +
         '<td class="label">Job Description:</td> <td colspan="2"> <input type="text" name="tradeworker-ongoingJobs-Details-WorkType-' + tableIndex + '" id="tradeworker-ongoingJobs-Details-WorkType-' + tableIndex + '" value="' + jobType + '"  readonly> </td> ' +
         '<td colspan="3"> <input type="text" name="tradeworker-ongoingJobs-Details-locality-' + tableIndex + '" id="tradeworker-ongoingJobs-Details-jobDescription-' + tableIndex + '" value="' + jobDescription + '"  readonly> </td> ' +
-        '</tr> </table>';
-    console.log(".....6......");
-    console.log(status);
-    console.log(".....6......");
+        '</tr> </table></div></div>';
+    //console.log(".....6......");
+    //console.log(status);
+    //console.log(".....6......");
     if(status == 0) {
         html +=   '<form id="tradeworker-manage-ongoingJobs-editableInformation-form" name="tradeworker-manage-ongoingJobs-editableInformation-form">' +
             '<div class="row">';
@@ -569,46 +570,77 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
             '</form>';
     }
     else if(status == 1){
-        html += '<div class="row">' +
-            '<h3>Pictures:</h3>' +
-            '<div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>' +
-            '<ul class="orbit-container">' +
-            '<button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>' +
-            '<button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>';
-        console.log("!!!5!!!");
-        console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureCount']);
-        console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureID-'+ 0]);
+        if(tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'] != 0) {
+            html += '<h3>Pictures:</h3>' +
+                '<div class="row">' +
+                '<div class="column large-11 medium-11">' +
+                '<div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>' +
+                '<ul class="orbit-container" id="tradeworker-completed-jobs-pic-orbiter" style="height: 600px;width: 800px">' +
+                '<button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>' +
+                '<button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>';
+            //console.log("!!!5!!!");
+            //console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureCount']);
+            //console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureID-'+ 0]);
 
-        console.log("!!!5!!!");
-        for(var d = 0;d < tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];d++){
-            var picFile = tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureID-'+ d];
-            console.log("!!!5!!!");
-            console.log(picFile);
-            console.log("!!!5!!!");
-            var picName = picFile.split("_");
-            html += '<li class="is-active orbit-slide">' +
-                '<img class="orbit-image" src="UploadedPictures/' + picFile + '" alt="Space">' +
-                '<figcaption class="orbit-caption">' + picName[picName.length - 1] + '</figcaption>' +
-                '</li>';
-        }
-
-        html += '</ul>' +
-            '<nav class="orbit-bullets">';
-        for(var w = 0;w < tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];w++) {
-            if(w == 0){
-                html += '<button class="is-active" data-slide="0"><span class="show-for-sr">' + w + ' slide details.</span><span class="show-for-sr">Current Slide</span></button>';
-            }
-            else{
-                html += '<button data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span>';
+            //console.log("!!!5!!!");
+            for (var d = 0; d < tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount']; d++) {
+                var picFile = tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureID-' + d];
+                //console.log("!!!5!!!");
+                //console.log(picFile);
+                //console.log("!!!5!!!");
+                var picName = picFile.split("_");
+                html += '<li class="is-active orbit-slide">' +
+                    '<img class="orbit-image" src="UploadedPictures/' + picFile + '" alt="Space">' +
+                    '<figcaption class="orbit-caption">' + picName[picName.length - 1] + '</figcaption>' +
+                    '</li>';
             }
 
+            html += '</ul>';
+            //    '<nav class="orbit-bullets">';
+            //for(var w = 0;w < tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];w++) {
+            //    if(w == 0){
+            //        html += '<button class="is-active" data-slide="0"><span class="show-for-sr">' + w + ' slide details.</span><span class="show-for-sr">Current Slide</span></button>';
+            //    }
+            //    else{
+            //        html += '<button data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span>';
+            //    }
+            //
+            //}
+            //html +='</nav>' +
+            html += '</div>' +
+                '</div>' +
+                '</div>';
+            html += '<div class="row">' +
+                    '<div class="large-3 columns">' +
+                    '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCompletedJob()">' +
+                    'Add Pictures' +
+                    '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+                    '</button>' +
+                    '</div>' +
+                    '</div>';
         }
-        html +='</nav>' +
-            '</div>' +
-            '</div>';
+        else{
+            html += '<h3>Pictures:</h3><h5>Please add pictures from the job as soon as you can, will be confirmed by the homeuser</h5>' +
+                '<div class="row">' +
+                '<div class="large-3 columns">' +
+                '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCompletedJob()">' +
+                'Add Pictures' +
+                '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+                '</button>' +
+                '</div>' +
+                '</div>';
+        }
     }
     $('#tradeworker-ongoingJobs-modal').foundation('toggle');
     document.getElementById("tradeworker-ongoingJobs-modal-additionalInfo").innerHTML = html;
+    picOrbiter = $('#tradeworker-completed-jobs-pic-orbiter');
+    //console.log(picOrbiter);
+    var elem = null;
+    elem = new Foundation.Orbit(picOrbiter);
+}
+
+function tradeworkerAddPicturesToCompletedJob(){
+    console.log("Should be adding pictures to the completed job");
 }
 
 function tradeworkerDisplayCancelledRequest(){
@@ -687,7 +719,7 @@ function handletradeworkerAcceptConfirmationResponse(response){
 
             $('#tradeworker-homepage-notification-modal-response').foundation('toggle');
             document.getElementById("tradeworker-homepage-notification-modal-response-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
 
         }
         else{

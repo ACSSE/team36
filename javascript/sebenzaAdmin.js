@@ -3,7 +3,7 @@
  */
 
 var adminRequestArray;
-function handleAdminFetchJobRequests(response){
+function handleFetchJobRequests(response){
     adminRequestArray = JSON.parse(response);
     console.log(adminRequestArray);
     if(typeof adminRequestArray == 'object'){

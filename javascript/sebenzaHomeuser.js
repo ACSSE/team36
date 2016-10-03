@@ -2,7 +2,7 @@
  * Created by Brandon on 2016/09/17.
  */
 var homeuserJobRequestArray;
-function handleHomeuserFetchJobRequests(response){
+function handleFetchJobRequests(response){
     homeuserJobRequestArray = JSON.parse(response);
     //
     if(typeof homeuserJobRequestArray == 'object'){
@@ -81,8 +81,8 @@ function homeuserDisplayOngoingJobs(){
     }
 }
 
-
-
+var picOrbiter = null;
+var pictureCount = 0;
 function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
     var street = homeuserJobRequestArray[tableIndex]["Road"];
     var streetNumber = homeuserJobRequestArray[tableIndex]["StreetNumber"];
@@ -97,7 +97,11 @@ function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
     var jobType = homeuserJobRequestArray[tableIndex]["WorkType"];
     var numWorkers = homeuserJobRequestArray[tableIndex]["NumberOfWorkersRequested"];
     var numWorkersAccepted = homeuserJobRequestArray[tableIndex]["NumberOfWorkersAccepted"];
-    var html = '<h3>Request information</h3><table>';
+    var html = '<h3>Request information</h3>' +
+        '<div class="row">' +
+        '<div class="column large-11 medium-11">' +
+        '<table>';
+
     html += '<tr> ' +
         '<td class="label">Address</td> ' +
         '<td><input type="text" name="homeuser-ongoingJobs-Details-street_number-' + tableIndex + '" id="homeuser-ongoingJobs-Details-street_number-' + tableIndex + '" value="' + streetNumber + '"  readonly> </td>' +
@@ -119,7 +123,9 @@ function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
         '<tr> ' +
         '<td class="label">Workers Requested</td> <td colspan="1"> <input type="text" name="homeuser-ongoingJobs-Details-requestedWorkers-' + tableIndex + '" id="homeuser-ongoingJobs-Details-requestedWorkers-' + tableIndex + '" value="' + numWorkers + '"  readonly> </td>' +
         '<td class="label">Workers Accepted</td> <td colspan="2"> <input type="text" name="homeuser-ongoingJobs-Details-acceptedWorkers-' + tableIndex + '" id="homeuser-ongoingJobs-Details-acceptedWorkers-' + tableIndex + '" value="' + numWorkersAccepted + '"  readonly> </td>' +
-        '</tr> </table>';
+        '</tr> </table>' +
+            '</div>' +
+        '</div>';
     if(homeuserJobRequestArray[tableIndex]['JobStatus-' + jobID] == 0){
         html += '<form id="homeuser-manage-ongoingJobs-editableInformation-form" name="homeuser-manage-ongoingJobs-editableInformation-form">' +
             '<div class="row">' +
@@ -129,7 +135,7 @@ function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
                 //    Remember to do this after it has been done to the html page else it will not work
             '<h3>Editable information:</h3>' +
             '<input type="hidden" value="' + jobID + '" id="homeuser-ongoingJobs-Details-jobID-' + tableIndex + '" name="ignore-homeuser-ongoingJobs-Details-jobID-' + tableIndex + '">' +
-            '<div class="column large-11 medium 11">' +
+            '<div class="column large-10 medium 10">' +
             '<label>Agreed price:</label><input type="number" step="0.01" min="20" name="homeuser-ongoingJobs-Details-agreedPrice-edit-' + tableIndex + '" id="homeuser-ongoingJobs-Details-agreedPrice-edit-' + tableIndex + '" class="REQ_VAL" value="' + estimatedPrice + '">' +
             '<div class="additional-info top-padding" id="homeuser-ongoingJobs-Details-agreedPrice-edit-' + tableIndex + '-info" data-toggler data-animate="fade-in fade-out">' +
             '<p class="help-text no-margins">Please select a date from the drop down</p>' +
@@ -142,43 +148,91 @@ function homeuserDisplayJobFurtherDetails(tableIndex,jobID){
             '</form>';
     }
     if(homeuserJobRequestArray[tableIndex]['JobStatus-' + jobID] == 1){
-        html += '<div class="row">' +
-            '<h3>Pictures:</h3>' +
-            '<div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>' +
-            '<ul class="orbit-container">' +
-            '<button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>' +
-            '<button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>';
-        for(var d = 0;d < homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];d++){
-            var picFile = homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureID-'+ d];
+        pictureCount = homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];
+        if(homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'] != 0){
+            html += '<h3>Pictures: Total(' + homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'] + ')</h3>' +
+                '<div class="row" >' +
+                '<div class="column large-11" >' +
+                '<div class="orbit" role="region" aria-label="Favorite Space Pictures" data-orbit>' +
+                '<ul class="orbit-container" id="homeuser-completed-jobs-pic-orbiter" style="height: 600px;width: 800px">' +
+                '<button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>' +
+                '<button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>';
+            var toDisplay = false;
+            for(var d = 0;d < homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];d++){
+                var picFile = homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureID-'+ d];
 
 
 
-            var picName = picFile.split("_");
-            html += '<li class="is-active orbit-slide">' +
-                '<img class="orbit-image" src="UploadedPictures/' + picFile + '" alt="Space">' +
-                '<figcaption class="orbit-caption">' + picName[picName.length - 1] + '</figcaption>' +
-                '</li>';
-        }
-
-        html += '</ul>' +
-            '<nav class="orbit-bullets">';
-        for(var w = 0;w < homeuserJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];w++) {
-            if(w == 0){
-                html += '<button class="is-active" data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span><span class="show-for-sr">Current Slide</span></button>';
+                var picName = picFile.split("_");
+                if(!toDisplay){
+                    html += '<li class="is-active orbit-slide">';
+                    toDisplay = true;
+                }
+                else{
+                    html += '<li class="orbit-slide">';
+                }
+                html += '<img class="orbit-image" src="UploadedPictures/' + picFile + '" alt="Space">' +
+                    '<figcaption class="orbit-caption">' + picName[picName.length - 1] + '</figcaption>' +
+                    '</li>';
             }
-            else{
-                html += '<button data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span>';
-            }
-
-        }
-        html +='</nav>' +
+            html += '</ul>';
+            html +='</div>' +
+                '</div>' +
+                '</div>' +
+            '<div class="row">' +
+            '<div class="large-3 columns">' +
+            '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="homeuserAddPicturesToCompletedJob()">' +
+            'Add Pictures' +
+            '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+            '</button>' +
             '</div>' +
             '</div>';
+        }
+        else{
+            html += '<h3>Pictures:</h3><h5>Please add pictures from the job as soon as you can, will be confirmed by the tradeworker</h5>' +
+                    '<div class="row">' +
+                    '<div class="large-3 columns">' +
+                    '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="homeuserAddPicturesToCompletedJob()">' +
+                    'Add Pictures' +
+                    '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+                    '</button>' +
+                    '</div>' +
+                    '</div>';
+        }
+
+
+
     }
 
+    var modalID = '#homeuser-completed-modal';
+    $(modalID).foundation('toggle');
+    document.getElementById("homeuser-completed-modal-additionalInfo").innerHTML = html;
+    picOrbiter = $('#homeuser-completed-jobs-pic-orbiter');
+    //console.log(picOrbiter);
+    var elem = null;
+    elem = new Foundation.Orbit(picOrbiter);
+    //new Foundation.Orbit($('#nav-button-test'),'data-nav-buttons');
+    //picOrbiter.foundation('reflow');
+    //$(document).foundation('reflow');
+    //$(document).foundation();
 
-    $('#homeuser-ongoingJobs-modal').foundation('toggle');
-    document.getElementById("homeuser-ongoingJobs-modal-additionalInfo").innerHTML = html;
+    //picOrbiter.foundation('destroy');
+    //console.log($(picOrbiter));
+    //$(picOrbiter).foundation();
+    //console.log($(picOrbiter));
+}
+
+function homeuserAddPicturesToCompletedJob(){
+    console.log("Should be adding pictures to completed job");
+}
+
+function homeuserCompletedJobCloseButtonPress(){
+    console.log("Close pressed");
+    //document.getElementById("homeuser-completed-modal-additionalInfo").innerHTML = "";
+    //$(document).foundation();
+    if(pictureCount != 0)
+    $('#homeuser-completed-jobs-pic-orbiter').foundation('destroy');
+
 }
 
 function handleHomeuserUpdateAgreedPriceResponse(response){
@@ -260,7 +314,7 @@ function homeuserBuildUpInterfaceArrays(){
         //The following will set up an individual list of all the requests that occur during
         for (var i = 0; i < homeuserJobRequestArray[j]['NumberOfWorkersRequested']; i++) {
             if(homeuserJobRequestArray[j].hasOwnProperty('QuoteID-' + i)){
-                if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 1) {
+                if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 1 && !homeuserJobRequestArray[j].hasOwnProperty('JobID-' + i)) {
                     success = true;
                     name = homeuserJobRequestArray[j]['Name-' + i];
                     surname = homeuserJobRequestArray[j]['Surname-' + i];
@@ -289,12 +343,12 @@ function homeuserBuildUpInterfaceArrays(){
                     userGenericSortSelectFill('homeuser-ongoingJobsInitiate-sortBy',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                 }
                 if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 2){
-                    homeuserCancelledJobsArray[homeuserCancelledJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>', 'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div>'};
+                    homeuserCancelledJobsArray[homeuserCancelledJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'};
                     userGenericFillColumnSelectTags('homeuser-cancelled-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                     userGenericSortSelectFill('homeuser-cancelled-sortBy',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                 }
                 if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 1){
-                    homeuserCompletedJobsArray[homeuserCompletedJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>', 'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div>'};
+                    homeuserCompletedJobsArray[homeuserCompletedJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'};
                     userGenericFillColumnSelectTags('homeuser-completed-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                     userGenericSortSelectFill('homeuser-completed-sortBy',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                 }
@@ -313,6 +367,8 @@ function homeuserDisplayRequests(){
 }
 
 function homeuserDisplayJobsToInitiate(){
+    console.log("Should be displaying jobs to initiate table: ");
+    document.getElementById('homeuser-manageJobInitiate-areainformation').innerHTML = "<h3>There are currently no jobs to initiate</h3>";
     var html = genericTableGenerate(homeuserJobsToInitiateArray,'jobs-toInitiate');
     if(homeuserJobsToInitiateArray.length < 1){
         document.getElementById('homeuser-manageJobInitiate-areainformation').innerHTML = "<h3>There are currently no jobs to initiate</h3>";
@@ -352,7 +408,7 @@ function handleHomeuserRemoveTradeworkerFromRequestShortcutResponse(response){
             html += "The tradeworker was removed from the request";
             document.getElementById('homeuser-initiateJob-modal-additionalInfo').innerHTML = html;
             $('#homeuser-initiateJob-modal').foundation('toggle');
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else{
             html += "The tradeworker could not be removed from the request";
@@ -470,7 +526,7 @@ function handleHomeuserRejectRequestResponse(response){
             var html = "<h3>Request(s) Rejected</h3>";
             $('#homeuser-homepage-notification-modal-response').foundation('toggle');
             document.getElementById("homeuser-homepage-notification-modal-response-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
 
         }
         else{
@@ -487,7 +543,7 @@ function handleHomeuserAcceptRequestResponse(response){
             var html = "<h3>Request Accepted</h3>";
             $('#homeuser-homepage-notification-modal-response').foundation('toggle');
             document.getElementById("homeuser-homepage-notification-modal-response-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
 
         }
         else{
@@ -524,7 +580,7 @@ function handleHomeuserRemoveRequestResponse(response){
             var html = "<h3>The request has been cancelled</h3>Thank you for using SebenzaSA";
             $('#homeuser-manageRequest-modal').foundation('toggle');
             document.getElementById("homeuser-manageRequest-modal-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else{
             //The request was not cancel
@@ -732,7 +788,7 @@ function handleHomeuserRemoveTradeworkerFromRequestResponse(response){
             html = "<h3>Tradeworker Successfully removed from request</h3>";
             $('#homeuser-manageRequest-modal-response').foundation('toggle');
             document.getElementById("homeuser-manageRequest-modal-response-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else{
             html = "<h3>Could not remove Tradeworker Successfully</h3>If matter persists please contact admin for further assistance";
@@ -794,7 +850,7 @@ function handleHomeuserTerminateJobRequestRespones(response){
             html = "<h3>Job has been terminated</h3>";
             $('#homeuser-ongoingJobs-modal-response').foundation('toggle');
             document.getElementById("homeuser-ongoingJobs-modal-response-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
 
         }
         else{
@@ -992,8 +1048,8 @@ function homeuserCompleteJobInitiate(){
         '<div class="row">' +
         '<div class="column large-11 medium 11">' +
         '<div id="homeuser-initiateJobCompletion-Picture-information" data-toggler data-animate="fade-in fade-out" style="display:none">' +
-        '<label>Please select a picture to be added:</label><input type="file" name="ignore-homeuser-initiateJobCompletion-Picture-0" id="homeuser-initiateJobCompletion-Picture-0" class="REQ_VAL">' +
-        '<div class="additional-info top-padding" id="homeuser-initiateJobCompletion-Picture-0-info" data-toggler data-animate="fade-in fade-out">' +
+        '<label>Please select a picture to be added:</label><input type="file" name="ignore-homeuser-initiateJobCompletion-Picture-0[]" id="homeuser-initiateJobCompletion-Picture-0" class="REQ_VAL" multiple>' +
+        '<div class="additional-info top-padding" id="homeuser-initiateJobCompletion-Picture-0[]-info" data-toggler data-animate="fade-in fade-out">' +
         '<p class="help-text no-margins">Please ensure a jpg or png was selected</p>' +
         '</div>' +
         '</div>' +
@@ -1019,10 +1075,10 @@ function homeuserCompleteJobInitiate(){
     new Foundation.Toggler(pictureAddition,'data-animate="fade-in fade-out"');
 
     pictureAddition.on("on.zf.toggler", function(e) {
-            document.getElementById('homeuser-initiateJobCompletion-Picture-0').name = "homeuser-initiateJobCompletion-Picture-0";
+            document.getElementById('homeuser-initiateJobCompletion-Picture-0').name = "homeuser-initiateJobCompletion-Picture-0[]";
         })
         .on("off.zf.toggler", function(e) {
-            document.getElementById('homeuser-initiateJobCompletion-Picture-0').name = "ignore-homeuser-initiateJobCompletion-Picture-0";
+            document.getElementById('homeuser-initiateJobCompletion-Picture-0').name = "ignore-homeuser-initiateJobCompletion-Picture-0[]";
         });
 
     jobComment.on("on.zf.toggler", function(e) {
@@ -1049,13 +1105,13 @@ function handleHomeuserInitiateJobCompletionResponse(response){
 
     if(typeof result == 'boolean'){
         if(result){
-
+            console.log(result);
             $('#homeuser-completed-modal').foundation('toggle');
             document.getElementById("homeuser-completed-modal-additionalInfo").innerHTML = "<h3>The job has been completed</h3>";
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else{
-
+            console.log(result);
             $('#homeuser-completed-modal').foundation('toggle');
             document.getElementById("homeuser-completed-modal-additionalInfo").innerHTML = "<h3>Something went wrong please contact admin</h3>";
         }
@@ -1138,7 +1194,9 @@ function handleHomeuserInitiateJobResponseShortcut(response){
         var html;
         if(result){
             html = "<h3>The job has been initiated</h3>";
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            console.log("Fetching job requests: ");
+
+            //sendAJAXRequest('fetch-job-requests', handleFetchJobRequests)
         }
         else{
             html = "<h3>The job wasn't initiated</h3>";
@@ -1206,7 +1264,7 @@ function handleHomeuserInitiateJobResponse(response){
         var html;
         if(result){
             html = "<h3>The job has been initiated</h3>";
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else{
             html = "<h3>The job wasn't initiated</h3>";
@@ -1339,7 +1397,7 @@ function handlerTradeworkerResponse(response){
             var html = "<h3>Tradeworker Request successful</h3>";
             $('#homeuser-rTradeworker-notification-modal-response').foundation('toggle');
             document.getElementById("homeuser-rTradeworker-notification-modal-response-additionalInfo").innerHTML = html;
-            sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+            sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
         }
         else {
             console.log("The work request was unsuccessful: " + response);

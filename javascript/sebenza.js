@@ -31,6 +31,8 @@ var locationsElements = [];
 function startNotificationPulls() {
     sendAJAXRequest('fetch_notifications', handleNotifications);
     setInterval(sendAJAXRequest, NOTIFICATION_PULL_INTERVAL, 'fetch_notifications', handleNotifications);
+    setInterval(sendAJAXRequest,60000,'fetch-job-requests',handleFetchJobRequests);
+
 }
 
 function handleNotifications(response) {

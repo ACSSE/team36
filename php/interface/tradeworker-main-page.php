@@ -134,7 +134,7 @@
 </div>
 <script>
     //tradeworkerRequestsNotifier();
-    sendAJAXRequest('fetch-job-requests', handleTradeworkerFetchJobRequests);
+    sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
     sendAJAXRequest('fetch-tradeworker-profile-details',handleTradeworkerFetchProfileDetails);
     sendAJAXRequest('fetch-tradeworker-location-details', handleTradeworkerFetchLocationDetails);
 </script>

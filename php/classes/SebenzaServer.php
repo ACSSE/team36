@@ -2267,27 +2267,70 @@ class SebenzaServer {
         }
     }
     //The following method is used when the homeuser presses complete job
-    public static  function homeuserOverallSatisfiedWithCompletedJob($jobID,$pictureName){
+    public static function homeuserJobCompletionPhotoAdditionHelper($jobID,$userID){
+        $command = "INSERT INTO `PICTURES_PER_JOB` (`JobID`, `UserID`, `PictureName`) VALUES (?,?,?)";
+        $returnValue = true;
+        $myFile = $_FILES['homeuser-initiateJobCompletion-Picture-0'];
+
+        for($j = 0;$j < count($myFile['name']);$j++){
+            $pictureName = basename($myFile["name"][$j]);
+            $dbhandler = self::fetchDatabaseHandler();
+            if($dbhandler->runCommand($command,$jobID,$userID,$pictureName)){
+                $picID = $dbhandler->getInsertID();
+                $uniquePicName = $picID."_".$jobID."_".$userID."_";
+                $returnValue &= SebenzaServer::addMultiplePictureToServer($j,$uniquePicName);
+
+            }
+            else{
+                $returnValue &= false;
+            }
+        }
+
+        return (bool)$returnValue;
+    }
+    public static  function homeuserNotOverallSatisfiedWithCompletedJob($jobID){
+        //$_POST['homeuser-initiateJobCompletion-jobSatisfaction-switch'] != 'true' || $_POST['homeuser-initiateJobCompletion-userRecommendation-switch'] != "true"
+        $jobReview = -1;
+        $jobReason = "Not given";
+        if($_POST['homeuser-initiateJobCompletion-jobSatisfaction-switch'] != 'true'){
+            $jobReview = 2;
+            $jobReason = $_POST['homeuser-initiateJobCompletion-jobComment'];
+        }
+        else
+            $jobReview = 1;
+
+        $workerReview = -1;
+        $workerReason = "Not given";
+        if($_POST['homeuser-initiateJobCompletion-userRecommendation-switch'] != "true"){
+            $workerReview = 2;
+            $workerReason = $_POST['homeuser-initiateJobCompletion-userComment'];
+        }
+        else{
+            $workerReview = 1;
+        }
+
         $command = "UPDATE `JOB_PER_USER` SET `Status` = ?, `Notifier` = ? WHERE `JobID` = ?";
         $dbhandler = self::fetchDatabaseHandler();
         $userID = self::fetchUserID();
         if($dbhandler->runCommand($command,1,1,$jobID)){
             $command = "INSERT INTO `REVIEW_PER_JOB` (`JobID`, `UserID`, `JobSatisfaction`, `TradeworkerSatisfaction`) VALUES (?,?,?,?)";
-            if($dbhandler->runCommand($command,$jobID,$userID,1,1)){
-            //adding the picture to the system, add the name of the picture to the database so that it can be displayed to users.
-                $command = "INSERT INTO `PICTURES_PER_JOB` (`JobID`, `UserID`, `PictureName`) VALUES (?,?,?)";
-                if($dbhandler->runCommand($command,$jobID,$userID,$pictureName)){
-                    $picID = $dbhandler->getInsertID();
-                    $uniquePicName = $picID."_".$jobID."_".$userID."_";
-                    $condition = SebenzaServer::addPictureToServer($uniquePicName);
-                    if($condition)
-                        $returnValue = true;
-                    else
-                        $returnValue = false;
+            if($dbhandler->runCommand($command,$jobID,$userID,$jobReview,$workerReview)){
+                $reviewID = $dbhandler->getInsertID();
+                if($workerReview == 2){
+                    $command = "INSERT INTO `REASON_FOR_DISSATISFACTION` (`ReviewID`, `Explanation`, `Selection`) VALUES (?,?,?)";
+                    $dbhandler->runCommand($command,$reviewID,$jobReason,0);
                 }
-                else{
-                    $returnValue = false;
+
+                if($jobReview == 2){
+                    $command = "INSERT INTO `REASON_FOR_DISSATISFACTION` (`ReviewID`, `Explanation`, `Selection`) VALUES (?,?,?)";
+                    $dbhandler->runCommand($command,$reviewID,$workerReason,1);
                 }
+                //adding the picture to the system, add the name of the picture to the database so that it can be displayed to users.
+                if($_POST['homeuser-initiateJobCompletion-pictureAddition-switch'] == 'true')
+                    $returnValue = self::homeuserJobCompletionPhotoAdditionHelper($jobID,$userID);
+                else
+                    $returnValue = true;
+
             }
             else{
                 $returnValue = false;
@@ -2298,35 +2341,36 @@ class SebenzaServer {
         }
         return $returnValue;
     }
-    public static function addPictureToServer($uniqueID){
+
+    public static function addMultiplePictureToServer($counter,$uniqueID){
         $target_dir = "../../UploadedPictures/".$uniqueID;
-        $target_file = $target_dir . basename($_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"]);
+        $target_file = $target_dir . basename($_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"][$counter]);
         $uploadOk = 1;
         $value = "";
         $imageFileType = pathinfo($target_file,PATHINFO_EXTENSION);
         // Check if image file is a actual image or fake image
         //if(isset($_POST["submit"])) {
-        $check = getimagesize($_FILES["homeuser-initiateJobCompletion-Picture-0"]["tmp_name"]);
+        $check = getimagesize($_FILES["homeuser-initiateJobCompletion-Picture-0"]["tmp_name"][$counter]);
         if($check !== false) {
-            $response = json_encode("Is image");
+            $response = "Is image";
             $value .= "Is image";
             $uploadOk = 1;
         } else {
             $value .= "File is not an image.";
-            $value .=$_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"];
-            $response = json_encode("File is not an image.");
+            $value .=$_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"][$counter];
+            $response = "File is not an image.";
             $uploadOk = 0;
         }
 
         if (file_exists($target_file)) {
-            $response = json_encode("Sorry, file already exists.");
+            $response = "Sorry, file already exists.";
             $value .= "Sorry, file already exists.";
             $uploadOk = 0;
         }
 
-        if ($_FILES["homeuser-initiateJobCompletion-Picture-0"]["size"] > 500000) {
+        if ($_FILES["homeuser-initiateJobCompletion-Picture-0"]["size"][$counter] > 500000) {
             $value .= "Sorry, your file is too large.";
-            $response = json_encode("Sorry, your file is too large.");
+            $response = "Sorry, your file is too large.";
             $uploadOk = 0;
         }
 
@@ -2334,19 +2378,19 @@ class SebenzaServer {
         if($imageFileType != "jpg" && $imageFileType != "png" && $imageFileType != "jpeg"
             && $imageFileType != "gif" ) {
             $value .= "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
-            $response = json_encode("Sorry, only JPG, JPEG, PNG & GIF files are allowed.");
+            $response = "Sorry, only JPG, JPEG, PNG & GIF files are allowed.";
             $uploadOk = 0;
         }
 
         if ($uploadOk == 0) {
             $value .= "Sorry, your file was not uploaded..";
-            $response = json_encode("Sorry, your file was not uploaded..");;
+            $response = "Sorry, your file was not uploaded..";
             // if everything is ok, try to upload file
         } else {
-            if (move_uploaded_file($_FILES["homeuser-initiateJobCompletion-Picture-0"]["tmp_name"], $target_file)) {
-                $response = json_encode(true);
+            if (move_uploaded_file($_FILES["homeuser-initiateJobCompletion-Picture-0"]["tmp_name"][$counter], $target_file)) {
+                $response = true;
             } else {
-                $response = json_encode("Sorry, there was an error uploading your file.");
+                $response = "Sorry, there was an error uploading your file.";
 
             }
         }
@@ -2445,12 +2489,20 @@ if (!empty($_POST)) {
                    if($_POST['homeuser-initiateJobCompletion-jobSatisfaction-switch'] == 'true' && $_POST['homeuser-initiateJobCompletion-userRecommendation-switch'] == "true" && $_POST['homeuser-initiateJobCompletion-pictureAddition-switch'] == "true"){
                        //Set the job satisfaction to thumbs up as well as set the tradeworker satisfaction to thumbs up
                        if(isset($_POST['ignore-homeuser-initiateJobCompletion-jobID'])){
-                           $response = json_encode(SebenzaServer::homeuserOverallSatisfiedWithCompletedJob($_POST['ignore-homeuser-initiateJobCompletion-jobID'],basename($_FILES["homeuser-initiateJobCompletion-Picture-0"]["name"])));
+                           $response = json_encode(SebenzaServer::homeuserNotOverallSatisfiedWithCompletedJob($_POST['ignore-homeuser-initiateJobCompletion-jobID']));
                        }
                        else{
                            $response = json_encode(false);
                        }
                    }
+                    else if($_POST['homeuser-initiateJobCompletion-jobSatisfaction-switch'] != 'true' || $_POST['homeuser-initiateJobCompletion-userRecommendation-switch'] != "true" || $_POST['homeuser-initiateJobCompletion-pictureAddition-switch'] != "true"){
+                        if(isset($_POST['ignore-homeuser-initiateJobCompletion-jobID'])){
+                            $response = json_encode(SebenzaServer::homeuserNotOverallSatisfiedWithCompletedJob($_POST['ignore-homeuser-initiateJobCompletion-jobID']));
+                        }
+                        else{
+                            $response = json_encode(false);
+                        }
+                    }
                     //TODO: Need to add all the other cases where the homeuser is either not happy with the job or the tradeworker or if pictures aren't uploaded.
                 }
                 else{

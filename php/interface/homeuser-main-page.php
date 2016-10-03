@@ -123,7 +123,7 @@
 <script>
     //The following is used to request all data necessary for the homeuser to be displayed
     //used by - homeuser-manage-requests.php,homeuser-manage-initiate-jobs
-    sendAJAXRequest('fetch-job-requests', handleHomeuserFetchJobRequests);
+    sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
     sendAJAXRequest('fetch-homeuser-profile-details', handleHomeuserFetchProfileDetails);
     sendAJAXRequest('fetch-homeuser-location-details', handleHomeuserFetchLocationDetails);
     //This brings up the confirmation between homeuser and tradeworker
