@@ -29,7 +29,7 @@ import oasys.za.ac.uj.team36.Requests.loginRequest;
 
 public class Main extends AppCompatActivity implements View.OnClickListener{
 
-    private static final String SERVER_ADDRESS_URL = "http://10.0.0.4:31335/php/classes/SebenzaServer.php" ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.10:31335/php/classes/SebenzaServer.php" ;
     private Button bLogin ;
     private TextView tvRegisterLink;
     private EditText etUsername ,etPassword ;
@@ -55,6 +55,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         tvRegisterLink.setOnClickListener(this);
         DB = new UserLocalDatabase(this) ;
         setFalseData();
+        DB.clearLocalDBdata();
     }
 
     @Override
@@ -63,6 +64,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         switch (v.getId())
         {
             case R.id.bLogin:
+                DB.clearLocalDBdata();
                 loginR();
                 setlogIn();
                 break ;

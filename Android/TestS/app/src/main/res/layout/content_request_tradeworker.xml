@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorPrimary"
     android:padding="10dp"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="oasys.za.ac.uj.team36.tests.requestTradeworker"
@@ -17,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Job Date"
-            android:textColor="@color/colorPrimary"
+            android:textColor="#FFF"
             android:textSize="14pt"/>
         <TextView
             android:id="@+id/textView3"
@@ -29,7 +30,7 @@
             android:id="@+id/bsetDate"
             android:layout_width="match_parent"
             android:text="Select Date"
-            android:textColor="#000000"
+            android:textColor="@color/colorPrimaryDark"
             android:onClick="setDate"
             android:background="@color/colorPrimary"
             android:textSize="10pt"
@@ -39,7 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Job Details"
-            android:textColor="@color/colorPrimary"
+            android:textColor="#FFF"
             android:textSize="14pt"/>
 
         <TextView
@@ -48,52 +49,58 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
+            android:textColor="#FFF"
             android:textSize="9pt"
             android:text="Job type"/>
         <EditText
             android:id="@+id/etType"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="9pt"
             android:hint="Painter"
-            android:inputType="text"/>
+            android:inputType="text"
+            android:textColorHint="@color/colorPrimaryDark"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
+            android:textColor="#FFF"
             android:textSize="9pt"
             android:text="Decription "/>
         <EditText
             android:id="@+id/etDecription"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="9pt"
             android:inputType="text"
+            android:textColorHint="@color/colorPrimaryDark"
             android:hint="I require 2 painters to paint my roof"/>
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
+            android:textColor="#FFF"
             android:textSize="9pt"
             android:text="Number of Workers:"/>
         <EditText
             android:id="@+id/etnWorkers"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="#000000"
+            android:textColor="@color/colorPrimaryDark"
             android:textSize="9pt"
             android:inputType="number"
-            android:hint="2"/>
+            android:textColorHint="@color/colorPrimaryDark"
+            android:hint="1"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Job Location"
-        android:textColor="@color/colorPrimary"
+        android:textColor="#FFF"
         android:textSize="14pt"/>
 
     <TextView
@@ -103,7 +110,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
+        android:textColor="#FFF"
         android:textSize="9pt"
         android:text="Street number"/>
 
@@ -111,14 +118,15 @@
         android:id="@+id/etsNumHU"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="9pt"
         android:inputType="number"
+        android:textColorHint="@color/colorPrimaryDark"
         android:hint="30"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
+        android:textColor="#FFF"
         android:textSize="9pt"
         android:text="Street Name"/>
 
@@ -126,15 +134,16 @@
         android:id="@+id/etsNameHU"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="9pt"
         android:inputType="text"
+        android:textColorHint="@color/colorPrimaryDark"
         android:hint="5th street"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
+        android:textColor="#FFF"
         android:textSize="9pt"
         android:text="Sub area"/>
 
@@ -142,16 +151,17 @@
         android:id="@+id/etSubLocalHU"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="9pt"
         android:inputType="text"
+        android:textColorHint="@color/colorPrimaryDark"
         android:hint="Orlando"/>
 
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
+        android:textColor="#FFF"
         android:textSize="9pt"
         android:text="Area"/>
 
@@ -159,15 +169,16 @@
         android:id="@+id/etLocalHU"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
+        android:textColor="@color/colorPrimaryDark"
         android:inputType="text"
         android:textSize="9pt"
+        android:textColorHint="@color/colorPrimaryDark"
         android:hint="Soweto"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
+        android:textColor="#FFF"
         android:textSize="9pt"
         android:text="Area"/>
 
@@ -175,10 +186,48 @@
         android:id="@+id/etAdminAreaHU"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="#000000"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="9pt"
         android:inputType="text"
+        android:textColorHint="@color/colorPrimaryDark"
         android:hint="Gauteng"/>
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFF"
+            android:textSize="9pt"
+            android:text="Postal Code"/>
+
+        <EditText
+            android:id="@+id/etPostalHU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:inputType="text"
+            android:textSize="9pt"
+            android:textColorHint="@color/colorPrimaryDark"
+            android:hint="1490"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFF"
+            android:textSize="9pt"
+            android:text="Country"/>
+
+        <EditText
+            android:id="@+id/etCountryHU"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:inputType="text"
+            android:textSize="9pt"
+            android:textColorHint="@color/colorPrimaryDark"
+            android:hint="South Africa"/>
+
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
@@ -187,7 +236,7 @@
         android:id="@+id/bRequestWorker"
         android:layout_width="match_parent"
         android:text="Send Request"
-        android:textColor="#000000"
+        android:textColor="#FFF"
         android:background="@color/colorPrimary"
         android:textSize="10pt"
         android:layout_marginBottom="12dp"

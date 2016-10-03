@@ -845,6 +845,127 @@ class SebenzaServer {
         return $returnValue;
     }
 
+    public static function homeuserRequestTradeworkerAndroid($input, $UserID){
+
+//        $_POST['commencement-homeuser-rTradeworker'],$_POST['homeuser-rTradeworker-street_number'],$_POST['homeuser-rTradeworker-route'],$_POST['homeuser-rTradeworker-sublocality_level_1'],$_POST['homeuser-rTradeworker-locality'],$_POST['homeuser-rTradeworker-administrative_area_level_1'],$_POST['homeuser-rTradeworker-postal_code'],$_POST['homeuser-rTradeworker-country'])
+        $dbhandler = self::fetchDatabaseHandler();
+        $route = $input[2];
+        $workType = 6;
+        $area = $input[4];
+        $subArea = $input[3];
+        $streetNumber = $input[1];
+        $province = $input[5];
+        $date = $input[0];
+        $numRequest = $input[8];
+//        $date = DateTime::createFromFormat("Y-m-d",$input[0]);
+        $command = "SELECT `locationID` FROM `LOCATIONS` WHERE `locationName` = ?";
+        $dbhandler->runCommand($command,$area);
+        $result = $dbhandler->getResults();
+        $locationID = -1;
+
+        if(count($result) > 0){
+            $locationID = $result[0]['locationID'];
+        }
+        else{
+            //TODO:The user needs to be informed that no tradeworker/contractor exists with that skill in the area currently
+            //I think to make that if an area has no tradeworkers that the area cannot be added by the homeuser to be the best approach
+            $result = 1;
+            $result *= 2;
+        }
+        $addressID = -1;
+        if($locationID > 0) {
+            $command = "SELECT `AreaID` FROM `AREA_PER_LOCATION` WHERE `AreaName` = ? AND `StreetNumber` = ?";
+            $dbhandler->runCommand($command, $subArea, $streetNumber);
+            $result = $dbhandler->getResults();
+
+            if (count($result) > 0) {
+                $addressID = $result[0]['AreaID'];
+            }
+            else {
+                //This one can occur it just means the street address and area need to be added to the database
+                $command = "INSERT INTO `AREA_PER_LOCATION` (`StreetNumber`,`AreaName`,`locationID`,`Road`) VALUES (?,?,?,?)";
+                if($dbhandler->runCommand($command, $streetNumber, $subArea, $locationID,$route)){
+                    $addressID = $dbhandler->getInsertID();
+                }
+                else{
+                    //area failed to insert for some reason check for errors
+                    $result = 1;
+                    $result *= 3;
+                }
+
+            }
+        }
+
+        $id = $UserID;
+
+        //$result = $addressID." ".$locationID;
+        //TODO: run for loop for all the different skill types requested as well as set up a quote per number requested per skill
+        if($addressID > 0 && $locationID > 0 && $id){
+            //The following will check if a tradeworker exists with the skills required so that a notification can be sent out immediately
+            // outer for loop runs on ignore-actual-nTradeworkers-homeuser-rTradeworker while inner for loop will run on nTradeworkers-homeuser-rTradeworker-0
+            $command = "INSERT INTO `QUOTE_REQUEST` (`UserID`,`NumberOfWorkersRequested`,`workTypeID`,`JobDescription`,`Address`,`JobCommencementDate`) VALUES (?,?,?,?,?,?)";
+
+            for($z = 0; $z < $numRequest; $z++){
+                $numRequestPerType = $_POST['nTradeworkers-homeuser-rTradeworker-'.$z];
+                $workType = $_POST['homeuser-rTradeworker-work-type-'.$z];
+                $jobDescription = $_POST['job-description-homeuser-rTradeworker-'.$z];
+                if ($dbhandler->runCommand($command, $id, $numRequestPerType, $workType, $jobDescription, $addressID, $date)) {
+
+                    $requestID = $dbhandler->getInsertID();
+                    $tradeworkerID = self::fetchAvailableTradeworker($workType,$locationID,$numRequestPerType,$requestID);
+
+                    if(gettype($tradeworkerID) == "boolean"){
+                        //TODO:Tell the difference between unavailable users in an area and no users in the area with selected work type so that user can leave the request active for when a tradeworker becomes available the returned values will then be negative integer for errors and if it passes it will be a positive integer
+                        //Technically this should not occur anymore on failure negative integer value is sent
+                        $result = $tradeworkerID;
+                    }
+                    else if(gettype($tradeworkerID) == "integer") {
+//                    Tradeworker could not be requested an error occured in the method fetchAvailableTradeworker
+                        $result = $tradeworkerID;
+                    }
+                    else if(gettype($tradeworkerID) == "array"){
+                        if(count($tradeworkerID) > 0){
+                            for($r = 0;$r < count($tradeworkerID);$r++){
+                                $command = "INSERT INTO `QUOTE` (`RequestID`,`RequestedUser`) VALUES (?,?)";
+                                if ($dbhandler->runCommand($command, $requestID, $tradeworkerID[$r])) {
+                                    //The insert was successful send notification to tradeworker
+                                    if (self::addNotification($tradeworkerID[$r], "Added job request: check under manage jobs - job requests tab")) {
+                                        //TODO:Add one to the activeRequests as well as one to the overall requests to the TRADEWORKER table for the given tradeworker id,
+                                        $dbhandler->runCommand("SELECT `ActiveWorkRequests`,`OverallWorkRequests` FROM `TRADE_WORKER` WHERE `UserID` = ?",$tradeworkerID[$r]);
+                                        $amount = $dbhandler->getResults();
+                                        $command = "UPDATE `TRADE_WORKER` SET `ActiveWorkRequests` = ? , `OverallWorkRequests` = ? WHERE `UserID` = ?";
+                                        if ($dbhandler->runCommand($command,intval($amount[0]['ActiveWorkRequests'] + 1),intval($amount[0]['OverallWorkRequests'] + 1),$tradeworkerID[$r])) {
+                                            $result = true;
+                                            //This should be counting array of the result of the dbHandler
+                                        } else {
+                                            $result = "Failed to increment tradeworker notifications";
+                                        }
+                                    } else {
+                                        $result = "Could not add notification";
+                                    }
+                                } else {
+                                    //The quote request could not be inserted for some reason error check
+                                    $result = "Could not add quote" . $date;
+                                }
+                            }
+                        }
+//                        $result = $tradeworkerID;
+                    }
+                    else{
+                        //The following should never occur the return type should be of Integer or boolean or array only
+
+                        $result = $tradeworkerID;
+                    }
+                }
+                else{
+                    //Failed to add request to database
+                }
+            }
+        }
+
+        return $result;
+    }
+
     public static function homeuserRequestTradeworker($input){
 
 //        $_POST['commencement-homeuser-rTradeworker'],$_POST['homeuser-rTradeworker-street_number'],$_POST['homeuser-rTradeworker-route'],$_POST['homeuser-rTradeworker-sublocality_level_1'],$_POST['homeuser-rTradeworker-locality'],$_POST['homeuser-rTradeworker-administrative_area_level_1'],$_POST['homeuser-rTradeworker-postal_code'],$_POST['homeuser-rTradeworker-country'])
@@ -2874,6 +2995,42 @@ if (!empty($_POST)) {
                     $response = json_encode(false);
                 }
 
+                break;
+            case 'android-homeuser-rTradeworker':
+                $condition = true;
+
+                if(isset($_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker'])){
+                    for($j =0;$j<$_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker'];$j++){
+                        if(!isset($_POST['homeuser-rTradeworker-work-type-'.$j]) || !isset($_POST['nTradeworkers-homeuser-rTradeworker-'.$j]) || !isset($_POST['job-description-homeuser-rTradeworker-'.$j])){
+                            $condition = false;
+                        }
+                    }
+
+                }
+                else{
+                    $condition = false;
+                }
+
+                if($condition){
+                    if(isset($_POST['commencement-homeuser-rTradeworker']) && isset($_POST['homeuser-rTradeworker-street_number']) && isset($_POST['homeuser-rTradeworker-route']) && isset($_POST['homeuser-rTradeworker-sublocality_level_1']) && isset($_POST['homeuser-rTradeworker-locality']) && isset($_POST['homeuser-rTradeworker-administrative_area_level_1']) && isset($_POST['homeuser-rTradeworker-postal_code']) && isset($_POST['homeuser-rTradeworker-country']) && isset($_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker'])){
+                        $condition = SebenzaServer::homeuserRequestTradeworkerAndroid([$_POST['commencement-homeuser-rTradeworker'],$_POST['homeuser-rTradeworker-street_number'],$_POST['homeuser-rTradeworker-route'],$_POST['homeuser-rTradeworker-sublocality_level_1'],$_POST['homeuser-rTradeworker-locality'],$_POST['homeuser-rTradeworker-administrative_area_level_1'],$_POST['homeuser-rTradeworker-postal_code'],$_POST['homeuser-rTradeworker-country'],$_POST['ignore-actual-nTradeworkers-homeuser-rTradeworker']],$_POST['android-UserID']);
+//                        $condition = true;
+                    }
+                    else{
+                        $condition = false;
+                    }
+                }
+
+                $response = json_encode($condition);
+                break;
+            case 'android-homeuser-remove-request':
+                //$response = json_encode("Should be removing the request from the server");
+                if(isset($_POST['ignore-homeuser-selected-request-id']))
+                {
+                    $response = json_encode(SebenzaServer::homeuserStopRequest($_POST['ignore-homeuser-selected-request-id']));
+                }else{
+                    return json_encode(false);
+                }
                 break;
             default:
                 //If the action was not one of the handled cases, respond appropriately
