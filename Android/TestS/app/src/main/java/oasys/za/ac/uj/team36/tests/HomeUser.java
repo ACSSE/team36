@@ -139,8 +139,14 @@ public class HomeUser extends AppCompatActivity
         if (id == R.id.nav_requestTradeworker) {
             Intent i = new Intent(HomeUser.this, requestTradeworker.class);
             startActivity(i);
-        } else if (id == R.id.nav_ManageRequests) {
-            Intent i = new Intent(HomeUser.this, HomeuserManageJobRequests.class);
+        } else if (id == R.id.nav_ManageRequestsOngoing) {
+            Intent i = new Intent(HomeUser.this, HomeuserManageOngoingJobRequests.class);
+            startActivity(i);
+        } else if (id == R.id.nav_ManageRequestsCompleted) {
+            Intent i = new Intent(HomeUser.this, HomeuserManageCompletedJobRequests.class);
+            startActivity(i);
+        } else if (id == R.id.nav_ManageRequestsCancelled   ) {
+            Intent i = new Intent(HomeUser.this, HomeuserManageCancelledJobRequests.class);
             startActivity(i);
         } else if (id == R.id.nav_InitiateJob) {
             Intent i = new Intent(HomeUser.this, HomeuserInitiatedJobs.class);
@@ -150,6 +156,9 @@ public class HomeUser extends AppCompatActivity
             startActivity(i);
         } else if (id == R.id.nav_FinishedJobs) {
             Intent i = new Intent(HomeUser.this, HomeuserFinishedJobs.class);
+            startActivity(i);
+        } else if (id == R.id.nav_CancelledJobs) {
+            Intent i = new Intent(HomeUser.this, HomeuserCancelledJobs.class);
             startActivity(i);
         } else if (id == R.id.nav_editDetails) {
 

@@ -11,35 +11,31 @@
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimary"
+        android:textColor="#000"
         android:text="Enter Your new Description:"
-        android:textSize="9pt"/>
+        android:textSize="10pt"/>
 
     <EditText
         android:id="@+id/etDecripRequestEdit"
         android:layout_width="match_parent"
+        android:textColor="#000"
         android:layout_height="wrap_content" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <Button
-        android:id="@+id/bsetRequestDate"
-        android:layout_width="match_parent"
-        android:text="Select Date"
-        android:textColor="@color/colorPrimaryDark"
-        android:onClick="setDate"
-        android:background="@color/colorPrimary"
-        android:textSize="12pt"
-        android:layout_marginBottom="12dp"
-        android:layout_height="wrap_content" />
-
     <TextView
-        android:id="@+id/textView3Date"
         android:layout_width="wrap_content"
-        android:textColor="@color/colorPrimary"
         android:layout_height="wrap_content"
-        />
+        android:textColor="#000"
+        android:text="Enter Job Date:"
+        android:textSize="10pt"/>
+
+    <EditText
+        android:id="@+id/etDateEdit"
+        android:layout_width="match_parent"
+        android:textColor="#000"
+        android:layout_height="wrap_content" />
 
 </LinearLayout>

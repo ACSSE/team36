@@ -5,11 +5,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="10dp"
+    android:background="@color/colorPrimary"
     android:orientation="vertical"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
     tools:context="oasys.za.ac.uj.team36.tests.HomeuserInitiatedJobs"
     tools:showIn="@layout/activity_homeuser_initiated_jobs">
 
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tap request for details"
+        android:textSize="10pt"
+        android:gravity="center"
+        android:textColor="#FFF"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
     <ListView
         android:id="@+id/lvInitiatedHU"
