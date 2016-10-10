@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -29,7 +30,7 @@ import oasys.za.ac.uj.team36.Requests.loginRequest;
 
 public class Main extends AppCompatActivity implements View.OnClickListener{
 
-    private static final String SERVER_ADDRESS_URL = "http://10.0.0.4:31335/php/classes/SebenzaServer.php" ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.10:31335/php/classes/SebenzaServer.php" ;
     private Button bLogin ;
     private TextView tvRegisterLink;
     private EditText etUsername ,etPassword ;
@@ -54,7 +55,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         bLogin.setOnClickListener(this);
         tvRegisterLink.setOnClickListener(this);
         DB = new UserLocalDatabase(this) ;
-        setFalseData();
+        //setFalseData();
     }
 
     @Override
@@ -119,15 +120,12 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
 
                     if(s.equalsIgnoreCase("true")){
                         // fetch users details
-                        int type = fetchDetails(uName);
+                        int Utype = fetchDetails(uName);
                         //store user details
                         setSharePreference();
-                        if (type == 2){
-                            startActivity(new Intent(Main.this, HomeUser.class));
-                        }
-                        if(type == 0){
-                            startActivity(new Intent(Main.this, TradeWorker.class));
-                        }
+                        // start activity
+                        startUserActivity(Utype);
+
                    /*     AlertDialog.Builder d = new AlertDialog.Builder(Main.this);
                         d.setMessage("User type: " + type);
                         d.setTitle("Type") ;
@@ -213,6 +211,17 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         return userType;
     }
 
+    private void startUserActivity(int type){
+        if (type == 2){
+            startActivity(new Intent(Main.this, HomeUser.class));
+        }
+        if(type == 0){
+            startActivity(new Intent(Main.this, TradeWorker.class));
+        }
+        if(type < 0){
+            Toast.makeText(Main.this,"Could Not login: Error in user type",Toast.LENGTH_LONG);
+        }
+    }
 
     public void setSharePreference(){
 
@@ -240,10 +249,6 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
         d.setTitle("Your OK") ;
         d.setNegativeButton("Retry", null) ;
         d.create().show();*/
-    }
-
-    public void clearSharedPref(){
-       DB.clearLocalDBdata();
     }
 
     public void setFalseData(){

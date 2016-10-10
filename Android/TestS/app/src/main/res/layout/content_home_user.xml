@@ -23,19 +23,6 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
-<!--    <Gallery
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/gallery"
-        android:layout_gravity="center_horizontal" />
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_marginTop="100dp"
-        android:layout_width="250dp"
-        android:layout_gravity="center_horizontal"
-        android:layout_height="250dp"
-        android:src="@drawable/labour8" />-->
 
     <DigitalClock
         android:layout_width="wrap_content"

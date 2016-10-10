@@ -78,8 +78,8 @@ public class TradeworkerJobRequests extends AppCompatActivity {
                 String st = error.toString() ;
                 AlertDialog.Builder d = new AlertDialog.Builder(TradeworkerJobRequests.this);
                 d.setMessage("Response : " + st.toString());
-                d.setTitle("Your Error") ;
-                d.setNegativeButton("Re try", null) ;
+                d.setTitle("Network Error") ;
+                d.setNegativeButton("Retry", null) ;
                 d.create().show();
             }
         }) ;
@@ -162,7 +162,6 @@ public class TradeworkerJobRequests extends AppCompatActivity {
         //pref = getSharedPreferences("user-details", Context.MODE_PRIVATE);
         RegisteredUser u = DB.getLoggedInUser() ;
         uID = u.getUserID();
-        String name =u.getName();
         utype = u.getUserType();
     }
 
@@ -339,7 +338,6 @@ public class TradeworkerJobRequests extends AppCompatActivity {
     }
 
     public void displayJobRequestConfirmationNotification(String[] confirms, int length){
-        Toast.makeText(getApplicationContext(),"DETAILS SET",Toast.LENGTH_LONG) ;
         for(int i = 0 ; i < confirms.length ; i++) {
             if (confirms[i].toString() == "") {
                 //dont show user job details

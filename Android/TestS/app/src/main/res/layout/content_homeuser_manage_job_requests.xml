@@ -4,11 +4,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-   android:padding="10dp"
+    android:padding="10dp"
     android:orientation="vertical"
+    android:background="@color/colorPrimary"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
-    tools:context="oasys.za.ac.uj.team36.tests.HomeuserOngoingJobs"
-    tools:showIn="@layout/activity_homeuser_ongoing_jobs">
+    tools:context=".HomeuserManageJobRequests"
+    tools:showIn="@layout/activity_homeuser_manage_job_requests">
 
     <TextView
         android:layout_width="match_parent"
@@ -23,9 +24,11 @@
         android:layout_height="wrap_content" />
 
     <ListView
-        android:id="@+id/lvOngoingHU"
+        android:id="@+id/lvManageRequestHU"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent">
+        android:layout_width="match_parent"
+        android:divider="@color/colorPrimaryDark"
+        android:dividerHeight="1.5dp">
     </ListView>
 
 </LinearLayout>

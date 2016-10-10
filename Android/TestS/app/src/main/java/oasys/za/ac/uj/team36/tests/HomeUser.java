@@ -3,11 +3,9 @@ package oasys.za.ac.uj.team36.tests;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -21,9 +19,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.ImageView;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -43,7 +38,7 @@ import oasys.za.ac.uj.team36.Requests.MyRequestJArray;
 public class HomeUser extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-    public static final String SERVER_ADDRESS_URL = "http://10.0.0.7:31335/php/classes/SebenzaServer.php" ;
+    public static final String SERVER_ADDRESS_URL = "http://10.0.0.10:31335/php/classes/SebenzaServer.php" ;
     private Notification.Builder notification;
     private static final int uniqueID = 45782 ; // Id for each notification
     private UserLocalDatabase DB ;
@@ -143,10 +138,15 @@ public class HomeUser extends AppCompatActivity
 
         if (id == R.id.nav_requestTradeworker) {
             Intent i = new Intent(HomeUser.this, requestTradeworker.class);
-           // this.finish();  //Kill the activity from which you will go to next activity
             startActivity(i);
-        } else if (id == R.id.nav_ManageJobs) {
-            Intent i = new Intent(HomeUser.this, HomeuserManageJobs.class);
+        } else if (id == R.id.nav_ManageRequestsOngoing) {
+            Intent i = new Intent(HomeUser.this, HomeuserManageOngoingJobRequests.class);
+            startActivity(i);
+        } else if (id == R.id.nav_ManageRequestsCompleted) {
+            Intent i = new Intent(HomeUser.this, HomeuserManageCompletedJobRequests.class);
+            startActivity(i);
+        } else if (id == R.id.nav_ManageRequestsCancelled   ) {
+            Intent i = new Intent(HomeUser.this, HomeuserManageCancelledJobRequests.class);
             startActivity(i);
         } else if (id == R.id.nav_InitiateJob) {
             Intent i = new Intent(HomeUser.this, HomeuserInitiatedJobs.class);
@@ -156,6 +156,9 @@ public class HomeUser extends AppCompatActivity
             startActivity(i);
         } else if (id == R.id.nav_FinishedJobs) {
             Intent i = new Intent(HomeUser.this, HomeuserFinishedJobs.class);
+            startActivity(i);
+        } else if (id == R.id.nav_CancelledJobs) {
+            Intent i = new Intent(HomeUser.this, HomeuserCancelledJobs.class);
             startActivity(i);
         } else if (id == R.id.nav_editDetails) {
 

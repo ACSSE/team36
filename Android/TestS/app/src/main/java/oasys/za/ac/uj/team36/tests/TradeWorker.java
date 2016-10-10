@@ -46,11 +46,6 @@ public class TradeWorker extends AppCompatActivity
     private Notification.Builder notification;
     private static final int uniqueID = 45788 ; // Id for each notification
     private UserLocalDatabase DB ;
-    private static final String SERVER_ADDRESS_URL = "http://10.0.0.4:31335/php/classes/SebenzaServer.php" ;
-    SharedPreferences pref ;
-    private int utype, uID;
-    private JSONArray allRequests;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -137,18 +132,21 @@ public class TradeWorker extends AppCompatActivity
         } else if (id == R.id.nav_InitiatedJobsTW) {
             Intent i = new Intent(TradeWorker.this, TradeworkerInitiatedJobs.class);
             startActivity(i);
-        } else if (id == R.id.nav_OngoingJobsTW) {
+        } else if (id == R.id.nav_FinishedJobsTW) {
             Intent i = new Intent(TradeWorker.this, TradeworkerCompletedJobs.class);
             startActivity(i);
-        } else if (id == R.id.nav_FinishedJobsTW) {
-            Intent i = new Intent(TradeWorker.this, TradeworkerCancelledJobs.class);
+        } else if (id == R.id.nav_UnfinishedJobsTW) {
+            // Intent i = new Intent(TradeWorker.this, TradeworkerUnfinishedJobs.class);
+            // startActivity(i);
+        } else if (id == R.id.nav_CancelledJobsTW) {
+            Intent i = new Intent(TradeWorker.this, TradeworkerCompletedJobs.class);
             startActivity(i);
         } else if (id == R.id.nav_editDetailsTW) {
-            // TODO Handle the camera action
+            // TODO Handle the edit action
         } else if (id == R.id.nav_editLocationsTW) {
-            // TODO Handle the camera action
+            // TODO Handle the edit action
         }else if (id == R.id.nav_editSkillsTW) {
-            // TODO Handle the camera action
+            // TODO Handle the edit action
         }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
