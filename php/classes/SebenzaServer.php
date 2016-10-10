@@ -1290,17 +1290,29 @@ class SebenzaServer {
                                     }
 
                                 }
-                            }
-                            else if($jobsInitiated[0]['Status'] == 1){
-                                $command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";
+                                //TODO: add the review when it is bad or good, if it is bad display what the homeuser said was bad - don't know if it should be displayed in detail to the tradeworker though
+                                $command = "SELECT `ReviewID`,`JobSatisfaction`,`TradeworkerSatisfaction` FROM `REVIEW_PER_JOB` WHERE `JobID` = ?";
                                 $dbhandler->runCommand($command,$jobsInitiated[0]['JobID']);
-                                $picturesResult = $dbhandler->getResults();
-                                if(count($picturesResult) > 0){
-                                    $returnValue[$r]['JobID-'.$r.'-'."PictureCount"] = count($picturesResult);
-                                    for($q = 0;$q < count($picturesResult);$q++){
-                                        $returnValue[$r]['JobID-'.$r.'-'."PictureID-".$q] = $picturesResult[$q]['PictureID'].'_'.$picturesResult[$q]['JobID'].'_'.$picturesResult[$q]['UserID'].'_'.$picturesResult[$q]['PictureName'];
-                                    }
-
+                                $reviewResults = $dbhandler->getResults();
+                                if($reviewResults[0]['JobSatisfaction'] == 2){
+                                    $returnValue[$i]['JobID-'.$r.'-'.'JobSatisfaction'] = "Unsatisfied";
+                                    $command = "SELECT `Explanation` FROM `REASON_FOR_DISSATISFACTION` WHERE `ReviewID` = ? AND `Selection` = ?";
+                                    $dbhandler->runCommand($command,$reviewResults[0]['ReviewID'],0);
+                                    $reason = $dbhandler->getResults();
+                                    $returnValue[$i]['JobID-'.$r.'-'.'JobSatisfactionReason'] = $reason[0]['Explanation'];
+                                }
+                                else{
+                                    $returnValue[$i]['JobID-'.$r.'-'.'JobSatisfaction'] = "Satisfied";
+                                }
+                                if($reviewResults[0]['TradeworkerSatisfaction'] == 2){
+                                    $returnValue[$i]['JobID-'.$r.'-'.'TradeworkerSatisfaction'] = "Unsatisfied";
+                                    $command = "SELECT `Explanation` FROM `REASON_FOR_DISSATISFACTION` WHERE `ReviewID` = ? AND `Selection` = ?";
+                                    $dbhandler->runCommand($command,$reviewResults[0]['ReviewID'],1);
+                                    $reason = $dbhandler->getResults();
+                                    $returnValue[$i]['JobID-'.$r.'-'.'TradeworkerSatisfactionReason'] = $reason[0]['Explanation'];
+                                }
+                                else{
+                                    $returnValue[$i]['JobID-'.$r.'-'.'TradeworkerSatisfaction'] = "Satisfied";
                                 }
                             }
                         }
