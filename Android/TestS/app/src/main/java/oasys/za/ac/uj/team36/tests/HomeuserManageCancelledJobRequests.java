@@ -23,6 +23,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import oasys.za.ac.uj.team36.Model.CustomAdapter;
 import oasys.za.ac.uj.team36.Model.MySingleton;
 import oasys.za.ac.uj.team36.Model.RegisteredUser;
 import oasys.za.ac.uj.team36.Model.UserLocalDatabase;
@@ -31,11 +32,13 @@ import oasys.za.ac.uj.team36.Requests.MyRequestJArray;
 public class HomeuserManageCancelledJobRequests extends AppCompatActivity {
 
 
-    private static final String SERVER_ADDRESS_URL = "http://10.0.0.10:31335/php/classes/SebenzaServer.php" ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.11:31335/php/classes/SebenzaServer.php" ;
     private UserLocalDatabase DB ;
     private int utype, uID;
     private JSONArray allRequests;
     private JSONObject[] finalRequests ;
+
+    private int imageResource = R.drawable.job2 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +142,7 @@ public class HomeuserManageCancelledJobRequests extends AppCompatActivity {
     public void populateListView(String[] req, int length){
         if(length > 0) {
             finalRequests = new JSONObject[length];
+            final Integer[] imgid = new Integer[length];
             final String[] a = new String[length]; // create an empty array;
             int count = 0;
 
@@ -148,6 +152,7 @@ public class HomeuserManageCancelledJobRequests extends AppCompatActivity {
                 } else {
                     try {
                         finalRequests[count] = allRequests.getJSONObject(i);
+                        imgid[count] = imageResource ;
                         a[count] = req[i];
                         count++;
                     } catch (JSONException e) {
@@ -157,8 +162,9 @@ public class HomeuserManageCancelledJobRequests extends AppCompatActivity {
                 }
             }
             ListView listView = (ListView) findViewById(R.id.lvManageCompletedRequestHU);
-            ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.list_requests_item, a);
-            listView.setAdapter(adapter);
+            //ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.list_requests_item, a);
+            CustomAdapter adapter1 = new CustomAdapter(this,a,imgid) ;
+            listView.setAdapter(adapter1);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

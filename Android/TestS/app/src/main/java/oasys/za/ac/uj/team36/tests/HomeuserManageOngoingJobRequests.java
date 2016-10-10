@@ -30,6 +30,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
+import oasys.za.ac.uj.team36.Model.CustomAdapter;
 import oasys.za.ac.uj.team36.Model.MySingleton;
 import oasys.za.ac.uj.team36.Model.RegisteredUser;
 import oasys.za.ac.uj.team36.Model.UserLocalDatabase;
@@ -38,7 +39,7 @@ import oasys.za.ac.uj.team36.Requests.MyRequestString;
 
 public class HomeuserManageOngoingJobRequests extends AppCompatActivity {
 
-    private static final String SERVER_ADDRESS_URL = "http://10.0.0.10:31335/php/classes/SebenzaServer.php" ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.11:31335/php/classes/SebenzaServer.php" ;
     private UserLocalDatabase DB ;
     private int utype, uID;
     private JSONArray allRequests;
@@ -48,6 +49,8 @@ public class HomeuserManageOngoingJobRequests extends AppCompatActivity {
     private EditText newDescription;
     private int year, month, day;
     private String newDescriptionString ;
+
+    private int imageResource = R.drawable.job2 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -149,9 +152,11 @@ public class HomeuserManageOngoingJobRequests extends AppCompatActivity {
 
     // display jobs in a list for user to read
     public void populateListView(String[] req, int length){
+        if(length > 0) {
         finalRequests = new JSONObject[length];
         final String[] a = new String[length]; // create an empty array;
         int count = 0;
+        final Integer[] imgid = new Integer[length];
 
         for(int i = 0 ; i < req.length ; i++) {
             if (req[i].toString() == "" || req[i] == null) {
@@ -160,6 +165,7 @@ public class HomeuserManageOngoingJobRequests extends AppCompatActivity {
                 try{
                     finalRequests[count] = allRequests.getJSONObject(i);
                     a[count]= req[i];
+                    imgid[count] = imageResource ;
                     count++;
                 }catch (JSONException e){
                     e.printStackTrace();
@@ -169,8 +175,9 @@ public class HomeuserManageOngoingJobRequests extends AppCompatActivity {
 
         }
         ListView listView = (ListView) findViewById(R.id.lvManageRequestHU);
-        ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.list_requests_item, a);
-        listView.setAdapter(adapter);
+        //ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.list_requests_item, a);
+        CustomAdapter adapter1 = new CustomAdapter(this,a,imgid) ;
+        listView.setAdapter(adapter1);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -178,6 +185,18 @@ public class HomeuserManageOngoingJobRequests extends AppCompatActivity {
                 userClickRequestResponse(position);
             }
         });
+        }else{
+            AlertDialog.Builder d = new AlertDialog.Builder(HomeuserManageOngoingJobRequests.this);
+            d.setMessage("No requests to Display");
+            d.setTitle("Notice") ;
+            d.setNeutralButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            d.create().show();
+        }
     }
 
     // displaying details of the related request to the user once a item is clicked

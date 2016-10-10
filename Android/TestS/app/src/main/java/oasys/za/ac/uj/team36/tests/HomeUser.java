@@ -38,7 +38,7 @@ import oasys.za.ac.uj.team36.Requests.MyRequestJArray;
 public class HomeUser extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener{
 
-    public static final String SERVER_ADDRESS_URL = "http://10.0.0.10:31335/php/classes/SebenzaServer.php" ;
+    public static final String SERVER_ADDRESS_URL = "http://10.0.0.11:31335/php/classes/SebenzaServer.php" ;
     private Notification.Builder notification;
     private static final int uniqueID = 45782 ; // Id for each notification
     private UserLocalDatabase DB ;

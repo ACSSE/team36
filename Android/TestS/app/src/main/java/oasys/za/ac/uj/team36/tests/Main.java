@@ -30,7 +30,7 @@ import oasys.za.ac.uj.team36.Requests.loginRequest;
 
 public class Main extends AppCompatActivity implements View.OnClickListener{
 
-    private static final String SERVER_ADDRESS_URL = "http://10.0.0.10:31335/php/classes/SebenzaServer.php" ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.11:31335/php/classes/SebenzaServer.php" ;
     private Button bLogin ;
     private TextView tvRegisterLink;
     private EditText etUsername ,etPassword ;

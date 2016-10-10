@@ -37,7 +37,7 @@ public class UserLocalDatabase {
         editor.putInt("userType",user.getUserType());
         editor.putInt("Confirmation",user.getConfirm());
 
-        editor.commit();
+        editor.apply();
     }
 
     /*
@@ -65,7 +65,7 @@ public class UserLocalDatabase {
     public void setUserLoggedIn(boolean isLoggedIn){
         SharedPreferences.Editor editor = localDB.edit();
         editor.putBoolean("isLoggedIn", isLoggedIn);
-        editor.commit();
+        editor.apply();
 
     }
     /*
@@ -88,7 +88,7 @@ public class UserLocalDatabase {
     public void clearLocalDBdata() {
         SharedPreferences.Editor editor = localDB.edit();
         editor.clear();
-        editor.commit();
+        editor.apply();
     }
 
     public void setSessionVariables(int Userid, String Username, int UserType, int Confirmation){
