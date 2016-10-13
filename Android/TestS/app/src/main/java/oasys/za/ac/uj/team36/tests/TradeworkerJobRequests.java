@@ -33,7 +33,7 @@ import org.json.JSONObject;
 
 public class TradeworkerJobRequests extends AppCompatActivity {
 
-    private static final String SERVER_ADDRESS_URL = "http://10.0.0.4:31335/php/classes/SebenzaServer.php" ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.9:31335/php/classes/SebenzaServer.php" ;
      private UserLocalDatabase DB ;
     SharedPreferences pref ;
     private int utype, uID;

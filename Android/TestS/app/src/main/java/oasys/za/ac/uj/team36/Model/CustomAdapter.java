@@ -24,16 +24,17 @@ public class CustomAdapter extends ArrayAdapter<String> {
     private final Activity context;
     // item name being the job title (the date/worktype)
     private final String[] itemname;
+    private final String[] itemDescrip;
     // item description being the description of item
     //private final String[] itemDescrip;
     // imgid being the image id resource from the drawable folder
     private final Integer[] imgid;
 
-    public CustomAdapter(Activity context, String[] itemname, Integer[] imgid// ,String[] itemDesc
-    ) {
+    public CustomAdapter(Activity context, String[] itemname, Integer[] imgid) {
         super(context, R.layout.image_text_list_item, itemname);
         // TODO Auto-generated constructor stub
         //this.itemDescrip = itemDesc ;
+        this.itemDescrip = null ;
         this.context=context;
         this.itemname=itemname;
         this.imgid=imgid;

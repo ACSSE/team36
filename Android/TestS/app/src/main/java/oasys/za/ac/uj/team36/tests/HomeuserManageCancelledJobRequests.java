@@ -32,7 +32,7 @@ import oasys.za.ac.uj.team36.Requests.MyRequestJArray;
 public class HomeuserManageCancelledJobRequests extends AppCompatActivity {
 
 
-    private static final String SERVER_ADDRESS_URL = "http://10.0.0.11:31335/php/classes/SebenzaServer.php" ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.9:31335/php/classes/SebenzaServer.php" ;
     private UserLocalDatabase DB ;
     private int utype, uID;
     private JSONArray allRequests;

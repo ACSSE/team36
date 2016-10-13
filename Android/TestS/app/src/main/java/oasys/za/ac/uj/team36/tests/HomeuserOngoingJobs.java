@@ -31,7 +31,7 @@ import oasys.za.ac.uj.team36.Model.UserLocalDatabase;
 import oasys.za.ac.uj.team36.Requests.MyRequestJArray;
 
 public class HomeuserOngoingJobs extends AppCompatActivity {
-    private static final String SERVER_ADDRESS_URL = "http://10.0.0.11:31335/php/classes/SebenzaServer.php" ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.9:31335/php/classes/SebenzaServer.php" ;
     private UserLocalDatabase DB ;
     private int utype, uID;
     private JSONArray allRequests;
@@ -112,8 +112,7 @@ public class HomeuserOngoingJobs extends AppCompatActivity {
                             int numAccepted = allRequests.getJSONObject(i).getInt("NumberOfWorkersAccepted");
                             String descrip = allRequests.getJSONObject(i).getString("JobDescription");
 
-                            String s = "Quote Date: " + quoteD + "\nWork Type: " + WorkT + "\nNumber Requested: " + numRequested +
-                                    "\nNumber Accepted: " + numAccepted + "\nDescription: " + descrip;
+                            String s = "Date: " + quoteD + "\nDescription: " + descrip;
                             requestsList[i] = s;
                             nActualRequests++;
                         }else
@@ -190,10 +189,11 @@ public class HomeuserOngoingJobs extends AppCompatActivity {
             int numRequested = finalRequests[position].getInt("NumberOfWorkersRequested");
             int numAccepted = finalRequests[position].getInt("NumberOfWorkersAccepted");
             String descrip =  finalRequests[position].getString("JobDescription");
+            int price = finalRequests[position].getInt("AgreedPrice-0");
 
             AlertDialog.Builder d = new AlertDialog.Builder(HomeuserOngoingJobs.this);
             String s  = "Quote Date: "+quoteD + "\nWork Type: "+WorkT + "\nNumber Requested: "+numRequested +
-                    "\nNumber Accepted: "+ numAccepted + "\nDescription: " + descrip;
+                    "\nNumber Accepted: "+ numAccepted + "\nDescription: " + descrip + "\nAgreed Price:" + price;
             d.setMessage(s);
             d.setTitle("Completed Request") ;
             d.setNeutralButton("OK", new DialogInterface.OnClickListener() {

@@ -1,12 +1,7 @@
 package oasys.za.ac.uj.team36.tests;
 
-import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -14,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -30,6 +24,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
+import oasys.za.ac.uj.team36.Model.CustomAdapter;
 import oasys.za.ac.uj.team36.Model.MySingleton;
 import oasys.za.ac.uj.team36.Model.RegisteredUser;
 import oasys.za.ac.uj.team36.Model.UserLocalDatabase;
@@ -38,7 +33,7 @@ import oasys.za.ac.uj.team36.Requests.MyRequestString;
 
 public class HomeuserInitiatedJobs extends AppCompatActivity {
 
-    private static final String SERVER_ADDRESS_URL = "http://10.0.0.23:31335/php/classes/SebenzaServer.php" ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.9:31335/php/classes/SebenzaServer.php" ;
     private UserLocalDatabase DB ;
     private int utype, uID;
     private JSONArray allRequests;
@@ -47,6 +42,7 @@ public class HomeuserInitiatedJobs extends AppCompatActivity {
     private TextView dateView;
 
     private EditText daysBC, agreedPrice, date;
+    private int imageResource = R.drawable.job1 ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -177,6 +173,7 @@ public class HomeuserInitiatedJobs extends AppCompatActivity {
         if(length > 0 && req != null) {
             finalRequests = new JSONObject[length];
             final String[] a = new String[length]; // create an empty array;
+            final Integer[] imgid = new Integer[length];
             int count = 0;
 
             for (int i = 0; i < req.length; i++) {
@@ -186,6 +183,7 @@ public class HomeuserInitiatedJobs extends AppCompatActivity {
                     try {
                         finalRequests[count] = allRequests.getJSONObject(i);
                         a[count] = req[i];
+                        imgid[count] = imageResource ;
                         count++;
                     } catch (JSONException e) {
                         e.printStackTrace();
@@ -196,14 +194,15 @@ public class HomeuserInitiatedJobs extends AppCompatActivity {
             if(a.length >0){
             ListView listView = (ListView) findViewById(R.id.lvInitiatedHU);
             ArrayAdapter adapter = new ArrayAdapter<String>(this, R.layout.list_requests_item, a);
-            listView.setAdapter(adapter);
+            CustomAdapter adapter1 = new CustomAdapter(this,a,imgid) ;
+            listView.setAdapter(adapter1);
             listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                     // Based on tradeworkers response this will handle
-                    userClickRequestResponse(position);
-                }
-            });
+                        userClickRequestResponse(position);
+                    }
+                });
             }
 
         }else{
@@ -274,7 +273,7 @@ public class HomeuserInitiatedJobs extends AppCompatActivity {
             d.setNeutralButton("Initiate Job", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                    getEditResults(QID) ;
+                    getAdditionJobInfo(QID) ;
                 }
             });
 
@@ -296,7 +295,7 @@ public class HomeuserInitiatedJobs extends AppCompatActivity {
 
     }
 
-    private void getEditResults(final int QID){
+    private void getAdditionJobInfo(final int QID){
         final String d = date.getText().toString() ;
         final int day = Integer.parseInt(daysBC.getText().toString());
         final int price = Integer.parseInt(agreedPrice.getText().toString());
@@ -323,7 +322,7 @@ public class HomeuserInitiatedJobs extends AppCompatActivity {
     private void userInitiatesJobRequest(String date, int nDays, int price, int qID){
 
         Map<String,String> params = new HashMap<>();
-        params.put("action","homeuser-initiateJob-request") ;
+        params.put("action","android-homeuser-initiateJob-request") ;
         params.put("homeuser-initiateJob-commenceDate",date);
         params.put("homeuser-initiateJob-numberDays",nDays+ "");
         params.put("homeuser-initiateJob-expectedPayment",price+ "");

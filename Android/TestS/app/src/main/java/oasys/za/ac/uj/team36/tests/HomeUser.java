@@ -123,9 +123,6 @@ public class HomeUser extends AppCompatActivity
         if (id == R.id.action_notification) {
             setNotification();
         }
-        if (id == R.id.action_testServer) {
-
-        }
         return super.onOptionsItemSelected(item);
     }
 

@@ -3096,6 +3096,17 @@ if (!empty($_POST)) {
                     return json_encode(false);
                 }
                 break;
+            case 'android-homeuser-initiateJob-request':
+                if(isset($_POST['homeuser-initiateJob-commenceDate']) && isset($_POST['homeuser-initiateJob-numberDays']) && isset($_POST['homeuser-initiateJob-expectedPayment']) && isset($_POST['ignore-homeuser-initiateJob-quoteID'])){
+                    $response = json_encode(SebenzaServer::homeuserInitiateJob($_POST['homeuser-initiateJob-commenceDate'],$_POST['homeuser-initiateJob-numberDays'],$_POST['homeuser-initiateJob-expectedPayment'],$_POST['ignore-homeuser-initiateJob-quoteID']));
+                }
+                else if(isset($_POST['homeuser-initiateJob-shortcut-commenceDate']) && isset($_POST['homeuser-initiateJob-shortcut-numberDays']) && isset($_POST['homeuser-initiateJob-shortcut-expectedPayment']) && isset($_POST['ignore-homeuser-initiateJob-shortcut-quoteID'])){
+                    $response = json_encode(SebenzaServer::homeuserInitiateJob($_POST['homeuser-initiateJob-shortcut-commenceDate'],$_POST['homeuser-initiateJob-shortcut-numberDays'],$_POST['homeuser-initiateJob-shortcut-expectedPayment'],$_POST['ignore-homeuser-initiateJob-shortcut-quoteID']));
+                }
+                else{
+                    $response = json_encode(false);
+                }
+                break ;
             default:
                 //If the action was not one of the handled cases, respond appropriately
                 $response = json_encode("Request not recognised.");

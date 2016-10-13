@@ -1,6 +1,7 @@
 package oasys.za.ac.uj.team36.tests;
 
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -30,7 +31,7 @@ import oasys.za.ac.uj.team36.Requests.loginRequest;
 
 public class Main extends AppCompatActivity implements View.OnClickListener{
 
-    private static final String SERVER_ADDRESS_URL = "http://10.0.0.11:31335/php/classes/SebenzaServer.php" ;
+    private static final String SERVER_ADDRESS_URL = "http://10.0.0.9:31335/php/classes/SebenzaServer.php" ;
     private Button bLogin ;
     private TextView tvRegisterLink;
     private EditText etUsername ,etPassword ;
@@ -105,6 +106,13 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
     }
 
     private void loginR(){
+
+        final ProgressDialog progressDialog = new ProgressDialog(Main.this,
+                R.style.AppTheme_NoActionBar);
+        progressDialog.setIndeterminate(true);
+        progressDialog.setMessage("Authenticating...");
+        progressDialog.show();
+
         final String uName = etUsername.getText().toString() ;
         final String pass = etPassword.getText().toString() ;
 
@@ -124,6 +132,7 @@ public class Main extends AppCompatActivity implements View.OnClickListener{
                         //store user details
                         setSharePreference();
                         // start activity
+                        progressDialog.dismiss();
                         startUserActivity(Utype);
 
                    /*     AlertDialog.Builder d = new AlertDialog.Builder(Main.this);
