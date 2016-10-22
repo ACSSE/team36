@@ -2552,7 +2552,7 @@ if (!empty($_POST)) {
                         $response = json_encode(SebenzaServer::rejectRequest($_POST['ignore-homeuser-manage-specificRequest-ID']));
                     }
                     else if(isset($_POST['ignore-homeuser-selected-initiate-job-id'])){
-                        $response = json_encode(SebenzaServer::homeuserRemoveTradeworkerFromRequest($_POST['ignore-homeuser-selected-initiate-job-id']));
+                        $response = json_encode(SebenzaServer::rejectRequest($_POST['ignore-homeuser-selected-initiate-job-id']));
                     }
                     else{
                         $response = json_encode(false);

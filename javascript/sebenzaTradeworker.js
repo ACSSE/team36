@@ -55,7 +55,7 @@ function tradeworkerRejectJobRequest(){
                 //console.log('The following request was selected: ' + i);
                 //console.log(input[i]);
                 var spl = input[i].value.split("_");
-                document.getElementById("tradeworker-selected-request-id").value = spl[1];
+                document.getElementById("tradeworker-selected-request-id").value = spl[0];
                 if(tradeworkerJobRequestArray[spl[1]]['Status'] == 0){
                     sendAJAXRequest('tradeworker-reject-request',handleTradeworkerRejectRequest,'tradeworker-selected-request');
                 }
