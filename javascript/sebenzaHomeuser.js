@@ -768,9 +768,8 @@ function editHomeuserJobRequestEntryRemoveWorker(){
             if(input[i].checked){
                 //console.log('The following request was selected: ' + i);
                 //console.log(input[i]);
-                var spl = input[i].value.split("_");
-                document.getElementById("homeuser-ongoingJobs-tradeworkerID-toRemove").value = spl[1];
-
+                var spl = input[i].value;
+                document.getElementById('homeuser-manage-specificRequest-ID').value = spl;
                 //homeuserManageRequestModal(input[i].value);
                 //console.log("The following request is being deleted: " + input[i].value);
                 sendAJAXRequest('homeuser-remove-tradeworker-from-request',handleHomeuserRemoveTradeworkerFromRequestResponse,'homeuser-manage-specificRequest-ID-form');

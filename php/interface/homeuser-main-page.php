@@ -76,13 +76,13 @@
             </div>
             <div class="tabs-panel full-height user-panels" id="panel6v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-                //include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-EditInfo.php";
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-EditInfo.php";
                 ?>
             </div>
 
             <div class="tabs-panel full-height user-panels" id="panel10v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
                 <?php
-               // include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-EditLocation.php";
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-EditLocation.php";
                 ?>
             </div>
 

@@ -51,7 +51,7 @@
             </button>
         </div>
         <div class="large-4 medium-4 columns">
-            <button type="button" class="button" style="background-color: #ff3914">
+            <button type="button" class="button" style="background-color: #ff3914" onclick="tradeworkerRejectJobRequest()">
                 Reject
             </button>
         </div>

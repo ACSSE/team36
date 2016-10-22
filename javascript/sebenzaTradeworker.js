@@ -45,6 +45,35 @@ function tradeworkerAcceptJobRequest(){
     //console.log(input);
 }
 
+function tradeworkerRejectJobRequest(){
+    var input = $("form input[name=job-requests]:radio");
+    //console.log("test");
+    if(input.length > 0)
+        for(var i = 0 ; i < input.length ; i++){
+            //console.log("should be printing :" + input[i].checked);
+            if(input[i].checked){
+                //console.log('The following request was selected: ' + i);
+                //console.log(input[i]);
+                var spl = input[i].value.split("_");
+                document.getElementById("tradeworker-selected-request-id").value = spl[1];
+                if(tradeworkerJobRequestArray[spl[1]]['Status'] == 0){
+                    sendAJAXRequest('tradeworker-reject-request',handleTradeworkerRejectRequest,'tradeworker-selected-request');
+                }
+                else if(tradeworkerJobRequestArray[spl[1]]['Status'] == 2){
+                    $('#tradeworker-requests-notification-modal').foundation('toggle');
+                    document.getElementById("tradeworker-requests-notification-modal-additionalInfo").innerHTML = "<h3>The work request has already been rejected:</h3> <p>contact homeuser on " + tradeworkerJobRequestArray[spl[1]]['HomeuserContact'] + " if the job is not being intitialised and you have quoted him already for further details</p>";
+                }
+
+            }
+        }
+}
+
+function handleTradeworkerRejectRequest(response){
+    var result = JSON.parse(response);
+    console.log(response);
+
+}
+
 function tradeworkerDisplayRequest(){
     var html = '';
     if(tradeworkerOngoingRequestArray.length < 1){
@@ -275,7 +304,7 @@ function tradeworkerBuildUpInterfaceArrays(){
                 var locationName = tradeworkerJobRequestArray[j]['locationName'];
 
                 //
-                if(tradeworkerJobRequestArray[j]['HomeuserResponse'] == 1 && status != 2){
+                if(tradeworkerJobRequestArray[j]['HomeuserResponse'] == 1 && tradeworkerJobRequestArray[j]['Status'] != 2){
                     tradeworkerOngoingRequestArray[tradeworkerOngoingRequestArrayCounter++] = {'Commencement Date' : commencementDate,
                                                                                                 'Job Type' : workType,
                                                                                                 'Area' : locationName,
@@ -287,7 +316,7 @@ function tradeworkerBuildUpInterfaceArrays(){
                     userGenericFillColumnSelectTags('tradeworker-manageRequest-search-column',['Commencement Date','Job Type','Area','Description','Homeuser Details']);
                     userGenericSortSelectFill('tradeworker-manageRequest-sortBy',['Commencement Date','Job Type','Area','Description','Homeuser Details']);
                 }
-                else if(tradeworkerJobRequestArray[j]['HomeuserResponse'] != 2 && status != 2){
+                else if(tradeworkerJobRequestArray[j]['HomeuserResponse'] == 0 && tradeworkerJobRequestArray[j]['Status'] != 2){
                     tradeworkerOngoingRequestArray[tradeworkerOngoingRequestArrayCounter++] = {'Commencement Date' : commencementDate,
                                                                                                 'Job Type' : workType,
                                                                                                 'Area' : locationName,
@@ -299,7 +328,7 @@ function tradeworkerBuildUpInterfaceArrays(){
                     userGenericFillColumnSelectTags('tradeworker-manageRequest-search-column',['Commencement Date','Job Type','Area','Description','Homeuser Details']);
                     userGenericSortSelectFill('tradeworker-manageRequest-sortBy',['Commencement Date','Job Type','Area','Description','Homeuser Details']);
                 }
-                else{
+                if(tradeworkerJobRequestArray[j]['HomeuserResponse'] == 2 || tradeworkerJobRequestArray[j]['Status'] == 2){
                     tradeworkerCancelledRequestArray[tradeworkerCancelledRequestArrayCounter++] = {'Commencement Date' : commencementDate,
                                                                                                     'Job Type' : workType,
                                                                                                     'Area' : locationName,'Status' : status,
@@ -543,7 +572,18 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
         '<tr> ' +
         '<td class="label">Job Description:</td> <td colspan="2"> <input type="text" name="tradeworker-ongoingJobs-Details-WorkType-' + tableIndex + '" id="tradeworker-ongoingJobs-Details-WorkType-' + tableIndex + '" value="' + jobType + '"  readonly> </td> ' +
         '<td colspan="3"> <input type="text" name="tradeworker-ongoingJobs-Details-locality-' + tableIndex + '" id="tradeworker-ongoingJobs-Details-jobDescription-' + tableIndex + '" value="' + jobDescription + '"  readonly> </td> ' +
-        '</tr> </table></div></div>';
+        '</tr> ';
+        if(status != 2){
+        html += '<tr> ' +
+            '<td class="label">Homeuser Details:</td> <td colspan="2"> <input type="text" name="tradeworker-ongoingJobs-username-WorkType-' + tableIndex + '" id="tradeworker-ongoingJobs-username-WorkType-' + tableIndex + '" value="' + tradeworkerJobRequestArray[tableIndex]["HomeuserName"] + '"  readonly> </td> ' +
+            '<td colspan="3"> <input type="text" name="tradeworker-ongoingJobs-surname-jobDescription-' + tableIndex + '" id="tradeworker-ongoingJobs-surname-jobDescription-' + tableIndex + '" value="' + tradeworkerJobRequestArray[tableIndex]["HomeuserSurname"] + '"  readonly> </td> ' +
+            '<tr>' +
+            '<td colspan="1"></td>' +
+            '<td colspan="5"> <input type="text" name="tradeworker-ongoingJobs-contact-jobDescription-' + tableIndex + '" id="tradeworker-ongoingJobs-contact-jobDescription-' + tableIndex + '" value="' + tradeworkerJobRequestArray[tableIndex]["HomeuserContact"] + '"  readonly> </td> ' +
+            '</tr>' +
+            '</tr>';
+        }
+        html += '</table></div></div>';
     //console.log(".....6......");
     //console.log(status);
     //console.log(".....6......");
@@ -612,8 +652,8 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
                 '</div>';
             html += '<div class="row">' +
                     '<div class="large-3 columns">' +
-                    '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCompletedJob()">' +
-                    'Add Pictures' +
+                    '<button type="top-bar-button button" class="button warning" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCompletedJob(' + tableIndex + ')">' +
+                    'Edit Pictures' +
                     '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
                     '</button>' +
                     '</div>' +
@@ -623,7 +663,7 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
             html += '<h3>Pictures:</h3><h5>Please add pictures from the job as soon as you can, will be confirmed by the homeuser</h5>' +
                 '<div class="row">' +
                 '<div class="large-3 columns">' +
-                '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCompletedJob()">' +
+                '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCompletedJob(' + tableIndex + ')">' +
                 'Add Pictures' +
                 '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
                 '</button>' +
@@ -638,9 +678,32 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
     var elem = null;
     elem = new Foundation.Orbit(picOrbiter);
 }
+var tradeworkerPictureArray = [];
+function tradeworkerAddPicturesToCompletedJob(index){
+    if(tradeworkerJobRequestArray.length > 0){
+        console.log("Should be adding pictures to the completed job");
+        console.log(tradeworkerJobRequestArray[index]);
+        var numPics = tradeworkerJobRequestArray[index]["JobID-1-PictureCount"];
+        var picN = [];
+        for(var j = 0;j < numPics;j++){
+            picN = tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +""].split('_');
+            tradeworkerPictureArray[j] = {
+                                            PicName:picN[picN.length-1],
+                                            ToPrint:'<input type="radio" value="'+ j + '" />'
+                                        };
 
-function tradeworkerAddPicturesToCompletedJob(){
-    console.log("Should be adding pictures to the completed job");
+        }
+        var html = '';
+        if(tradeworkerPictureArray.length > 0){
+            html = genericTableGenerate(tradeworkerPictureArray,'job-pictureList');
+        }
+        else{
+            html = '<h3>There are no pictures added yet, please add to be able to print a more detailed CV</h3>';
+        }
+        $('#tradeworker-ongoingJobs-modal-response').foundation('toggle');
+        document.getElementById("tradeworker-ongoingJobs-modal-response-additionalInfo").innerHTML = html;
+    }
+
 }
 
 function tradeworkerDisplayCancelledRequest(){

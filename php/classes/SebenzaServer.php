@@ -776,21 +776,20 @@ class SebenzaServer {
         //Remove all tradeworkers already related to the the request
         $command = "SELECT * FROM `QUOTE` WHERE `RequestID` = ? AND `RequestedUser` = ?";
         $continue = true;
-        if(count($applicantsToSend) > 0)
-        while($continue){
-            $toRemove = true;
-            for($e = 0; $e < count($applicantsToSend) && $toRemove;$e++){
+
+        if(count($applicantsToSend) > 0){
+            for($e = 0; $e < count($applicantsToSend);$e++){
                 $dbhandler->runCommand($command,$requestID,$applicantsToSend[$e]['UserID']);
                 $result = $dbhandler->getResults();
                 if(count($result) > 0){
-                    array_slice($applicantsToSend,$e, 1);
+
+                    unset($applicantsToSend[$e]);
+//                    array_slice($applicantsToSend,$e, 1);
                     $toRemove = false;
                 }
             }
-            if($e == count($applicantsToSend)){
-                $continue = false;
-            }
         }
+        $applicantsToSend = array_values($applicantsToSend);
 
         //This will fail if no users are available of users in given area and work type
         //The process of comparing which tradeworker to take currently involves only comparing the last time worked(date) and will return the tradeworker with the lowest date worked
@@ -822,7 +821,7 @@ class SebenzaServer {
                         $result = $dbhandler->getResults();
                         $activeWorkRequests2 = $result[0]['ActiveWorkRequests'];
 //                        $returnValue .= " \n Should be compared with".$applicantsToSend[$m]['UserID']."The following dates to be compared: ".$minDate->format("Y-m-d").":".$date2->format("Y-m-d")." And the following active requests :".$activeWorkRequests.":".$activeWorkRequests2;
-                        if($date2 < $minDate && $activeWorkRequests2 < $activeWorkRequests){
+                        if($date2 < $minDate || $activeWorkRequests2 < $activeWorkRequests){
 //                            $returnValue = "It got here";
                             $minDate = $date2;
                             $activeWorkRequests = $activeWorkRequests2;
@@ -843,6 +842,84 @@ class SebenzaServer {
         }
 //        $returnValue = $applicantsToSend;
         return $returnValue;
+    }
+
+    public static function fetchLocationToAddress($areaID){
+        $command = "Select * FROM `AREA_PER_LOCATION` WHERE `AreaID`=?";
+        $dbhandler = self::fetchDatabaseHandler();
+        $dbhandler->runCommand($command,$areaID);
+        $result = $dbhandler->getResults();
+        return $result[0]['locationID'];
+
+    }
+
+    public static function addTradeworkerToOngoingRequest($requestID){
+        $command = "SELECT `workTypeID`,`Address`,`NumberOfWorkersRequested`,`NumberOfWorkersAccepted`,`JobCommencementDate` FROM `QUOTE_REQUEST` WHERE `RequestID`=?";
+        $result = false;
+        $dbhandler = self::fetchDatabaseHandler();
+        $dbhandler->runCommand($command,$requestID);
+        $requestDetails = $dbhandler->getResults();
+        $date = $requestDetails[0]['JobCommencementDate'];
+        $workType = $requestDetails[0]['workTypeID'];
+        $locationID = self::fetchLocationToAddress($requestDetails[0]['Address']);
+        $command = "SELECT * FROM `QUOTE` WHERE `RequestID`=?";
+        $dbhandler->runCommand($command,$requestID);
+        $quote = $dbhandler->getResults();
+        $numRequestPerType = $requestDetails[0]['NumberOfWorkersRequested'] - $requestDetails[0]['NumberOfWorkersAccepted'];
+        for($i = 0;$i < count($quote);$i++){
+            if($quote[$i]['HomeuserResponse'] != 3 && $quote[$i]['Status'] != 3){
+                if($quote[$i]['HomeuserResponse'] == 2 || $quote[$i]['Status'] == 2){
+                    //Means that one of the users has rejected the request and so it should not be taken in to the count
+                }
+                else{
+                    //Means that neither the homeuser or the tradeworker have rejected the request and the request has neither been completed
+                    $numRequestPerType--;
+                }
+            }
+
+        }
+
+        if($numRequestPerType > 0){
+            $tradeworkerID = self::fetchAvailableTradeworker($workType,intval($locationID),$numRequestPerType,$requestID);
+            if(gettype($tradeworkerID) == "boolean"){
+                //TODO:Tell the difference between unavailable users in an area and no users in the area with selected work type so that user can leave the request active for when a tradeworker becomes available the returned values will then be negative integer for errors and if it passes it will be a positive integer
+                //Technically this should not occur anymore on failure negative integer value is sent
+                $result = $tradeworkerID;
+            }
+            else if(gettype($tradeworkerID) == "integer") {
+//                    Tradeworker could not be requested an error occured in the method fetchAvailableTradeworker
+                $result = $tradeworkerID;
+            }
+            else if(gettype($tradeworkerID) == "array"){
+                if(count($tradeworkerID) > 0){
+                    for($r = 0;$r < count($tradeworkerID);$r++){
+                        $command = "INSERT INTO `QUOTE` (`RequestID`,`RequestedUser`) VALUES (?,?)";
+                        if ($dbhandler->runCommand($command, $requestID, $tradeworkerID[$r])) {
+                            //The insert was successful send notification to tradeworker
+                            if (self::addNotification($tradeworkerID[$r], "Added job request: check under manage jobs - job requests tab")) {
+                                //TODO:Add one to the activeRequests as well as one to the overall requests to the TRADEWORKER table for the given tradeworker id,
+                                $dbhandler->runCommand("SELECT `ActiveWorkRequests`,`OverallWorkRequests` FROM `TRADE_WORKER` WHERE `UserID` = ?",$tradeworkerID[$r]);
+                                $amount = $dbhandler->getResults();
+                                $command = "UPDATE `TRADE_WORKER` SET `ActiveWorkRequests` = ? , `OverallWorkRequests` = ? WHERE `UserID` = ?";
+                                if ($dbhandler->runCommand($command,intval($amount[0]['ActiveWorkRequests'] + 1),intval($amount[0]['OverallWorkRequests'] + 1),$tradeworkerID[$r])) {
+                                    $result = true;
+                                    //This should be counting array of the result of the dbHandler
+                                } else {
+                                    $result = "Failed to increment tradeworker notifications";
+                                }
+                            } else {
+                                $result = "Could not add notification";
+                            }
+                        } else {
+                            //The quote request could not be inserted for some reason error check
+                            $result = "Could not add quote" . $date;
+                        }
+                    }
+                }
+//                        $result = $tradeworkerID;
+            }
+        }
+        return $result;
     }
 
     public static function homeuserRequestTradeworkerAndroid($input, $UserID){
@@ -1493,6 +1570,10 @@ class SebenzaServer {
                     $command = "UPDATE `QUOTE` SET `Status` = ? WHERE `QuoteID` = ? AND `RequestedUser` = ?";
                     //Status = 2 means the request has been rejected
                     if($dbhandler->runCommand($command,2,$requestID,$userID)){
+                        $command = "SELECT `RequestID` FROM `QUOTE` WHERE `QuoteID`=?";
+                        $dbhandler->runCommand($command,$requestID);
+                        $rID = $dbhandler->getResults();
+                        $result = self::addTradeworkerToOngoingRequest(intval($rID[0]['RequestID']));
                         return true;
                     }
                     else{
@@ -1506,6 +1587,10 @@ class SebenzaServer {
                     $command = "UPDATE `QUOTE` SET `HomeuserResponse` = ? WHERE `QuoteID` = ?";
                     //Status = 2 means the request has been rejected
                     if($dbhandler->runCommand($command,2,$requestID)){
+                        $command = "SELECT `RequestID` FROM `QUOTE` WHERE `QuoteID`=?";
+                        $dbhandler->runCommand($command,$requestID);
+                        $rID = $dbhandler->getResults();
+                        $result = self::addTradeworkerToOngoingRequest(intval($rID[0]['RequestID']));
                         return true;
                     }
                     else{
@@ -2464,7 +2549,7 @@ if (!empty($_POST)) {
                 $condition = SebenzaServer::serverSecurityCheck();
                 if($condition){
                     if(isset($_POST['ignore-homeuser-manage-specificRequest-ID'])){
-                        $response = json_encode(SebenzaServer::homeuserRemoveTradeworkerFromRequest($_POST['ignore-homeuser-manage-specificRequest-ID']));
+                        $response = json_encode(SebenzaServer::rejectRequest($_POST['ignore-homeuser-manage-specificRequest-ID']));
                     }
                     else if(isset($_POST['ignore-homeuser-selected-initiate-job-id'])){
                         $response = json_encode(SebenzaServer::homeuserRemoveTradeworkerFromRequest($_POST['ignore-homeuser-selected-initiate-job-id']));
@@ -2789,6 +2874,17 @@ if (!empty($_POST)) {
                     $response = json_encode(false);
                 }
 
+                break;
+            case 'tradeworker-reject-request':
+                $continue = SebenzaServer::serverSecurityCheck();
+                if($continue){
+                    if(isset($_POST['ignore-tradeworker-selected-request-id'])) {
+                        $response = json_encode(SebenzaServer::rejectRequest($_POST['ignore-tradeworker-selected-request-id']));
+                    }
+                }
+                else{
+                    $response = json_encode(false);
+                }
                 break;
             case 'tradeworker-accept-request':
                 $continue = SebenzaServer::serverSecurityCheck();
