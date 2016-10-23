@@ -235,6 +235,33 @@ function handleLoginResponse(response) {
 function switchToPage(page){
     console.log("Switching pages");
     window.location = page;
+
+}
+
+function fillInAdditionalAreaSearch(inputID){
+    if(typeof inputID == 'string') {
+        autocomplete = new google.maps.places.Autocomplete(
+            /** @type {!HTMLInputElement} */(document.getElementById(inputID)),
+            {types: ['geocode']});
+        fillInAddressID = inputID.substring(0,inputID.length - 12);
+        // When the user selects an address from the dropdown, populate the address
+        // fields in the form.
+        autocomplete.addListener('place_changed', genericChangeMapsLocation);
+    }
+    else{
+        console.log("inputID is wrong type should be String is: " + typeof inputID)
+    }
+}
+
+function genericChangeMapsLocation(){
+    var place = autocomplete.getPlace();
+    if (place.geometry) {
+        map.panTo(place.geometry.location);
+        map.setZoom(15);
+        search();
+    } else {
+        document.getElementById('autocomplete').placeholder = 'Enter a city';
+    }
 }
 
 function handleTradeworkerRegisterResponse(response){

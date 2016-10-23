@@ -115,16 +115,18 @@
     <!--http://foundation.zurb.com/sites/docs/forms.html-->
     <form>
         <div class="row">
+
             <div class="columns">
-                <label><b>Area</b>
-                    <input type="text" class="smaller-input-box" name="areaname" id="areaname" placeholder="Johannesburg" required/>
+                <h3>Area:</h3>
+                <label>Select from drop down after input
+                    <input type="text" class="smaller-input-box" name="areaname" id="areaname" placeholder="Johannesburg" required  onfocus="geolocate()" onclick="fillInAdditionalAreaSearch('areaname')"/>
                 </label>
             </div>
         </div>
         <div class="row top-padding">
             <div class="columns">
                 <button type="button" class="success button full-width login-button" id="area-button" onclick="switchToPage('areainformation-page.php')">
-                    Search
+                    Go To Maps
                 </button>
             </div>
         </div>
