@@ -686,9 +686,16 @@ function tradeworkerAddPicturesToCompletedJob(index){
         var picN = [];
         for(var j = 0;j < numPics;j++){
             picN = tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +""].split('_');
+            var toP = '<input type="radio" value="'+ j + '" checked/>';
+            if(tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +"-ToPrint"] == 1){
+                toP = '<input type="radio" value="'+ j + '" />';
+            }
+            else{
+
+            }
             tradeworkerPictureArray[j] = {
                                             PicName:picN[picN.length-1],
-                                            ToPrint:'<input type="radio" value="'+ j + '" />'
+                                            ToPrint:toP
                                         };
 
         }

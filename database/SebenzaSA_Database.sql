@@ -189,6 +189,9 @@ CREATE TABLE `PICTURES_PER_JOB` (
   `JobID` integer not null,
   `UserID` INTEGER NOT NULL,
   `PictureName` VARCHAR(150) NOT NULL,
+  `ToPrint` INTEGER not NULL DEFAULT 1,
+  `HomeuserAccepted` INTEGER not NULL DEFAULT 0,
+  `TradeworkerAccepted` INTEGER not NULL DEFAULT 0,
   PRIMARY KEY (`PictureID`),
   FOREIGN KEY (`UserID`) REFERENCES REGISTERED_USER(`UserID`),
   FOREIGN KEY (`JobID`) REFERENCES JOB_PER_USER(`JobID`)

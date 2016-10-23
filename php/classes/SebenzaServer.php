@@ -1375,13 +1375,16 @@ class SebenzaServer {
                     $returnValue[$r]["TradeworkerReq"] = $jobResults[0]['TradeworkerRequest'];
                     $returnValue[$r]["Notifier"] = $jobResults[0]['Notifier'];
                     if($jobResults[0]['Status'] == 1){
-                        $command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";
+                        $command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName`,`ToPrint`,`HomeuserAccepted`,`TradeworkerAccepted` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";
                         $dbhandler->runCommand($command,$jobResults[0]['JobID']);
                         $picturesResult = $dbhandler->getResults();
                         if(count($picturesResult) > 0){
                             $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureCount"] = count($picturesResult);
                             for($q = 0;$q < count($picturesResult);$q++){
                                 $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureID-".$q] = $picturesResult[$q]['PictureID'].'_'.$picturesResult[$q]['JobID'].'_'.$picturesResult[$q]['UserID'].'_'.$picturesResult[$q]['PictureName'];
+                                $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureID-".$q.'ToPrint'] = $picturesResult[$q]['ToPrint'];
+                                $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureID-".$q.'HomeuserAcceptedPic'] = $picturesResult[$q]['HomeuserAccepted'];
+                                $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureID-".$q.'TradeworkerAcceptedPic'] = $picturesResult[$q]['TradeworkerAccepted'];
                             }
 
                         }
@@ -1460,7 +1463,7 @@ class SebenzaServer {
                             $returnValue[$i]['JobStatus-'.$r] = $jobsInitiated[0]['Status'];
                             $returnValue[$i]["Notifier-".$r] = $jobsInitiated[0]['Notifier'];
                             $returnValue[$i]["TradeworkerReq-".$r] = $jobsInitiated[0]['TradeworkerRequest'];
-                            $command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";
+                            //$command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName`,`ToPrint`,`HomeuserAccepted`,`TradeworkerAccepted` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";
 //                            $dbhandler->runCommand($command,$jobsInitiated[0]['JobID']);
 //                            $picturesResult = $dbhandler->getResults();
 //                            $returnValue[$i]['JobID-'.$r.'-'."PictureCount"] = count($picturesResult);
@@ -1477,7 +1480,7 @@ class SebenzaServer {
                                 $returnValue[$i]["DateTerminated-".$r] = $terminatedJobResults[0]["DateTerminated"];
                             }
                             if($jobsInitiated[0]['Status'] == 1){
-                                $command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";
+                                $command = "SELECT `PictureID`,`JobID`,`UserID`,`PictureName`,`ToPrint`,`HomeuserAccepted`,`TradeworkerAccepted` FROM `PICTURES_PER_JOB` WHERE `JobID` = ?";
                                 $dbhandler->runCommand($command,$jobsInitiated[0]['JobID']);
                                 $picturesResult = $dbhandler->getResults();
                                 $returnValue[$i]['JobID-'.$r.'-'."PictureCount"] = count($picturesResult);
@@ -1485,6 +1488,8 @@ class SebenzaServer {
                                     //$returnValue[$r]['JobID-'.$r.'-'."PictureCount"] = count($picturesResult);
                                     for($q = 0;$q < count($picturesResult);$q++){
                                         $returnValue[$i]['JobID-'.$r.'-'."PictureID-".$q] = $picturesResult[$q]['PictureID'].'_'.$picturesResult[$q]['JobID'].'_'.$picturesResult[$q]['UserID'].'_'.$picturesResult[$q]['PictureName'];
+                                        $returnValue[$i]['JobID-'.$r.'-'."PictureID-".$q.'-TradeworkerAcceptedPic'] = $picturesResult[$q]['TradeworkerAccepted'];
+                                        $returnValue[$i]['JobID-'.$r.'-'."PictureID-".$q.'-HomeuserAcceptedPic'] = $picturesResult[$q]['HomeuserAccepted'];
                                     }
 
                                 }
@@ -2413,14 +2418,14 @@ class SebenzaServer {
     }
     //The following method is used when the homeuser presses complete job
     public static function homeuserJobCompletionPhotoAdditionHelper($jobID,$userID){
-        $command = "INSERT INTO `PICTURES_PER_JOB` (`JobID`, `UserID`, `PictureName`) VALUES (?,?,?)";
+        $command = "INSERT INTO `PICTURES_PER_JOB` (`JobID`, `UserID`, `PictureName`,`HomeuserAccepted`) VALUES (?,?,?,?)";
         $returnValue = true;
         $myFile = $_FILES['homeuser-initiateJobCompletion-Picture-0'];
 
         for($j = 0;$j < count($myFile['name']);$j++){
             $pictureName = basename($myFile["name"][$j]);
             $dbhandler = self::fetchDatabaseHandler();
-            if($dbhandler->runCommand($command,$jobID,$userID,$pictureName)){
+            if($dbhandler->runCommand($command,$jobID,$userID,$pictureName,1)){
                 $picID = $dbhandler->getInsertID();
                 $uniquePicName = $picID."_".$jobID."_".$userID."_";
                 $returnValue &= SebenzaServer::addMultiplePictureToServer($j,$uniquePicName);
