@@ -302,12 +302,22 @@ function homeuserBuildUpInterfaceArrays(){
             userGenericSortSelectFill('homeuser-manageRTradeworker-sortBy',['Quote Date','Work Type','Number Requested','Number Accepted','Description']);
         }
         else if(requestStatus == 1){
-            homeuserCompletedRequestArray[homeuserCompletedRequestArrayCounter++] = {'Quote Date' : commencementDate,'Work Type' : jobType, 'Number Requested' : numWorkers, 'Number Accepted' : numWorkersAccepted,'Description' : jobDescription, 'Selected' : '<div class="full-width" style="padding-left: 50%"><input type="radio" name="ignore-job-requests-completed" id="homeuser-manageRTradeworker-requestID-' + j + '" value="' + tableIndex + "_" + quoteRequest + '" readonly></div>'};
+            homeuserCompletedRequestArray[homeuserCompletedRequestArrayCounter++] = {'Quote Date' : commencementDate,
+                'Work Type' : jobType,
+                'Number Requested' : numWorkers,
+                'Number Accepted' : numWorkersAccepted,
+                'Description' : jobDescription
+                };
             userGenericFillColumnSelectTags('homeuser-manageRTradeworker-completed-search-column',['Quote Date','Work Type','Number Requested','Number Accepted','Description']);
             userGenericSortSelectFill('homeuser-manageRTradeworker-completed-sortBy',['Quote Date','Work Type','Number Requested','Number Accepted','Description']);
         }
         else{
-            homeuserCancelledRequestArray[homeuserCancelledRequestArrayCounter++] = {'Quote Date' : commencementDate,'Work Type' : jobType, 'Number Requested' : numWorkers, 'Number Accepted' : numWorkersAccepted,'Description' : jobDescription, 'Selected' : '<div class="full-width" style="padding-left: 50%"><input type="radio" name="ignore-job-requests-cancelled" id="homeuser-manageRTradeworker-requestID-' + j + '" value="' + tableIndex + "_" + quoteRequest + '" readonly></div>'};
+            homeuserCancelledRequestArray[homeuserCancelledRequestArrayCounter++] = {'Quote Date' : commencementDate,
+                'Work Type' : jobType,
+                'Number Requested' : numWorkers,
+                'Number Accepted' : numWorkersAccepted,
+                'Description' : jobDescription
+                };
             userGenericFillColumnSelectTags('homeuser-manageRTradeworker-cancelled-search-column',['Quote Date','Work Type','Number Requested','Number Accepted','Description']);
             userGenericSortSelectFill('homeuser-manageRTradeworker-cancelled-sortBy',['Quote Date','Work Type','Number Requested','Number Accepted','Description']);
         }
@@ -338,17 +348,33 @@ function homeuserBuildUpInterfaceArrays(){
                 workType = homeuserJobRequestArray[j]['WorkType'];
                 tableIndex = j;
                 if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 0){
-                    homeuserOngoingJobsArray[homeuserOngoingJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>', 'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div>'};
+                    homeuserOngoingJobsArray[homeuserOngoingJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,
+                                                                                    'Agreed Price' : agreedPrice,
+                                                                                    'Estimated Complete Date' : estimatedCompletionDate,
+                                                                                    'Work Type' : workType,'Status' : status,
+                                                                                    'Job Details': '<button type="button" class="button AdditionalButtonColors-tertiary" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>',
+                                                                                    'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="ignore-requested-user-onGoingJobs-selected" id="requested-user-onGoingJobs-id" value="' + tableIndex + "_" + jobID + '"></div>'};
                     userGenericFillColumnSelectTags('homeuser-ongoingJobs-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                     userGenericSortSelectFill('homeuser-ongoingJobsInitiate-sortBy',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                 }
                 if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 2){
-                    homeuserCancelledJobsArray[homeuserCancelledJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'};
+                    homeuserCancelledJobsArray[homeuserCancelledJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,
+                                                                                        'Agreed Price' : agreedPrice,
+                                                                                        'Estimated Complete Date' : estimatedCompletionDate,
+                                                                                        'Work Type' : workType,
+                                                                                        'Status' : status,
+                                                                                        'Job Details': '<button type="button" class="button AdditionalButtonColors-tertiary" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'
+                    };
                     userGenericFillColumnSelectTags('homeuser-cancelled-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                     userGenericSortSelectFill('homeuser-cancelled-sortBy',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                 }
                 if(homeuserJobRequestArray[j]['Status-' + i] == 3 && homeuserJobRequestArray[j]['HomeuserResponse-' + i] == 3 && homeuserJobRequestArray[j]['JobStatus-' + i] == 1){
-                    homeuserCompletedJobsArray[homeuserCompletedJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,'Agreed Price' : agreedPrice, 'Estimated Complete Date' : estimatedCompletionDate, 'Work Type' : workType,'Status' : status,'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'};
+                    homeuserCompletedJobsArray[homeuserCompletedJobsArrayCounter++] = {'Job Start Date' : jobProceedDate,
+                        'Agreed Price' : agreedPrice,
+                        'Estimated Complete Date' : estimatedCompletionDate,
+                        'Work Type' : workType,'Status' : status,
+                        'Job Details': '<button type="button" class="button AdditionalButtonColors-tertiary" style="margin: 0.5em" onclick="homeuserDisplayJobFurtherDetails(' + tableIndex + ',' + i + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'
+                    };
                     userGenericFillColumnSelectTags('homeuser-completed-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                     userGenericSortSelectFill('homeuser-completed-sortBy',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                 }
@@ -736,7 +762,7 @@ function homeuserManageRequestModal(tableIndex){
             '</form>';
         html += '<div class="row">' +
             '<div class="large-3 large-offset-3 medium-offset-3 medium-3 columns">' +
-            '<button type="top-bar-button button" class="button warning" style="margin-top: 0.2em" onclick="editHomeuserJobRequestEntryInitiateJobWorker()">' +
+            '<button type="top-bar-button button" class="button AdditionalButtonColors-tertiary" style="margin-top: 0.2em" onclick="editHomeuserJobRequestEntryInitiateJobWorker()">' +
             'Initiate Job' +
             '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
             '</button>' +
@@ -1172,7 +1198,7 @@ function homeuserInitiateJobShortcut(quoteID){
 
     html += '<div class="row">' +
         '<div class="large-3 large-offset-8 medium-offset-8 medium-3 columns">' +
-        '<button type="top-bar-button button" class="button warning" style="margin-top: 0.2em" onclick="sendAJAXRequest(\'homeuser-initiateJob-request\',handleHomeuserInitiateJobResponseShortcut,\'homeuser-initiateJob-shortcut-form\')">' +
+        '<button type="top-bar-button button" class="button AdditionalButtonColors-tertiary" style="margin-top: 0.2em" onclick="sendAJAXRequest(\'homeuser-initiateJob-request\',handleHomeuserInitiateJobResponseShortcut,\'homeuser-initiateJob-shortcut-form\')">' +
         'Initiate Job' +
         '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
         '</button>' +
@@ -1242,7 +1268,7 @@ function homeuserInitiateJob(quoteID){
 
     html += '<div class="row">' +
         '<div class="large-3 large-offset-8 medium-offset-8 medium-3 columns">' +
-        '<button type="top-bar-button button" class="button warning" style="margin-top: 0.2em" onclick="sendAJAXRequest(\'homeuser-initiateJob-request\',handleHomeuserInitiateJobResponse,\'homeuser-initiateJob-form\')">' +
+        '<button type="top-bar-button button" class="button AdditionalButtonColors-tertiary" style="margin-top: 0.2em" onclick="sendAJAXRequest(\'homeuser-initiateJob-request\',handleHomeuserInitiateJobResponse,\'homeuser-initiateJob-form\')">' +
         'Initiate Job' +
         '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
         '</button>' +

@@ -7,8 +7,6 @@
  */$PAGE_TITLE = "";
 include $_SERVER['DOCUMENT_ROOT']."/php/interface/open-html.php";
 include $_SERVER['DOCUMENT_ROOT']."/php/interface/top-bar.php";
-
-
 ?>
     <div class="content-view" style="overflow: hidden">
 

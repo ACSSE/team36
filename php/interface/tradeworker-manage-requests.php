@@ -36,7 +36,7 @@
     </div>
     <div class="row">
         <div class="column large-11">
-            <div class=" full-width" id="tradeworker-manageRequest-areainformation" style="overflow-y: auto; height: 400px">
+            <div class="areainformation-panel-container full-width" id="tradeworker-manageRequest-areainformation">
 
             </div>
         </div>
@@ -45,14 +45,15 @@
     </form>
     <div class="row">
         <div class="large-4 large-offset-4 medium-offset-4 medium-4 columns">
-            <button type="button" class="button" style="background-color: #3aff29"  onclick="tradeworkerAcceptJobRequest()">
+            <button type="button" class="button success" style="margin-top: 0.5em"  onclick="tradeworkerAcceptJobRequest()">
                 Accept
                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
             </button>
         </div>
         <div class="large-4 medium-4 columns">
-            <button type="button" class="button" style="background-color: #ff3914" onclick="tradeworkerRejectJobRequest()">
+            <button type="button" class="button alert" style="margin-top: 0.5em" onclick="tradeworkerRejectJobRequest()">
                 Reject
+                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/remove-icon.svg" alt="logo"/>
             </button>
         </div>
     </div>

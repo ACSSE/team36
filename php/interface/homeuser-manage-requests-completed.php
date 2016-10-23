@@ -38,7 +38,7 @@
         </div>
         <div class="row">
             <div class="column large-11">
-                <div class=" full-width" id="homeuser-manageRTradeworker-completed-areainformation" style="overflow-y: auto; height: 400px">
+                <div class="areainformation-panel-container full-width" id="homeuser-manageRTradeworker-completed-areainformation">
 
                 </div>
             </div>

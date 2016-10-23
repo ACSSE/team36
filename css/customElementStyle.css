@@ -200,6 +200,36 @@ hr {
     justify-content: center;
 }
 
+.additionalbuttoncolors-primary{
+    background-color: #5C86C4;
+}
+
+.additionalbuttoncolors-secondary{
+    background-color: #7363CA;
+}
+
+.AdditionalButtonColors-tertiary{
+    background-color: #FFE16B;
+}
+
+.areainformation-panel-container{
+    overflow-y: auto;
+    height: 400px;
+    margin-top: 0.5em;
+    margin-bottom: 0.5em;
+}
+
+
+.google-panel-design{
+    background-color: rgba(247, 196, 85, 0.85);
+}
+
+.panel-container{
+    display: block;
+    overflow-y: auto;
+    background-color: rgba(255, 200, 107, 0.85)
+}
+
 /*Override foundation 6 button text color*/
 .button, .button:hover, .button:active, .button:focus {
     color: #000000;

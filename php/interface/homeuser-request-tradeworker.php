@@ -84,7 +84,7 @@
             <div class="column large-11 medium 11">
                 <div id="homeuser-rTradeworker-locationField">
                     <label>Search Address:</label> <input name="ignore-homeuser-rTradeworker-autocomplete" id="homeuser-rTradeworker-autocomplete" placeholder="Enter in location of job"
-                            onclick="genericInitAutocomplete('homeuser-rTradeworker-autocomplete')" type="text" autocomplete="off"/>
+                           onfocus="geolocate()" onclick="genericInitAutocomplete('homeuser-rTradeworker-autocomplete')" type="text" autocomplete="off"/>
                 </div>
             </div>
         </div>
@@ -159,7 +159,7 @@
 
         <div class="row">
             <div class="large-2 medium-2 large-offset-9 medium-offset-9 columns">
-                <button type="submit" class="warning button radius" id="register-button"
+                <button type="submit" class="button radius additionalbuttoncolors-primary" id="register-button"
                         onclick="sendAJAXRequest('homeuser-rTradeworker',handlerTradeworkerResponse,'homeuser-rTradeworker-form');">
                     Request Tradeworker(s)
                     <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>

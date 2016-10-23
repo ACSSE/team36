@@ -310,7 +310,7 @@ function tradeworkerBuildUpInterfaceArrays(){
                                                                                                 'Area' : locationName,
                                                                                                 'Description' : description,
                                                                                                 'Homeuser Details' : 'Available',
-                                                                                                'Request Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="tradeworkerDisplayRequestInformation(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>',
+                                                                                                'Request Details': '<button type="button" class="button AdditionalButtonColors-tertiary" style="margin: 0.5em" onclick="tradeworkerDisplayRequestInformation(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>',
                                                                                                 'Selected' : '<div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests" id="tradeworker-requests-quoteID-' + j + '" value="' + quoteID + "_" + j + '" readonly></div>'
                                                                                                 };
                     userGenericFillColumnSelectTags('tradeworker-manageRequest-search-column',['Commencement Date','Job Type','Area','Description','Homeuser Details']);
@@ -322,7 +322,7 @@ function tradeworkerBuildUpInterfaceArrays(){
                                                                                                 'Area' : locationName,
                                                                                                 'Description' : description,
                                                                                                 'Homeuser Details' : 'Pending Acceptance',
-                                                                                                'Request Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="tradeworkerDisplayRequestInformation(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>',
+                                                                                                'Request Details': '<button type="button" class="button AdditionalButtonColors-tertiary" style="margin: 0.5em" onclick="tradeworkerDisplayRequestInformation(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>',
                                                                                                 'Selected' : '<div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests" id="tradeworker-requests-quoteID-' + j + '" value="' + quoteID + "_" + j + '" readonly></div>'
                                                                                             };
                     userGenericFillColumnSelectTags('tradeworker-manageRequest-search-column',['Commencement Date','Job Type','Area','Description','Homeuser Details']);
@@ -332,8 +332,7 @@ function tradeworkerBuildUpInterfaceArrays(){
                     tradeworkerCancelledRequestArray[tradeworkerCancelledRequestArrayCounter++] = {'Commencement Date' : commencementDate,
                                                                                                     'Job Type' : workType,
                                                                                                     'Area' : locationName,'Status' : status,
-                                                                                                    'Request Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="tradeworkerDisplayRequestInformation(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>',
-                                                                                                    'Selected' : '<div class="full-width" style="padding-left: 50%"><input type="radio" name="job-requests" id="tradeworker-requests-quoteID-' + j + '" value="' + quoteID + "_" + j + '" readonly></div>'
+                                                                                                    'Request Details': '<button type="button" class="button AdditionalButtonColors-tertiary" style="margin: 0.5em" onclick="tradeworkerDisplayRequestInformation(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'
                                                                                                 };
                     //tradeworker-manageRequest-search-column
                     userGenericFillColumnSelectTags('tradeworker-manageRequest-cancelled-search-column',['Commencement Date','Job Type','Area']);
@@ -358,7 +357,7 @@ function tradeworkerBuildUpInterfaceArrays(){
                                                                                             'Estimated Complete Date' : estimatedCompletionDate,
                                                                                             'Work Type' :workType,
                                                                                             'Status':status,
-                                                                                            'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="tradeworkerDisplayJobFurtherDetails(' + tableIndex + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>',
+                                                                                            'Job Details': '<button type="button" class="button AdditionalButtonColors-tertiary" style="margin: 0.5em" onclick="tradeworkerDisplayJobFurtherDetails(' + tableIndex + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>',
                                                                                             'Selected' : '<div class="full-height full-width" style="text-align: center;padding-top: 1em"><input type="radio" name="job-initiate-selected" id="requested-user-id" value="' + tableIndex + '"></div>'
                                                                                         };
                     userGenericFillColumnSelectTags('tradeworker-ongoingJobs-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
@@ -371,7 +370,7 @@ function tradeworkerBuildUpInterfaceArrays(){
                                                                                             'Estimated Complete Date' : estimatedCompletionDate,
                                                                                             'Work Type' :workType,
                                                                                             'Status':status,
-                                                                                            'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="tradeworkerDisplayJobFurtherDetails(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'
+                                                                                            'Job Details': '<button type="button" class="button AdditionalButtonColors-tertiary" style="margin: 0.5em" onclick="tradeworkerDisplayJobFurtherDetails(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'
                                                                                         };
                     userGenericFillColumnSelectTags('tradeworker-cancelled-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                     userGenericSortSelectFill('tradeworker-cancelled-sortBy-jobs',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
@@ -383,7 +382,7 @@ function tradeworkerBuildUpInterfaceArrays(){
                                                                                             'Estimated Complete Date' : estimatedCompletionDate,
                                                                                             'Work Type' :workType,
                                                                                             'Status':status,
-                                                                                            'Job Details': '<button type="button" class="button warning" style="margin: 0.5em" onclick="tradeworkerDisplayJobFurtherDetails(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'
+                                                                                            'Job Details': '<button type="button" class="button AdditionalButtonColors-tertiary" style="margin: 0.5em" onclick="tradeworkerDisplayJobFurtherDetails(' + j + ')">Details<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/></button>'
                                                                                         };
                     userGenericFillColumnSelectTags('tradeworker-completed-search-column',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
                     userGenericSortSelectFill('tradeworker-completed-jobs-sortBy',['Job Start Date','Agreed Price','Estimated Complete Date','Work Type','Status']);
@@ -652,7 +651,7 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
                 '</div>';
             html += '<div class="row">' +
                     '<div class="large-3 columns">' +
-                    '<button type="top-bar-button button" class="button warning" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCompletedJob(' + tableIndex + ')">' +
+                    '<button type="top-bar-button button" class="button AdditionalButtonColors-tertiary" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCompletedJob(' + tableIndex + ')">' +
                     'Edit Pictures' +
                     '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
                     '</button>' +

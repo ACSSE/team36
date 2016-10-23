@@ -68,42 +68,42 @@
     </div>
     <div class="small-9 columns full-height">
         <div class="full-height" style="max-height: 100%">
-            <div class="tabs-panel full-height user-panels" id="panel1v" style="display: block;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels panel-container" id="panel1v">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel2v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels panel-container" id="panel2v">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests-cancelled.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel3v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels panel-container" id="panel3v">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-ongoing-jobs.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel4v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels panel-container" id="panel4v">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-cancelled-jobs.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel5v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels panel-container" id="panel5v" >
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-EditInfo.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel6v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels panel-container" id="panel6v">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-EditLocation.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel7v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels panel-container" id="panel7v">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-requests.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel8v" style="display: none;overflow-y: scroll;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels panel-container" id="panel8v">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-completed-jobs.php";
                 ?>

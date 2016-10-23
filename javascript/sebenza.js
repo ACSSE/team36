@@ -15,6 +15,7 @@ $(document).ready(function () {
     }else if(sPage == "userPage.php"){
 
     }
+    setPanelSizeAccordingToScreen();
     //graphTestRun();
 
 });
@@ -1587,11 +1588,11 @@ function handleHomeuserFetchLocationDetails(response){
     if(result.length > 0)
     { //`StreetNumber`,`Route`,`Sublocality`,`Locality`,`AdministrativeArea`
         console.log("accessing the array :" + result[0]['StreetNumber'] + " " + result[0]['Route'] + " " + result[0]['Sublocality'] + " " + result[0]['Locality'] + " " + result[0]['AdministrativeArea']);
-        document.getElementById("StreetNumber-homeuser-edit").value = result[0]["StreetNumber"] ;
-        document.getElementById("Route-homeuser-edit").value = result[0]["Route"] ;
-        document.getElementById("Sublocality-homeuser-edit").value = result[0]["Sublocality"] ;
-        document.getElementById("Locality-homeuser-edit").value = result[0]["Locality"] ;
-        document.getElementById("AdministrativeArea-homeuser-edit").value = result[0]["AdministrativeArea"] ;
+        document.getElementById("homeuser-loc-street_number").value = result[0]["StreetNumber"] ;
+        document.getElementById("homeuser-loc-route").value = result[0]["Route"] ;
+        document.getElementById("homeuser-loc-sublocality_level_1").value = result[0]["Sublocality"] ;
+        document.getElementById("homeuser-loc-locality").value = result[0]["Locality"] ;
+        document.getElementById("homeuser-loc-administrative_area_level_1").value = result[0]["AdministrativeArea"] ;
     }else
     {
         console.log("Cannot fill in user details")
@@ -1638,6 +1639,20 @@ function handleHomeUserUpdateProfileDeitails(response){
 
 }
 
+window.onresize = function(event){
+  setPanelSizeAccordingToScreen();
+};
+
+function setPanelSizeAccordingToScreen(){
+    console.log("The following is the screen inner height: " + window.innerHeight);
+    console.log("The following is the screen inner width: " + window.innerWidth);
+    var height = window.innerHeight;
+    height *= 0.5;
+    console.log(height);
+    var test = document.getElementsByClassName("areainformation-panel-container");
+    console.log(test.length);
+    $('.areainformation-panel-container').css('height', height + 'px');
+}
 
 //Used in contractor registration to add more skills up to three maximum
 function toggleSwitch(id,validationID){
@@ -1690,7 +1705,19 @@ function handleFetchWorkerLocations(response){
     if(typeof result == 'object'){
 
         for(var i = 0; i < result.length;i++){
-            geocodeAddress(geocoder, map, result[i]['locality'] + " " + result[i]['province'],"<h3>" + result[i]['locality'] + "</h3><p>The number of workers available in location: " + result[i]['numWorkers'] + "</p>");
+            var html = "<div> <h3>" + result[i]['locality'] + "</h3>" +
+                "<h5>The following skills are covered in the area</h5><select>";
+            for(var k = 0;k < result[i]['DifferentWorksCovered'].length;k++){
+                html+= "<option>" + result[i]['DifferentWorksCovered'][k] + "</option>";
+            }
+            html += "</select>";
+                html += "<h5>Tradeworker Information</h5><p>The total number of workers in location: " + result[i]['numWorkers'] + "</p>" +
+                "<p>The number of workers available in location: " + result[i]['AvailableWorkers'] + "</p>";
+
+                    html += "</div>";
+
+            geocodeAddress(geocoder, map,result[i]['locality'] + " " + result[i]['province'],html);
+
         }
 
     }
@@ -1757,7 +1784,14 @@ function genericFillInAddress(){
         if (componentForm[addressType]) {
             var val = place.address_components[i][componentForm[addressType]];
             //console.log("The following is value's val" + addressType + "The value of addressType:" + val);
-            document.getElementById(fillInAddressID + addressType).value = val;
+            if(document.getElementById(fillInAddressID + addressType) != null){
+                document.getElementById(fillInAddressID + addressType).value = val;
+            }
+            else{
+                console.log("ID does not exist: " + fillInAddressID + addressType);
+            }
+
+
         }
     }
 }
@@ -1843,8 +1877,9 @@ function initMap() {
     geocoder = new google.maps.Geocoder();
 
 }
-
+var markers = [];
 function geocodeAddress(geocoder, resultsMap,address,html) {
+    //console.log(html);
     geocoder.geocode({'address': address}, function(results, status) {
         if (status === 'OK') {
             console.log("Should be placing marker");
@@ -1853,6 +1888,8 @@ function geocodeAddress(geocoder, resultsMap,address,html) {
                 content: html
             });
 
+            //var googleDiv = infowindow.getDiv();
+            //googleDiv.addClass('google-panel-design');
             var marker = new google.maps.Marker({
                 map: resultsMap,
                 position: results[0].geometry.location,
@@ -1865,6 +1902,16 @@ function geocodeAddress(geocoder, resultsMap,address,html) {
             alert('Geocode was not successful for the following reason: ' + status);
         }
     });
+}
+
+function googleDesignChanger(){
+    var test = $('.google-panel-design');
+    console.log(test.length);
+    for(var k =0;k<test.length;k++){
+
+        test.parent().css("background-color","red");
+        console.log((test.parent().name))
+    }
 }
 //End Google related Javascript
 

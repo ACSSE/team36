@@ -24,7 +24,7 @@
                 <div class="navigation-bar">
                     <!--http://foundation.zurb.com/sites/docs/button-group.html-->
                     <!--http://foundation.zurb.com/sites/docs/button.html-->
-                    <ul class="menu align-right hide-for-small-only">
+                    <ul class="menu align-right"><!--hide-for-small-only-->
                         <li>
                             <button type="button" class="warning button top-bar-button" data-toggle="areainformation-medium-large">
                                 Area Information
@@ -53,14 +53,14 @@
                             ?>
                         </li>
                     </ul>
-                    <ul class="menu align-right show-for-small-only">
-                        <li>
-                            <button type="button" class="button top-bar-button" >
-                                Menu
-                                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/menu-icon.svg" alt="logo"/>
-                            </button>
-                        </li>
-                    </ul>
+<!--                    <ul class="menu align-right show-for-small-only">-->
+<!--                        <li>-->
+<!--                            <button type="button" class="button top-bar-button" >-->
+<!--                                Menu-->
+<!--                                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/menu-icon.svg" alt="logo"/>-->
+<!--                            </button>-->
+<!--                        </li>-->
+<!--                    </ul>-->
                 </div>
             </div>
         </div>

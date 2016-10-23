@@ -26,7 +26,7 @@
         </div>
         <div class="row">
             <div class="column large-11">
-                <div class=" full-width" id="homeuser-ongoingJobs-areainformation" style="overflow-y: auto; height: 400px">
+                <div class="areainformation-panel-container full-width" id="homeuser-ongoingJobs-areainformation">
 
                 </div>
             </div>
@@ -44,7 +44,7 @@
             </button>
         </div>
         <div class="large-4 medium-4 columns">
-            <button type="button" class="button warning" style="margin-top: 0.5em" onclick="homeuserExtendJobInitiate()">
+            <button type="button" class="button additionalbuttoncolors-primary" style="margin-top: 0.5em" onclick="homeuserExtendJobInitiate()">
                 Extend
                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
             </button>

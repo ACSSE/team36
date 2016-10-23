@@ -1641,15 +1641,66 @@ class SebenzaServer {
         $dbhandler->runCommand($command);
         $result = $dbhandler->getResults();
         $returnValue = null;
+        $availableCount = 0;
+
+        $added = false;
         if(count($result) > 0){
             $command = "SELECT * FROM `LOCATIONS_PER_USER` WHERE `locationID` = ?";
             for($i = 0; $i < count($result); $i++){
+                $availableCount = 0;
+                $specializationsGathered = [];
+                $userIDGather = [];
                 $dbhandler->runCommand($command,$result[$i]['locationID']);
                 $locationsPerUser = $dbhandler->getResults();
                 $returnValue[$i]['locality'] = $result[$i]['locationName'];
                 $returnValue[$i]['province'] = $result[$i]['Province'];
                 $returnValue[$i]['numWorkers'] = count($locationsPerUser);
-            }
+                for($t = 0;$t < count($locationsPerUser) && !$added ;$t++){
+                    for($s = 0;$s < count($userIDGather);$s++){
+                        if($locationsPerUser[$t]['UserID'] == $userIDGather[$s]){
+                            $added = true;
+                        }
+                    }
+                    if(!$added){
+                        array_push($userIDGather,$locationsPerUser[$t]['UserID']);
+                    }
+                    $added = false;
+
+                }
+                $command2 = "SELECT * FROM `TRADE_WORKER` WHERE `Availability`=?";
+                $dbhandler->runCommand($command2,1);
+                $users = $dbhandler->getResults();
+                    for($e = 0;$e < count($userIDGather);$e++){
+                        for($r= 0;$r < count($users);$r++){
+                            if($userIDGather[$e] == $users[$r]['UserID']){
+                                $availableCount++;
+                            }
+                        }
+                        $command3 = "SELECT * FROM `SPECIALIZATIONS_PER_USER` WHERE `UserID` = ?";
+                        $dbhandler->runCommand($command3,$userIDGather[$e]);
+                        $specializationsPerUser = $dbhandler->getResults();
+                        $specializations = self::adminFetchSpecializations();
+                        for($l = 0;$l < count($specializationsPerUser);$l++){
+
+                            for($x = 0;$x < count($specializations);$x++){
+                                if($specializationsPerUser[$l]['workTypeID'] == $specializations[$x]['workTypeID']){
+                                    $gathered = false;
+                                    for($v = 0;$v < count($specializationsGathered);$v++){
+                                        if($specializationsGathered[$v] == $specializations[$x]['WorkType']){
+                                            $gathered = true;
+                                        }
+                                    }
+                                    if(!$gathered){
+                                        array_push($specializationsGathered,$specializations[$x]['WorkType']);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                $returnValue[$i]['AvailableWorkers'] = $availableCount;
+                $returnValue[$i]['DifferentWorksCovered'] = $specializationsGathered;
+                }
+
 
             return $returnValue;
         }
@@ -2318,14 +2369,11 @@ class SebenzaServer {
     }
 
     public static function fetchHomeUserLocationDetails(){
-        $returnValue = false ;
+        $returnValue = false;
         $dbHandler = self::fetchDatabaseHandler();
         $userID = self::fetchSessionHandler()->getSessionVariable("UserID");
-        $command1 = "SELECT `locationID` FROM `LOCATIONS_PER_USER` WHERE `UserID`= ?" ;
-            $dbHandler->runCommand($command1,$userID);
-            $lID = $dbHandler->getResults();
-        $command = "SELECT * FROM `HOMEUSER_LOCATIONS` WHERE `UserID` = ? AND `locationID` = ?";
-        $dbHandler->runCommand($command,$userID,$lID);
+        $command = "SELECT * FROM `HOMEUSER_LOCATIONS` WHERE `UserID` = ?";
+        $dbHandler->runCommand($command,$userID);
             $userDetails = $dbHandler->getResults();
             //still some details that need to be added but hope you get the idea
             //`StreetNumber`,`Route`,`Sublocality`,`Locality`,`AdministrativeArea`
@@ -3065,7 +3113,7 @@ if (!empty($_POST)) {
                 {
                     $response = json_encode(SebenzaServer::fetchHomeUserLocationDetails()) ;
                 }else{
-                    $resonse = json_encode(false) ;
+                    $response = json_encode(false) ;
                 }
                 break;
             case'fetch-tradeworker-location-details' :
@@ -3074,17 +3122,18 @@ if (!empty($_POST)) {
                 {
                     $response = json_encode(SebenzaServer::fetchTradeworkerLocationDetails()) ;
                 }else{
-                    $resonse = json_encode(false) ;
+                    $response = json_encode(false) ;
                 }
 
                 break;
 
             case'update-tradeworker-location-details':
+                //TODO: Actually update the user location this will be a bit more complex involving for loops
                 $continue = SebenzaServer::serverSecurityCheck();
                 if($continue)
                 {
-                    if(isset($_POST["StreetNumber-tradeworker-edit"]) && isset($_POST["Route-tradeworker-edit"]) && isset($_POST["Sublocality-tradeworker-edit"])
-                        && isset($_POST["Locality-tradeworker-edit"]) && isset($_POST["AdministrativeArea-tradeworker-edit"])){
+                    if(isset($_POST["tradeworker-loc-street_number"]) && isset($_POST["homeuser-loc-route"]) && isset($_POST["homeuser-loc-sublocality_level_1"])
+                        && isset($_POST["homeuser-loc-locality"]) && isset($_POST["homeuser-loc-administrative_area_level_1"])){
                         $response = json_encode(true) ;
                     }else{
                         $response = json_encode(false) ;
@@ -3094,11 +3143,12 @@ if (!empty($_POST)) {
                 }
                 break;
             case'update-homeuser-location-details':
+            //TODO: Actually update the user location
                 $continue = SebenzaServer::serverSecurityCheck();
                 if($continue)
                 {
-                    if(isset($_POST["StreetNumber-homeuser-edit"]) && isset($_POST["Route-homeuser-edit"]) && isset($_POST["Sublocality-homeuser-edit"])
-                        && isset($_POST["Locality-homeuser-edit"]) && isset($_POST["AdministrativeArea-homeuser-edit"])){
+                    if(isset($_POST["homeuser-loc-street_number"]) && isset($_POST["homeuser-loc-route"]) && isset($_POST["homeuser-loc-sublocality_level_1"])
+                        && isset($_POST["homeuser-loc-locality"]) && isset($_POST["homeuser-loc-administrative_area_level_1"])){
                         $response = json_encode(true) ;
                     }else{
                         $response = json_encode("Not Set") ;

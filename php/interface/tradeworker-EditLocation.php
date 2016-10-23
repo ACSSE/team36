@@ -35,18 +35,8 @@
                 </tr>
                 <tr>
                     <td class="label">State</td>
-                    <td>
-                        <input type="text" name="AdministrativeArea-tradeworker-edit" id="AdministrativeArea-tradeworker-edit" placeholder="Gauteng Province" class="REQ_VAL" readonly>
-                    </td>
-                    <td class="label">Zip Code</td>
-                    <td>
-                        <input type="text" name="Zipcode-tradeworker-edit" id="Zipcode-tradeworker-edit" placeholder="1201" class="REQ_VAL" readonly>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="label">Country</td>
                     <td colspan="3">
-                        <input type="text" name="Country-tradeworker-edit" id="Country-tradeworker-edit" placeholder="South Africa" class="REQ_VAL" readonly>
+                        <input type="text" name="AdministrativeArea-tradeworker-edit" id="AdministrativeArea-tradeworker-edit" placeholder="Gauteng Province" class="REQ_VAL" readonly>
                     </td>
                 </tr>
             </table>
@@ -54,7 +44,7 @@
         </div>
     <div class="row">
         <div class="large-2 medium-2 large-offset-9 medium-offset-9 columns">
-            <button type="submit" class="warning button radius" id="updateInfo-button"
+            <button type="submit" class="additionalbuttoncolors-primary button radius" id="updateInfo-button"
                     onclick="sendAJAXRequest('update-tradeworker-location-details',handleTradeworkerUpdateLocationDeitails);">
                 Update Location Information
             </button>

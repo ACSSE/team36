@@ -26,7 +26,7 @@
         </div>
         <div class="row">
             <div class="column large-11">
-                <div class=" full-width" id="homeuser-cancelled-areainformation" style="overflow-y: auto; height: 400px">
+                <div class="areainformation-panel-container full-width" id="homeuser-cancelled-areainformation">
 
                 </div>
             </div>
