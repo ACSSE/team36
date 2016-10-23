@@ -1877,6 +1877,9 @@ function initMap() {
     geocoder = new google.maps.Geocoder();
 
 }
+var infowindow = new google.maps.InfoWindow({
+    content: ""
+});
 var markers = [];
 function geocodeAddress(geocoder, resultsMap,address,html) {
     //console.log(html);
@@ -1884,18 +1887,21 @@ function geocodeAddress(geocoder, resultsMap,address,html) {
         if (status === 'OK') {
             console.log("Should be placing marker");
             resultsMap.setCenter(results[0].geometry.location);
-            var infowindow = new google.maps.InfoWindow({
-                content: html
-            });
 
+            //console.log(typeof (infowindow.content));
+            //console.log(infowindow.content);
+            //infowindow.content.style.backgroundColor = "red";
             //var googleDiv = infowindow.getDiv();
             //googleDiv.addClass('google-panel-design');
             var marker = new google.maps.Marker({
                 map: resultsMap,
                 position: results[0].geometry.location,
-                title: address
+                title: address,
+                content: html
             });
             marker.addListener('click', function() {
+                console.log(html);
+                infowindow.setContent(html);
                 infowindow.open(map, marker);
             });
         } else {
