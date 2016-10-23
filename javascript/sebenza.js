@@ -17,7 +17,23 @@ $(document).ready(function () {
     }
     setPanelSizeAccordingToScreen();
     //graphTestRun();
+    $("#areainformation-medium-large")
+        .on("on.zf.toggler", function(e) {
+            if(document.getElementById('login-medium-large').style.display == 'block'){
+                $('#login-medium-large').foundation('toggle');
+            }
+        })
+        .on("off.zf.toggler", function(e) {
+        });
 
+    $("#login-medium-large")
+        .on("on.zf.toggler", function(e) {
+            if(document.getElementById('areainformation-medium-large').style.display == 'block'){
+                $('#areainformation-medium-large').foundation('toggle');
+            }
+        })
+        .on("off.zf.toggler", function(e) {
+        });
 });
 
 var NOTIFICATION_DISPLAY_TIMEOUT = 5000;  //How long a notification shows
@@ -35,6 +51,8 @@ function startNotificationPulls() {
     setInterval(sendAJAXRequest,60000,'fetch-job-requests',handleFetchJobRequests);
 
 }
+
+
 
 function handleNotifications(response) {
     var notifications = JSON.parse(response);
@@ -1909,6 +1927,8 @@ function geocodeAddress(geocoder, resultsMap,address,html) {
         }
     });
 }
+
+
 
 function googleDesignChanger(){
     var test = $('.google-panel-design');
