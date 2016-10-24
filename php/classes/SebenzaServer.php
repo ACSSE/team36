@@ -99,16 +99,16 @@ class SebenzaServer {
         if ($session->exists("dbHandler")) {
             $dbHandler = $session->getSessionVariable("dbHandler");
         } else {
-            //$dbHandler = new DatabaseHandler("eu-cdbr-azure-west-d.cloudapp.net","bb5f5a5205e9c5","74c8233a","sebenzasa_database");
-            $dbHandler = new DatabaseHandler("localhost","root","Sebenza","SebenzaSA_Database");
+            $dbHandler = new DatabaseHandler("eu-cdbr-azure-west-d.cloudapp.net","bb5f5a5205e9c5","74c8233a","sebenzasa_database");
+//            $dbHandler = new DatabaseHandler("localhost","root","Sebenza","SebenzaSA_Database");
             $session->setSessionVariable("dbHandler", $dbHandler);
         }
         return $dbHandler;
     }
 
     public static function createAndResetDatabase():bool {
-        //$dbHandler = new DatabaseHandler("eu-cdbr-azure-west-d.cloudapp.net","bb5f5a5205e9c5","74c8233a","");
-        $dbHandler = new DatabaseHandler("localhost","root","Sebenza","");
+        $dbHandler = new DatabaseHandler("eu-cdbr-azure-west-d.cloudapp.net","bb5f5a5205e9c5","74c8233a","");
+//        $dbHandler = new DatabaseHandler("localhost","root","Sebenza");
         $success = $dbHandler->executeSQLScriptFile("database/SebenzaSA_Database.sql");
         self::fetchSessionHandler()->setSessionVariable("dbHandler", $dbHandler);
         return $success;
