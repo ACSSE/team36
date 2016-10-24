@@ -219,7 +219,116 @@ function tradeworkerPrintCompletedJobs(){
     //test.style.display = 'none';
     //var printWindow = window;
     //$("#AreaToBePrinted").show();
-    window.print();
+    console.log("Array to be added to be printed: ");
+    console.log(tradeworkerJobRequestArray);
+    var html = '';
+
+    for(var t = 0;t < tradeworkerJobRequestArray.length;t++){
+        if(tradeworkerJobRequestArray[t]['HomeuserResponse'] == 3 && tradeworkerJobRequestArray[t]['Status'] == 3 && tradeworkerJobRequestArray[t]['JobStatus'] == 1){
+            var street = tradeworkerJobRequestArray[t]["Road"];
+            var streetNumber = tradeworkerJobRequestArray[t]["StreetNumber"];
+            var subLocality = tradeworkerJobRequestArray[t]["AreaName"];
+            var locality = tradeworkerJobRequestArray[t]["locationName"];
+            var province = tradeworkerJobRequestArray[t]["Province"];
+            var jobDescription = tradeworkerJobRequestArray[t]["JobDescription"];
+            var estimatedPrice = tradeworkerJobRequestArray[t]["AgreedPrice"];
+            //var status = tradeworkerJobRequestArray[t]["Accepted"];
+            var status = tradeworkerJobRequestArray[t]['JobStatus'];
+            var jobType = tradeworkerJobRequestArray[t]["WorkType"];
+            html += '<div style="page-break-after:always;width: 100%;height: 100%">';
+            html += '<h2>Job:' + t + '</h2>';
+            html += '<h3>Request information</h3>';
+            var jobID = tradeworkerJobRequestArray[t]["JobID"];
+            html += '<div class="row">' +
+                '<div class="column large-11 medium-11"><table>' +
+                '<tr> ' +
+                '<td class="label">Address</td> ' +
+                '<td><input type="text" name="tradeworker-ongoingJobs-Details-street_number-' + t + '" id="tradeworker-ongoingJobs-Details-street_number-' + t + '" value="' + streetNumber + '"  readonly> </td>' +
+                '<td colspan="2"> <input type="text" name="tradeworker-ongoingJobs-Details-route-' + t + '" id="tradeworker-ongoingJobs-Details-route-' + t + '" value="' + street + '"  readonly> </td>' +
+                '<td colspan="2"> <input type="text" name="tradeworker-ongoingJobs-Details-sublocality_level_1-' + t + '" id="tradeworker-ongoingJobs-Details-sublocality_level_1-' + t + '" value="' + subLocality + '"  readonly> </td>' +
+                '</tr> ' +
+                '<tr> ' +
+                '<td></td> ' +
+                '<td colspan="2"> <input type="text" name="tradeworker-ongoingJobs-Details-locality-' + t + '" id="tradeworker-ongoingJobs-Details-locality-' + t + '" value="' + locality + '"  readonly> </td> ' +
+                '<td colspan="3"> <input type="text" name="tradeworker-ongoingJobs-Details-country-' + t + '" id="tradeworker-ongoingJobs-Details-country-' + t + '" value="' + province + '"  readonly> </td> ' +
+                '</tr> ' +
+                '<tr> ' +
+                '<td class="label">Job Description:</td> <td colspan="2"> <input type="text" name="tradeworker-ongoingJobs-Details-WorkType-' + t + '" id="tradeworker-ongoingJobs-Details-WorkType-' + t + '" value="' + jobType + '"  readonly> </td> ' +
+                '<td colspan="3"> <input type="text" name="tradeworker-ongoingJobs-Details-locality-' + t + '" id="tradeworker-ongoingJobs-Details-jobDescription-' + t + '" value="' + jobDescription + '"  readonly> </td> ' +
+                '</tr> ';
+            if(status != 2){
+                html += '<tr> ' +
+                    '<td class="label">Homeuser Details:</td> <td colspan="2"> <input type="text" name="tradeworker-ongoingJobs-username-WorkType-' + t + '" id="tradeworker-ongoingJobs-username-WorkType-' + t + '" value="' + tradeworkerJobRequestArray[t]["HomeuserName"] + '"  readonly> </td> ' +
+                    '<td colspan="3"> <input type="text" name="tradeworker-ongoingJobs-surname-jobDescription-' + t + '" id="tradeworker-ongoingJobs-surname-jobDescription-' + t + '" value="' + tradeworkerJobRequestArray[t]["HomeuserSurname"] + '"  readonly> </td> ' +
+                    '<tr>' +
+                    '<td colspan="1"></td>' +
+                    '<td colspan="5"> <input type="text" name="tradeworker-ongoingJobs-contact-jobDescription-' + t + '" id="tradeworker-ongoingJobs-contact-jobDescription-' + t + '" value="' + tradeworkerJobRequestArray[t]["HomeuserContact"] + '"  readonly> </td> ' +
+                    '</tr>' +
+                    '</tr>';
+            }
+            html += '</table></div></div>';
+            //console.log(".....6......");
+            //console.log(status);
+            //console.log(".....6......");
+            if(status == 1){
+                if(tradeworkerJobRequestArray[t]['JobID-' + jobID + '-' + 'PictureCount'] != 0) {
+                    html += '<h3>Pictures:</h3>' +
+                        '<div class="row">' +
+                        '<div class="column large-11 medium-11">';
+
+
+                    //console.log("!!!5!!!");
+                    //console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureCount']);
+                    //console.log(tradeworkerJobRequestArray[tableIndex]['JobID-' + 0 + '-' + 'PictureID-'+ 0]);
+
+                    //console.log("!!!5!!!");
+                    for (var d = 0; d < tradeworkerJobRequestArray[t]['JobID-' + jobID + '-' + 'PictureCount']; d++) {
+                        var picFile = tradeworkerJobRequestArray[t]['JobID-' + jobID + '-' + 'PictureID-' + d];
+                        //console.log("!!!5!!!");
+                        //console.log(picFile);
+                        //console.log("!!!5!!!");
+                        var picName = picFile.split("_");
+                        html += '<div style="float: left">' +
+                            '<img style="height: 200px;width: 200px" src="UploadedPictures/' + picFile + '">' +
+                            //'<figcaption>' + picName[picName.length - 1] + '</figcaption>' +
+                            '</div>';
+                    }
+
+
+                    //    '<nav class="orbit-bullets">';
+                    //for(var w = 0;w < tradeworkerJobRequestArray[tableIndex]['JobID-' + jobID + '-' + 'PictureCount'];w++) {
+                    //    if(w == 0){
+                    //        html += '<button class="is-active" data-slide="0"><span class="show-for-sr">' + w + ' slide details.</span><span class="show-for-sr">Current Slide</span></button>';
+                    //    }
+                    //    else{
+                    //        html += '<button data-slide="' + w + '"><span class="show-for-sr">' + w + ' slide details.</span>';
+                    //    }
+                    //
+                    //}
+                    //html +='</nav>' +
+                    html += '</div>' +
+
+                        '</div>';
+                    html += '</div>';
+                }
+                else{
+                    html += '<h3>Pictures:</h3><h5>Please add pictures from the job as soon as you can, will be confirmed by the homeuser</h5>';
+                }
+            }
+        }
+    }
+
+    var toBePrinted = document.getElementsByClassName('section-to-print');
+
+    toBePrinted[0].innerHTML = "";
+
+    toBePrinted[0].innerHTML += html;
+
+    //toBePrinted[0].innerHTML += html;
+    //The following is a little complicated way to get all the pictures and details of the completed jobs to print
+    setTimeout(function(){document.getElementById('make-visible-onprint').style.display = "block"; window.print(); document.getElementById('make-visible-onprint').style.display = "none";}, 1500);
+
+
     //test.style.display = '';
     //$("#AreaToBePrinted").show();
     //window.print();
@@ -650,9 +759,16 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
                 '</div>' +
                 '</div>';
             html += '<div class="row">' +
+                '<div class="large-3 columns">' +
+                '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCompletedJob(' + tableIndex + ')">' +
+                'Add Pictures' +
+                '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+                '</button>' +
+                '</div>' +
+                '<div class="large-3 columns">' +
                     '<div class="large-3 columns">' +
-                    '<button type="top-bar-button button" class="button AdditionalButtonColors-tertiary" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCompletedJob(' + tableIndex + ')">' +
-                    'Edit Pictures' +
+                    '<button type="top-bar-button button" class="button AdditionalButtonColors-tertiary" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToCV(' + tableIndex + ')">' +
+                    'CV: Picture Selection' +
                     '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
                     '</button>' +
                     '</div>' +
@@ -677,7 +793,9 @@ function tradeworkerDisplayJobFurtherDetails(tableIndex){
     var elem = null;
     elem = new Foundation.Orbit(picOrbiter);
 }
-var tradeworkerPictureArray = [];
+
+var tradeworkerPictureArrayAccepted = [];
+var tradeworkerPictureArrayToAccept = [];
 function tradeworkerAddPicturesToCompletedJob(index){
     if(tradeworkerJobRequestArray.length > 0){
         console.log("Should be adding pictures to the completed job");
@@ -686,12 +804,101 @@ function tradeworkerAddPicturesToCompletedJob(index){
         var picN = [];
         for(var j = 0;j < numPics;j++){
             picN = tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +""].split('_');
-            var toP = '<input type="radio" value="'+ j + '" checked/>';
-            if(tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +"-ToPrint"] == 1){
-                toP = '<input type="radio" value="'+ j + '" />';
+            var toP = '';
+            if(tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +"-TradeworkerAcceptedPic"] == 1){
+                toP = '<input class="tradeworker-toAccept-check" type="checkbox" value="'+ picN[0] + '" name="toAccept-'+ j + '" id="toAccept-'+ j + '" checked/>';
             }
             else{
+                toP = '<input class="tradeworker-toAccept-check" type="checkbox" value="'+ picN[0] + '" name="toAccept-'+ j + '" id="toAccept-'+ j + '"/>';
+            }
+            if(tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +"-TradeworkerAcceptedPic"] == 0){
+                tradeworkerPictureArrayToAccept[j] = {
+                    PicName:picN[picN.length-1],
+                    ToPrint:toP
+                };
+            }
+            else{
+                tradeworkerPictureArrayAccepted[j] = {
+                    PicName:picN[picN.length-1],
+                    ToPrint:toP
+                };
+            }
 
+
+        }
+        var html = '';
+        if(tradeworkerPictureArrayToAccept.length > 0 || tradeworkerPictureArrayAccepted.length > 0){
+            html = '<h3>Pictures To Accept:</h3><h5>tick which Pictures will be accepted</h5><form id="tradeworker-toPrint-check-form" name="tradeworker-toPrint-check-form">';
+            if(tradeworkerPictureArrayToAccept.length > 0){
+                html += genericTableGenerate(tradeworkerPictureArrayToAccept,'job-pictureList-toAccept');
+            }
+            else{
+                html +="<h5>No Pictures To Accept</h5>";
+            }
+
+
+            html += '</form><div class="row">' +
+                '<div class="large-3 columns">' +
+                '<button type="top-bar-button button" class="button additionalbuttoncolors-secondary" style="margin-top: 0.2em" onclick="tradeworkerAcceptPictures()">' +
+                'Accept Pictures' +
+                '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+                '</button>' +
+                '</div>' +
+                '</div>' +
+                '<h3>Accepted Pictures:</h3>';
+            if(tradeworkerPictureArrayAccepted.length > 0){
+                html += genericTableGenerate(tradeworkerPictureArrayAccepted,'job-pictureList-accepted');
+            }
+            else{
+                html +="<h5>No Pictures Accepted</h5>";
+            }
+                html += '<div class="row">' +
+            '<div class="large-3 columns">' +
+            '<button type="top-bar-button button" class="button AdditionalButtonColors-tertiary" style="margin-top: 0.2em" onclick="tradeworkerAddPicturesToJob()">' +
+            'Add Pictures' +
+            '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+            '</button>' +
+            '</div>' +
+            '</div>';
+        }
+        else{
+            html = '<h3>There are no pictures added yet, please add to be able to print a more detailed CV</h3>';
+        }
+        $('#tradeworker-ongoingJobs-modal-response').foundation('toggle');
+        document.getElementById("tradeworker-ongoingJobs-modal-response-additionalInfo").innerHTML = html;
+    }
+}
+
+function tradeworkerAcceptPictures(){
+    console.log("Should be accepting pictures: ");
+    var checkbox = $(".tradeworker-toAccept-check");
+    console.log(checkbox.length);
+    for(var t =0; t < checkbox.length; t++){
+        if(checkbox[t].checked){
+            console.log("Pic ID " + checkbox[t].value);
+        }
+    }
+}
+
+function tradeworkerAddPicturesToJob(){
+    console.log("Should be adding pictures to completed job for tradeworker:");
+}
+
+var tradeworkerPictureArray = [];
+function tradeworkerAddPicturesToCV(index){
+    if(tradeworkerJobRequestArray.length > 0){
+        console.log("Should be adding pictures for the CV");
+        console.log(tradeworkerJobRequestArray[index]);
+        var numPics = tradeworkerJobRequestArray[index]["JobID-1-PictureCount"];
+        var picN = [];
+        for(var j = 0;j < numPics;j++){
+            picN = tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +""].split('_');
+            var toP = '';
+            if(tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +"-ToPrint"] == 1){
+                toP = '<input class="tradeworker-toPrint-check" type="checkbox" value="'+ picN[0] + '" name="toPrint-'+ j + '" id="toPrint-'+ j + '" checked/>';
+            }
+            else{
+                toP = '<input class="tradeworker-toPrint-check" type="checkbox" value="'+ picN[0] + '" name="toPrint-'+ j + '" id="toPrint-'+ j + '"/>';
             }
             tradeworkerPictureArray[j] = {
                                             PicName:picN[picN.length-1],
@@ -701,7 +908,16 @@ function tradeworkerAddPicturesToCompletedJob(index){
         }
         var html = '';
         if(tradeworkerPictureArray.length > 0){
-            html = genericTableGenerate(tradeworkerPictureArray,'job-pictureList');
+            html = '<h3>Select Pictures:</h3><h5>tick which Pictures will be added to CV when printing</h5><form id="tradeworker-toPrint-check-form" name="tradeworker-toPrint-check-form">';
+            html += genericTableGenerate(tradeworkerPictureArray,'job-pictureList');
+            html += '</form><div class="row">' +
+                '<div class="large-3 columns">' +
+                '<button type="top-bar-button button" class="button additionalbuttoncolors-secondary" style="margin-top: 0.2em" onclick="tradeworkerUpdatePicturesToPrint()">' +
+                'Edit selection Pictures' +
+                '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+                '</button>' +
+                '</div>' +
+                '</div>';
         }
         else{
             html = '<h3>There are no pictures added yet, please add to be able to print a more detailed CV</h3>';
@@ -710,6 +926,16 @@ function tradeworkerAddPicturesToCompletedJob(index){
         document.getElementById("tradeworker-ongoingJobs-modal-response-additionalInfo").innerHTML = html;
     }
 
+}
+
+function tradeworkerUpdatePicturesToPrint(){
+    var checkbox = $(".tradeworker-toPrint-check");
+    console.log(checkbox.length);
+    for(var t =0; t < checkbox.length; t++){
+        if(checkbox[t].checked){
+            console.log("Pic ID " + checkbox[t].value);
+        }
+    }
 }
 
 function tradeworkerDisplayCancelledRequest(){

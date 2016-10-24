@@ -1382,9 +1382,9 @@ class SebenzaServer {
                             $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureCount"] = count($picturesResult);
                             for($q = 0;$q < count($picturesResult);$q++){
                                 $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureID-".$q] = $picturesResult[$q]['PictureID'].'_'.$picturesResult[$q]['JobID'].'_'.$picturesResult[$q]['UserID'].'_'.$picturesResult[$q]['PictureName'];
-                                $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureID-".$q.'ToPrint'] = $picturesResult[$q]['ToPrint'];
-                                $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureID-".$q.'HomeuserAcceptedPic'] = $picturesResult[$q]['HomeuserAccepted'];
-                                $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureID-".$q.'TradeworkerAcceptedPic'] = $picturesResult[$q]['TradeworkerAccepted'];
+                                $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureID-".$q.'-ToPrint'] = $picturesResult[$q]['ToPrint'];
+                                $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureID-".$q.'-HomeuserAcceptedPic'] = $picturesResult[$q]['HomeuserAccepted'];
+                                $returnValue[$r]['JobID-'.$jobResults[0]['JobID'].'-'."PictureID-".$q.'-TradeworkerAcceptedPic'] = $picturesResult[$q]['TradeworkerAccepted'];
                             }
 
                         }
