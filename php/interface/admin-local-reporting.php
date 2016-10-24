@@ -4,15 +4,6 @@
     <form id="admin-manage-specialization-search-form" name="admin-manage-specialization-search-form">
         <div class="row">
             <div class="column large-11">
-                <label>Search:</label>
-                <input type="text" name="ignore-admin-manage-specialization-search" id="admin-manage-specialization-search">
-            </div>
-            <div class="column large-1">
-
-            </div>
-        </div>
-        <div class="row">
-            <div class="column large-11">
                 <div class=" full-width" id="admin-manage-specialization-areainformation" style="overflow-y: auto; height: 400px">
 
                 </div>

@@ -12,7 +12,7 @@
                 <ul class="menu vertical nested">
                     <li><a onclick="toggleUserPageArea('panel4v')">Country Reports</a></li>
                     <li><a onclick="toggleUserPageArea('panel5v')">Provincial Reports</a></li>
-                    <li><a onclick="toggleUserPageArea('panel6v')">Local Reports</a></li>
+<!--                    <li><a onclick="toggleUserPageArea('panel6v')">Local Reports</a></li>-->
                 </ul>
             </li>
             <li><a href="#">Profile Management</a>
@@ -26,37 +26,37 @@
     </div>
     <div class="small-9 columns full-height">
         <div class="full-height">
-            <div class="tabs-panel full-height user-panels" id="panel1v" style="display: block;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel1v" style="display: block;overflow-y: auto;background-color: rgba(255, 200, 107, 0.85)">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/admin-manage-specializations.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel2v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel2v" style="display: none;overflow-y: auto;background-color: rgba(255, 200, 107, 0.85)">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/admin-view-tables.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel3v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel3v" style="display: none;overflow-y: auto;background-color: rgba(255, 200, 107, 0.85)">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/admin-block-user.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel4v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel4v" style="display: none;overflow-y: auto;background-color: rgba(255, 200, 107, 0.95)">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/admin-country-reporting.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel5v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel5v" style="display: none;overflow-y: auto;background-color: rgba(255, 200, 107, 0.95)">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/admin-provincial-reporting.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel6v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel6v" style="display: none;overflow-y: auto;background-color: rgba(255, 200, 107, 0.95)">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/admin-local-reporting.php";
                 ?>
             </div>
-            <div class="tabs-panel full-height user-panels" id="panel7v" style="display: none;overflow-y: auto;background-color: rgba(247, 196, 85, 0.85)">
+            <div class="tabs-panel full-height user-panels" id="panel7v" style="display: none;overflow-y: auto;background-color: rgba(255, 200, 107, 0.85)">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/admin-profile-management.php";
                 ?>

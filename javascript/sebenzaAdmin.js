@@ -16,6 +16,7 @@ function handleFetchJobRequests(response){
         SetUpTableSortBySelect('specialization-table-headers','admin-specialization-sortBy');
         //SetUpTableSortBySelect('generic-table-headers','admin-view-table-sortBy');
         SetUpTableSortBySelect('block-table-headers','admin-manage-block-user-sortBy');
+        adminChangeProvinceToReportOn();
     }
 }
 
@@ -71,6 +72,12 @@ function adminDisplayProfileDetails(){
     }
 
 }
+
+var primaryGraphColor = '#7363CA';
+var secondaryGraphColor = '#FF6B6B';
+var tertiaryGraphColor = '#6AD359';
+var fourthGraphColor = '#CE5798';
+
 
 function adminDisplayCountryReport(){
     createCanvas('canvas','admin-manage-country-reports-areainformation',100);
@@ -136,7 +143,7 @@ function adminDisplayCountryReport(){
     data[0] = [gautengInfo['TotalTradeWorkersInArea'], westernCapeInfo['TotalTradeWorkersInArea'], nCapeInfo['TotalTradeWorkersInArea'], eCapeInfo['TotalTradeWorkersInArea'], kznInfo['TotalTradeWorkersInArea'], fsInfo['TotalTradeWorkersInArea']];
     data[1] = [gautengInfo['TotalTradeWorkersAvailableInArea'], westernCapeInfo['TotalTradeWorkersAvailableInArea'], nCapeInfo['TotalTradeWorkersAvailableInArea'], eCapeInfo['TotalTradeWorkersAvailableInArea'], kznInfo['TotalTradeWorkersAvailableInArea'], fsInfo['TotalTradeWorkersAvailableInArea']];
     var dataHeadings = ["Total Tradeworkers","Available Tradeworkers"];
-    var colours = [randomColor(),randomColor()];
+    var colours = [primaryGraphColor,secondaryGraphColor];
     var barChartData = createBarGraphConfig("Provincial Tradeworker Indicator",labels,data,dataHeadings,colours);
     var ctx = document.getElementById("canvas").getContext("2d");
     var ctx1 = document.getElementById("canvas1").getContext("2d");
@@ -147,7 +154,7 @@ function adminDisplayCountryReport(){
     //graphTestRun();
     var labels = ["Available Tradeworkers","Unavailable Tradeworkers"];
     var colors = [];
-    colors[0] = [randomColor(),randomColor()];
+    colors[0] = [primaryGraphColor,tertiaryGraphColor];
 
     data = [];
     data[0] = [availableTradeworkers.length,tradeworkers.length - availableTradeworkers.length];
@@ -165,6 +172,76 @@ function adminDisplayCountryReport(){
     window.myBar = test;
     window.myPie = new Chart(ctx, pieChartData);
 
+}
+
+function adminChangeProvinceToReportOn(){
+    var province = document.getElementById('provincial-country-select').value;
+    console.log(province);
+    var provincialInfo = 1;
+    createCanvas('canvas3','admin-manage-provincial-reporting-areainformation',100);
+    createCanvas('canvas4','admin-manage-provincial-reporting-areainformation',100);
+    createCanvas('canvas5','admin-manage-provincial-reporting-areainformation',100);
+    var tableName = "Tradeworkers";
+    var tradeworkers = adminGenericDisplayTableSetUp(tableName,"");
+    var search = "Availability=1";
+    var availableTradeworkers = admin3DimensionalSearchArray(tableName,search);
+    var totalRequests = adminGenericDisplayTableSetUp("Quote","");
+    console.log("The following are tradeworkers within the bounds of South Africa:" + tradeworkers.length);
+    console.log("Of these tradeworkers :" + availableTradeworkers.length + " are available for requests: ");
+    console.log("The following is the number of total requests: " + totalRequests.length);
+    var label = '';
+    console.log(province);
+    switch (province){
+        case '1':
+            console.log("IT GOT HERE!!!");
+            provincialInfo = adminDisplayProvincialReport("GP");
+            label = "Gauteng";
+            break;
+        case '2':
+            provincialInfo = adminDisplayProvincialReport("WC");
+            label = "Western Cape";
+            break;
+        case '3':
+            provincialInfo = adminDisplayProvincialReport("NC");
+            label = "Northern Cape";
+            break;
+        case '4':
+            provincialInfo = adminDisplayProvincialReport("EC");
+            label = "Eastern Cape";
+            break;
+        case '5':
+            provincialInfo = adminDisplayProvincialReport("KZN");
+            label = "Kwazulu-Natal";
+            break;
+        case '6':
+            provincialInfo = adminDisplayProvincialReport("FS");
+            label = "FreeState";
+            break;
+    }
+    var labels = [label];
+    var data = [];
+    console.log("Provincial INFO!!!");
+    console.log(provincialInfo);
+    data[0] = [provincialInfo['TotalTradeWorkersInArea']];
+    data[1] = [provincialInfo['TotalTradeWorkersAvailableInArea']];
+    var dataHeadings = ["Total Tradeworkers","Available Tradeworkers"];
+    var colours = [primaryGraphColor,secondaryGraphColor];
+    var barChartData = createBarGraphConfig("Provincial Tradeworker Indicator",labels,data,dataHeadings,colours);
+    var ctx = document.getElementById("canvas3").getContext("2d");
+    var ctx1 = document.getElementById("canvas4").getContext("2d");
+    var ctx2 = document.getElementById("canvas5").getContext("2d");
+    //var ctx1 = document.getElementById("canvas1").getContext("2d");
+    var test = new Chart(ctx, barChartData);
+
+    var labels = ["Available Tradeworkers","Unavailable Tradeworkers"];
+    var colors = [];
+    colors[0] = [primaryGraphColor,secondaryGraphColor];
+
+    data = [];
+    data[0] = [provincialInfo['TotalTradeWorkersAvailableInArea'],provincialInfo['TotalTradeWorkersInArea'] - provincialInfo['TotalTradeWorkersAvailableInArea']];
+
+    var pieChartData = createPieGraphConfig(labels,colors,data,1,"Total Tradeworkers");
+    window.myPie = new Chart(ctx1, pieChartData);
 }
 
 function adminDisplayProvincialReport(provinceName){

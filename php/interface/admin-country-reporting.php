@@ -11,15 +11,7 @@
     <h1>Country Reports</h1>
     <!-- TODO:Need to implement sort and search on target array as well as make the buttons interact-able  -->
     <form id="admin-manage-country-reports-search-form" name="admin-manage-country-reports-search-form">
-        <div class="row">
-            <div class="column large-11">
-                <label>Search:</label>
-                <input type="text" name="ignore-admin-manage-country-reports-search" id="admin-manage-country-reports-search">
-            </div>
-            <div class="column large-1">
 
-            </div>
-        </div>
         <div class="row">
             <div class="column large-11">
                 <div class="full-width" id="admin-manage-country-reports-areainformation" style="overflow-y: auto;height: 550px">

@@ -15,6 +15,7 @@ $(document).ready(function () {
     }else if(sPage == "userPage.php"){
 
     }
+
     setPanelSizeAccordingToScreen();
     //graphTestRun();
     $("#areainformation-medium-large")
