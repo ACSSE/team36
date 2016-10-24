@@ -32,14 +32,14 @@
 
 
     <div class="row">
-        <div class="large-4 large-offset-4 medium-offset-4 medium-4 columns">
-            <button type="button" class="button additionalbuttoncolors-primary" style="margin-top: 0.5em" onclick="">
-                Edit Selected
-                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>
-            </button>
-        </div>
+<!--        <div class="large-4 large-offset-4 medium-offset-4 medium-4 columns">-->
+<!--            <button type="button" class="button additionalbuttoncolors-primary" style="margin-top: 0.5em" onclick="adminEditSelectedSpecialization()">-->
+<!--                Edit Selected-->
+<!--                <img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>-->
+<!--            </button>-->
+<!--        </div>-->
         <div class="large-4 medium-4 columns">
-            <button type="button" class="button alert" style="margin-top: 0.5em" onclick="">
+            <button type="button" class="button additionalbuttoncolors-primary" style="margin-top: 0.5em" onclick="adminAddNewSpecialization()">
                 Add new
                 <img class="top-bar-button-icon" type="image/svg+xml" src="Images/addition-icon.svg" alt="logo"/>
             </button>

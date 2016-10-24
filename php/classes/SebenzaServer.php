@@ -156,6 +156,18 @@ class SebenzaServer {
         }
         return $returnValue;
     }
+
+    public static function adminAddSpecialization($workType,$typeDescription){
+        $command = "INSERT INTO `SPECIALIZATIONS` (`WorkType`,`Description`) VALUES (?,?)";
+        $dbhandler = self::fetchDatabaseHandler();
+        if($dbhandler->runCommand($command,$workType,$typeDescription)){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
     /*The following function will register the user according to his type, confirmation of email will be required from all
     users, to ensure that the email account exists.*/
     public static function register(array $input, $type)
@@ -2728,6 +2740,17 @@ if (!empty($_POST)) {
                     $response = json_encode(false);
                 }
 
+                break;
+            case 'admin-add-new-specialization':
+
+                $condition = SebenzaServer::serverSecurityCheck();
+                if($condition){
+                    if(isset($_POST['admin-specialization-add-type']) && isset($_POST['admin-specialization-add-description']))
+                    $response = json_encode(SebenzaServer::adminAddSpecialization($_POST['admin-specialization-add-type'],$_POST['admin-specialization-add-description']));
+                }
+                else{
+                    $response = json_encode(false);
+                }
                 break;
             case 'register-contractor':
                 //Ensure all skill are set

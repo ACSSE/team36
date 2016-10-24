@@ -19,6 +19,45 @@ function handleFetchJobRequests(response){
     }
 }
 
+function adminEditSelectedSpecialization(){
+    console.log("Should be editing an existing specialization");
+}
+
+function handleAdminAddNewSpecialization(response){
+    var result = JSON.parse(response);
+    console.log("Should updating specialization table");
+    console.log(result);
+}
+
+function adminAddNewSpecialization(){
+    console.log("Should be adding a new specialization to tables");
+    var html = "<div><form id='admin-add-specialization-form' name='admin-add-specialization-form'>" +
+        "<h3>Add Specialization:</h3>" +
+        "<label>Work Type:</label><input type='text' id='admin-specialization-add-type' name='admin-specialization-add-type' placeholder='Builder' class='REQ_VAL'>" +
+        '<div class="additional-info top-padding" id="admin-specialization-add-type-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please make sure to set some name for the specialization you are trying to add. E.g.' +
+        'Tiler</p>' +
+        '</div>' +
+        "<label>Work Type Description:</label><input type='text' id='admin-specialization-add-description' name='admin-specialization-add-description' placeholder='The laying of ceramic tiles' class='REQ_VAL'>" +
+        '<div class="additional-info top-padding" id="admin-specialization-add-description-info" data-toggler data-animate="fade-in fade-out">' +
+        '<p class="help-text no-margins">Please enter a description for the specialization you are trying to add. E.g.' +
+        'tiling all day long</p>' +
+        '</div>' +
+        "</form></div>" +
+    '<div class="row">' +
+    '<div class="large-3 columns">' +
+    '<button type="top-bar-button button" class="button success" style="margin-top: 0.2em" onclick="sendAJAXRequest(\'admin-add-new-specialization\',handleAdminAddNewSpecialization,\'admin-add-specialization-form\')">' +
+    'Add Specialization' +
+    '<img class="top-bar-button-icon" type="image/svg+xml" src="Images/user-icon.svg" alt="logo"/>' +
+    '</button>' +
+    '</div>' +
+    '</div>';
+    document.getElementById('admin-manage-specialization-modal-additionalInfo').innerHTML = html;
+    new Foundation.Toggler($('#admin-specialization-add-description-info'), 'data-animate="hinge-in-from-right spin-out"');
+    new Foundation.Toggler($('#admin-specialization-add-type-info'), 'data-animate="hinge-in-from-right spin-out"');
+    $('#admin-manage-specialization-modal').foundation('toggle');
+}
+
 function adminDisplayProfileDetails(){
     //console.log("Should be doing profile details 3");
 
