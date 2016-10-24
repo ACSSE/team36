@@ -314,15 +314,15 @@ INSERT INTO `locations` (`locationID`, `locationName`, `Coordinates`, `Region`, 
   (34, 'Bethlehem', NULL, NULL, 'FS', 'South Africa');
 
 
-INSERT 	 INTO `SPECIALIZATIONS` (`WorkType`, `Description`)
-	VALUES	('Painter', 'person who paints'),
-			( 'Tiler', 'Person who tiles floors'),
-			('Paving', 'Person who paves areas'),
-    ('Decking', 'Person who paves areas'),
-    ('Plumber', 'Person who fixes plumbing for a living'),
-    ('Brick-Layer', 'Person who lays bricks for buildings'),
-    ('foundation-Layer', 'Person who lays foundation for buildings'),
-			('Tree-Feller', 'Person who removes trees');
+INSERT 	 INTO `SPECIALIZATIONS` (`workTypeID`,`WorkType`, `Description`)
+	VALUES	(1,'Painter', 'person who paints'),
+			(2,'Tiler', 'Person who tiles floors'),
+			(3,'Paving', 'Person who paves areas'),
+    (4,'Decking', 'Person who paves areas'),
+    (5,'Plumber', 'Person who fixes plumbing for a living'),
+    (6,'Brick-Layer', 'Person who lays bricks for buildings'),
+    (7,'foundation-Layer', 'Person who lays foundation for buildings'),
+			(8,'Tree-Feller', 'Person who removes trees');
 
 INSERT INTO `specializations_per_user` (`specID`, `UserID`, `workTypeID`, `Recommendations`) VALUES
   (1, 10, 1, 0),
