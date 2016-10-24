@@ -534,7 +534,8 @@ function sendAJAXPictures (action,responseFunction,formID) {
                 //All ajax requests are handled by php/classes/SebenzaServer.php
                 $.ajax({
                     type: 'POST',
-                    url: 'https://sebenzasa.azurewebsites.net/php/classes/SebenzaServer.php',
+                    url: 'php/classes/SebenzaServer.php',
+                    //url: 'https://sebenzasa.azurewebsites.net/php/classes/SebenzaServer.php',
                     data: oData,
                     cache       : false,
                     contentType : false,
@@ -545,7 +546,8 @@ function sendAJAXPictures (action,responseFunction,formID) {
         } else {
             $.ajax({
                 type: 'POST',
-                url: 'https://sebenzasa.azurewebsites.net/php/classes/SebenzaServer.php.php',
+                url: 'php/classes/SebenzaServer.php',
+                //url: 'https://sebenzasa.azurewebsites.net/php/classes/SebenzaServer.php.php',
                 data: {action: action},
                 success: responseFunction
             });
@@ -608,7 +610,8 @@ function sendAJAXRequest (action, responseFunction, formID) {
                 //All ajax requests are handled by php/classes/SebenzaServer.php
                 $.ajax({
                     type: 'POST',
-                    url: 'https://sebenzasa.azurewebsites.net/php/classes/SebenzaServer.php',
+                    url: 'php/classes/SebenzaServer.php',
+                    //url: 'https://sebenzasa.azurewebsites.net/php/classes/SebenzaServer.php',
                     data: dataObject,
                     success: responseFunction
                 });
@@ -616,7 +619,8 @@ function sendAJAXRequest (action, responseFunction, formID) {
         } else {
             $.ajax({
                 type: 'POST',
-                url: 'https://sebenzasa.azurewebsites.net/php/classes/SebenzaServer.php',
+                url: 'php/classes/SebenzaServer.php',
+                //url: 'https://sebenzasa.azurewebsites.net/php/classes/SebenzaServer.php',
                 data: {action: action},
                 success: responseFunction
             });
