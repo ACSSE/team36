@@ -502,7 +502,7 @@ function tradeworkerBuildUpInterfaceArrays(){
             }
 
             }
-
+        tradeworkerDisplayReporting();
         }
 }
 
@@ -882,6 +882,105 @@ function tradeworkerAcceptPictures(){
         }
     }
 }
+
+
+var primaryGraphColor = '#7363CA';
+var secondaryGraphColor = '#FF6B6B';
+var tertiaryGraphColor = '#6AD359';
+var fourthGraphColor = '#CE5798';
+
+function tradeworkerDisplayReporting(){
+    createCanvas('canvas','tradeworker-reporting-areainformation',100);
+    createCanvas('canvas1','tradeworker-reporting-areainformation',100);
+    createCanvas('canvas2','tradeworker-reporting-areainformation',100);
+
+    var labels = ["Request","Jobs"];
+    var data = [];
+    console.log("Reporting");
+    console.log(tradeworkerOngoingRequestArray.length);
+    console.log(tradeworkerCancelledRequestArray.length);
+    console.log(tradeworkerOngoingJobsArray.length);
+    data[0] = [tradeworkerOngoingRequestArray.length,tradeworkerOngoingJobsArray.length];
+    data[1] = [tradeworkerCancelledRequestArray.length,tradeworkerCancelledJobsArray.length];
+    data[2] = [tradeworkerOngoingJobsArray.length,tradeworkerCompletedJobsArray.length];
+    var dataHeadings = ["Pending", "Cancelled", "Completed"];
+    var colours = [primaryGraphColor,secondaryGraphColor,fourthGraphColor];
+    var barChartData = createBarGraphConfig("Requests and Jobs",labels,data,dataHeadings,colours);
+    var ctx = document.getElementById("canvas").getContext("2d");
+    var ctx1 = document.getElementById("canvas1").getContext("2d");
+    var ctx2 = document.getElementById("canvas2").getContext("2d");
+    //var ctx1 = document.getElementById("canvas1").getContext("2d");
+    var test = new Chart(ctx, barChartData);
+
+
+    ////graphTestRun();
+    if(tradeworkerOngoingJobsArray.length > 0 || tradeworkerCompletedJobsArray.length > 0){
+        var labels = ["Ongoing Jobs","Completed Jobs"];
+        var colors = [];
+        colors[0] = [primaryGraphColor,tertiaryGraphColor];
+
+        data = [];
+        data[0] = [tradeworkerOngoingJobsArray.length,tradeworkerCompletedJobsArray.length];
+
+        var pieChartData = createPieGraphConfig(labels,colors,data,1,"Ongoing vs Completed");
+    }
+    //var labels = ["Available Tradeworkers","Unavailable Tradeworkers"];
+    //var colors = [];
+    //colors[0] = [primaryGraphColor,tertiaryGraphColor];
+    //
+    //data = [];
+    //data[0] = [availableTradeworkers.length,tradeworkers.length - availableTradeworkers.length];
+    //
+    //var pieChartData = createPieGraphConfig(labels,colors,data,1,"Total Tradeworkers");
+    //
+    //
+
+    var requestsMonth = [0,0,0,0,0,0,0,0,0,0,0,0];
+    var confirmedRequests = [0,0,0,0,0,0,0,0,0,0,0,0];
+    var terminatedRequests = [0,0,0,0,0,0,0,0,0,0,0,0];
+    var request = tradeworkerJobRequestArray;
+
+    for(var v = 0;v < request.length;v++){
+        //console.log(request);
+        //console.log(request[v]['JobCommencementDate']);
+        var date = new Date(request[v]['JobCommencementDate']);
+        //console.log(date);
+        var month = date.getMonth();
+        //console.log("this is the month: " + month);
+        //console.log(request[v]['RequestID']);
+        var relatedRequests = admin2DimensionalSearchArray(request,"QuoteID=" + request[v]['QuoteID']);
+        if(relatedRequests != null){
+            //console.log(".....1.....");
+            var acceptedRequests = admin2DimensionalAndSearchArray(relatedRequests,"HomeuserResponse=3","Status=3");
+            var rejectedRequests = admin2DimensionalOrSearchArray(relatedRequests,"HomeuserResponse=2","Status=2");
+            //console.log(".....1.....");
+            if(acceptedRequests != null){
+                //console.log("Accepted Requests logged:");
+                confirmedRequests[month] += acceptedRequests.length;
+            }
+            if(rejectedRequests != null){
+                terminatedRequests[month] += rejectedRequests.length;
+            }
+
+            //console.log("Adding to array");
+            requestsMonth[month] += relatedRequests.length;
+        }
+    }
+    data = [requestsMonth,confirmedRequests,terminatedRequests];
+    labels = ["January","Febuary","March","April","May","June","July","August","September","October","November","December"];
+    var dataLabel = ['Total Number Requests Come in','Total Confirmed Requests','Total Rejected Requests'];
+    var lineChartData = createLineGraphConfig(labels,data,dataLabel,"Overall Requests Report");
+
+
+    window.myLine = new Chart(ctx2, lineChartData);
+
+    //console.log(confirmedRequests);
+    //console.log(requestsMonth);
+    //console.log(terminatedRequests);
+    window.myBar = test;
+    window.myPie = new Chart(ctx1, pieChartData);
+}
+
 
 function tradeworkerAddPicturesToJob(){
     console.log("Should be adding pictures to completed job for tradeworker:");

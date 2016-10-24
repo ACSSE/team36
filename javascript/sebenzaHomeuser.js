@@ -64,7 +64,7 @@ function homeuserDisplayReporting(){
 
     ////graphTestRun();
     if(homeuserOngoingJobsArray.length > 0 || homeuserCompletedJobsArray.length > 0){
-        var labels = ["Ongoing Jobs","Completed Jobs"];
+        var labels = ["Completed Jobs","Ongoing Jobs"];
         var colors = [];
         colors[0] = [primaryGraphColor,tertiaryGraphColor];
 

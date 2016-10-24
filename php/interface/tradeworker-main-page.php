@@ -25,8 +25,9 @@
                     <li><a onclick="toggleUserPageArea('panel4v')">Unfinished Jobs</a></li>
                 </ul>
             </li>
-            <li><a onclick="toggleUserPageArea('panel4v')">Manage Profile</a>
+            <li><a onclick="toggleUserPageArea('panel9v')">Manage Profile</a>
                 <ul class="menu vertical nested">
+                    <li><a onclick="toggleUserPageArea('panel9v')">Reporting</a></li>
                     <li><a onclick="toggleUserPageArea('panel5v')">General Details</a></li>
                     <li><a onclick="toggleUserPageArea('panel6v')">Locations</a></li>
                     <li><a onclick="toggleUserPageArea('panel7v')">Skills</a></li>
@@ -106,6 +107,11 @@
             <div class="tabs-panel full-height user-panels panel-container" id="panel8v">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-manage-completed-jobs.php";
+                ?>
+            </div>
+            <div class="tabs-panel full-height user-panels panel-container" id="panel9v">
+                <?php
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/tradeworker-reporting.php";
                 ?>
             </div>
         </div>
