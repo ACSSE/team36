@@ -30,7 +30,7 @@ SebenzaServer::start();
     <link rel="stylesheet" href="foundation-6/css/app.css" />
     <link rel="stylesheet" href="css/customElementStyle.css" />
     <link rel="icon" type="image/png" href="Images/favicon.png"/>
-    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Ubuntu:regular,bold&subset=Latin">
     <script src="foundation-6/js/jquery.js"></script>
     <script src="foundation-6/js/what-input.js"></script>
     <script src="foundation-6/js/foundation.js"></script>
