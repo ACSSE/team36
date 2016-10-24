@@ -242,6 +242,7 @@ function adminChangeProvinceToReportOn(){
 
     var pieChartData = createPieGraphConfig(labels,colors,data,1,"Total Tradeworkers");
     window.myPie = new Chart(ctx1, pieChartData);
+    window.myBar = test;
 }
 
 function adminDisplayProvincialReport(provinceName){

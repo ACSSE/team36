@@ -34,6 +34,7 @@
             </li>
             <li><a href="#">Profile Management</a>
                 <ul class="menu vertical nested">
+                    <li><a onclick="toggleUserPageArea('panel12v')">Reporting</a></li>
                     <li><a onclick="toggleUserPageArea('panel6v')">General Details</a></li>
                     <li><a onclick="toggleUserPageArea('panel10v')">Locations</a></li>
 
@@ -99,6 +100,11 @@
             <div class="tabs-panel full-height user-panels panel-container" id="panel9v">
                 <?php
                 include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-manage-cancelled-jobs.php";
+                ?>
+            </div>
+            <div class="tabs-panel full-height user-panels panel-container" id="panel12v">
+                <?php
+                include_once $_SERVER['DOCUMENT_ROOT'] . "/php/interface/homeuser-reporting.php";
                 ?>
             </div>
         </div>

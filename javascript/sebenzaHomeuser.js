@@ -19,6 +19,7 @@ function handleFetchJobRequests(response){
         homeuserDisplayCancelledJobs();
         homeuserDisplayCompletedJobs();
 
+
     }
     else if(typeof homeuserJobRequestArray == 'boolean'){
         if(homeuserJobRequestArray == false)
@@ -30,6 +31,103 @@ function handleFetchJobRequests(response){
     else{
         console.log("Response not recognized" + typeof homeuserJobRequestArray + " value: " + homeuserJobRequestArray);
     }
+}
+
+var primaryGraphColor = '#7363CA';
+var secondaryGraphColor = '#FF6B6B';
+var tertiaryGraphColor = '#6AD359';
+var fourthGraphColor = '#CE5798';
+
+function homeuserDisplayReporting(){
+    createCanvas('canvas','homeuser-reporting-areainformation',100);
+    createCanvas('canvas1','homeuser-reporting-areainformation',100);
+    createCanvas('canvas2','homeuser-reporting-areainformation',100);
+
+    var labels = ["Request","Jobs"];
+    var data = [];
+    console.log("Reporting");
+    console.log(homeuserOngoingRequestArray.length);
+    console.log(homeuserCancelledRequestArray.length);
+    console.log(homeuserCompletedRequestArray.length);
+    data[0] = [homeuserOngoingRequestArray.length,homeuserOngoingJobsArray.length];
+    data[1] = [homeuserCompletedRequestArray.length,homeuserCompletedJobsArray.length];
+    data[2] = [homeuserCancelledRequestArray.length,homeuserCancelledJobsArray.length];
+    var dataHeadings = ["Pending", "Completed", "Cancelled"];
+    var colours = [primaryGraphColor,secondaryGraphColor,fourthGraphColor];
+    var barChartData = createBarGraphConfig("Requests and Jobs",labels,data,dataHeadings,colours);
+    var ctx = document.getElementById("canvas").getContext("2d");
+    var ctx1 = document.getElementById("canvas1").getContext("2d");
+    var ctx2 = document.getElementById("canvas2").getContext("2d");
+    //var ctx1 = document.getElementById("canvas1").getContext("2d");
+    var test = new Chart(ctx, barChartData);
+
+
+    ////graphTestRun();
+    if(homeuserOngoingJobsArray.length > 0 || homeuserCompletedJobsArray.length > 0){
+        var labels = ["Ongoing Jobs","Completed Jobs"];
+        var colors = [];
+        colors[0] = [primaryGraphColor,tertiaryGraphColor];
+
+        data = [];
+        data[0] = [homeuserCompletedJobsArray.length,homeuserOngoingJobsArray.length];
+
+        var pieChartData = createPieGraphConfig(labels,colors,data,1,"Ongoing vs Completed");
+    }
+    //var labels = ["Available Tradeworkers","Unavailable Tradeworkers"];
+    //var colors = [];
+    //colors[0] = [primaryGraphColor,tertiaryGraphColor];
+    //
+    //data = [];
+    //data[0] = [availableTradeworkers.length,tradeworkers.length - availableTradeworkers.length];
+    //
+    //var pieChartData = createPieGraphConfig(labels,colors,data,1,"Total Tradeworkers");
+    //
+    //
+
+    var requestsMonth = [0,0,0,0,0,0,0,0,0,0,0,0];
+    var confirmedRequests = [0,0,0,0,0,0,0,0,0,0,0,0];
+    var terminatedRequests = [0,0,0,0,0,0,0,0,0,0,0,0];
+    var request = homeuserJobRequestArray;
+
+    for(var v = 0;v < request.length;v++){
+        //console.log(request);
+        //console.log(request[v]['JobCommencementDate']);
+        var date = new Date(request[v]['JobCommencementDate']);
+        //console.log(date);
+        var month = date.getMonth();
+        //console.log("this is the month: " + month);
+        //console.log(request[v]['RequestID']);
+        var relatedRequests = admin2DimensionalSearchArray(request,"RequestID=" + request[v]['RequestID']);
+        if(relatedRequests != null){
+            //console.log(".....1.....");
+            var acceptedRequests = admin2DimensionalAndSearchArray(relatedRequests,"HomeuserResponse-0=3","Status-0=3");
+            var rejectedRequests = admin2DimensionalOrSearchArray(relatedRequests,"HomeuserResponse-0=2","Status-0=2");
+            //console.log(".....1.....");
+            if(acceptedRequests != null){
+                //console.log("Accepted Requests logged:");
+                confirmedRequests[month] += acceptedRequests.length;
+            }
+            if(rejectedRequests != null){
+                terminatedRequests[month] += rejectedRequests.length;
+            }
+
+            //console.log("Adding to array");
+            requestsMonth[month] += relatedRequests.length;
+        }
+    }
+    data = [requestsMonth,confirmedRequests,terminatedRequests];
+    labels = ["January","Febuary","March","April","May","June","July","August","September","October","November","December"];
+    var dataLabel = ['Total Number Requests Sent Out','Total Confirmed Requests','Total Rejected Requests'];
+    var lineChartData = createLineGraphConfig(labels,data,dataLabel,"Overall Requests Report");
+
+
+    window.myLine = new Chart(ctx2, lineChartData);
+
+    //console.log(confirmedRequests);
+    //console.log(requestsMonth);
+    //console.log(terminatedRequests);
+    window.myBar = test;
+    window.myPie = new Chart(ctx1, pieChartData);
 }
 
 function homeuserDisplayCompletedJobs(){
@@ -380,7 +478,9 @@ function homeuserBuildUpInterfaceArrays(){
                 }
             }
         }
+
     }
+    homeuserDisplayReporting();
 }
 
 function homeuserDisplayRequests(){

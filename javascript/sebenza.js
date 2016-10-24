@@ -87,6 +87,410 @@ function closeNotification() {
     }
 }
 
+function admin2DimensionalSearchArray(array,searchValue){
+    //var table = tableName;
+
+    var searchTerm = "";
+    var columnName = "";
+    if(searchValue.indexOf("=") > 0){
+        var spl = searchValue.split("=");
+        columnName = spl[0];
+        searchTerm = spl[1];
+    }
+    else{
+        searchTerm = searchValue;
+    }
+
+
+    var relevantIndexArray = [];
+    var found = false;
+    var counter = 0;
+    var tableToView = [];
+    var fullTable = "";
+    //console.log("Choosing generic Table for " + table + " with the following search term: " +searchTerm);
+    for(var index in array){
+        if(array.hasOwnProperty(index)){
+            found = false;
+            for(var name in array[index]){
+                if(columnName == ""){
+                    if(!found)
+                        if(array[index].hasOwnProperty(name)){
+                            if(searchTerm != ""){
+                                var target = array[index][name];
+                                var contains = -1;
+                                if (typeof target == "string") {
+                                    contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+                                    if (contains >= 0) {
+                                        //console.log("Found match at " + counter);
+                                        relevantIndexArray.push(counter);
+                                        found = true;
+                                    }
+                                }
+                                else {
+                                    if (target == searchTerm) {
+                                        relevantIndexArray.push(counter);
+                                        found = true;
+                                    }
+                                }
+                            }
+                        }
+                }
+                else{
+                    if(name == columnName)
+                        if(!found)
+                            if(array[index].hasOwnProperty(name)){
+                                if(searchTerm != ""){
+                                    var target = array[index][name];
+                                    var contains = -1;
+                                    if (typeof target == "string") {
+                                        contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+                                        if (contains >= 0) {
+                                            //console.log("Found match at " + counter);
+                                            relevantIndexArray.push(counter);
+                                            found = true;
+                                        }
+                                    }
+                                    else {
+                                        if (target == searchTerm) {
+                                            relevantIndexArray.push(counter);
+                                            found = true;
+                                        }
+                                    }
+                                }
+                            }
+                }
+
+            }
+            counter++;
+
+        }
+    }
+
+    while(relevantIndexArray.length > 0){
+        tableToView.push(array[relevantIndexArray.pop()]);
+    }
+
+    if(tableToView.length > 0){
+        return tableToView;
+    }
+    else{
+        tableToView = null;
+        return tableToView;
+    }
+}
+
+function admin2DimensionalOrSearchArray(array,searchValue,searchValue1){
+    //var table = tableName;
+    console.log("The following values are coming in: " + searchValue1 + " " + searchValue);
+    var searchTerm = "";
+    var columnName = "";
+    if(searchValue.indexOf("=") > 0){
+        var spl = searchValue.split("=");
+        columnName = spl[0];
+        searchTerm = spl[1];
+    }
+    else{
+        searchTerm = searchValue;
+    }
+
+    var searchTerm1 = "";
+    var columnName1 = "";
+    if(searchValue1.indexOf("=") > 0){
+        var spl1 = searchValue1.split("=");
+        columnName1 = spl1[0];
+        searchTerm1 = spl1[1];
+    }
+    else{
+        searchTerm1 = searchValue1;
+    }
+    var target = null;
+    var contains = -1;
+    var contains1 = -1;
+    var foundA = false;
+    var foundB = false;
+    var relevantIndexArray = [];
+    var found = false;
+    var counter = 0;
+    var tableToView = [];
+    var fullTable = "";
+
+    //console.log("Choosing generic Table for " + table + " with the following search term: " +searchTerm);
+    for(var index in array){
+        if(array.hasOwnProperty(index)){
+            //console.log("Searching through: " + index + " looking for " + columnName + "=" + searchTerm + " and " + columnName1  + "=" + searchTerm1);
+            found = false;
+            foundA = false;
+            foundB = false;
+            for(var name in array[index]){
+                if(columnName == "" && columnName1 == ""){
+                    if(!foundA && !foundB)
+                        if(array[index].hasOwnProperty(name)){
+                            if(searchTerm != ""){
+                                target = array[index][name];
+                                contains = -1;
+                                contains1 = -1;
+                                if (typeof target == "string") {
+                                    contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+                                    contains1 = target.toLowerCase().indexOf(searchTerm1.toLowerCase());
+                                    if (contains >= 0 || contains>=0) {
+                                        //console.log("1Found match at " + counter);
+                                        if(contains > 0){
+                                            foundA = true;
+                                        }
+                                        if(contains1 > 0){
+                                            foundB = true;
+                                        }
+
+                                    }
+                                }
+                                else {
+                                    if (target == searchTerm) {
+                                        //console.log("2Found match at " + counter);
+                                        foundA = true;
+                                    }
+                                    else if(target == searchTerm1){
+                                        //console.log("3Found match at " + counter);
+                                        foundB = true;
+                                    }
+                                }
+                            }
+                        }
+                }
+                else{
+                    if(name == columnName){
+                        if(!foundA && !foundB){
+                            if(array[index].hasOwnProperty(name)){
+                                if(searchTerm != ""){
+                                    target = array[index][name];
+                                    contains = -1;
+                                    if (typeof target == "string") {
+                                        contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+
+                                        if (contains >= 0) {
+                                            //console.log("Found match at " + counter);
+                                            if(contains > 0){
+                                                foundA = true;
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        if (target == searchTerm) {
+                                            //console.log("4Found match at " + counter + " target: " + target + " searchTerm: " + searchTerm);
+                                            foundA = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(name == columnName1){
+                        if(!foundA && !foundB){
+                            if(array[index].hasOwnProperty(name)){
+                                if(searchTerm != ""){
+                                    target = array[index][name];
+                                    contains = -1;
+                                    if (typeof target == "string") {
+                                        contains = target.toLowerCase().indexOf(searchTerm1.toLowerCase());
+
+                                        if (contains >= 0) {
+                                            console.log("Found match at " + counter);
+                                            if(contains > 0){
+                                                foundB = true;
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        if(target == searchTerm1){
+                                            console.log("5Found match at " + counter);
+                                            foundB = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            if(foundA || foundB){
+                relevantIndexArray.push(counter);
+            }
+            counter++;
+
+        }
+
+    }
+
+    while(relevantIndexArray.length > 0){
+        tableToView.push(array[relevantIndexArray.pop()]);
+    }
+
+    if(tableToView.length > 0){
+        return tableToView;
+    }
+    else{
+        tableToView = null;
+        return tableToView;
+    }
+}
+
+
+function admin2DimensionalAndSearchArray(array,searchValue,searchValue1){
+    //var table = tableName;
+    //console.log("The following values are coming in: " + searchValue1 + " " + searchValue);
+    var searchTerm = "";
+    var columnName = "";
+    if(searchValue.indexOf("=") > 0){
+        var spl = searchValue.split("=");
+        columnName = spl[0];
+        searchTerm = spl[1];
+    }
+    else{
+        searchTerm = searchValue;
+    }
+
+    var searchTerm1 = "";
+    var columnName1 = "";
+    if(searchValue1.indexOf("=") > 0){
+        var spl1 = searchValue1.split("=");
+        columnName1 = spl1[0];
+        searchTerm1 = spl1[1];
+    }
+    else{
+        searchTerm1 = searchValue1;
+    }
+    var target = null;
+    var contains = -1;
+    var contains1 = -1;
+    var foundA = false;
+    var foundB = false;
+    var relevantIndexArray = [];
+    var found = false;
+    var counter = 0;
+    var tableToView = [];
+    var fullTable = "";
+
+    //console.log("Choosing generic Table for " + table + " with the following search term: " +searchTerm);
+    for(var index in array){
+        if(array.hasOwnProperty(index)){
+            //console.log("Searching through: " + index + " looking for " + columnName + "=" + searchTerm + " and " + columnName1  + "=" + searchTerm1);
+            found = false;
+            foundA = false;
+            foundB = false;
+            for(var name in array[index]){
+                if(columnName == "" && columnName1 == ""){
+                    if(!foundA || !foundB)
+                        if(array[index].hasOwnProperty(name)){
+                            if(searchTerm != ""){
+                                target = array[index][name];
+                                contains = -1;
+                                contains1 = -1;
+                                if (typeof target == "string") {
+                                    contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+                                    contains1 = target.toLowerCase().indexOf(searchTerm1.toLowerCase());
+                                    if (contains >= 0 || contains>=0) {
+                                        console.log("Found match at " + counter);
+                                        if(contains > 0){
+                                            foundA = true;
+                                        }
+                                        if(contains1 > 0){
+                                            foundB = true;
+                                        }
+
+                                    }
+                                }
+                                else {
+                                    if (target == searchTerm) {
+                                        console.log("Found match at " + counter);
+                                        foundA = true;
+                                    }
+                                    else if(target == searchTerm1){
+                                        console.log("Found match at " + counter);
+                                        foundB = true;
+                                    }
+                                }
+                            }
+                        }
+                }
+                else{
+                    if(name == columnName){
+                        if(!foundA || !foundB){
+                            if(array[index].hasOwnProperty(name)){
+                                if(searchTerm != ""){
+                                    target = array[index][name];
+                                    contains = -1;
+                                    if (typeof target == "string") {
+                                        contains = target.toLowerCase().indexOf(searchTerm.toLowerCase());
+
+                                        if (contains >= 0) {
+                                            console.log("Found match at " + counter);
+                                            if(contains > 0){
+                                                foundA = true;
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        if (target == searchTerm) {
+                                            console.log("4Found match at " + counter + " target: " + target + " searchTerm: " + searchTerm);
+                                            foundA = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if(name == columnName1){
+                        if(!foundA || !foundB){
+                            if(array[index].hasOwnProperty(name)){
+                                if(searchTerm != ""){
+                                    target = array[index][name];
+                                    contains = -1;
+                                    if (typeof target == "string") {
+                                        contains = target.toLowerCase().indexOf(searchTerm1.toLowerCase());
+
+                                        if (contains >= 0) {
+                                            console.log("Found match at " + counter);
+                                            if(contains > 0){
+                                                foundB = true;
+                                            }
+                                        }
+                                    }
+                                    else {
+                                        if(target == searchTerm1){
+                                            console.log("5Found match at " + counter);
+                                            foundB = true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
+            if(foundA && foundB){
+                relevantIndexArray.push(counter);
+            }
+            counter++;
+
+        }
+
+    }
+
+    while(relevantIndexArray.length > 0){
+        tableToView.push(array[relevantIndexArray.pop()]);
+    }
+
+    if(tableToView.length > 0){
+        return tableToView;
+    }
+    else{
+        tableToView = null;
+        return tableToView;
+    }
+}
+
+
 function toggleNotification() {
     $('#notification-panel').foundation('toggle');
 }
