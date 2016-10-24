@@ -853,6 +853,25 @@ class SebenzaServer {
 
     }
 
+    public static function tradeworkerSetPicturesToDisplay($toSet,$toRemove){
+        $command = "UPDATE `PICTURES_PER_JOB` SET `ToPrint` = ? WHERE `PictureID` = ?";
+        $dbhandler = self::fetchDatabaseHandler();
+        $result = true;
+        for($z = 0;$z < count($toSet);$z++){
+            if(!$dbhandler->runCommand($command,1,$toSet[$z])){
+                $result &= false;
+            }
+
+        }
+
+        for($z = 0;$z < count($toRemove);$z++){
+            if(!$dbhandler->runCommand($command,0,$toRemove[$z])){
+                $result &= false;
+            }
+        }
+        return $result;
+    }
+
     public static function addTradeworkerToOngoingRequest($requestID){
         $command = "SELECT `workTypeID`,`Address`,`NumberOfWorkersRequested`,`NumberOfWorkersAccepted`,`JobCommencementDate` FROM `QUOTE_REQUEST` WHERE `RequestID`=?";
         $result = false;
@@ -2671,6 +2690,39 @@ if (!empty($_POST)) {
                         $response = json_encode(SebenzaServer::confirmTerminatedJobNotification($_POST['ignore-tradeworker-confirm-jobTermination-ID']));
                     else
                         $response = json_encode(false);
+                }
+                else{
+                    $response = json_encode(false);
+                }
+
+                break;
+            case 'tradeworker-update-pictures-toprint':
+
+                $condition = SebenzaServer::serverSecurityCheck();
+                if($condition){
+                    $response = json_encode(true);
+                    $toSet = [];
+                    $toRemove = [];
+                    if(isset($_POST['ignore-toPrint-numpics'])){
+                        $condition = false;
+                        for($x=0;$x < $_POST['ignore-toPrint-numpics'];$x++){
+                            if(isset($_POST['ignore-toPrint-'.$x.'-switch'])){
+                                if($_POST['toPrint-'.$x.'-switch'] == "true"){
+                                    array_push($toSet,$_POST['ignore-toPrint-'.$x.'-switch']);
+                                }
+                                else{
+                                    array_push($toRemove,$_POST['ignore-toPrint-'.$x.'-switch']);
+                                }
+
+                            }
+                        }
+                        if(count($toSet) > 0 || count($toRemove) > 0){
+                            $response = json_encode(SebenzaServer::tradeworkerSetPicturesToDisplay($toSet,$toRemove));
+                        }
+                        else{
+                            $response = json_encode(false);
+                        }
+                    }
                 }
                 else{
                     $response = json_encode(false);

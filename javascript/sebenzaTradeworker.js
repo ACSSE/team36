@@ -288,10 +288,13 @@ function tradeworkerPrintCompletedJobs(){
                         //console.log(picFile);
                         //console.log("!!!5!!!");
                         var picName = picFile.split("_");
-                        html += '<div style="float: left">' +
-                            '<img style="height: 200px;width: 200px" src="UploadedPictures/' + picFile + '">' +
-                            //'<figcaption>' + picName[picName.length - 1] + '</figcaption>' +
-                            '</div>';
+                        if(tradeworkerJobRequestArray[t]['JobID-' + jobID + '-' + 'PictureID-' + d + '-ToPrint'] == 1){
+                            html += '<div style="float: left">' +
+                                '<img style="height: 200px;width: 200px" src="UploadedPictures/' + picFile + '">' +
+                                    //'<figcaption>' + picName[picName.length - 1] + '</figcaption>' +
+                                '</div>';
+                        }
+
                     }
 
 
@@ -800,18 +803,18 @@ function tradeworkerAddPicturesToCompletedJob(index){
     if(tradeworkerJobRequestArray.length > 0){
         console.log("Should be adding pictures to the completed job");
         console.log(tradeworkerJobRequestArray[index]);
-        var numPics = tradeworkerJobRequestArray[index]["JobID-1-PictureCount"];
+        var numPics = tradeworkerJobRequestArray[index]["JobID-" + tradeworkerJobRequestArray[index]["JobID"] + "-PictureCount"];
         var picN = [];
         for(var j = 0;j < numPics;j++){
-            picN = tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +""].split('_');
+            picN = tradeworkerJobRequestArray[index]["JobID-" + tradeworkerJobRequestArray[index]["JobID"] + "-PictureID-" + j +""].split('_');
             var toP = '';
-            if(tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +"-TradeworkerAcceptedPic"] == 1){
-                toP = '<input class="tradeworker-toAccept-check" type="checkbox" value="'+ picN[0] + '" name="toAccept-'+ j + '" id="toAccept-'+ j + '" checked/>';
+            if(tradeworkerJobRequestArray[index]["JobID-" + tradeworkerJobRequestArray[index]["JobID"] + "-PictureID-" + j +"-TradeworkerAcceptedPic"] == 1){
+                toP = '<input class="tradeworker-toAccept-check" type="checkbox" value="'+ picN[0] + '" name="ignore-toAccept-'+ j + '-switch" id="toAccept-'+ j + '-switch" checked/>';
             }
             else{
-                toP = '<input class="tradeworker-toAccept-check" type="checkbox" value="'+ picN[0] + '" name="toAccept-'+ j + '" id="toAccept-'+ j + '"/>';
+                toP = '<input class="tradeworker-toAccept-check" type="checkbox" value="'+ picN[0] + '" name="ignore-toAccept-'+ j + '-switch" id="toAccept-'+ j + '-switch"/>';
             }
-            if(tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +"-TradeworkerAcceptedPic"] == 0){
+            if(tradeworkerJobRequestArray[index]["JobID-" + tradeworkerJobRequestArray[index]["JobID"] + "-PictureID-" + j +"-TradeworkerAcceptedPic"] == 0){
                 tradeworkerPictureArrayToAccept[j] = {
                     PicName:picN[picN.length-1],
                     ToPrint:toP
@@ -889,16 +892,16 @@ function tradeworkerAddPicturesToCV(index){
     if(tradeworkerJobRequestArray.length > 0){
         console.log("Should be adding pictures for the CV");
         console.log(tradeworkerJobRequestArray[index]);
-        var numPics = tradeworkerJobRequestArray[index]["JobID-1-PictureCount"];
+        var numPics = tradeworkerJobRequestArray[index]["JobID-" + tradeworkerJobRequestArray[index]["JobID"] + "-PictureCount"];
         var picN = [];
         for(var j = 0;j < numPics;j++){
-            picN = tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +""].split('_');
+            picN = tradeworkerJobRequestArray[index]["JobID-" + tradeworkerJobRequestArray[index]["JobID"] + "-PictureID-" + j +""].split('_');
             var toP = '';
-            if(tradeworkerJobRequestArray[index]["JobID-1-PictureID-" + j +"-ToPrint"] == 1){
-                toP = '<input class="tradeworker-toPrint-check" type="checkbox" value="'+ picN[0] + '" name="toPrint-'+ j + '" id="toPrint-'+ j + '" checked/>';
+            if(tradeworkerJobRequestArray[index]["JobID-" + tradeworkerJobRequestArray[index]["JobID"] + "-PictureID-" + j +"-ToPrint"] == 1){
+                toP = '<input class="tradeworker-toPrint-check" type="checkbox" value="'+ picN[0] + '" name="ignore-toPrint-'+ j + '-switch" id="toPrint-'+ j + '-switch" checked/>';
             }
             else{
-                toP = '<input class="tradeworker-toPrint-check" type="checkbox" value="'+ picN[0] + '" name="toPrint-'+ j + '" id="toPrint-'+ j + '"/>';
+                toP = '<input class="tradeworker-toPrint-check" type="checkbox" value="'+ picN[0] + '" name="ignore-toPrint-'+ j + '-switch" id="toPrint-'+ j + '-switch"/>';
             }
             tradeworkerPictureArray[j] = {
                                             PicName:picN[picN.length-1],
@@ -908,7 +911,7 @@ function tradeworkerAddPicturesToCV(index){
         }
         var html = '';
         if(tradeworkerPictureArray.length > 0){
-            html = '<h3>Select Pictures:</h3><h5>tick which Pictures will be added to CV when printing</h5><form id="tradeworker-toPrint-check-form" name="tradeworker-toPrint-check-form">';
+            html = '<h3>Select Pictures:</h3><h5>tick which Pictures will be added to CV when printing</h5><form id="tradeworker-toPrint-check-form" name="tradeworker-toPrint-check-form"><input type="hidden" value="' + numPics + '" id="ignore-toPrint-numpics" name="ignore-toPrint-numpics">';
             html += genericTableGenerate(tradeworkerPictureArray,'job-pictureList');
             html += '</form><div class="row">' +
                 '<div class="large-3 columns">' +
@@ -934,8 +937,16 @@ function tradeworkerUpdatePicturesToPrint(){
     for(var t =0; t < checkbox.length; t++){
         if(checkbox[t].checked){
             console.log("Pic ID " + checkbox[t].value);
+
         }
     }
+    sendAJAXRequest('tradeworker-update-pictures-toprint',handleTradeworkerUpdatePictureToDisplay,'tradeworker-toPrint-check-form')
+}
+
+function handleTradeworkerUpdatePictureToDisplay(response){
+    var result = JSON.parse(response);
+    console.log("The following was returned for updating cv pics: " + result);
+    sendAJAXRequest('fetch-job-requests', handleFetchJobRequests);
 }
 
 function tradeworkerDisplayCancelledRequest(){
